@@ -1,0 +1,118 @@
+.mdl-layout__header {
+    @include transition();
+    position: relative;
+    background-color: $brand-primary;
+    @media screen and (max-width: 1024px) {
+        display: flex;
+    }
+    &-row {
+      padding: 0 16px 0 16px;
+      @media screen and (max-width: 1024px) {
+        padding: 0 16px 0 16px;
+      }
+    }
+}
+
+.mdl-navigation {
+    svg {
+        @include transition();
+        height: 30px;
+        width: 30px;
+    }
+
+    &__link {
+        font-size: 16px;
+        letter-spacing: 0.07em;
+        font-family: $font-primary;
+        align-items: center;
+        text-transform: uppercase;
+        @include transition();
+        color: $brand-secondary;
+        fill: $brand-secondary;
+        display: flex;
+        align-items: center;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+
+        .mdl-layout__header-row & {
+            padding: 0 12px;
+        }
+
+        svg {
+            @include transition(transform);
+        }
+
+        &:focus {
+            outline: 0;
+        }
+
+        &.is-active,
+        &:hover {
+            color: rgba($brand-secondary, 0.7);
+            fill: rgba($brand-secondary, 0.7);
+        }
+
+        &:active {
+            svg {
+                transform: scale(0.8);
+            }
+        }
+    }
+}
+
+.mdl-layout__drawer {
+    @include transition();
+    background-color: $brand-primary;
+    width: 250px;
+    border: none;
+
+    .mdl-navigation {
+        width: 100%;
+
+        &__link {
+            padding: 16px 24px;
+
+            svg {
+                margin-right: 15px;
+            }
+
+            &.is-active,
+            &:hover {
+                fill: $black;
+                color: $black;
+                background-color: $white;
+            }
+        }
+    }
+
+    .mdl-layout__header &-button {
+        position: static;
+        margin: 8px 4px;
+        @include transition();
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        fill: $brand-secondary;
+
+        svg {
+            @include transition();
+            height: 30px;
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &.active,
+        &:hover {
+            fill: rgba($brand-secondary, 0.7);
+        }
+
+        &:active {
+            svg {
+                transform: scale(0.8);
+            }
+        }
+    }
+}

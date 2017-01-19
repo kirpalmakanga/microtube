@@ -1,0 +1,72 @@
+.card {
+    @include transition();
+    display: flex;
+    background-color: lighten($black, 40%);
+    width: 100%;
+
+    &:active,
+    &:hover {
+        background-color: lighten($black, 60%);
+    }
+
+    &__text {
+        cursor: pointer;
+        padding: 16px;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
+
+        &-title {
+          letter-spacing: 0.1em;
+            font-size: 14px;
+            @media screen and (min-width: 1024px) {
+                font-size: 20px;
+            }
+            line-height: 19px;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+
+        &-subtitle {
+            font-size: 14px;
+            line-height: 13px;
+            margin: 0;
+        }
+    }
+
+    &__button {
+        @include transition();
+        background-color: $black;
+        fill: $white;
+        border: none;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+
+        &:not(:last-child) {
+            margin-right: 1px;
+        }
+
+        &:hover {
+            background-color: lighten($black, 20%);
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &:active {
+            svg {
+                transform: scale(0.7);
+                opacity: 0.7;
+            }
+        }
+        width: 50px;
+
+        svg {
+            @include transition();
+            height: 30px;
+        }
+    }
+}

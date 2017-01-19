@@ -1,0 +1,99 @@
+.queue {
+    overflow-y: scroll;
+    z-index: 3;
+    top: 0;
+
+    @media screen and (min-width: 1024px) {
+      height: calc(100vh - 60px);
+      bottom: 60px;
+    }
+
+    &.queue--show {
+        transform: translate(0);
+    }
+
+    &__header {
+        font-family: $font-primary;
+        padding: 10px 15px;
+        font-size: 16px;
+        border-bottom: 2px solid rgba($brand-primary, 0.5);
+        text-transform: uppercase;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &-clear {
+            border: none;
+            background-color: transparent;
+            fill: $white;
+            padding: 0;
+            cursor: pointer;
+
+            svg {
+                @include transition();
+                height: 30px;
+                width: 30px;
+            }
+
+            &:focus {
+                outline: none;
+            }
+
+            &:active {
+                svg {
+                    transform: scale(0.7);
+                }
+            }
+        }
+    }
+
+    &__item {
+        @include transition();
+        border-bottom: 2px solid rgba($brand-primary, 0.5);
+
+        text-transform: uppercase;
+        font-size: 16px;
+        font-family: $font-primary;
+        display: flex;
+        align-items: center;
+
+        &.is-active {
+            background-color: lighten($brand-primary, 40%);
+        }
+
+        &-title {
+            padding: 15px;
+            display: flex;
+            flex: 1;
+        }
+
+        &-button {
+            padding: 0;
+            background-color: transparent;
+            fill: $brand-secondary;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            height: 40px;
+            width: 40px;
+            cursor: pointer;
+
+            svg {
+                @include transition();
+                height: 36px;
+                width: 36px;
+            }
+
+            &:focus {
+                outline: none;
+            }
+
+            &:active {
+                svg {
+                    transform: scale(0.7);
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+@mixin transition($property: all, $duration: 0.25s, $easing: ease-out) {
+  transition: $property $duration $easing;
+}
+
+@mixin font-face($font-family, $file-path, $font-weight, $font-style) {
+  @font-face {
+    font-family: $font-family;
+      src: url('#{$file-path}.eot');
+      src:
+           url('#{$file-path}.eot?#iefix') format('embedded-opentype'),
+           url('#{$file-path}.woff') format('woff'),
+           url('#{$file-path}.woff2') format('woff2'),
+           url('#{$file-path}.ttf') format('truetype');
+    font-weight: $font-weight;
+    font-style: $font-style;
+  }
+}

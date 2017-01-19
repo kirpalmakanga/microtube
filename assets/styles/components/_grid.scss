@@ -1,0 +1,35 @@
+$gutter: 16px;
+
+.mdl-grid {
+  position: relative;
+  .mdl-cell {
+      display: flex;
+      height: calc((100vh - 56px - 50px - 6 * #{$gutter}) / 5);
+
+      @media screen and (min-width: 840px) {
+      }
+
+      @media screen and (min-width: 1024px) {
+        height: calc((100vh - 64px - 60px - 8 * #{$gutter}) / 7);
+      }
+  }
+  &__loading {
+    @include transition(opacity);
+    opacity: 0;
+    margin: 8px 0;
+    display: flex;
+    flex: 1;
+    fill: $brand-secondary;
+    align-items: center;
+    justify-content: center;
+
+    &.is-active {
+      opacity: 1;
+    }
+
+    svg {
+        height: 30px;
+        width: 30px;
+    }
+  }
+}

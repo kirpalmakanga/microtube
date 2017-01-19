@@ -1,0 +1,38 @@
+.mdl-button {
+    @include transition();
+
+    &--icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        fill: $brand-secondary;
+
+        svg {
+            @include transition();
+            width: 30px;
+            height: 30px;
+        }
+
+        &:active {
+            svg {
+                transform: scale(0.7);
+            }
+        }
+    }
+
+    &.mdl-button--fab {
+        fill: $brand-secondary;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+            height: 30px;
+            width: 30px;
+        }
+
+        &:active {
+            transform: scale(0.7);
+        }
+    }
+}

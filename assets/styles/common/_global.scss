@@ -1,0 +1,77 @@
+@import '_variables';
+@import '_mixins';
+
+@include font-face('Open Sans', '../fonts/OpenSans', normal, normal);
+@include font-face('Open Sans', '../fonts/OpenSans-Bold', bold, normal);
+
+@include font-face('Montserrat', '../fonts/Montserrat-Regular', normal, normal);
+@include font-face('Montserrat', '../fonts/Montserrat-Bold', 700, normal);
+@include font-face('Montserrat', '../fonts/Montserrat-ExtraBold', 800, normal);
+
+* {
+  box-sizing: border-box;
+}
+
+body,
+html {
+  min-height: 100vh;
+}
+body {
+  position: relative;
+  background-color: lighten($brand-primary, 20%);
+  color: $brand-secondary;
+  font-family: $font-secondary;
+}
+
+h1, h2 {
+  font-family: $font-primary;
+}
+
+h1 {
+  @extend .add-top;
+  text-transform: uppercase;
+}
+
+svg {
+  position: relative;
+  pointer-events: none;
+  vertical-align: middle;
+  path {
+    fill: inherit;
+  }
+}
+.sprite {
+  display: none;
+}
+
+.loading {
+      -webkit-animation: rotating 2s linear infinite;
+      -moz-animation: rotating 2s linear infinite;
+      animation: rotating 2s linear infinite;
+}
+
+.arrow-up {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid lighten($brand-primary, 40%);
+}
+
+.arrow-right {
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 15px solid lighten($brand-primary, 40%);
+}
+
+.mdl-snackbar {
+  z-index: 5;
+}
+
+.mdl-dialog {
+  z-index: 6;
+  top: 50%;
+  transform: translateY(-50%);
+}

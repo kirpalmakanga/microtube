@@ -1,0 +1,19 @@
+.search-form {
+  margin: 0;
+  flex-grow: 1;
+  .mdl-textfield {
+    width: 100%;
+  }
+}
+
+.mdl-textfield {
+  &__input {
+    font-family: $font-primary;
+  }
+  &__label {
+    color: rgba($white, 0.3);
+    &:after {
+      background-color: $white;
+    }
+  }
+}

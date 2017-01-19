@@ -5,6 +5,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 const Queue = ({ player, dispatch }) => {
+  console.log('queue', player.queue)
   return (
     <div className={['queue mdl-shadow--2dp', player.showQueue ? 'queue--show': ''].join(' ')}>
       <header className='mdl-layout__header'>

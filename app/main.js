@@ -7,8 +7,6 @@ import { Router, browserHistory } from 'react-router'
 import configureStore from './store/configureStore'
 import getRoutes from './routes'
 
-require('fetch-ponyfill')({ Promise: Promise })
-
 const store = configureStore(window.INITIAL_STATE)
 
 ReactDOM.render(

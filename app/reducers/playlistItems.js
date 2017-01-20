@@ -1,6 +1,7 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 const initialState = {
+  isOpen: false,
   playlistId: 0,
   items: [],
   pages: [],
@@ -10,6 +11,12 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
+    case 'PLAYLIST_OPEN':
+      return Object.assign({}, state, { isOpen: true })
+
+    case 'PLAYLIST_CLOSE':
+      return Object.assign({}, state, initialState)
+
     case 'CLEAR_PLAYLIST_ITEMS':
       return initialState
 

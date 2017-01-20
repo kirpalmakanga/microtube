@@ -76,6 +76,7 @@ svg {
   transform: translateY(-50%);
 }
 
+.playlist-items,
 .search {
   background-color: lighten($brand-primary, 20%);
   @include transition();
@@ -88,6 +89,7 @@ svg {
   bottom: 50px;
   z-index: 1;
 }
+.playlist-items--show,
 .search--show {
   transform: translateY(0);
 }

@@ -6,9 +6,15 @@ import { connect } from 'react-redux'
 import { getPlaylistItems } from '../../actions/database'
 
 const PlaylistCard = ({ auth, id, title, dispatch }) => {
+  function openPlaylist() {
+    dispatch({
+      type: 'PLAYLIST_OPEN',
+      playlistId: id
+    })
+  }
   return (
     <div className='card mdl-shadow--2dp'>
-      <div className='card__text' onClick={() => browserHistory.push('/playlists/' + id)}>
+      <div className='card__text' onClick={openPlaylist}>
         <h2 className='card__text-title'>{title}</h2>
         <p className='card__text-subtitle'></p>
       </div>

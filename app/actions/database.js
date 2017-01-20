@@ -65,6 +65,37 @@ export function getPlaylists (accessToken) {
   }
 }
 
+export function queuePlaylistItems (accessToken, playlistId, play) {
+  return dispatch => {
+    const getItems = (nextPage) => {
+      api.getPlaylistItems(accessToken, playlistId, nextPage)
+      .then(data => {
+        const { items, nextPageToken } = data
+
+        if (play && !nextPage && items.length > 0) {
+          dispatch({
+            type: 'PLAY',
+            data: items[0],
+            skip: true
+          })
+        }
+
+        dispatch({
+          type: 'QUEUE_PUSH_PLAYLIST',
+          playlistId,
+          data: items
+        })
+
+        if (nextPageToken) {
+          getItems(nextPageToken)
+        }
+      })
+      .catch(err => console.error(err))
+    }
+    getItems()
+  }
+}
+
 export function getPlaylistItems (accessToken, playlistId, play) {
   return dispatch => {
     const getItems = (nextPage) => {

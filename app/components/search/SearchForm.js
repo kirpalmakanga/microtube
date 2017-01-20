@@ -3,9 +3,9 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { getData } from '../../actions/database'
+import { searchVideos } from '../../actions/database'
 
-const SearchForm = ({ menu, dispatch }) => {
+const SearchForm = ({ menu, auth, dispatch }) => {
 
   function handleSearchFocus(e) {
     e.preventDefault()
@@ -21,11 +21,9 @@ const SearchForm = ({ menu, dispatch }) => {
     const query = e.target.querySelector('#search').value
     e.preventDefault()
 
-    dispatch(getData({
-      type: 'SEARCH_VIDEOS',
-      path: 'search/' + encodeURIComponent(query),
-      query
-    }))
+    console.log('query', query)
+
+    dispatch(searchVideos(auth.token, query))
   }
 
   return (
@@ -45,5 +43,6 @@ const SearchForm = ({ menu, dispatch }) => {
     </form>
   )
 }
+const mapStateToProps = ({ auth }) => ({ auth })
 
-export default connect()(SearchForm)
+export default connect(mapStateToProps)(SearchForm)

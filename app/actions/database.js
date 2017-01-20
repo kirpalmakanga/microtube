@@ -65,24 +65,25 @@ export function getPlaylists (accessToken) {
   }
 }
 
-export function getPlaylistItems (accessToken, playlistId, play) {
+export function queuePlaylistItems (accessToken, playlistId, play) {
   return dispatch => {
     const getItems = (nextPage) => {
       api.getPlaylistItems(accessToken, playlistId, nextPage)
       .then(data => {
-        const { nextPageToken } = data
+        const { items, nextPageToken } = data
 
-        if (play && !nextPage && data.length > 0) {
+        if (play && !nextPage && items.length > 0) {
           dispatch({
             type: 'PLAY',
-            data: data[0],
+            data: items[0],
             skip: true
           })
         }
 
         dispatch({
           type: 'QUEUE_PUSH_PLAYLIST',
-          data
+          playlistId,
+          data: items
         })
 
         if (nextPageToken) {
@@ -95,13 +96,45 @@ export function getPlaylistItems (accessToken, playlistId, play) {
   }
 }
 
-export function search (accessToken, query, pageToken) {
+export function getPlaylistItems (accessToken, playlistId, play) {
+  return dispatch => {
+    const getItems = (nextPage) => {
+      api.getPlaylistItems(accessToken, playlistId, nextPage)
+      .then(data => {
+        const { items, nextPageToken } = data
+
+        if (play && !nextPage && items.length > 0) {
+          dispatch({
+            type: 'PLAY',
+            data: items[0],
+            skip: true
+          })
+        }
+
+        dispatch({
+          type: 'QUEUE_PUSH_PLAYLIST',
+          playlistId,
+          data: items
+        })
+
+        if (nextPageToken) {
+          getItems(nextPageToken)
+        }
+      })
+      .catch(err => console.error(err))
+    }
+    getItems()
+  }
+}
+
+export function searchVideos (accessToken, query, pageToken) {
+  console.log('query', query)
   return dispatch => {
     dispatch({
       type: 'SEARCH_VIDEOS',
       query
     })
-    api.search(accessToken, terms, pageToken)
+    api.searchVideos(accessToken, query, pageToken)
     .then(data => {
       dispatch({
         type: 'SEARCH_VIDEOS_SUCCESS',

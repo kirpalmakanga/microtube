@@ -23,10 +23,10 @@ export default function getRoutes ({ dispatch }) {
   return (
     <Route path='/' component={App}>
       <IndexRoute component={Playlists} />
-      <Route path='/search' component={Search} onEnter={clearSearch}/>
-      <Route path='/playlists' component={Playlists} />
-      <Route path='/playlists/:id' component={PlaylistItems} onEnter={clearPlaylistItems} />
-      <Route path='*' component={NotFound} onLeave={clearNotifications} />
+      // <Route path='/search' component={Search} onEnter={clearSearch}/>
+      // <Route path='/playlists' component={Playlists} />
+      // <Route path='/playlists/:id' component={PlaylistItems} onEnter={clearPlaylistItems} />
+      // <Route path='*' component={NotFound} onLeave={clearNotifications} />
     </Route>
   )
 }

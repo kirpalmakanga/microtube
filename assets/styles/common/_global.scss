@@ -75,3 +75,20 @@ svg {
   top: 50%;
   transform: translateY(-50%);
 }
+
+.playlist-items,
+.search {
+  background-color: lighten($brand-primary, 20%);
+  @include transition();
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  transform: translateY(100%);
+  height: calc(100vh - 124px);
+  z-index: 1;
+}
+.playlist-items--show,
+.search--show {
+  transform: translateY(0);
+}

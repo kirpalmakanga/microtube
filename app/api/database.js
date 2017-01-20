@@ -19,7 +19,6 @@ function request(field, config) {
     loadApi()
     .then(youtube => {
       youtube[field].list(config).execute(response => {
-        console.log('response', response)
         if (response.error) {
           return reject(response.message)
         }
@@ -85,12 +84,13 @@ exports.getPlaylistItems = (accessToken, playlistId, pageToken = '') => {
   })
 }
 
-exports.search = (accessToken, terms, pageToken) => {
+exports.searchVideos = (accessToken, query, pageToken) => {
   return new Promise((resolve, reject) => {
     request('search', {
+      access_token: accessToken,
       part: 'snippet',
       type: 'video',
-      q: terms,
+      q: query,
       pageToken,
       key: apiKey,
       maxResults: 50,

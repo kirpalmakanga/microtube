@@ -25,6 +25,8 @@ const App = ({ location, children, notifications, auth, menu, dispatch }) => {
       </main>
 
       <Search />
+      
+      <PlaylistItems />
 
       <PlayerContainer />
 

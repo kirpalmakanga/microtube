@@ -28,19 +28,19 @@ const PlaylistItems = ({ auth, playlistItems, dispatch }) => {
 
   return (
     <div className={['playlist-items', playlistItems.isOpen ? 'playlist-items--show': ''].join(' ')}>
-    </div>
-    <div className='mdl-grid'>
-      {playlistItems.items.map((video, i) => (
-        <div key={i} className='mdl-cell mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--12-col'>
-          <VideoCard video={video} />
+      <div className='mdl-grid'>
+        {playlistItems.items.map((video, i) => (
+          <div key={i} className='mdl-cell mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--12-col'>
+            <VideoCard video={video} />
+          </div>
+        ))}
+
+        <div className={['mdl-grid__loading', playlistItems.isLoading === 1 ? 'is-active': ''].join(' ')}>
+          <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
         </div>
-      ))}
 
-      <div className={['mdl-grid__loading', playlistItems.isLoading === 1 ? 'is-active': ''].join(' ')}>
-        <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
+        {renderWaypoint()}
       </div>
-
-      {renderWaypoint()}
     </div>
   )
 }

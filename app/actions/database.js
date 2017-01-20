@@ -70,12 +70,12 @@ export function getPlaylistItems (accessToken, playlistId, play) {
     const getItems = (nextPage) => {
       api.getPlaylistItems(accessToken, playlistId, nextPage)
       .then(data => {
-        const { nextPageToken } = data
+        const { items, nextPageToken } = data
 
-        if (play && !nextPage && data.length > 0) {
+        if (play && !nextPage && items.length > 0) {
           dispatch({
             type: 'PLAY',
-            data: data[0],
+            data: items[0],
             skip: true
           })
         }
@@ -83,7 +83,7 @@ export function getPlaylistItems (accessToken, playlistId, play) {
         dispatch({
           type: 'QUEUE_PUSH_PLAYLIST',
           playlistId,
-          data
+          data: items
         })
 
         if (nextPageToken) {

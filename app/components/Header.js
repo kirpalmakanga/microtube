@@ -4,11 +4,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import cookie from 'react-cookie'
-import { IndexLink, Link, browserHistory } from 'react-router'
+import { IndexLink, Link } from 'react-router'
 import { logIn } from '../actions/database'
 import SearchForm from './search/SearchForm.js'
 
-const Header = ({ auth, playlists, player, pathName, dispatch }) => {
+const Header = ({ auth, playlists, player, search, pathName, dispatch }) => {
   const [ , path, pathId] = pathName.split('/')
 
   function getTitle() {
@@ -35,7 +35,6 @@ const Header = ({ auth, playlists, player, pathName, dispatch }) => {
   }
 
   function logOut() {
-    cookie.remove('ytltoken')
     dispatch({
       type: 'UNLINK'
     })
@@ -51,12 +50,22 @@ const Header = ({ auth, playlists, player, pathName, dispatch }) => {
     }
   }
 
+  function openSearch() {
+    closePanels()
+
+    dispatch({ type: 'SEARCH_OPEN' })
+  }
+
+  function closeSearch() {
+    dispatch({ type: 'SEARCH_CLOSE' })
+  }
+
   return (
     <header className='mdl-layout__header'>
-      {pathName === '/search' ? (
+      {search.isOpen ? (
         <div className='mdl-layout__header-row'>
           <button tabIndex='0' className='mdl-layout__drawer-button'
-            onClick={browserHistory ? browserHistory.goBack : () => false}
+            onClick={closeSearch}
           >
               <svg><use xlinkHref='#icon-back'></use></svg>
           </button>
@@ -74,9 +83,9 @@ const Header = ({ auth, playlists, player, pathName, dispatch }) => {
 
           <div className='mdl-layout-spacer'></div>
           <nav className='mdl-navigation'>
-            <Link className='mdl-navigation__link' to='/search' onClick={closePanels}>
+            <button className='mdl-navigation__link' onClick={openSearch}>
               <svg><use xlinkHref='#icon-search'></use></svg>
-            </Link>
+            </button>
 
             <button className='mdl-navigation__link' onClick={isAuthenticated() ? logOut : () => dispatch(logIn()) }>
               {isAuthenticated() ? (
@@ -91,6 +100,6 @@ const Header = ({ auth, playlists, player, pathName, dispatch }) => {
     </header>
   )
 }
-const mapStateToProps = ({ auth, playlists, player }) => ({ auth, playlists, player })
+const mapStateToProps = ({ auth, playlists, player, search }) => ({ auth, playlists, player, search })
 
 export default connect(mapStateToProps)(Header)

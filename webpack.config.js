@@ -14,7 +14,6 @@ const config = {
     publicPath: './public/'
   },
   entry: [
-    'webpack-hot-middleware/client',
     './app/main'
   ],
   output: {

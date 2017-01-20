@@ -6,8 +6,8 @@ import VideoCard from './VideoCard'
 import Waypoint from 'react-waypoint'
 import { connect } from 'react-redux'
 
-const PlaylistItems = ({ auth, playlistItems, params, dispatch }) => {
-  const playlistId = params.id
+const PlaylistItems = ({ auth, playlistItems, dispatch }) => {
+  const playlistId = playlistItems.playlistId
   const nextPage = playlistItems.pages[playlistItems.pages.length - 1] || ''
 
   console.log('playlistItems', playlistItems)

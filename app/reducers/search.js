@@ -1,6 +1,7 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 const initialState = {
+  isOpen: false,
   items: [],
   pages: [],
   isLoading: 0,
@@ -10,6 +11,12 @@ const initialState = {
 
 export default function(state = initialState, action) {
   switch (action.type) {
+    case 'SEARCH_OPEN':
+      return Object.assign({}, state, { isOpen: true })
+
+    case 'SEARCH_CLOSE':
+      return Object.assign({}, state, initialState)
+
     case 'SEARCH_VIDEOS':
       let newQuery = state.query !== action.query
       return Object.assign({}, state, {

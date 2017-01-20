@@ -82,6 +82,7 @@ export function getPlaylistItems (accessToken, playlistId, play) {
 
         dispatch({
           type: 'QUEUE_PUSH_PLAYLIST',
+          playlistId,
           data
         })
 
@@ -95,13 +96,14 @@ export function getPlaylistItems (accessToken, playlistId, play) {
   }
 }
 
-export function search (accessToken, query, pageToken) {
+export function searchVideos (accessToken, query, pageToken) {
+  console.log('query', query)
   return dispatch => {
     dispatch({
       type: 'SEARCH_VIDEOS',
       query
     })
-    api.search(accessToken, terms, pageToken)
+    api.searchVideos(accessToken, query, pageToken)
     .then(data => {
       dispatch({
         type: 'SEARCH_VIDEOS_SUCCESS',

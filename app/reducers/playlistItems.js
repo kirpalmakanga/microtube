@@ -1,6 +1,7 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 const initialState = {
+  playlistId: 0,
   items: [],
   pages: [],
   isLoading: 0,
@@ -24,6 +25,7 @@ export default function(state = initialState, action) {
 
       if (isNewToken) {
         return Object.assign({}, state, {
+          playlistId: action.playlistId,
           items: [...state.items, ...items],
           pages: [...state.pages, nextPageToken],
           isLoading: typeof nextPageToken === 'undefined' ? 2 : 0,

@@ -11,7 +11,8 @@ const config = {
   devServer: {
     outputPath: path.join(__dirname, 'public'),
     noInfo: true,
-    publicPath: './public/'
+    publicPath: './public/',
+    contentBase: './public'
   },
   entry: [
     './app/main.js'

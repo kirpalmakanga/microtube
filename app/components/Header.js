@@ -8,26 +8,10 @@ import { IndexLink, Link } from 'react-router'
 import { logIn } from '../actions/database'
 import SearchForm from './search/SearchForm.js'
 
-const Header = ({ auth, playlists, player, search, pathName, dispatch }) => {
-  const [ , path, pathId] = pathName.split('/')
+const Header = ({ auth, playlists, playlistItems, player, search, dispatch }) => {
 
   function getTitle() {
-    function getPlaylistTitle(playlistId) {
-      const item = playlists.items.find(({ id }) => id === playlistId)
-
-      return item ? item.title : 'Playlists'
-    }
-
-    switch (path) {
-      case 'search':
-        return 'Search';
-
-      case 'playlists':
-        return getPlaylistTitle(pathId)
-
-      default:
-        return 'Youtube Lite'
-    }
+    return playlistItems.isOpen ? playlistItems.title : 'Youtube Lite'
   }
 
   function isAuthenticated () {
@@ -60,6 +44,10 @@ const Header = ({ auth, playlists, player, search, pathName, dispatch }) => {
     dispatch({ type: 'SEARCH_CLOSE' })
   }
 
+  function openPlaylist() {
+    dispatch({ type: 'PLAYLIST_CLOSE' })
+  }
+
   return (
     <header className='mdl-layout__header'>
       {search.isOpen ? (
@@ -73,10 +61,10 @@ const Header = ({ auth, playlists, player, search, pathName, dispatch }) => {
         </div>
       ) : (
         <div className='mdl-layout__header-row'>
-          {pathId ? (
-            <Link className='mdl-layout__drawer-button' to='/'>
+          {playlistItems.isOpen ? (
+            <button className='mdl-layout__drawer-button' onClick={openPlaylist}>
               <svg><use xlinkHref='#icon-back'></use></svg>
-            </Link>
+            </button>
           ) : null}
 
           <span className='mdl-layout-title'>{getTitle()}</span>
@@ -100,6 +88,6 @@ const Header = ({ auth, playlists, player, search, pathName, dispatch }) => {
     </header>
   )
 }
-const mapStateToProps = ({ auth, playlists, player, search }) => ({ auth, playlists, player, search })
+const mapStateToProps = ({ auth, playlists, playlistItems, player, search }) => ({ auth, playlists, playlistItems, player, search })
 
 export default connect(mapStateToProps)(Header)

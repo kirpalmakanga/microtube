@@ -3,15 +3,17 @@
 import React from 'react'
 import { Link, browserHistory } from 'react-router'
 import { connect } from 'react-redux'
-import { queuePlaylistItems } from '../../actions/database'
+import { getPlaylistItems, queuePlaylistItems } from '../../actions/database'
 
 const PlaylistCard = ({ auth, id, title, dispatch }) => {
   function openPlaylist() {
     dispatch({
       type: 'PLAYLIST_OPEN',
-      playlistId: id
+      title
     })
+    dispatch(getPlaylistItems(auth.token, id))
   }
+
   return (
     <div className='card mdl-shadow--2dp'>
       <div className='card__text' onClick={openPlaylist}>

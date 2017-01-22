@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 
 const VideoCard = ({ video, dispatch }) => {
-  console.log('video', video)
   const { videoId, title, publishedAt } = video
 
   return (

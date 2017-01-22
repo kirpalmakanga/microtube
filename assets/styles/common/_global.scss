@@ -87,6 +87,11 @@ svg {
   transform: translateY(100%);
   height: calc(100vh - 124px);
   z-index: 1;
+
+  .mdl-grid {
+    height: 100%;
+    overflow-y: auto;
+  }
 }
 .playlist-items--show,
 .search--show {

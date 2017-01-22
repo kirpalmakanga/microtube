@@ -3,6 +3,7 @@
 const initialState = {
   isOpen: false,
   playlistId: 0,
+  playlistTitle: '',
   items: [],
   pages: [],
   isLoading: 0,
@@ -12,7 +13,10 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case 'PLAYLIST_OPEN':
-      return Object.assign({}, state, { isOpen: true })
+      return Object.assign({}, state, {
+        isOpen: true,
+        title: action.title
+      })
 
     case 'PLAYLIST_CLOSE':
       return Object.assign({}, state, initialState)

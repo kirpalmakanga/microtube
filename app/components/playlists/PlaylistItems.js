@@ -10,22 +10,6 @@ const PlaylistItems = ({ auth, playlistItems, dispatch }) => {
   const playlistId = playlistItems.playlistId
   const nextPage = playlistItems.pages[playlistItems.pages.length - 1] || ''
 
-  console.log('playlistItems', playlistItems)
-
-  function loadMoreContent () {
-    dispatch(getPlaylistItems(auth.token, playlistId))
-  }
-
-  function renderWaypoint() {
-    if (playlistItems.isLoading !== 2) {
-      return (
-        <Waypoint
-          onEnter={loadMoreContent}
-        />
-      )
-    }
-  }
-
   return (
     <div className={['playlist-items', playlistItems.isOpen ? 'playlist-items--show': ''].join(' ')}>
       <div className='mdl-grid'>
@@ -38,8 +22,6 @@ const PlaylistItems = ({ auth, playlistItems, dispatch }) => {
         <div className={['mdl-grid__loading', playlistItems.isLoading === 1 ? 'is-active': ''].join(' ')}>
           <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
         </div>
-
-        {renderWaypoint()}
       </div>
     </div>
   )

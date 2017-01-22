@@ -81,7 +81,7 @@ export function queuePlaylistItems (accessToken, playlistId, play) {
         }
 
         dispatch({
-          type: 'QUEUE_PUSH_PLAYLIST',
+          type: 'QUEUE_PUSH_PLAYLISTS',
           playlistId,
           data: items
         })
@@ -92,29 +92,21 @@ export function queuePlaylistItems (accessToken, playlistId, play) {
       })
       .catch(err => console.error(err))
     }
+
     getItems()
   }
 }
 
-export function getPlaylistItems (accessToken, playlistId, play) {
+export function getPlaylistItems (accessToken, playlistId) {
   return dispatch => {
     const getItems = (nextPage) => {
       api.getPlaylistItems(accessToken, playlistId, nextPage)
       .then(data => {
-        const { items, nextPageToken } = data
-
-        if (play && !nextPage && items.length > 0) {
-          dispatch({
-            type: 'PLAY',
-            data: items[0],
-            skip: true
-          })
-        }
+        const { nextPageToken } = data
 
         dispatch({
-          type: 'QUEUE_PUSH_PLAYLIST',
-          playlistId,
-          data: items
+          type: 'GET_PLAYLIST_ITEMS_SUCCESS',
+          data
         })
 
         if (nextPageToken) {
@@ -123,6 +115,7 @@ export function getPlaylistItems (accessToken, playlistId, play) {
       })
       .catch(err => console.error(err))
     }
+    dispatch({ type: 'GET_PLAYLIST_ITEMS' })
     getItems()
   }
 }

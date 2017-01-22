@@ -14,12 +14,12 @@ const config = {
     publicPath: './public/'
   },
   entry: [
-    './app/main'
+    './app/main.js'
   ],
   output: {
     path: path.join(__dirname, 'public'),
-    filename: 'app.js',
-    publicPath: './public/'
+    publicPath: './public/',
+    filename: 'app.js'
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),

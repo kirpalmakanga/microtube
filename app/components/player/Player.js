@@ -4,6 +4,7 @@
 import React from 'react'
 import moment from 'moment'
 import { connect } from 'react-redux'
+import { setTabTitle } from '../../lib/tab.js'
 
 function getPlayerTime(time) {
   let hours, minutes, seconds
@@ -58,6 +59,8 @@ const Player = ({ player, dispatch }) => {
           className='mdl-player__controls-button'
           onClick={() => {
             if(previousVideo) {
+              setTabTitle(previousVideo.title)
+
               dispatch({ type: 'CLEAR_WATCHERS' })
 
               dispatch({
@@ -104,6 +107,8 @@ const Player = ({ player, dispatch }) => {
           className='mdl-player__controls-button'
           onClick={() => {
             if(nextVideo) {
+              setTabTitle(nextVideo.title)
+
               dispatch({ type: 'CLEAR_WATCHERS' })
 
               dispatch({

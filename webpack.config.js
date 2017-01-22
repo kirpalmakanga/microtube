@@ -6,6 +6,10 @@ const webpack = require('webpack')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
+const packageJSON = require('./package.json')
+
+console.log(Object.keys(packageJSON.dependencies))
+
 const config = {
   devtool: 'cheap-module-eval-source-map',
   devServer: {
@@ -44,6 +48,7 @@ const config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
+        // include: Object.keys(packageJSON.dependencies),
         loaders: ['react-hot', 'babel-loader']
       },
       {

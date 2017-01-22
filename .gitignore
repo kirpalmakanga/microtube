@@ -24,9 +24,3 @@ node_modules
 # OS metadata
 .DS_Store
 Thumbs.db
-
-public/*.eot
-public/*.woff
-public/*.ttf
-public/*.css
-public/*.js

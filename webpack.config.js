@@ -8,8 +8,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const packageJSON = require('./package.json')
 
-console.log(Object.keys(packageJSON.dependencies))
-
 const config = {
   devtool: 'cheap-module-eval-source-map',
   devServer: {

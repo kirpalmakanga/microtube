@@ -1,10 +1,7 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 
-import React from 'react'
-
-import connect from 'react-redux/lib/components/connect'
-import moment from 'moment'
+const { connect } = ReactRedux
 
 const VideoCard = ({ video, dispatch }) => {
   const { videoId, title, publishedAt } = video

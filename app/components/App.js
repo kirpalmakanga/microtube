@@ -3,7 +3,7 @@
 
 require('../../assets/styles/app.scss')
 
-import React from 'react'
+
 
 import Header from './Header'
 import PlayerContainer from './player/PlayerContainer'
@@ -13,7 +13,7 @@ import Search from './search/Search'
 import PlaylistItems from './playlists/PlaylistItems'
 import cookie from 'react-cookie'
 
-import connect from 'react-redux/lib/components/connect'
+const { connect } = ReactRedux
 
 const App = ({ children, notifications, auth, menu, player, dispatch }) => {
   return (
@@ -24,9 +24,9 @@ const App = ({ children, notifications, auth, menu, player, dispatch }) => {
         {auth.token ? children : null}
       </main>
 
-      <Search />
-
       <PlaylistItems />
+
+      <Search />
 
       <PlayerContainer />
 

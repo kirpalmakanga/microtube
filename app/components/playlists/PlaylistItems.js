@@ -1,12 +1,12 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 
-import React from 'react'
+
 
 import { getPlaylistItems } from '../../actions/database'
 import VideoCard from './VideoCard'
 import Waypoint from 'react-waypoint'
-import connect from 'react-redux/lib/components/connect'
+const { connect } = ReactRedux
 
 const PlaylistItems = ({ auth, playlistItems, dispatch }) => {
   const playlistId = playlistItems.playlistId

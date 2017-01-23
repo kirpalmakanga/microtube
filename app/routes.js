@@ -1,8 +1,6 @@
 // jshint esversion: 6, asi:true
 // eslint-env es6
 
-import React from 'react'
-
 import { IndexRoute, Route } from 'react-router'
 import App from './components/App'
 import Playlists from './components/playlists/Playlists'

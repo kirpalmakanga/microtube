@@ -1,10 +1,11 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 
-import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 import persistState from 'redux-localstorage'
 import rootReducer from '../reducers'
+
+const { applyMiddleware, compose, createStore } = Redux
 
 const hasStorage = (() => {
 	var uid = new Date

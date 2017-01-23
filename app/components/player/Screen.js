@@ -1,10 +1,10 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 
-import React from 'react'
+
 
 import YoutubePlayer from 'react-youtube'
-import connect from 'react-redux/lib/components/connect'
+const { connect } = ReactRedux
 
 function getTimeWatcher(yt, dispatch) {
   const duration = yt.getDuration()

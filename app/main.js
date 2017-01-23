@@ -9,9 +9,12 @@ import getRoutes from './routes'
 
 const store = configureStore(window.INITIAL_STATE)
 
-ReactDOM.render(
-  <Provider store={store}>
-    <Router history={browserHistory} routes={getRoutes(store)} />
-  </Provider>,
-  document.querySelector('.app')
-)
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.app-loader').classList.remove('app-loader--active')
+  ReactDOM.render(
+    <Provider store={store}>
+      <Router history={browserHistory} routes={getRoutes(store)} />
+    </Provider>,
+    document.querySelector('.app')
+  )
+})

@@ -66,6 +66,34 @@ svg {
   border-left: 15px solid lighten($brand-primary, 40%);
 }
 
+.app-loader {
+  position: fixed;
+  z-index: 7;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: $brand-primary;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  visibility: hidden;
+
+  svg {
+    fill: $brand-secondary;
+    height: 50px;
+    width: 50px;
+  }
+}
+
+.app-loader--active {
+  opacity: 1;
+  visibility: visible;
+}
+
 .mdl-snackbar {
   z-index: 5;
 }

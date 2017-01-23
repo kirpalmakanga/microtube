@@ -15,17 +15,17 @@ import cookie from 'react-cookie'
 
 import { connect } from 'react-redux'
 
-const App = ({ location, children, notifications, auth, menu, dispatch }) => {
+const App = ({ children, notifications, auth, menu, player, dispatch }) => {
   return (
     <div className='mdl-layout'>
-      <Header pathName={location.pathname} />
+      <Header />
 
       <main className='mdl-layout__content'>
         {auth.token ? children : null}
       </main>
 
       <Search />
-      
+
       <PlaylistItems />
 
       <PlayerContainer />
@@ -37,6 +37,6 @@ const App = ({ location, children, notifications, auth, menu, dispatch }) => {
   )
 }
 
-const mapStateToProps = ({ auth, menu, notifications }) => ({ auth, menu, notifications })
+const mapStateToProps = ({ auth, menu, player, notifications }) => ({ auth, menu, player, notifications })
 
 export default connect(mapStateToProps)(App)

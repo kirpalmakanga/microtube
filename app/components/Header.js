@@ -44,7 +44,11 @@ const Header = ({ auth, playlists, playlistItems, player, search, dispatch }) =>
     dispatch({ type: 'SEARCH_CLOSE' })
   }
 
-  function openPlaylist() {
+  function closeQueue() {
+    dispatch({ type: 'QUEUE_CLOSE' })
+  }
+
+  function closePlaylist() {
     dispatch({ type: 'PLAYLIST_CLOSE' })
   }
 
@@ -59,10 +63,34 @@ const Header = ({ auth, playlists, playlistItems, player, search, dispatch }) =>
           </button>
           <SearchForm />
         </div>
-      ) : (
+      ) : player.showQueue ? (
         <div className='mdl-layout__header-row'>
-          {playlistItems.isOpen ? (
-            <button className='mdl-layout__drawer-button' onClick={openPlaylist}>
+          <button tabIndex='0' className='mdl-layout__drawer-button'
+            onClick={closeQueue}
+          >
+              <svg><use xlinkHref='#icon-back'></use></svg>
+          </button>
+          <span className='mdl-layout-title'>{'Queue (' + player.queue.length + ' Elements)'}</span>
+          <div className='mdl-layout-spacer'></div>
+          <nav className='mdl-navigation'>
+            <button className='mdl-navigation__link' onClick={() => {
+              dispatch({
+                type: 'PROMPT_CLEAR_QUEUE',
+                callback: () => {
+                  dispatch({ type: 'QUEUE_CLEAR' })
+                  dispatch({ type: 'PROMPT_CLOSE' })
+                }
+              })
+            }}>
+              <svg><use xlinkHref='#icon-clear'></use></svg>
+            </button>
+          </nav>
+        </div>
+      ) : (
+
+        <div className='mdl-layout__header-row'>
+          {playlistItems.isOpen || player.showQueue ? (
+            <button className='mdl-layout__drawer-button' onClick={closePlaylist}>
               <svg><use xlinkHref='#icon-back'></use></svg>
             </button>
           ) : null}

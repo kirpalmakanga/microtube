@@ -1,7 +1,6 @@
 .queue {
     overflow-y: scroll;
     z-index: 3;
-    top: 0;
 
     @media screen and (min-width: 1024px) {
       height: calc(100vh - 60px);

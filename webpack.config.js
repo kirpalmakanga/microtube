@@ -5,12 +5,14 @@ const path = require('path')
 const webpack = require('webpack')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const CompressionPlugin = require('compression-webpack-plugin')
 
 const packageJSON = require('./package.json')
 
 const config = {
   devtool: 'cheap-module-eval-source-map',
   devServer: {
+    hot: true,
     outputPath: path.join(__dirname, 'public'),
     noInfo: true,
     publicPath: './public/',
@@ -25,6 +27,9 @@ const config = {
     filename: 'app.js'
   },
   plugins: [
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
@@ -59,18 +64,6 @@ const config = {
       }
     ]
   }
-}
-
-if (process.env.ENVIRONMENT === 'PRODUCTION') {
-  config.plugins.push(
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        screw_ie8: true,
-        warnings: false
-      }
-    })
-  )
 }
 
 module.exports = config

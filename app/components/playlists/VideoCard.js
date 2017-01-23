@@ -4,7 +4,6 @@ import React from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import moment from 'moment'
-import { setTabTitle } from '../../lib/tab.js'
 
 const VideoCard = ({ video, dispatch }) => {
   const { videoId, title, publishedAt } = video
@@ -29,8 +28,6 @@ const VideoCard = ({ video, dispatch }) => {
       <button
         className='card__button'
         onClick={() => {
-          setTabTitle(video.title)
-          
           dispatch({ type: 'CLEAR_WATCHERS' })
 
           dispatch({

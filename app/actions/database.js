@@ -2,7 +2,6 @@
 // eslint-env es6
 
 import api from '../api/database.js'
-import { setTabTitle } from '../lib/tab.js'
 
 export function getPlaylists (accessToken) {
   return dispatch => {
@@ -35,8 +34,6 @@ export function queuePlaylistItems (accessToken, playlistId, play) {
         const { items, nextPageToken } = data
 
         if (play && !nextPage && items.length > 0) {
-          setTabTitle(items[0].title)
-
           dispatch({
             type: 'PLAY',
             data: items[0],

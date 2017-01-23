@@ -1,10 +1,10 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
-import React from 'react'
-import YoutubePlayer from 'react-youtube'
-import { connect } from 'react-redux'
 
-import { setTabTitle } from '../../lib/tab.js'
+import React from 'react'
+
+import YoutubePlayer from 'react-youtube'
+import connect from 'react-redux/lib/components/connect'
 
 function getTimeWatcher(yt, dispatch) {
   const duration = yt.getDuration()
@@ -100,15 +100,11 @@ const Screen = ({ player, dispatch }) => {
               }}
               onEnd={() => {
                 if (nextVideo) {
-                  setTabTitle(nextVideo.title)
-
                   dispatch({
                     type: 'PLAY',
                     data: nextVideo,
                     skip: true
                   })
-                } else {
-                  setTabTitle()
                 }
               }}
               onStateChange={({data, target}) => {

@@ -2,9 +2,10 @@
 // eslint-env es6
 
 import React from 'react'
+
 import moment from 'moment'
-import { connect } from 'react-redux'
-import { setTabTitle } from '../../lib/tab.js'
+import DocumentTitle from 'react-document-title'
+import connect from 'react-redux/lib/components/connect'
 
 function getPlayerTime(time) {
   let hours, minutes, seconds
@@ -59,7 +60,6 @@ const Player = ({ player, dispatch }) => {
           className='mdl-player__controls-button'
           onClick={() => {
             if(previousVideo) {
-              setTabTitle(previousVideo.title)
 
               dispatch({ type: 'CLEAR_WATCHERS' })
 
@@ -107,8 +107,6 @@ const Player = ({ player, dispatch }) => {
           className='mdl-player__controls-button'
           onClick={() => {
             if(nextVideo) {
-              setTabTitle(nextVideo.title)
-
               dispatch({ type: 'CLEAR_WATCHERS' })
 
               dispatch({
@@ -131,7 +129,11 @@ const Player = ({ player, dispatch }) => {
           </div>
         </div>
 
-        <div className='mdl-player__info-title'>{player.video.title || 'No video.'}</div>
+        <DocumentTitle title={player.video.title || 'Youtube Lite'}>
+          <div className='mdl-player__info-title'>
+            {player.video.title || 'No video.'}
+          </div>
+        </DocumentTitle>
 
         <div className='mdl-player__info-time'>
           <span>{getPlayerTime(currentTime) || '00:00:00'}</span>

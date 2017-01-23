@@ -2,7 +2,8 @@
 // eslint-env es6
 
 import React from 'react'
-import { connect } from 'react-redux'
+
+import connect from 'react-redux/lib/components/connect'
 import { searchVideos } from '../../actions/database'
 
 const SearchForm = ({ menu, auth, dispatch }) => {

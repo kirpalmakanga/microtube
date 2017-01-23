@@ -2,9 +2,9 @@
 // eslint-env es6
 
 import React from 'react'
-import { connect } from 'react-redux'
+
+import connect from 'react-redux/lib/components/connect'
 import cookie from 'react-cookie'
-import { IndexLink, Link } from 'react-router'
 import { logIn } from '../actions/auth'
 import SearchForm from './search/SearchForm.js'
 
@@ -56,7 +56,8 @@ const Header = ({ auth, playlists, playlistItems, player, search, dispatch }) =>
     <header className='mdl-layout__header'>
       {search.isOpen ? (
         <div className='mdl-layout__header-row'>
-          <button tabIndex='0' className='mdl-layout__drawer-button'
+          <button
+            className='mdl-layout__drawer-button'
             onClick={closeSearch}
           >
               <svg><use xlinkHref='#icon-back'></use></svg>
@@ -65,7 +66,8 @@ const Header = ({ auth, playlists, playlistItems, player, search, dispatch }) =>
         </div>
       ) : player.showQueue ? (
         <div className='mdl-layout__header-row'>
-          <button tabIndex='0' className='mdl-layout__drawer-button'
+          <button
+            className='mdl-layout__drawer-button'
             onClick={closeQueue}
           >
               <svg><use xlinkHref='#icon-back'></use></svg>
@@ -90,7 +92,10 @@ const Header = ({ auth, playlists, playlistItems, player, search, dispatch }) =>
 
         <div className='mdl-layout__header-row'>
           {playlistItems.isOpen || player.showQueue ? (
-            <button className='mdl-layout__drawer-button' onClick={closePlaylist}>
+            <button
+              className='mdl-layout__drawer-button'
+              onClick={closePlaylist}
+            >
               <svg><use xlinkHref='#icon-back'></use></svg>
             </button>
           ) : null}

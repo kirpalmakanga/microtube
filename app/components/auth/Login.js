@@ -2,7 +2,8 @@
 // eslint-env es6
 
 import React from 'react'
-import Notification from './Notification'
+
+import connect from 'react-redux/lib/components/connect'
 
 const Login = ({ auth }) => {
   return (

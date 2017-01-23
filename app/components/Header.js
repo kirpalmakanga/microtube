@@ -1,9 +1,9 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 
-import React from 'react'
 
-import connect from 'react-redux/lib/components/connect'
+
+const { connect } = ReactRedux
 import cookie from 'react-cookie'
 import { logIn } from '../actions/auth'
 import SearchForm from './search/SearchForm.js'

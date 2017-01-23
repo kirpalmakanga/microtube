@@ -1,11 +1,8 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 
-import React from 'react'
-
-import moment from 'moment'
 import DocumentTitle from 'react-document-title'
-import connect from 'react-redux/lib/components/connect'
+const { connect } = ReactRedux
 
 function getPlayerTime(time) {
   let hours, minutes, seconds

@@ -234,5 +234,8 @@
     left: 0;
     right: 0;
     transform: translateY(100%);
-    height: calc(100vh - 124px);
+    @media screen and (min-width: 1024px) {
+      height: calc(100vh - 124px);
+      bottom: 60px;
+    }
 }

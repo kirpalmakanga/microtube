@@ -2,6 +2,7 @@
 // eslint-env es6
 
 import firebase from 'firebase'
+
 const app = firebase.initializeApp({
   apiKey: 'AIzaSyCLDBo0aNwTTOp6yQMaD9b4mQX4B_rT2NE',
   authDomain: 'youtube-lite-react.firebaseapp.com',

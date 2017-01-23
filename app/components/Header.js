@@ -2,9 +2,9 @@
 // eslint-env es6
 
 import React from 'react'
-import { connect } from 'react-redux'
+
+import connect from 'react-redux/lib/components/connect'
 import cookie from 'react-cookie'
-import { IndexLink, Link } from 'react-router'
 import { logIn } from '../actions/auth'
 import SearchForm from './search/SearchForm.js'
 

@@ -1,10 +1,12 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
+
 import React from 'react'
+
 import { searchVideos } from '../../actions/database'
 import VideoCard from '../playlists/VideoCard'
 import Waypoint from 'react-waypoint'
-import { connect } from 'react-redux'
+import connect from 'react-redux/lib/components/connect'
 
 const Search = ({ auth, search, dispatch }) => {
   const nextPage = search.pages[search.pages.length - 1] || ''

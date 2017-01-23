@@ -1,8 +1,9 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
+
 import React from 'react'
-import { Link, browserHistory } from 'react-router'
-import { connect } from 'react-redux'
+
+import connect from 'react-redux/lib/components/connect'
 import { getPlaylistItems, queuePlaylistItems } from '../../actions/database'
 
 const PlaylistCard = ({ auth, id, title, dispatch }) => {

@@ -2,6 +2,7 @@
 // eslint-env es6
 
 import React from 'react'
+
 import Notification from './Notification'
 
 const Notifications = ({ notifications }) => {

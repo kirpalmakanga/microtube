@@ -6,6 +6,8 @@ const webpack = require('webpack')
 const WriteFilePlugin = require('write-file-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 
 const packageJSON = require('./package.json')
 
@@ -27,6 +29,13 @@ const config = {
     filename: 'app.js'
   },
   plugins: [
+    new LodashModuleReplacementPlugin({
+      'collections': true,
+      'paths': true
+    }),
+    // new BundleAnalyzerPlugin(),
+    new webpack.IgnorePlugin(/^\.\/lang$/, /moment$/),
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),
@@ -51,8 +60,11 @@ const config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        // include: Object.keys(packageJSON.dependencies),
-        loaders: ['react-hot', 'babel-loader']
+        loader: 'babel',
+        query: {
+          plugins: ['lodash'],
+          presets: ['es2015']
+        }
       },
       {
         test: /\.scss$/,

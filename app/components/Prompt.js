@@ -2,9 +2,10 @@
 // eslint-env es6
 
 import React from 'react'
-import { connect } from 'react-redux'
 
-const Modal = ({ prompt, dispatch }) => {
+import connect from 'react-redux/lib/components/connect'
+
+const Prompt = ({ prompt, dispatch }) => {
   const { isVisible, promptText, confirmText, cancelText, callback } = prompt
 
   return (
@@ -22,4 +23,4 @@ const Modal = ({ prompt, dispatch }) => {
 
 const mapStateToProps = ({ prompt }) => ({ prompt })
 
-export default connect(mapStateToProps)(Modal)
+export default connect(mapStateToProps)(Prompt)

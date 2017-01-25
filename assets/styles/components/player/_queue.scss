@@ -2,11 +2,6 @@
     overflow-y: scroll;
     z-index: 3;
 
-    @media screen and (min-width: 1024px) {
-      height: calc(100vh - 60px);
-      bottom: 60px;
-    }
-
     &.queue--show {
         transform: translate(0);
     }

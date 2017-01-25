@@ -15,8 +15,7 @@
     "array.prototype.move": "0.0.3",
     "firebase": "^3.6.6",
     "material-design-lite": "^1.2.0",
-    "moment": "^2.14.1",
-    "react": "15.1.0",
+    "react": "^15.4.2",
     "react-cookie": "^0.4.8",
     "react-document-title": "^2.0.2",
     "react-dom": "15.1.0",
@@ -27,7 +26,6 @@
     "react-waypoint": "^3.1.1",
     "react-youtube": "7.2.0",
     "redbox-react": "^1.2.4",
-    "redux": "^3.3.1",
     "redux-localstorage": "^0.4.1",
     "redux-thunk": "^2.0.1"
   },

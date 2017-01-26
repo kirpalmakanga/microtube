@@ -119,7 +119,7 @@ export default function(state = initialState, action) {
       return Object.assign({}, state, { queue })
 
     case 'QUEUE_CLEAR':
-      return Object.assign({}, state, { queue: [] })
+      return Object.assign({}, state, { queue: [action.currentVideo] })
 
     case 'OPEN_VOLUME':
       return Object.assign({}, state, { showVolume: true })

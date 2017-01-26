@@ -91,7 +91,10 @@ const Header = ({ auth, playlists, playlistItems, player, search, dispatch }) =>
               dispatch({
                 type: 'PROMPT_CLEAR_QUEUE',
                 callback: () => {
-                  dispatch({ type: 'QUEUE_CLEAR' })
+                  dispatch({
+                    type: 'QUEUE_CLEAR',
+                    currentVideo: player.video
+                  })
                   dispatch({ type: 'PROMPT_CLOSE' })
                 }
               })

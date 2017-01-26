@@ -11,11 +11,7 @@ const initialState = {
   showVolume: false,
   isMuted: false,
   volume: 100,
-  video: {
-    resourceId: {
-      videoId: ''
-    }
-  },
+  video: {},
   loaded: 0,
   currentTime: 0,
   duration: 0,
@@ -119,7 +115,7 @@ export default function(state = initialState, action) {
       return Object.assign({}, state, { queue })
 
     case 'QUEUE_CLEAR':
-      return Object.assign({}, state, { queue: [] })
+      return Object.assign({}, state, { queue: [action.currentVideo] })
 
     case 'OPEN_VOLUME':
       return Object.assign({}, state, { showVolume: true })

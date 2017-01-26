@@ -82,7 +82,6 @@ export function getPlaylistItems (accessToken, playlistId) {
 }
 
 export function searchVideos (accessToken, query, pageToken) {
-  console.log('query', query)
   return dispatch => {
     dispatch({
       type: 'SEARCH_VIDEOS',
@@ -93,6 +92,19 @@ export function searchVideos (accessToken, query, pageToken) {
       dispatch({
         type: 'SEARCH_VIDEOS_SUCCESS',
         data
+      })
+    })
+    .catch(err => console.error(err))
+  }
+}
+
+export function getVideo (accessToken, urlOrId) {
+  return dispatch => {
+    api.getVideo(accessToken, urlOrId)
+    .then(video => {
+      dispatch({
+        type: 'QUEUE_PUSH',
+        data: video
       })
     })
     .catch(err => console.error(err))

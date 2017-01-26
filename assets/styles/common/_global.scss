@@ -102,6 +102,10 @@ svg {
   z-index: 6;
   top: 50%;
   transform: translateY(-50%);
+  .mdl-textfield {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
 }
 
 .playlist-items,

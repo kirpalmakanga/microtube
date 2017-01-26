@@ -11,8 +11,6 @@ const { connect } = ReactRedux
 const Playlists = ({ auth, playlists, dispatch }) => {
   const nextPage = playlists.pages[playlists.pages.length - 1] || ''
 
-  console.log('access token', auth.token)
-
   function loadMoreContent () {
     dispatch(getPlaylists(auth.token))
   }

@@ -2,12 +2,9 @@
 // eslint-env es6
 
 const apiKey = 'AIzaSyCLDBo0aNwTTOp6yQMaD9b4mQX4B_rT2NE'
-const OAUTH2_CLIENT_ID = '440745412600-snpeajuh0l9tqfrt356mec6j3mdn8eoo.apps.googleusercontent.com'
-const OAUTH2_SCOPES = ['https://www.googleapis.com/auth/youtube']
 
 function loadApi() {
   return new Promise((resolve, reject) => {
-    gapi.client.setApiKey(apiKey)
     gapi.client.load('youtube', 'v3', function() {
       resolve(gapi.client.youtube)
     })
@@ -105,6 +102,43 @@ exports.searchVideos = (accessToken, query, pageToken) => {
         })),
         nextPageToken,
         totalResults: pageInfo.totalResults
+      })
+    }).catch(message => {
+
+    })
+  })
+}
+
+exports.getVideo = (accessToken, urlOrId) => {
+
+  function getYouTubeID(url){
+    var ID = ''
+    url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/)
+    if(url[2] !== undefined) {
+      ID = url[2].split(/[^0-9a-z_\-]/i)
+      ID = ID[0]
+    }
+    else {
+      ID = url.toString()
+    }
+    return ID
+  }
+
+  return new Promise((resolve, reject) => {
+    request('videos', {
+      access_token: accessToken,
+      id: getYouTubeID(urlOrId),
+      part: 'snippet',
+      key: apiKey
+    }).then(({ items }) => {
+      const { id, snippet, status } = items[0]
+
+      resolve({
+        videoId: id,
+        title: snippet.title,
+        channelId: snippet.channelId,
+        channelTitle: snippet.channelTitle,
+        publishedAt: snippet.publishedAt
       })
     }).catch(message => {
 

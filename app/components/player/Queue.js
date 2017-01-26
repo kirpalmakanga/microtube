@@ -6,7 +6,6 @@
 const { connect } = ReactRedux
 
 const Queue = ({ player, dispatch }) => {
-  console.log('queue', player.queue)
   return (
     <div className={['queue mdl-shadow--2dp', player.showQueue ? 'queue--show': ''].join(' ')}>
       {player.queue.map((item, i) => {

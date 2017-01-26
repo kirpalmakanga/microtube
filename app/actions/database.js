@@ -82,7 +82,6 @@ export function getPlaylistItems (accessToken, playlistId) {
 }
 
 export function searchVideos (accessToken, query, pageToken) {
-  console.log('query', query)
   return dispatch => {
     dispatch({
       type: 'SEARCH_VIDEOS',

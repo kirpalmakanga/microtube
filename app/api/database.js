@@ -2,12 +2,9 @@
 // eslint-env es6
 
 const apiKey = 'AIzaSyCLDBo0aNwTTOp6yQMaD9b4mQX4B_rT2NE'
-const OAUTH2_CLIENT_ID = '440745412600-snpeajuh0l9tqfrt356mec6j3mdn8eoo.apps.googleusercontent.com'
-const OAUTH2_SCOPES = ['https://www.googleapis.com/auth/youtube']
 
 function loadApi() {
   return new Promise((resolve, reject) => {
-    gapi.client.setApiKey(apiKey)
     gapi.client.load('youtube', 'v3', function() {
       resolve(gapi.client.youtube)
     })

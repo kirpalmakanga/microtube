@@ -2,6 +2,7 @@
 // eslint-env es6
 
 import { IndexRoute, Route } from 'react-router'
+
 import App from './components/App'
 import Playlists from './components/playlists/Playlists'
 

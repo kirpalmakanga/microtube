@@ -2,6 +2,7 @@
 // eslint-env es6
 
 import { Router, browserHistory } from 'react-router'
+
 import configureStore from './store/configureStore'
 import getRoutes from './routes'
 

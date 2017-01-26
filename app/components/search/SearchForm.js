@@ -22,8 +22,6 @@ const SearchForm = ({ menu, auth, dispatch }) => {
     const query = e.target.querySelector('#search').value
     e.preventDefault()
 
-    console.log('query', query)
-
     dispatch(searchVideos(auth.token, query))
   }
 

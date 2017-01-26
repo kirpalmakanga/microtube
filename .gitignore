@@ -30,3 +30,5 @@ public/*.woff
 public/*.ttf
 public/*.css
 public/*.js
+
+.htaccess

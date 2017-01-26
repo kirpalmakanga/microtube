@@ -4,7 +4,6 @@
 import notifications from './notifications'
 import playlists from './playlists'
 import playlistItems from './playlistItems'
-import video from './video'
 import player from './player'
 import search from './search'
 import auth from './auth'
@@ -17,7 +16,6 @@ export default combineReducers({
   notifications,
   playlists,
   playlistItems,
-  video,
   player,
   search,
   prompt

@@ -98,3 +98,16 @@ export function searchVideos (accessToken, query, pageToken) {
     .catch(err => console.error(err))
   }
 }
+
+export function getVideo (accessToken, urlOrId) {
+  return dispatch => {
+    api.getVideo(accessToken, urlOrId)
+    .then(video => {
+      dispatch({
+        type: 'QUEUE_PUSH',
+        data: video
+      })
+    })
+    .catch(err => console.error(err))
+  }
+}

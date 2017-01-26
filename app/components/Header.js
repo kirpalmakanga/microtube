@@ -6,6 +6,7 @@
 const { connect } = ReactRedux
 import cookie from 'react-cookie'
 import { logIn } from '../actions/auth'
+import { getVideo } from '../actions/database'
 import SearchForm from './search/SearchForm.js'
 
 const Header = ({ auth, playlists, playlistItems, player, search, dispatch }) => {
@@ -75,6 +76,17 @@ const Header = ({ auth, playlists, playlistItems, player, search, dispatch }) =>
           <span className='mdl-layout-title'>{'Queue (' + player.queue.length + ' Elements)'}</span>
           <div className='mdl-layout-spacer'></div>
           <nav className='mdl-navigation'>
+            <button className='mdl-navigation__link' onClick={() => {
+              dispatch({
+                type: 'PROMPT_ADD_VIDEO',
+                callback: () => {
+                  dispatch({ type: 'PROMPT_CLOSE' })
+                }
+              })
+            }}>
+              <svg><use xlinkHref='#icon-add'></use></svg>
+            </button>
+
             <button className='mdl-navigation__link' onClick={() => {
               dispatch({
                 type: 'PROMPT_CLEAR_QUEUE',

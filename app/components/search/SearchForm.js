@@ -8,12 +8,12 @@ import { searchVideos } from '../../actions/database'
 
 const SearchForm = ({ menu, auth, dispatch }) => {
 
-  function handleSearchFocus(e) {
+  function handleFocus(e) {
     e.preventDefault()
     e.target.parentNode.classList.add('is-focused')
   }
 
-  function handleSearchBlur(e) {
+  function handleBlur(e) {
     e.preventDefault()
     e.target.parentNode.classList.remove('is-focused')
   }
@@ -36,10 +36,9 @@ const SearchForm = ({ menu, auth, dispatch }) => {
           id='search'
           type='text'
           placeholder='Search...'
-          onFocus={handleSearchFocus}
-          onBlur={handleSearchBlur}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
-        <label className='mdl-textfield__label' htmlFor='search'></label>
       </div>
     </form>
   )

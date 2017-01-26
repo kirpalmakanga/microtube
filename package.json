@@ -14,7 +14,9 @@
   "dependencies": {
     "array.prototype.move": "0.0.3",
     "firebase": "^3.6.6",
+    "install": "^0.8.4",
     "material-design-lite": "^1.2.0",
+    "npm": "^4.1.2",
     "react": "^15.4.2",
     "react-cookie": "^0.4.8",
     "react-document-title": "^2.0.2",

@@ -2,6 +2,7 @@
 // eslint-env es6
 
 const initialState = {
+  form: false,
   isVisible: false,
   promptText: '',
   confirmText: '',
@@ -43,6 +44,16 @@ export default function(state = initialState, action) {
         isVisible: true,
         promptText: 'Vider la file d\'attente ?',
         confirmText: 'Vider',
+        cancelText: 'Annuler',
+        callback: action.callback
+      })
+
+    case 'PROMPT_ADD_VIDEO':
+      return Object.assign({}, state, {
+        form: true,
+        isVisible: true,
+        promptText: 'Ajouter à la file d\'attente',
+        confirmText: 'Ajouter',
         cancelText: 'Annuler',
         callback: action.callback
       })

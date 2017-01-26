@@ -108,3 +108,40 @@ exports.searchVideos = (accessToken, query, pageToken) => {
     })
   })
 }
+
+exports.getVideo = (accessToken, urlOrId) => {
+
+  function getYouTubeID(url){
+    var ID = ''
+    url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/)
+    if(url[2] !== undefined) {
+      ID = url[2].split(/[^0-9a-z_\-]/i)
+      ID = ID[0]
+    }
+    else {
+      ID = url.toString()
+    }
+    return ID
+  }
+
+  return new Promise((resolve, reject) => {
+    request('videos', {
+      access_token: accessToken,
+      id: getYouTubeID(urlOrId),
+      part: 'snippet',
+      key: apiKey
+    }).then(({ items }) => {
+      const { id, snippet, status } = items[0]
+
+      resolve({
+        videoId: id,
+        title: snippet.title,
+        channelId: snippet.channelId,
+        channelTitle: snippet.channelTitle,
+        publishedAt: snippet.publishedAt
+      })
+    }).catch(message => {
+
+    })
+  })
+}

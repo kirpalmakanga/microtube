@@ -1,7 +1,6 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 
-import queryString from 'querystring'
 import firebase from 'firebase'
 import cookie from 'react-cookie'
 

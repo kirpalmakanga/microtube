@@ -1,12 +1,9 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 
-
-
 const { connect } = ReactRedux
 
-const Notification = ({ className, message, url, dispatch }) => {
-
+const Notifications = ({ notifications }) => {
   const close = ({ target }) => {
     const notification = target.parentNode
 
@@ -20,17 +17,13 @@ const Notification = ({ className, message, url, dispatch }) => {
   }
 
   return (
-    <div className={'mdl-snackbar ' + className}>
-      <div className='mdl-snackbar__text'>{message || ''}</div>
-      <button
-        className='mdl-snackbar__action'
-        type='button'
-        onClick={close}
-      >Fermer</button>
+    <div className={'mdl-snackbar ' + notifications.className}>
+      <div className='mdl-snackbar__text'>{notifications.message || ''}</div>
+      <button className='mdl-snackbar__action' onClick={close} >Fermer</button>
     </div>
   )
 }
 
 const mapStateToProps = ({ notifications }) => ({ notifications })
 
-export default connect(mapStateToProps)(Notification)
+export default connect(mapStateToProps)(Notifications)

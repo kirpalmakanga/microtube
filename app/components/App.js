@@ -3,19 +3,16 @@
 
 require('../../assets/styles/app.scss')
 
-
-
-import Header from './Header'
-import PlayerContainer from './player/PlayerContainer'
-import Notifications from './notifications/Notifications'
-import Prompt from './Prompt'
-import Search from './search/Search'
+import Header from './header/HeaderContainer'
 import PlaylistItems from './playlists/PlaylistItems'
-import cookie from 'react-cookie'
+import Search from './search/Search'
+import PlayerContainer from './player/PlayerContainer'
+import Notifications from './Notifications'
+import Prompt from './Prompt'
 
 const { connect } = ReactRedux
 
-const App = ({ children, notifications, auth, menu, player, dispatch }) => {
+const App = ({ children, auth, dispatch }) => {
   return (
     <div className='mdl-layout'>
       <Header />
@@ -30,13 +27,13 @@ const App = ({ children, notifications, auth, menu, player, dispatch }) => {
 
       <PlayerContainer />
 
-      <Notifications notifications={notifications} />
+      <Notifications />
 
       <Prompt />
     </div>
   )
 }
 
-const mapStateToProps = ({ auth, menu, player, notifications }) => ({ auth, menu, player, notifications })
+const mapStateToProps = ({ auth }) => ({ auth })
 
 export default connect(mapStateToProps)(App)

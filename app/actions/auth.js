@@ -1,7 +1,9 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 
+import queryString from 'querystring'
 import firebase from 'firebase'
+import cookie from 'react-cookie'
 
 const app = firebase.initializeApp({
   apiKey: 'AIzaSyCLDBo0aNwTTOp6yQMaD9b4mQX4B_rT2NE',
@@ -10,8 +12,6 @@ const app = firebase.initializeApp({
   storageBucket: 'youtube-lite-react.appspot.com',
   messagingSenderId: '440745412600'
 })
-
-const database = app.database()
 
 const provider = new firebase.auth.GoogleAuthProvider()
 

@@ -36,7 +36,8 @@ exports.getPlaylists = (accessToken, pageToken = '') => {
       mine: true,
       maxResults: 25,
       key: apiKey
-    }).then(({ items, nextPageToken, pageInfo }) => {
+    })
+    .then(({ items, nextPageToken, pageInfo }) => {
       resolve({
         items: items.map(({ id, snippet, status }) => ({
           id,
@@ -46,9 +47,8 @@ exports.getPlaylists = (accessToken, pageToken = '') => {
         nextPageToken,
         totalResults: pageInfo.totalResults
       })
-    }).catch(message => {
-
     })
+    .catch(message => reject(message))
   })
 }
 
@@ -61,7 +61,8 @@ exports.getPlaylistItems = (accessToken, playlistId, pageToken = '') => {
       part: 'snippet, status',
       maxResults: 50,
       key: apiKey
-    }).then(({ items, nextPageToken, pageInfo }) => {
+    })
+    .then(({ items, nextPageToken, pageInfo }) => {
       const playlistItemIds = items.map(({ id }) => id)
       const videoIds = items.map(({ snippet }) => snippet.resourceId.videoId).join(', ')
 
@@ -71,7 +72,8 @@ exports.getPlaylistItems = (accessToken, playlistId, pageToken = '') => {
         id: videoIds,
         maxResults: 50,
         key: apiKey
-      }).then(({ items }) => {
+      })
+      .then(({ items }) => {
 
         resolve({
           items: items.map(({ id, contentDetails, snippet, status }, i) => ({
@@ -89,9 +91,9 @@ exports.getPlaylistItems = (accessToken, playlistId, pageToken = '') => {
         })
 
       })
-    }).catch(message => {
-
+      .catch(message => reject(message))
     })
+    .catch(message => reject(message))
   })
 }
 
@@ -105,7 +107,8 @@ exports.searchVideos = (accessToken, query, pageToken) => {
       pageToken,
       key: apiKey,
       maxResults: 50,
-    }).then(({ items, nextPageToken, pageInfo }) => {
+    })
+    .then(({ items, nextPageToken, pageInfo }) => {
       const ids = items.map(({ id }) => id.videoId).join(', ')
 
       request('videos', {
@@ -114,7 +117,8 @@ exports.searchVideos = (accessToken, query, pageToken) => {
         id: ids,
         maxResults: 50,
         key: apiKey
-      }).then(({ items }) => {
+      })
+      .then(({ items }) => {
         resolve({
           items: items.map(({ id, contentDetails, snippet, status }, i) => ({
             videoId: id,
@@ -130,9 +134,9 @@ exports.searchVideos = (accessToken, query, pageToken) => {
         })
 
       })
-    }).catch(message => {
-
+      .catch(message => reject(message))
     })
+    .catch(message => reject(message))
   })
 }
 
@@ -157,7 +161,8 @@ exports.getVideo = (accessToken, urlOrId) => {
       id: getYouTubeID(urlOrId),
       part: 'contentDetails, snippet, status',
       key: apiKey
-    }).then(({ items }) => {
+    })
+    .then(({ items }) => {
       const { id, contentDetails, snippet, status } = items[0]
 
       resolve({
@@ -169,8 +174,7 @@ exports.getVideo = (accessToken, urlOrId) => {
         publishedAt: snippet.publishedAt,
         privacyStatus: status.privacyStatus
       })
-    }).catch(message => {
-      console.log('message', message)
     })
+    .catch(message => reject(message))
   })
 }

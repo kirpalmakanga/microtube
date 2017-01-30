@@ -1,7 +1,7 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
 
-
+import parseDuration from '../../lib/parseDuration'
 
 const { connect } = ReactRedux
 
@@ -16,6 +16,8 @@ const Queue = ({ player, dispatch }) => {
             className={['queue__item', isCurrentVideo ? 'is-active' : ''].join(' ')}
           >
             <span className='queue__item-title'>{item.title}</span>
+
+            <span>{parseDuration(item.duration)}</span>
 
             {!isCurrentVideo ? (
               <button

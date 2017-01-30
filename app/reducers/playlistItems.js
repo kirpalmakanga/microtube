@@ -48,6 +48,9 @@ export default function(state = initialState, action) {
           isLoading: 2
         })
       }
+      
+    case 'UNLINK_SUCCESS':
+      return initialState
   }
   return state
 }

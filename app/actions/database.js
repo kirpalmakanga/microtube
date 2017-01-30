@@ -3,7 +3,7 @@
 
 import api from '../api/database.js'
 
-export function getPlaylists (accessToken) {
+exports.getPlaylists = (accessToken) => {
   return dispatch => {
     dispatch({ type: 'GET_PLAYLISTS' })
     const getItems = nextPage => {
@@ -26,7 +26,7 @@ export function getPlaylists (accessToken) {
   }
 }
 
-export function queuePlaylistItems (accessToken, playlistId, play) {
+exports.queuePlaylistItems = (accessToken, playlistId, play) => {
   return dispatch => {
     const getItems = (nextPage) => {
       api.getPlaylistItems(accessToken, playlistId, nextPage)
@@ -58,7 +58,7 @@ export function queuePlaylistItems (accessToken, playlistId, play) {
   }
 }
 
-export function getPlaylistItems (accessToken, playlistId) {
+exports.getPlaylistItems = (accessToken, playlistId) => {
   return dispatch => {
     const getItems = (nextPage) => {
       api.getPlaylistItems(accessToken, playlistId, nextPage)
@@ -81,7 +81,7 @@ export function getPlaylistItems (accessToken, playlistId) {
   }
 }
 
-export function searchVideos (accessToken, query, pageToken) {
+exports.searchVideos = (accessToken, query, pageToken) => {
   return dispatch => {
     dispatch({
       type: 'SEARCH_VIDEOS',
@@ -98,7 +98,7 @@ export function searchVideos (accessToken, query, pageToken) {
   }
 }
 
-export function getVideo (accessToken, urlOrId) {
+exports.getVideo = (accessToken, urlOrId) => {
   return dispatch => {
     api.getVideo(accessToken, urlOrId)
     .then(video => {

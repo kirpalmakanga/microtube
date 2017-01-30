@@ -16,7 +16,7 @@ const provider = new firebase.auth.GoogleAuthProvider()
 
 provider.addScope('https://www.googleapis.com/auth/youtube')
 
-export function logIn() {
+exports.logIn = () => {
   return dispatch => {
     app.auth().signInWithPopup(provider).then(({ credential, user }) => {
       const { displayName, email, photoURL, uid } = user

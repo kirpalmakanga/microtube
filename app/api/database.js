@@ -155,20 +155,22 @@ exports.getVideo = (accessToken, urlOrId) => {
     request('videos', {
       access_token: accessToken,
       id: getYouTubeID(urlOrId),
-      part: 'snippet',
+      part: 'contentDetails, snippet, status',
       key: apiKey
     }).then(({ items }) => {
-      const { id, snippet, status } = items[0]
+      const { id, contentDetails, snippet, status } = items[0]
 
       resolve({
         videoId: id,
         title: snippet.title,
+        duration: contentDetails.duration,
         channelId: snippet.channelId,
         channelTitle: snippet.channelTitle,
-        publishedAt: snippet.publishedAt
+        publishedAt: snippet.publishedAt,
+        privacyStatus: status.privacyStatus
       })
     }).catch(message => {
-
+      console.log('message', message)
     })
   })
 }

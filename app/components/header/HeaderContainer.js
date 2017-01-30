@@ -13,10 +13,10 @@ const { connect } = ReactRedux
 const Header = ({ auth, playlistItems, player, search, dispatch }) => {
   return (
     <header className='mdl-layout__header'>
-      {search.isOpen ? (
-        <SearchHeader />
-      ) : player.showQueue ? (
+      {player.showQueue ? (
         <QueueHeader />
+      ) : search.isOpen ? (
+        <SearchHeader />
       ) : (
         <div className='mdl-layout__header-row'>
           {playlistItems.isOpen ? (

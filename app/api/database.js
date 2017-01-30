@@ -106,16 +106,29 @@ exports.searchVideos = (accessToken, query, pageToken) => {
       key: apiKey,
       maxResults: 50,
     }).then(({ items, nextPageToken, pageInfo }) => {
-      resolve({
-        items: items.map(({ id, snippet, status }) => ({
-          videoId: id.videoId,
-          title: snippet.title,
-          channelId: snippet.channelId,
-          channelTitle: snippet.channelTitle,
-          publishedAt: snippet.publishedAt
-        })),
-        nextPageToken,
-        totalResults: pageInfo.totalResults
+      const ids = items.map(({ id }) => id.videoId).join(', ')
+
+      request('videos', {
+        access_token: accessToken,
+        part: 'contentDetails, snippet, status',
+        id: ids,
+        maxResults: 50,
+        key: apiKey
+      }).then(({ items }) => {
+        resolve({
+          items: items.map(({ id, contentDetails, snippet, status }, i) => ({
+            videoId: id,
+            title: snippet.title,
+            duration: contentDetails.duration,
+            publishedAt: snippet.publishedAt,
+            channelId: snippet.channelId,
+            channelTitle: snippet.channelTitle,
+            privacyStatus: status.privacyStatus
+          })),
+          nextPageToken,
+          totalResults: pageInfo.totalResults
+        })
+
       })
     }).catch(message => {
 

@@ -14,11 +14,24 @@
         padding: 16px;
         display: flex;
         flex: 1;
-        flex-direction: column;
-        justify-content: space-between;
+
+        div {
+          &:first-child {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+          }
+          &:last-child {
+            font-size: 14px;
+            @media screen and (min-width: 1024px) {
+                font-size: 20px;
+            }
+          }
+        }
 
         &-title {
-          letter-spacing: 0.1em;
+            letter-spacing: 0.1em;
             font-size: 14px;
             @media screen and (min-width: 1024px) {
                 font-size: 20px;

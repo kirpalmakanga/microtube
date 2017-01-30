@@ -62,18 +62,32 @@ exports.getPlaylistItems = (accessToken, playlistId, pageToken = '') => {
       maxResults: 50,
       key: apiKey
     }).then(({ items, nextPageToken, pageInfo }) => {
-      resolve({
-        items: items.map(({ id, snippet, status }) => ({
-          id,
-          videoId: snippet.resourceId.videoId,
-          title: snippet.title,
-          publishedAt: snippet.publishedAt,
-          channelId: snippet.channelId,
-          channelTitle: snippet.channelTitle,
-          privacyStatus: status.privacyStatus
-        })),
-        nextPageToken,
-        totalResults: pageInfo.totalResults
+      const playlistItemIds = items.map(({ id }) => id)
+      const videoIds = items.map(({ snippet }) => snippet.resourceId.videoId).join(', ')
+
+      request('videos', {
+        access_token: accessToken,
+        part: 'contentDetails, snippet, status',
+        id: videoIds,
+        maxResults: 50,
+        key: apiKey
+      }).then(({ items }) => {
+
+        resolve({
+          items: items.map(({ id, contentDetails, snippet, status }, i) => ({
+            id: playlistItemIds[i],
+            videoId: id,
+            title: snippet.title,
+            duration: contentDetails.duration,
+            publishedAt: snippet.publishedAt,
+            channelId: snippet.channelId,
+            channelTitle: snippet.channelTitle,
+            privacyStatus: status.privacyStatus
+          })),
+          nextPageToken,
+          totalResults: pageInfo.totalResults
+        })
+
       })
     }).catch(message => {
 

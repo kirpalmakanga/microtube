@@ -2,10 +2,6 @@
     overflow-y: scroll;
     z-index: 3;
 
-    &.queue--show {
-        transform: translate(0);
-    }
-
     &__header {
         font-family: $font-primary;
         padding: 10px 15px;
@@ -51,10 +47,6 @@
         display: flex;
         align-items: center;
 
-        &.is-active {
-            background-color: lighten($brand-primary, 40%);
-        }
-
         &-title {
             padding: 15px;
             display: flex;
@@ -90,4 +82,18 @@
             }
         }
     }
+    &__item--active {
+        background-color: lighten($brand-primary, 40%);
+    }
+    &__item--placeholder {
+        height: 50px;
+        background-color: lighten($brand-primary, 30%);
+    }
+    &__item--hidden {
+      display: none;
+    }
+}
+
+.queue--show {
+    transform: translate(0);
 }

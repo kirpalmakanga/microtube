@@ -46,12 +46,14 @@
         font-family: $font-primary;
         display: flex;
         align-items: center;
+        // pointer-events: none;
 
         &-title {
             padding: 15px;
             display: flex;
             flex: 1;
         }
+
 
         &-button {
             padding: 0;
@@ -82,18 +84,25 @@
             }
         }
     }
+
     &__item--active {
         background-color: lighten($brand-primary, 40%);
-    }
-    &__item--placeholder {
-        height: 50px;
-        background-color: lighten($brand-primary, 30%);
-    }
-    &__item--hidden {
-      display: none;
     }
 }
 
 .queue--show {
     transform: translate(0);
+}
+
+.draggable-list {
+  &__item {
+    position: relative;
+  }
+  &__item--placeholder {
+      height: 52px;
+      background-color: lighten($brand-primary, 30%);
+  }
+  &__item--hidden {
+    display: none;
+  }
 }

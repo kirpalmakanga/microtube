@@ -2,9 +2,6 @@
 // eslint-env es6
 
 const initialState = {
-  dragged: null,
-  over: null,
-  nodePlacement: null,
   queue: [],
   isPlaying: false,
   isBuffering: false,
@@ -110,17 +107,8 @@ export default function(state = initialState, action) {
     case 'QUEUE_CLEAR':
       return Object.assign({}, state, { queue: action.currentVideo.videoId ? [action.currentVideo] : initialState.queue })
 
-    case 'QUEUE_DRAG_SET':
+    case 'QUEUE_SET':
       return Object.assign({}, state, { queue: action.newQueue })
-
-    case 'QUEUE_DRAG_ON':
-      return Object.assign({}, state, { dragged: action.element })
-
-    case 'QUEUE_DRAG_OFF':
-      return Object.assign({}, state, { dragged: initialState.dragged })
-
-    case 'QUEUE_DRAG_OVER':
-      return Object.assign({}, state, { over: action.element })
 
     case 'OPEN_VOLUME':
       return Object.assign({}, state, { showVolume: true })

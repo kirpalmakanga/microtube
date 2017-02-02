@@ -80,7 +80,7 @@ class Queue extends React.Component {
     const { player, dispatch } = this.props
     return (
       <div className={['queue mdl-shadow--2dp', player.showQueue ? 'queue--show': ''].join(' ')} onDragOver={this.dragOver.bind(this)}>
-      	{player.queue.map((item, i) => {
+      	{player.queue.length ? player.queue.map((item, i) => {
           const isCurrentVideo = (player.video.videoId === item.videoId)
         	return (
           	<div
@@ -121,7 +121,7 @@ class Queue extends React.Component {
               </button>
             </div>
           )
-     	 	}, this)}
+     	 	}, this) : null }
       </div>
     )
   }

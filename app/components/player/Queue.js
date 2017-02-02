@@ -77,7 +77,7 @@ class Queue extends React.Component {
   }
 
   render() {
-    const { player } = this.props
+    const { player, dispatch } = this.props
     return (
       <div className={['queue mdl-shadow--2dp', player.showQueue ? 'queue--show': ''].join(' ')} onDragOver={this.dragOver.bind(this)}>
       	{player.queue.map((item, i) => {

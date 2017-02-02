@@ -1,6 +1,6 @@
 .queue {
-    overflow-y: scroll;
     z-index: 3;
+    overflow-y: scroll;
 
     &__header {
         font-family: $font-primary;
@@ -48,10 +48,11 @@
         align-items: center;
         // pointer-events: none;
 
-        &-title {
+        &:before {
             padding: 15px;
             display: flex;
             flex: 1;
+            content: attr(data-title);
         }
 
 
@@ -88,21 +89,16 @@
     &__item--active {
         background-color: lighten($brand-primary, 40%);
     }
+
+    &__item--placeholder {
+        height: 52px;
+        background-color: lighten($brand-primary, 30%);
+    }
+    &__item--hidden {
+      display: none;
+    }
 }
 
 .queue--show {
     transform: translate(0);
-}
-
-.draggable-list {
-  &__item {
-    position: relative;
-  }
-  &__item--placeholder {
-      height: 52px;
-      background-color: lighten($brand-primary, 30%);
-  }
-  &__item--hidden {
-    display: none;
-  }
 }

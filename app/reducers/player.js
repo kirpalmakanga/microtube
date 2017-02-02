@@ -1,6 +1,5 @@
 // jshint esversion: 6, asi: true
 // eslint-env es6
-require('array.prototype.move')
 
 const initialState = {
   queue: [],
@@ -105,17 +104,11 @@ export default function(state = initialState, action) {
 
       return Object.assign({}, state, { queue })
 
-    case 'QUEUE_MOVE':
-      let newIndex = action.index + action.direction
-
-      if (newIndex > -1 && newIndex < queue.length) {
-        queue.move(action.index, newIndex)
-      }
-
-      return Object.assign({}, state, { queue })
-
     case 'QUEUE_CLEAR':
       return Object.assign({}, state, { queue: action.currentVideo.videoId ? [action.currentVideo] : initialState.queue })
+
+    case 'QUEUE_SET':
+      return Object.assign({}, state, { queue: action.newQueue })
 
     case 'OPEN_VOLUME':
       return Object.assign({}, state, { showVolume: true })

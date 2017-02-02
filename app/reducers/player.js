@@ -10,7 +10,9 @@ const initialState = {
   showVolume: false,
   isMuted: false,
   volume: 100,
-  video: {},
+  video: {
+    videoId: null
+  },
   loaded: 0,
   currentTime: 0,
   duration: 0,

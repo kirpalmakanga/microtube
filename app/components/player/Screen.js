@@ -90,6 +90,7 @@ const Screen = ({ player, dispatch }) => {
               opts={opts}
               onReady={({ target }) => {
                 target.setPlaybackQuality('hd1080')
+                target.playVideo()
                 dispatch({
                   type: 'GET_YOUTUBE',
                   youtube: target

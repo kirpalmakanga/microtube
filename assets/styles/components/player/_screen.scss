@@ -1,11 +1,5 @@
 .screen {
     z-index: 1;
-    top: 56px;
-    @media screen and (min-width: 1024px) {
-      height: calc(100vh - 124px);
-      top: 64px;
-      bottom: 60px;
-    }
     &.screen--show {
         transform: translate(0);
     }

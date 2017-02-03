@@ -26,7 +26,7 @@ const Search = ({ auth, search, dispatch }) => {
   }
 
   return (
-    <div className={['search', search.isOpen ? 'search--show': ''].join(' ')}>
+    <div className={['search mdl-shadow--2dp', search.isOpen ? 'search--show': ''].join(' ')}>
       <div className='mdl-grid'>
         {search.items.map((video, i) => (
           <div key={i} className='mdl-cell mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--12-col'>

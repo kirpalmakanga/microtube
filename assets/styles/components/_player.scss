@@ -9,6 +9,7 @@
 
 .mdl-player {
     display: flex;
+    flex-wrap: wrap;
     position: fixed;
     bottom: 0;
     right: 0;
@@ -17,6 +18,13 @@
 
     &__controls {
         display: flex;
+        width: 50%;
+        order: 1;
+
+        @media screen and (min-width: 480px) {
+          width: initial;
+          order: initial;
+        }
 
         &-button {
             @include transition();
@@ -27,11 +35,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 50px;
+            flex: 1;
             height: 50px;
-            @media screen and (min-width: 1024px) {
-              width: 60px;
-              height: 60px;
+            @media screen and (min-width: 480px) {
+              width: 50px;
+              flex: initial;
             }
             cursor: pointer;
             position: relative;
@@ -97,6 +105,18 @@
 
         &-volume {
             position: relative;
+            flex: 1;
+            z-index: 1;
+
+            button {
+              @media screen and (max-width: 480px) {
+                width: 100%;
+              }
+            }
+
+            @media screen and (min-width: 480px) {
+              flex: initial;
+            }
 
             &:hover {
                 .mdl-player__controls-volume-range {
@@ -128,11 +148,20 @@
     &__info {
         background-color: $black;
         display: flex;
-        flex: 1;
         flex-direction: column;
         justify-content: space-around;
         padding: 5px 15px;
         position: relative;
+
+        height: 50px;
+        order: 0;
+        width: 100%;
+
+        @media screen and (min-width: 480px) {
+          width: initial;
+          order: initial;
+          flex: 1;
+        }
 
         &-time,
         &-title {
@@ -234,11 +263,12 @@
     left: 0;
     right: 0;
     transform: translateY(100%);
-    height: calc(100vh - 106px);
-    bottom: 50px;
+    bottom: 100px;
+
+    @media screen and (min-width: 480px) {
+      bottom: 50px;
+    }
     @media screen and (min-width: 1024px) {
       top: 64px;
-      height: calc(100vh - 124px);
-      bottom: 60px;
     }
 }

@@ -13,7 +13,7 @@ const PlaylistItems = ({ auth, playlistItems, dispatch }) => {
   const nextPage = playlistItems.pages[playlistItems.pages.length - 1] || ''
 
   return (
-    <div className={['playlist-items', playlistItems.isOpen ? 'playlist-items--show': ''].join(' ')}>
+    <div className={['playlist-items mdl-shadow--2dp', playlistItems.isOpen ? 'playlist-items--show': ''].join(' ')}>
       <div className='mdl-grid'>
         {playlistItems.items.map((video, i) => (
           <div key={i} className='mdl-cell mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--12-col'>

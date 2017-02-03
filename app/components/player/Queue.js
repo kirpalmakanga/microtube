@@ -2,6 +2,7 @@
 // eslint-env es6
 
 import parseDuration from '../../lib/parseDuration'
+import { Throttle } from 'react-throttle'
 
 const { connect } = ReactRedux
 
@@ -83,50 +84,52 @@ class Queue extends React.Component {
   render() {
     const { player, dispatch } = this.props
     return (
-      <div className={['queue mdl-shadow--2dp', player.showQueue ? 'queue--show': ''].join(' ')} onDragOver={this.dragOver.bind(this)}>
-      	{player.queue.length ? player.queue.map((item, i) => {
-          const isCurrentVideo = (player.video.videoId === item.videoId)
-        	return (
-          	<div
-              key={i}
-              className={['queue__item', isCurrentVideo ? 'queue__item--active' : ''].join(' ')}
-              onDragEnd={this.dragEnd.bind(this)}
-              onDragStart={this.dragStart.bind(this)}
-              data-id={i}
-              data-title={item.title}
-              data-duration={parseDuration(item.duration)}
-              draggable
-              >
-              {!isCurrentVideo ? (
+      <Throttle time='200' handler='onDragOver'>
+        <div className={['queue mdl-shadow--2dp', player.showQueue ? 'queue--show': ''].join(' ')} onDragOver={this.dragOver.bind(this)}>
+        	{player.queue.length ? player.queue.map((item, i) => {
+            const isCurrentVideo = (player.video.videoId === item.videoId)
+          	return (
+            	<div
+                key={i}
+                className={['queue__item', isCurrentVideo ? 'queue__item--active' : ''].join(' ')}
+                onDragEnd={this.dragEnd.bind(this)}
+                onDragStart={this.dragStart.bind(this)}
+                data-id={i}
+                data-title={item.title}
+                data-duration={parseDuration(item.duration)}
+                draggable
+                >
+                {!isCurrentVideo ? (
+                  <button
+                    className='queue__item-button'
+                    onClick={() => {
+                      dispatch({ type: 'CLEAR_WATCHERS' })
+
+                      dispatch({
+                        type: 'PLAY',
+                        data: item,
+                        skip: true
+                      })
+                    }}
+                  >
+                    <svg><use xlinkHref='#icon-play'></use></svg>
+                  </button>
+                ) : null}
+
                 <button
                   className='queue__item-button'
-                  onClick={() => {
-                    dispatch({ type: 'CLEAR_WATCHERS' })
-
-                    dispatch({
-                      type: 'PLAY',
-                      data: item,
-                      skip: true
-                    })
-                  }}
+                  onClick={() => dispatch({
+                    type: 'QUEUE_REMOVE',
+                    index: i
+                  })}
                 >
-                  <svg><use xlinkHref='#icon-play'></use></svg>
+                  <svg><use xlinkHref='#icon-close'></use></svg>
                 </button>
-              ) : null}
-
-              <button
-                className='queue__item-button'
-                onClick={() => dispatch({
-                  type: 'QUEUE_REMOVE',
-                  index: i
-                })}
-              >
-                <svg><use xlinkHref='#icon-close'></use></svg>
-              </button>
-            </div>
-          )
-     	 	}, this) : null }
-      </div>
+              </div>
+            )
+       	 	}, this) : null }
+        </div>
+      </Throttle>
     )
   }
 }

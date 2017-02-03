@@ -113,11 +113,17 @@ svg {
   background-color: lighten($brand-primary, 20%);
   @include transition();
   position: fixed;
-  top: 64px;
+  top: 56px;
   left: 0;
   right: 0;
   transform: translateY(100%);
-  height: calc(100vh - 124px);
+  height: calc(100vh - 106px);
+  bottom: 50px;
+  @media screen and (min-width: 1024px) {
+    top: 64px;
+    height: calc(100vh - 124px);
+    bottom: 60px;
+  }
 
   .mdl-grid {
     height: 100%;

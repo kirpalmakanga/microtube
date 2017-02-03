@@ -2,41 +2,6 @@
     z-index: 3;
     overflow-y: scroll;
 
-    &__header {
-        font-family: $font-primary;
-        padding: 10px 15px;
-        font-size: 16px;
-        border-bottom: 2px solid rgba($brand-primary, 0.5);
-        text-transform: uppercase;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        &-clear {
-            border: none;
-            background-color: transparent;
-            fill: $white;
-            padding: 0;
-            cursor: pointer;
-
-            svg {
-                @include transition();
-                height: 30px;
-                width: 30px;
-            }
-
-            &:focus {
-                outline: none;
-            }
-
-            &:active {
-                svg {
-                    transform: scale(0.7);
-                }
-            }
-        }
-    }
-
     &__item {
         @include transition();
         border-bottom: 2px solid rgba($brand-primary, 0.5);
@@ -46,7 +11,6 @@
         font-family: $font-primary;
         display: flex;
         align-items: center;
-        // pointer-events: none;
 
         &:before {
             padding: 15px;

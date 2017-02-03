@@ -5,28 +5,41 @@ import parseDuration from '../../lib/parseDuration'
 
 const { connect } = ReactRedux
 
-const placeholder = document.createElement('div')
-placeholder.classList.add('queue__item', 'queue__item--placeholder')
-
-
 class Queue extends React.Component {
   constructor(props) {
+
     super(props)
-    this.state = { data: props.player.queue }
+    this.state = {
+      data: props.player.queue
+    }
   }
 
   componentWillReceiveProps(props){
    this.setState({ data: props.player.queue})
   }
 
+  getPlaceholder() {
+    let placeholder = this.placeholder
+    if(!placeholder) {
+      placeholder = document.createElement('div')
+      placeholder.classList.add('queue__item', 'queue__item--placeholder')
+    }
+    return placeholder
+  }
+
   dragStart({ currentTarget, dataTransfer }) {
-    this.setState({ dragged: currentTarget })
     dataTransfer.effectAllowed = 'move'
     dataTransfer.setData('text/html', currentTarget)
+
+    this.setState({
+      dragged: currentTarget,
+      container: currentTarget.parentNode,
+      placeholder: this.getPlaceholder()
+    })
   }
 
   dragEnd() {
-    const { data, dragged, over } = this.state
+    const { data, dragged, over, placeholder } = this.state
     const from = Number(dragged.dataset.id)
     let to = Number(over.dataset.id)
 
@@ -50,83 +63,80 @@ class Queue extends React.Component {
   }
 
   dragOver(e) {
-    const { target, clientY } = e
-
-    const parent = target.parentNode
+    const { target, pageY } = e
+    const { dragged, container, placeholder } = this.state
 
     let relY
-    let height
+    let lastChildY
 
     e.preventDefault()
 
-    this.state.dragged.classList.add('queue__item--hidden')
+    dragged.classList.add('queue__item--hidden')
 
-    if(target.classList.contains('queue__item--placeholder')) {
+    if(target.classList.contains('queue__item--placeholder') || !target.getAttribute('draggable')) {
       return
     }
 
     this.setState({ over: target })
 
-    relY = clientY - target.offsetTop
-    height = target.offsetHeight / 2
+    relY = pageY - target.offsetTop
+    lastChildY = pageY - container.lastChild.offsetTop + target.offsetHeight / 2
 
-    if(relY > height) {
+    if(relY <= lastChildY) {
       this.setState({ nodePlacement: 'after' })
-      parent.insertBefore(placeholder, target.nextElementSibling)
-    }
-    else if(relY < height) {
+      container.insertBefore(placeholder, target.nextElementSibling)
+    } else {
       this.setState({ nodePlacement: 'before' })
-      parent.insertBefore(placeholder, target)
+      container.insertBefore(placeholder, target)
     }
   }
 
   render() {
     const { player, dispatch } = this.props
-    const activeClass = player.showQueue ? 'queue--show' : ''
     return (
-        <div className={['queue mdl-shadow--2dp', activeClass].join(' ')} onDragOver={this.dragOver.bind(this)}>
-        	{player.queue.length ? player.queue.map((item, i) => {
-            const isCurrentVideo = (player.video.videoId === item.videoId)
-          	return (
-            	<div
-                key={i}
-                className={['queue__item', isCurrentVideo ? 'queue__item--active' : ''].join(' ')}
-                onDragEnd={this.dragEnd.bind(this)}
-                onDragStart={this.dragStart.bind(this)}
-                data-id={i}
-                data-title={item.title}
-                data-duration={parseDuration(item.duration)}
-                draggable
-                >
-                {!isCurrentVideo ? (
+        <div className={['queue mdl-shadow--2dp', player.showQueue ? 'queue--show' : ''].join(' ')} onDragOver={this.dragOver.bind(this)}>
+            {player.queue.length ? player.queue.map((item, i) => {
+              const isCurrentVideo = (player.video.videoId === item.videoId)
+              return (
+                <div
+                  key={i}
+                  className={['queue__item', isCurrentVideo ? 'queue__item--active' : ''].join(' ')}
+                  onDragEnd={this.dragEnd.bind(this)}
+                  onDragStart={this.dragStart.bind(this)}
+                  data-id={i}
+                  data-title={item.title}
+                  data-duration={parseDuration(item.duration)}
+                  draggable
+                  >
+                  {!isCurrentVideo ? (
+                    <button
+                      className='queue__item-button'
+                      onClick={() => {
+                        dispatch({ type: 'CLEAR_WATCHERS' })
+
+                        dispatch({
+                          type: 'PLAY',
+                          data: item,
+                          skip: true
+                        })
+                      }}
+                    >
+                      <svg><use xlinkHref='#icon-play'></use></svg>
+                    </button>
+                  ) : null}
+
                   <button
                     className='queue__item-button'
-                    onClick={() => {
-                      dispatch({ type: 'CLEAR_WATCHERS' })
-
-                      dispatch({
-                        type: 'PLAY',
-                        data: item,
-                        skip: true
-                      })
-                    }}
+                    onClick={() => dispatch({
+                      type: 'QUEUE_REMOVE',
+                      index: i
+                    })}
                   >
-                    <svg><use xlinkHref='#icon-play'></use></svg>
+                    <svg><use xlinkHref='#icon-close'></use></svg>
                   </button>
-                ) : null}
-
-                <button
-                  className='queue__item-button'
-                  onClick={() => dispatch({
-                    type: 'QUEUE_REMOVE',
-                    index: i
-                  })}
-                >
-                  <svg><use xlinkHref='#icon-close'></use></svg>
-                </button>
-              </div>
-            )
-       	 	}, this) : null }
+                </div>
+              )
+            }, this) : null }
         </div>
     )
   }

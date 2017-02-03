@@ -15,6 +15,10 @@ class Queue extends React.Component {
     this.state = { data: props.player.queue }
   }
 
+  componentWillReceiveProps(props){
+   this.setState({ data: props.player.queue})
+  }
+
   dragStart({ currentTarget, dataTransfer }) {
     this.setState({ dragged: currentTarget })
     dataTransfer.effectAllowed = 'move'

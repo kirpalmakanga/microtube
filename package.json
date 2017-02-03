@@ -19,6 +19,7 @@
     "react-cookie": "^0.4.8",
     "react-document-title": "^2.0.2",
     "react-router": "^2.4.0",
+    "react-throttle": "^0.3.0",
     "react-waypoint": "^3.1.1",
     "react-youtube": "7.2.0",
     "redux-localstorage": "^0.4.1",

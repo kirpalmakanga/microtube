@@ -52,6 +52,8 @@ class Queue extends React.Component {
   dragOver(e) {
     const { target, clientY } = e
 
+    console.log('target', target)
+
     const parent = target.parentNode
 
     let relY
@@ -61,7 +63,7 @@ class Queue extends React.Component {
 
     this.state.dragged.classList.add('queue__item--hidden')
 
-    if(target.classList.contains('queue__item--placeholder')) {
+    if(target.classList.contains('queue__item--placeholder') && !target.getAttribute('draggable')) {
       return
     }
 

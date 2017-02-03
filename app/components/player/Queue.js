@@ -2,7 +2,6 @@
 // eslint-env es6
 
 import parseDuration from '../../lib/parseDuration'
-import { Throttle } from 'react-throttle'
 
 const { connect } = ReactRedux
 
@@ -83,9 +82,9 @@ class Queue extends React.Component {
 
   render() {
     const { player, dispatch } = this.props
+    const activeClass = player.showQueue ? 'queue--show' : ''
     return (
-      <Throttle time='200' handler='onDragOver'>
-        <div className={['queue mdl-shadow--2dp', player.showQueue ? 'queue--show': ''].join(' ')} onDragOver={this.dragOver.bind(this)}>
+        <div className={['queue mdl-shadow--2dp', activeClass].join(' ')} onDragOver={this.dragOver.bind(this)}>
         	{player.queue.length ? player.queue.map((item, i) => {
             const isCurrentVideo = (player.video.videoId === item.videoId)
           	return (
@@ -129,7 +128,6 @@ class Queue extends React.Component {
             )
        	 	}, this) : null }
         </div>
-      </Throttle>
     )
   }
 }

@@ -8,6 +8,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 
 const packageJSON = require('./package.json')
 
@@ -53,6 +54,15 @@ const config = {
     }),
     new ExtractTextPlugin('app.css', {
         allChunks: true
+    }),
+    new SWPrecacheWebpackPlugin({
+      cacheId: 'youtube-lite',
+      filename: 'sw.js',
+      maximumFileSizeToCacheInBytes: 4194304,
+      minify: true,
+      staticFileGlobs: [
+        'public/*',
+      ],
     })
   ],
   module: {

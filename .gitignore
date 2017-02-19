@@ -25,10 +25,6 @@ node_modules
 .DS_Store
 Thumbs.db
 
-public/*.eot
-public/*.woff
-public/*.ttf
-public/*.css
-public/*.js
+public
 
 .htaccess

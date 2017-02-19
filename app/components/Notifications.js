@@ -3,7 +3,7 @@
 
 const { connect } = ReactRedux
 
-const Notifications = ({ notifications }) => {
+const Notifications = ({ notifications, dispatch }) => {
   const close = ({ target }) => {
     const notification = target.parentNode
 

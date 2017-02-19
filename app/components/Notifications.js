@@ -7,7 +7,7 @@ const Notifications = ({ notifications }) => {
   const close = ({ target }) => {
     const notification = target.parentNode
 
-    notification.classList.remove(className)
+    notification.classList.remove(notifications.className)
 
     notification.addEventListener('transitionend', () => {
       notification.removeEventListener('transitionend', close)

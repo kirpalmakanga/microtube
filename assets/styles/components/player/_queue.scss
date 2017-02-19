@@ -1,5 +1,6 @@
 .queue {
     z-index: 3;
+    overflow-x: hidden;
     overflow-y: scroll;
 
     &__item {

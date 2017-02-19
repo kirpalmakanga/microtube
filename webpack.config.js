@@ -17,7 +17,7 @@ const config = {
     hot: true,
     outputPath: path.join(__dirname, 'public'),
     noInfo: true,
-    publicPath: './',
+    publicPath: './public',
     contentBase: './'
   },
   entry: [
@@ -25,7 +25,7 @@ const config = {
   ],
   output: {
     path: path.join(__dirname, 'public'),
-    publicPath: './public/',
+    publicPath: './',
     filename: 'app.js'
   },
   plugins: [

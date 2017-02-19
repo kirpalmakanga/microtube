@@ -17,8 +17,8 @@ const config = {
     hot: true,
     outputPath: path.join(__dirname, 'public'),
     noInfo: true,
-    publicPath: './public/',
-    contentBase: './public'
+    publicPath: './',
+    contentBase: './'
   },
   entry: [
     './app/main.js'

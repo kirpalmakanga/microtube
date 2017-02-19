@@ -12,7 +12,7 @@ import Prompt from './Prompt'
 
 const { connect } = ReactRedux
 
-const App = ({ children, auth, dispatch }) => {
+const App = ({ children, auth }) => {
   return (
     <div className='mdl-layout'>
       <Header />

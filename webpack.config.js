@@ -57,7 +57,7 @@ const config = {
     }),
     new SWPrecacheWebpackPlugin({
       cacheId: 'youtube-lite',
-      filename: 'sw.js',
+      filename: '../sw.js',
       maximumFileSizeToCacheInBytes: 4194304,
       minify: true,
       staticFileGlobs: [

@@ -10,7 +10,7 @@ const Notifications = ({ notifications, dispatch }) => {
     notification.classList.remove(notifications.className)
 
     notification.addEventListener('transitionend', () => {
-      notification.removeEventListener('transitionend', close)
+      target.removeEventListener('transitionend', close)
 
       dispatch({ type: 'CLEAR_NOTIFICATIONS' })
     })

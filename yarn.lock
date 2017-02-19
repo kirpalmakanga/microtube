@@ -3337,6 +3337,10 @@ react-document-title@^2.0.2:
   dependencies:
     react-side-effect "^1.0.2"
 
+react-fastclick-alt@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-fastclick-alt/-/react-fastclick-alt-1.1.1.tgz#0f857c0f6ecc0036af817e9f8ef15dc28e64baac"
+
 react-hot-api@^0.4.5:
   version "0.4.7"
   resolved "https://registry.yarnpkg.com/react-hot-api/-/react-hot-api-0.4.7.tgz#a7e22a56d252e11abd9366b61264cf4492c58171"

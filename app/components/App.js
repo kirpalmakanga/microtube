@@ -3,6 +3,7 @@
 
 require('../../assets/styles/app.scss')
 
+import FastClick from 'react-fastclick-alt';
 import Header from './header/HeaderContainer'
 import PlaylistItems from './playlists/PlaylistItems'
 import Search from './search/Search'
@@ -14,23 +15,25 @@ const { connect } = ReactRedux
 
 const App = ({ children, auth }) => {
   return (
-    <div className='mdl-layout'>
-      <Header />
+    <FastClick>
+      <div className='mdl-layout'>
+        <Header />
 
-      <main className='mdl-layout__content'>
-        {auth.token ? children : null}
-      </main>
+        <main className='mdl-layout__content'>
+          {auth.token ? children : null}
+        </main>
 
-      <PlaylistItems />
+        <PlaylistItems />
 
-      <Search />
+        <Search />
 
-      <PlayerContainer />
+        <PlayerContainer />
 
-      <Notifications />
+        <Notifications />
 
-      <Prompt />
-    </div>
+        <Prompt />
+      </div>
+    </FastClick>
   )
 }
 

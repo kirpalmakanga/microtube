@@ -18,6 +18,7 @@
     "react": "^15.4.2",
     "react-cookie": "^0.4.8",
     "react-document-title": "^2.0.2",
+    "react-fastclick-alt": "^1.1.1",
     "react-router": "^2.4.0",
     "react-waypoint": "^3.1.1",
     "react-youtube": "7.2.0",

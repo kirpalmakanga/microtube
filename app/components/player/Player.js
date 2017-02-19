@@ -50,6 +50,19 @@ const Player = ({ player, dispatch }) => {
     return Object.keys(obj).length
   }
 
+  function getDocumentTitle() {
+    let title = 'Youtube Lite'
+
+    if (player.video.title) {
+      title = player.video.title
+      + ' - '
+      + getPlayerTime(currentTime)
+      + ' / '
+      + getPlayerTime(duration)
+    }
+    return title
+  }
+
   return (
     <div className='mdl-player mdl-shadow--2dp'>
       <div className='mdl-player__controls'>
@@ -126,7 +139,7 @@ const Player = ({ player, dispatch }) => {
           </div>
         </div>
 
-        <DocumentTitle title={player.video.title || 'Youtube Lite'}>
+        <DocumentTitle title={getDocumentTitle()}>
           <div className='mdl-player__info-title'>
             {player.video.title || 'No video.'}
           </div>

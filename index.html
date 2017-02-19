@@ -168,5 +168,12 @@
     </script>
     <script src="//apis.google.com/js/client.js"></script>
     <script src="public/app.js"></script>
+    <script>
+      (function() {
+        if('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('public/sw.js');
+        }
+      })()
+    </script>
   </body>
 </html>

@@ -11,11 +11,11 @@ const { Provider } = ReactRedux
 const store = configureStore(window.INITIAL_STATE)
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.querySelector('.app-loader').classList.remove('app-loader--active')
   ReactDOM.render(
     <Provider store={store}>
       <Router history={browserHistory} routes={getRoutes(store)} />
     </Provider>,
-    document.querySelector('.app')
+    document.querySelector('.app'),
+    () => document.querySelector('.app-loader').classList.remove('app-loader--active')
   )
 })

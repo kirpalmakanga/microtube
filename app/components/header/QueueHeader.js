@@ -9,7 +9,7 @@ const SearchHeader = ({ player, dispatch }) => {
       >
           <svg><use xlinkHref='#icon-back'></use></svg>
       </button>
-      <span className='mdl-layout-title'>{'Queue (' + player.queue.length + ' Elements)'}</span>
+      <span className='mdl-layout-title'>{'Queue (' + player.queue.length + ' Items)'}</span>
       <div className='mdl-layout-spacer'></div>
       <nav className='mdl-navigation'>
         <button className='mdl-navigation__link' onClick={() => {

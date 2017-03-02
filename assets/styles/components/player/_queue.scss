@@ -34,19 +34,12 @@
             cursor: pointer;
 
             svg {
-                @include transition();
                 height: 36px;
                 width: 36px;
             }
 
             &:focus {
                 outline: none;
-            }
-
-            &:active {
-                svg {
-                    transform: scale(0.7);
-                }
             }
         }
     }

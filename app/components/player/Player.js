@@ -46,11 +46,11 @@ const Player = ({ player, dispatch }) => {
     transform: 'translateX(' + parseFloat((player.loaded * 100) - 100).toFixed(2) + '%)'
   }
 
-  function isEmpty(obj) {
+  function isEmpty (obj) {
     return Object.keys(obj).length
   }
 
-  function getDocumentTitle() {
+  function getDocumentTitle () {
     let title = 'Youtube Lite'
 
     if (player.video.title) {
@@ -61,6 +61,18 @@ const Player = ({ player, dispatch }) => {
       + getPlayerTime(duration)
     }
     return title
+  }
+
+  function playPause () {
+    if (player.isPlaying) {
+      player.youtube.pauseVideo()
+    } else {
+      player.youtube.playVideo()
+    }
+
+    dispatch({
+      type: player.isPlaying ? 'PAUSE' : 'PLAY',
+    })
   }
 
   return (
@@ -85,31 +97,19 @@ const Player = ({ player, dispatch }) => {
         </button>
 
         <button
-          className={['mdl-player__controls-button', player.isBuffering ? 'is-buffering' : player.isPlaying ? 'is-playing': 'is-paused' ].join(' ')}
-          onClick={() => {
-            if (player.isBuffering) {
-              return
-            } else if (player.isPlaying) {
-              player.youtube.pauseVideo()
-            } else {
-              player.youtube.playVideo()
-            }
-
-            dispatch({
-              type: player.isPlaying ? 'PAUSE': 'PLAY',
-            })
-          }}
+          className={['mdl-player__controls-button', player.isBuffering ? 'is-buffering' : player.isPlaying ? 'is-playing' : 'is-paused' ].join(' ')}
+          onClick={() => player.youtube && !player.isBuffering ? playPause() : false}
         >
-          <span className='icon'>
-            <svg className='buffer loading'><use xlinkHref='#icon-loading'></use></svg>
+          <span className='icon buffer'>
+            <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
           </span>
 
-          <span className='icon'>
-            <svg className='pause'><use xlinkHref='#icon-pause'></use></svg>
+          <span className='icon pause'>
+            <svg><use xlinkHref='#icon-pause'></use></svg>
           </span>
 
-          <span className='icon'>
-            <svg className='play'><use xlinkHref='#icon-play'></use></svg>
+          <span className='icon play'>
+            <svg><use xlinkHref='#icon-play'></use></svg>
           </span>
         </button>
 
@@ -140,9 +140,7 @@ const Player = ({ player, dispatch }) => {
         </div>
 
         <DocumentTitle title={getDocumentTitle()}>
-          <div className='mdl-player__info-title'>
-            {player.video.title || 'No video.'}
-          </div>
+          <div className='mdl-player__info-title'>{player.video.title || 'No video.'}</div>
         </DocumentTitle>
 
         <div className='mdl-player__info-time'>

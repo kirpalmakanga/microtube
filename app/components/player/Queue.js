@@ -110,7 +110,7 @@ class Queue extends React.Component {
                   >
                   {!isCurrentVideo ? (
                     <button
-                      className='queue__item-button'
+                      className='queue__item-button icon-button'
                       onClick={() => {
                         dispatch({ type: 'CLEAR_WATCHERS' })
 
@@ -121,18 +121,22 @@ class Queue extends React.Component {
                         })
                       }}
                     >
-                      <svg><use xlinkHref='#icon-play'></use></svg>
+                      <span className='icon'>
+                        <svg><use xlinkHref='#icon-play'></use></svg>
+                      </span>
                     </button>
                   ) : null}
 
                   <button
-                    className='queue__item-button'
+                    className='queue__item-button icon-button'
                     onClick={() => dispatch({
                       type: 'QUEUE_REMOVE',
                       index: i
                     })}
                   >
-                    <svg><use xlinkHref='#icon-close'></use></svg>
+                    <span className='icon'>
+                      <svg><use xlinkHref='#icon-close'></use></svg>
+                    </span>
                   </button>
                 </div>
               )

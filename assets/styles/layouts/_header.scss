@@ -52,12 +52,6 @@
             color: rgba($brand-secondary, 0.7);
             fill: rgba($brand-secondary, 0.7);
         }
-
-        &:active {
-            svg {
-                transform: scale(0.8);
-            }
-        }
     }
 }
 

@@ -157,7 +157,7 @@ const Player = ({ player, dispatch }) => {
           onChange={({target}) => {
             const newTime = duration * (target.value / 100)
 
-            if (isEmpty(player.youtube)) {
+            if (player.youtube) {
               player.youtube.seekTo(newTime)
               dispatch({
                 type: 'UPDATE_TIME',
@@ -197,7 +197,7 @@ const Player = ({ player, dispatch }) => {
             className='mdl-player__controls-button'
             onClick={() => dispatch({ type: player.isMuted ? 'UNMUTE' : 'MUTE' })}
             onWheel={({ deltaY }) => {
-              if (isEmpty(player.youtube)) {
+              if (player.youtube) {
                 dispatch({
                   type: 'SET_VOLUME',
                   data: deltaY < 0 ? player.volume + 5 : player.volume - 5
@@ -220,7 +220,7 @@ const Player = ({ player, dispatch }) => {
           <div
             className='mdl-player__controls-volume-range'
             onWheel={({ deltaY }) => {
-              if (isEmpty(player.youtube)) {
+              if (player.youtube) {
                 dispatch({
                   type: 'SET_VOLUME',
                   data: deltaY < 0 ? player.volume + 5 : player.volume - 5

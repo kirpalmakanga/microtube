@@ -69,17 +69,12 @@
             outline: none;
         }
 
-        &:active {
-            svg {
-                transform: scale(0.7);
-                opacity: 0.7;
-            }
-        }
         width: 50px;
 
         svg {
             @include transition();
             height: 30px;
+            width: 30px;
         }
     }
 }

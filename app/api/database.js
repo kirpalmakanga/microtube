@@ -5,9 +5,12 @@ const apiKey = 'AIzaSyCLDBo0aNwTTOp6yQMaD9b4mQX4B_rT2NE'
 
 function loadApi() {
   return new Promise((resolve, reject) => {
-    gapi.client.load('youtube', 'v3', function() {
-      resolve(gapi.client.youtube)
-    })
+    const waitForAPI = setInterval(() => {
+      if(gapi) {
+        clearInterval(waitForAPI)
+        gapi.client.load('youtube', 'v3', () => resolve(gapi.client.youtube))
+      }
+    }, 100)
   })
 }
 

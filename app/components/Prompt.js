@@ -8,6 +8,11 @@ import { getVideo } from '../actions/database'
 const Prompt = ({ auth, prompt, dispatch }) => {
   const {form, isVisible, promptText, confirmText, cancelText, callback } = prompt
 
+  function close(e) {
+    e.stopPropagation()
+    dispatch({ type: 'PROMPT_CLOSE' })
+  }
+
   function handleFocus(e) {
     e.preventDefault()
     e.target.parentNode.classList.add('is-focused')
@@ -23,39 +28,44 @@ const Prompt = ({ auth, prompt, dispatch }) => {
     e.preventDefault()
 
     dispatch(getVideo(auth.token, videoId))
-    dispatch({ type: 'PROMPT_CLOSE' })
+    close()
   }
 
   return (
-    <dialog className='mdl-dialog' open={isVisible ? true : false}>
-      <div className='mdl-dialog__content'>
-        <p>{promptText}</p>
-      </div>
-      {form ? (
-        <form onSubmit={handleSubmit}>
-          <div className='mdl-textfield' >
-            <input
-              className='mdl-textfield__input'
-              type='text'
-              autoFocus
-              placeholder='URL/ID...'
-              id='videoId'
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-          </div>
-          <div className='mdl-dialog__actions'>
-            <button type='submit' className='mdl-button'>{confirmText}</button>
-            <button type='button' className='mdl-button close' onClick={() => dispatch({ type: 'PROMPT_CLOSE' })}>{cancelText}</button>
-          </div>
-        </form>
-      ) : (
-        <div className='mdl-dialog__actions'>
-          <button type='button' className='mdl-button' onClick={callback}>{confirmText}</button>
-          <button type='button' className='mdl-button close' onClick={() => dispatch({ type: 'PROMPT_CLOSE' })}>{cancelText}</button>
+    <div
+      className={['mdl-dialog__overlay', isVisible ? 'mdl-dialog__overlay--show': ''].join(' ')}
+      onClick={close}
+    >
+      <div className='mdl-dialog'>
+        <div className='mdl-dialog__content'>
+          <p>{promptText}</p>
         </div>
-      )}
-    </dialog>
+        {form ? (
+          <form onSubmit={handleSubmit}>
+            <div className='mdl-textfield' >
+              <input
+                className='mdl-textfield__input'
+                type='text'
+                autoFocus
+                placeholder='URL/ID...'
+                id='videoId'
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+            </div>
+            <div className='mdl-dialog__actions'>
+              <button type='submit' className='mdl-button'>{confirmText}</button>
+              <button type='button' className='mdl-button close' onClick={close}>{cancelText}</button>
+            </div>
+          </form>
+        ) : (
+          <div className='mdl-dialog__actions'>
+            <button type='button' className='mdl-button' onClick={callback}>{confirmText}</button>
+            <button type='button' className='mdl-button close' onClick={close}>{cancelText}</button>
+          </div>
+        )}
+      </div>
+    </div>
   )
 }
 

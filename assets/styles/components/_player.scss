@@ -32,9 +32,6 @@
             background-color: $brand-primary;
             border: none;
             fill: $brand-secondary;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             flex: 1;
             height: 50px;
             @media screen and (min-width: 480px) {
@@ -53,29 +50,9 @@
                 outline: none;
             }
 
-            &:active {
-                svg {
-                    transform: scale(0.7);
-                }
-            }
-
             svg {
-                @include transition();
                 height: 30px;
                 width: 30px;
-            }
-
-            .icon {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-
-                svg {
-                    @include transition();
-                    opacity: 0;
-                    transform: scale(0.5);
-                }
             }
 
             &.mdl-badge[data-badge] {
@@ -92,14 +69,6 @@
                 top: 10px;
                 right: 10px;
               }
-            }
-
-            &.is-buffering .buffer,
-            &.is-muted .mute,
-            &.is-paused .play,
-            &.is-playing .pause {
-                opacity: 1;
-                transform: scale(1);
             }
         }
 

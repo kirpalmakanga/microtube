@@ -26,7 +26,9 @@ const VideoCard = ({ video, dispatch }) => {
           data: video
         })}
       >
-        <svg><use xlinkHref='#icon-queue'></use></svg>
+        <span className='icon'>
+          <svg><use xlinkHref='#icon-queue'></use></svg>
+        </span>
       </button>
 
       <button
@@ -46,7 +48,9 @@ const VideoCard = ({ video, dispatch }) => {
           })
         }}
       >
-        <svg><use xlinkHref='#icon-play'></use></svg>
+        <span className='icon'>
+          <svg><use xlinkHref='#icon-play'></use></svg>
+        </span>
       </button>
     </div>
   )

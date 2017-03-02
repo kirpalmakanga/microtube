@@ -2,6 +2,8 @@
   margin: 0;
   flex-grow: 1;
   .mdl-textfield {
+    display: flex;
+    align-items: center;
     width: 100%;
   }
 }

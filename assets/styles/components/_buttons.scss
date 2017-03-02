@@ -36,3 +36,22 @@
         }
     }
 }
+
+.icon-button {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .icon {
+      @include transition();
+      transform-origin: 50% 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  &:active {
+      .icon {
+          transform: scale(0.7);
+      }
+  }
+}

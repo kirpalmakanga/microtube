@@ -87,7 +87,7 @@
     }
 
     .mdl-layout__header &-button {
-        position: static;
+        position: relative;
         margin: 8px 4px;
         @include transition();
         display: flex;
@@ -97,6 +97,7 @@
 
         svg {
             @include transition();
+            width: 30px;
             height: 30px;
         }
 

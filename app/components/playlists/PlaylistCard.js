@@ -22,12 +22,16 @@ const PlaylistCard = ({ auth, id, title, dispatch }) => {
         <p className='card__text-subtitle'></p>
       </div>
 
-      <button className='card__button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id))}>
-        <svg><use xlinkHref='#icon-queue'></use></svg>
+      <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id))}>
+        <span className='icon'>
+          <svg><use xlinkHref='#icon-queue'></use></svg>
+        </span>
       </button>
 
-      <button className='card__button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id, true))}>
-        <svg><use xlinkHref='#icon-play'></use></svg>
+      <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id, true))}>
+        <span className='icon'>
+          <svg><use xlinkHref='#icon-play'></use></svg>
+        </span>
       </button>
     </div>
   )

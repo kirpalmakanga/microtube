@@ -79,7 +79,7 @@ const Player = ({ player, dispatch }) => {
     <div className='mdl-player mdl-shadow--2dp'>
       <div className='mdl-player__controls'>
         <button
-          className='mdl-player__controls-button'
+          className='mdl-player__controls-button icon-button'
           onClick={() => {
             if(previousVideo) {
 
@@ -93,28 +93,29 @@ const Player = ({ player, dispatch }) => {
             }
           }}
         >
-          <svg><use xlinkHref='#icon-skip-previous'></use></svg>
+          <span className='icon'>
+            <svg><use xlinkHref='#icon-skip-previous'></use></svg>
+          </span>
         </button>
 
         <button
-          className={['mdl-player__controls-button', player.isBuffering ? 'is-buffering' : player.isPlaying ? 'is-playing' : 'is-paused' ].join(' ')}
+          className='mdl-player__controls-button icon-button'
           onClick={() => player.youtube && !player.isBuffering ? playPause() : false}
         >
-          <span className='icon buffer'>
-            <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
-          </span>
-
-          <span className='icon pause'>
-            <svg><use xlinkHref='#icon-pause'></use></svg>
-          </span>
-
-          <span className='icon play'>
-            <svg><use xlinkHref='#icon-play'></use></svg>
+          <span className={['icon', player.isBuffering ? 'loading': ''].join(' ')}>
+            {player.isBuffering ? (
+              <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
+            )
+            : player.isPlaying ? (
+              <svg><use xlinkHref='#icon-pause'></use></svg>
+            ) : (
+              <svg><use xlinkHref='#icon-play'></use></svg>
+            )}
           </span>
         </button>
 
         <button
-          className='mdl-player__controls-button'
+          className='mdl-player__controls-button icon-button'
           onClick={() => {
             if(nextVideo) {
               dispatch({ type: 'CLEAR_WATCHERS' })
@@ -127,7 +128,9 @@ const Player = ({ player, dispatch }) => {
             }
           }}
         >
-          <svg><use xlinkHref='#icon-skip-next'></use></svg>
+          <span className='icon'>
+            <svg><use xlinkHref='#icon-skip-next'></use></svg>
+          </span>
         </button>
       </div>
 
@@ -171,21 +174,25 @@ const Player = ({ player, dispatch }) => {
       <div className='mdl-player__controls'>
         <button
           className={[
-            'mdl-player__controls-button mdl-badge',
+            'mdl-player__controls-button mdl-badge icon-button',
             player.showQueue ? 'is-active' : '',
             player.newQueueItems ? 'mdl-badge--active' : '',
           ].join(' ')}
           onClick={() => dispatch({ type: player.showQueue ? 'QUEUE_CLOSE' : 'QUEUE_OPEN' })}
           data-badge={player.newQueueItems}
         >
-          <svg><use xlinkHref='#icon-list'></use></svg>
+          <span className='icon'>
+            <svg><use xlinkHref='#icon-list'></use></svg>
+          </span>
         </button>
 
         <button
-          className={['mdl-player__controls-button', player.showScreen ? 'is-active' : ''].join(' ')}
+          className={['mdl-player__controls-button icon-button', player.showScreen ? 'is-active' : ''].join(' ')}
           onClick={() => dispatch({ type: player.showScreen ? 'SCREEN_CLOSE' : 'SCREEN_OPEN' })}
         >
-          <svg><use xlinkHref='#icon-film'></use></svg>
+          <span className='icon'>
+            <svg><use xlinkHref='#icon-film'></use></svg>
+          </span>
         </button>
 
         <div
@@ -194,7 +201,7 @@ const Player = ({ player, dispatch }) => {
           onMouseLeave={() => dispatch({ type: 'CLOSE_VOLUME' })}
         >
           <button
-            className='mdl-player__controls-button'
+            className='mdl-player__controls-button icon-button'
             onClick={() => dispatch({ type: player.isMuted ? 'UNMUTE' : 'MUTE' })}
             onWheel={({ deltaY }) => {
               if (player.youtube) {
@@ -205,16 +212,17 @@ const Player = ({ player, dispatch }) => {
               }
             }}
           >
-            {player.isMuted ? (
-              <svg><use xlinkHref='#icon-volume-mute'></use></svg>
-            ) : player.volume >= 50 ? (
-              <svg><use xlinkHref='#icon-volume-up'></use></svg>
-            ) : player.volume > 0 && player.volume <= 50 ? (
-              <svg><use xlinkHref='#icon-volume-down'></use></svg>
-            ) : (
-              <svg><use xlinkHref='#icon-volume-off'></use></svg>
-            ) }
-
+            <span className='icon'>
+              {player.isMuted ? (
+                <svg><use xlinkHref='#icon-volume-mute'></use></svg>
+              ) : player.volume >= 50 ? (
+                <svg><use xlinkHref='#icon-volume-up'></use></svg>
+              ) : player.volume > 0 && player.volume <= 50 ? (
+                <svg><use xlinkHref='#icon-volume-down'></use></svg>
+              ) : (
+                <svg><use xlinkHref='#icon-volume-off'></use></svg>
+              ) }
+            </span>
           </button>
 
           <div

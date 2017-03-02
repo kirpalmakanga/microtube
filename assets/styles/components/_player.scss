@@ -50,36 +50,9 @@
                 outline: none;
             }
 
-            &:active {
-                svg {
-                    transform: scale(0.7);
-                }
-            }
-
             svg {
-                @include transition();
                 height: 30px;
                 width: 30px;
-            }
-
-            .icon {
-                @include transition();
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                opacity: 0;
-            }
-
-            &.is-buffering .buffer,
-            &.is-muted .mute,
-            &.is-paused .play,
-            &.is-playing .pause {
-                opacity: 1;
             }
 
             &.mdl-badge[data-badge] {

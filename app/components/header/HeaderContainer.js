@@ -21,10 +21,12 @@ const Header = ({ auth, playlistItems, player, search, dispatch }) => {
         <div className='mdl-layout__header-row'>
           {playlistItems.isOpen ? (
             <button
-              className='mdl-layout__drawer-button'
+              className='mdl-layout__drawer-button icon-button'
               onClick={() => dispatch({ type: 'PLAYLIST_CLOSE' })}
             >
-              <svg><use xlinkHref='#icon-back'></use></svg>
+              <span className='icon'>
+                <svg><use xlinkHref='#icon-back'></use></svg>
+              </span>
             </button>
           ) : null}
 
@@ -33,7 +35,7 @@ const Header = ({ auth, playlistItems, player, search, dispatch }) => {
           <div className='mdl-layout-spacer'></div>
           <nav className='mdl-navigation'>
             <button
-              className='mdl-navigation__link'
+              className='mdl-navigation__link icon-button'
               onClick={() => {
                 dispatch({ type: 'SCREEN_CLOSE' })
 
@@ -42,14 +44,21 @@ const Header = ({ auth, playlistItems, player, search, dispatch }) => {
                 dispatch({ type: 'SEARCH_OPEN' })
               }}
             >
-              <svg><use xlinkHref='#icon-search'></use></svg>
+              <span className='icon'>
+                <svg><use xlinkHref='#icon-search'></use></svg>
+              </span>
+
             </button>
 
-            <button className='mdl-navigation__link' onClick={auth.token ? () => dispatch({ type: 'UNLINK' }) : () => dispatch(logIn()) }>
+            <button className='mdl-navigation__link icon-button' onClick={auth.token ? () => dispatch({ type: 'UNLINK' }) : () => dispatch(logIn()) }>
               {auth.token ? (
-                <svg><use xlinkHref='#icon-exit'></use></svg>
+                <span className='icon'>
+                  <svg><use xlinkHref='#icon-exit'></use></svg>
+                </span>
               ) : (
-                <svg><use xlinkHref='#icon-user'></use></svg>
+                <span className='icon'>
+                  <svg><use xlinkHref='#icon-user'></use></svg>
+                </span>
               )}
             </button>
           </nav>

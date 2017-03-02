@@ -6,10 +6,12 @@ const SearchHeader = ({ dispatch }) => {
   return (
     <div className='mdl-layout__header-row'>
       <button
-        className='mdl-layout__drawer-button'
+        className='mdl-layout__drawer-button icon-button'
         onClick={() => dispatch({ type: 'SEARCH_CLOSE' })}
       >
+        <span className='icon'>
           <svg><use xlinkHref='#icon-back'></use></svg>
+        </span>
       </button>
       <SearchForm />
     </div>

@@ -12,12 +12,16 @@
         font-family: $font-primary;
         display: flex;
         align-items: center;
+        cursor: pointer;
 
         &:before {
             padding: 15px;
             display: flex;
             flex: 1;
             content: attr(data-title);
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
         }
 
 

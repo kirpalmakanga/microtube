@@ -100,7 +100,16 @@ class Queue extends React.Component {
               return (
                 <div
                   key={i}
-                  className={['queue__item', isCurrentVideo ? 'queue__item--active' : ''].join(' ')}
+                  className={['queue__item', player.video.videoId === item.videoId ? 'queue__item--active' : ''].join(' ')}
+                  onClick={() => {
+                    dispatch({ type: 'CLEAR_WATCHERS' })
+
+                    dispatch({
+                      type: 'PLAY',
+                      data: item,
+                      skip: true
+                    })
+                  }}
                   onDragEnd={this.dragEnd.bind(this)}
                   onDragStart={this.dragStart.bind(this)}
                   data-id={i}
@@ -108,24 +117,19 @@ class Queue extends React.Component {
                   data-duration={parseDuration(item.duration)}
                   draggable
                   >
-                  {!isCurrentVideo ? (
-                    <button
-                      className='queue__item-button icon-button'
-                      onClick={() => {
-                        dispatch({ type: 'CLEAR_WATCHERS' })
 
-                        dispatch({
-                          type: 'PLAY',
-                          data: item,
-                          skip: true
-                        })
-                      }}
-                    >
-                      <span className='icon'>
+                  <button className='queue__item-button icon-button'>
+                    <span className='icon'>
+                      {isCurrentVideo && player.isBuffering ? (
+                        <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
+                      )
+                      : isCurrentVideo && player.isPlaying ? (
+                        <svg><use xlinkHref='#icon-pause'></use></svg>
+                      ) : (
                         <svg><use xlinkHref='#icon-play'></use></svg>
-                      </span>
-                    </button>
-                  ) : null}
+                      )}
+                    </span>
+                  </button>
 
                   <button
                     className='queue__item-button icon-button'

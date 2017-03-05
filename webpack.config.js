@@ -16,6 +16,7 @@ const config = {
   devtool: 'cheap-module-eval-source-map',
   devServer: {
     hot: true,
+    open: true,
     outputPath: path.join(__dirname, 'public'),
     noInfo: true,
     publicPath: './public',

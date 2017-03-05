@@ -1,3 +1,9 @@
+.mdl-layout-title {
+  font-size: 16px;
+  @media screen and (min-width: 480px) {
+      font-size: 20px;
+  }
+}
 .mdl-layout__header {
     @include transition();
     position: relative;
@@ -16,8 +22,12 @@
 .mdl-navigation {
     svg {
         @include transition();
-        height: 30px;
-        width: 30px;
+        height: 26px;
+        width: 26px;
+        @media screen and (min-width: 480px) {
+          height: 30px;
+          width: 30px;
+        }
     }
 
     &__link {
@@ -37,6 +47,9 @@
 
         .mdl-layout__header-row & {
             padding: 0 12px;
+            &:last-child {
+              padding-right: 0;
+            }
         }
 
         svg {
@@ -82,7 +95,7 @@
 
     .mdl-layout__header &-button {
         position: relative;
-        margin: 8px 4px;
+        margin-left: -16px;
         @include transition();
         display: flex;
         justify-content: center;
@@ -103,6 +116,6 @@
         &:hover {
             fill: rgba($brand-secondary, 0.7);
         }
-        
+
     }
 }

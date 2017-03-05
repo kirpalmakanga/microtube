@@ -91,6 +91,24 @@ class Queue extends React.Component {
     }
   }
 
+  playItem() {
+    this.props.dispatch({ type: 'CLEAR_WATCHERS' })
+
+    this.props.dispatch({
+      type: 'PLAY',
+      data: item,
+      skip: true
+    })
+  }
+
+  deleteItem(e) {
+    e.stopPropagation()
+    this.props.dispatch({
+      type: 'QUEUE_REMOVE',
+      index: i
+    })
+  }
+
   render() {
     const { player, dispatch } = this.props
     return (
@@ -101,15 +119,7 @@ class Queue extends React.Component {
                 <div
                   key={i}
                   className={['queue__item', player.video.videoId === item.videoId ? 'queue__item--active' : ''].join(' ')}
-                  onClick={() => {
-                    dispatch({ type: 'CLEAR_WATCHERS' })
-
-                    dispatch({
-                      type: 'PLAY',
-                      data: item,
-                      skip: true
-                    })
-                  }}
+                  onClick={playItem.bind(this)}
                   onDragEnd={this.dragEnd.bind(this)}
                   onDragStart={this.dragStart.bind(this)}
                   data-id={i}
@@ -118,7 +128,7 @@ class Queue extends React.Component {
                   draggable
                   >
 
-                  <button className='queue__item-button icon-button'>
+                  <div className='queue__item-button icon-button'>
                     <span className='icon'>
                       {isCurrentVideo && player.isBuffering ? (
                         <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
@@ -129,14 +139,11 @@ class Queue extends React.Component {
                         <svg><use xlinkHref='#icon-play'></use></svg>
                       )}
                     </span>
-                  </button>
+                  </div>
 
                   <button
                     className='queue__item-button icon-button'
-                    onClick={() => dispatch({
-                      type: 'QUEUE_REMOVE',
-                      index: i
-                    })}
+                    onClick={deleteItem.bind(this)}
                   >
                     <span className='icon'>
                       <svg><use xlinkHref='#icon-close'></use></svg>

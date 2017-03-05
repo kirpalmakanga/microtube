@@ -119,7 +119,7 @@ class Queue extends React.Component {
                 <div
                   key={i}
                   className={['queue__item', player.video.videoId === item.videoId ? 'queue__item--active' : ''].join(' ')}
-                  onClick={playItem.bind(this)}
+                  onClick={this.playItem.bind(this)}
                   onDragEnd={this.dragEnd.bind(this)}
                   onDragStart={this.dragStart.bind(this)}
                   data-id={i}
@@ -143,7 +143,7 @@ class Queue extends React.Component {
 
                   <button
                     className='queue__item-button icon-button'
-                    onClick={deleteItem.bind(this)}
+                    onClick={this.deleteItem.bind(this)}
                   >
                     <span className='icon'>
                       <svg><use xlinkHref='#icon-close'></use></svg>

@@ -128,7 +128,7 @@ class Queue extends React.Component {
                   draggable
                   >
 
-                  <button className='queue__item-button icon-button'>
+                  <div className='queue__item-button icon-button'>
                     <span className='icon'>
                       {isCurrentVideo && player.isBuffering ? (
                         <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
@@ -139,7 +139,7 @@ class Queue extends React.Component {
                         <svg><use xlinkHref='#icon-play'></use></svg>
                       )}
                     </span>
-                  </button>
+                  </div>
 
                   <button
                     className='queue__item-button icon-button'

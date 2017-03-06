@@ -91,24 +91,6 @@ class Queue extends React.Component {
     }
   }
 
-  playItem() {
-    this.props.dispatch({ type: 'CLEAR_WATCHERS' })
-
-    this.props.dispatch({
-      type: 'PLAY',
-      data: item,
-      skip: true
-    })
-  }
-
-  deleteItem(e) {
-    e.stopPropagation()
-    this.props.dispatch({
-      type: 'QUEUE_REMOVE',
-      index: e.target.getAttribute('data-id')
-    })
-  }
-
   render() {
     const { player, dispatch } = this.props
     return (
@@ -119,7 +101,15 @@ class Queue extends React.Component {
                 <div
                   key={i}
                   className={['queue__item', player.video.videoId === item.videoId ? 'queue__item--active' : ''].join(' ')}
-                  onClick={this.playItem.bind(this)}
+                  onClick={() =>{
+                    dispatch({ type: 'CLEAR_WATCHERS' })
+
+                    dispatch({
+                      type: 'PLAY',
+                      data: item,
+                      skip: true
+                    })
+                  }}
                   onDragEnd={this.dragEnd.bind(this)}
                   onDragStart={this.dragStart.bind(this)}
                   data-id={i}
@@ -143,7 +133,13 @@ class Queue extends React.Component {
 
                   <button
                     className='queue__item-button icon-button'
-                    onClick={this.deleteItem.bind(this)}
+                    onClick={e => {
+                      e.stopPropagation()
+                      this.props.dispatch({
+                        type: 'QUEUE_REMOVE',
+                        index: e.target.getAttribute('data-id')
+                      })
+                    }}
                   >
                     <span className='icon'>
                       <svg><use xlinkHref='#icon-close'></use></svg>

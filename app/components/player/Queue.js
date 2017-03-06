@@ -102,16 +102,16 @@ class Queue extends React.Component {
                   key={i}
                   className={['queue__item', isCurrentVideo ? 'queue__item--active' : ''].join(' ')}
                   onClick={() => {
-                    if (player.isPlaying) {
-                      player.youtube.pauseVideo()
-                    } else if (isCurrentVideo) {
-                      player.youtube.pauseVideo()
-                    } else {
+                    if(!isCurrentVideo) {
                       dispatch({
                         type: 'PLAY',
                         data: item,
                         skip: true
                       })
+                    } else if (player.isPlaying) {
+                      player.youtube.pauseVideo()
+                    } else {
+                      player.youtube.playVideo()
                     }
                   }}
                   onDragEnd={this.dragEnd.bind(this)}

@@ -101,11 +101,11 @@ class Queue extends React.Component {
     })
   }
 
-  deleteItem({target, stopPropagation}) {
-    stopPropagation()
+  deleteItem(e) {
+    e.stopPropagation()
     this.props.dispatch({
       type: 'QUEUE_REMOVE',
-      index: target.getAttribute('data-id')
+      index: e.target.getAttribute('data-id')
     })
   }
 

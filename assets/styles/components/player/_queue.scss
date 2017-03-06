@@ -19,6 +19,7 @@
             padding: 15px;
             display: flex;
             flex: 1;
+            -webkit-appearance: none;
             content: attr(data-title);
             text-overflow: ellipsis;
             overflow: hidden;

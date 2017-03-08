@@ -1,16 +1,25 @@
 .search-form {
   margin: 0;
   flex-grow: 1;
-  .mdl-textfield {
+  .textfield {
     display: flex;
     align-items: center;
     width: 100%;
   }
 }
 
-.mdl-textfield {
+.textfield {
   &__input {
     font-family: $font-primary;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    color: $white;
+    @extend .add-bottom;
+    color: $black;
+    &:focus {
+      outline: none;
+    }
   }
   &__label {
     color: rgba($white, 0.3);

@@ -52,17 +52,16 @@
         @include transition();
         background-color: $black;
         fill: $white;
-        border: none;
+        border-top: none;
+        border-bottom: none;
+        border-right: none;
         display: flex;
         align-items: center;
         cursor: pointer;
-
-        &:not(:last-child) {
-            margin-right: 1px;
-        }
+        border-left: 2px solid lighten($brand-primary, 20%);
 
         &:hover {
-            background-color: lighten($black, 20%);
+            background-color: lighten($black, 10%);
         }
 
         &:focus {
@@ -77,4 +76,6 @@
             width: 30px;
         }
     }
+
+
 }

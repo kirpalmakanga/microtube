@@ -6,26 +6,15 @@ export default function(state = {}, action) {
   switch (action.type) {
     case 'GET_PLAYLISTS_ERROR':
       return {
-        className: 'mdl-snackbar--active',
+        className: 'notification--active',
         message: action.notifications.error
       }
 
     case 'OAUTH_FAILURE':
-      return {
-        className: 'mdl-snackbar--active',
-        message: action.notification
-      }
-
     case 'LINK_FAILURE':
+    case 'UNLINK':
       return {
-        className: 'mdl-snackbar--active',
-        message: action.notification
-      }
-
-    case 'UNLINK_SUCCESS':
-    case 'UNLINK_FAILURE':
-      return {
-        className: 'mdl-snackbar--active',
+        className: 'notification--active',
         message: action.notification
       }
 

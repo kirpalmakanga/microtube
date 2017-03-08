@@ -6,14 +6,20 @@
     &__item {
         @include transition();
         border-bottom: 2px solid rgba($brand-primary, 0.5);
-
         text-transform: uppercase;
         font-size: 16px;
         font-family: $font-primary;
         display: flex;
         align-items: center;
         cursor: pointer;
-        -webkit-appearance: none;
+        -webkit-tap-highlight-color: transparent;
+
+        &:hover {
+          background-color: lighten($brand-primary, 30%);
+          &.queue__item--active {
+              background-color: lighten($brand-primary, 40%);
+          }
+        }
 
         &:before {
             padding: 15px;
@@ -25,7 +31,6 @@
             overflow: hidden;
             white-space: nowrap;
         }
-
 
         &-button {
             padding: 0;
@@ -56,7 +61,7 @@
 
     &__item--placeholder {
         height: 52px;
-        background-color: lighten($brand-primary, 30%);
+        background-color: lighten($brand-primary, 50%);
     }
     &__item--hidden {
       display: none;

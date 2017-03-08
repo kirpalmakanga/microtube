@@ -1,0 +1,45 @@
+.dialog__overlay {
+  @include transition();
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  visibility: hidden;
+  background-color: rgba($black, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  z-index: 6;
+  &--show {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.dialog {
+  background-color: $white;
+  padding: 20px;
+  position: relative;
+
+  &__content {
+    color: $black;
+  }
+
+  &__actions {
+      display: flex;
+      justify-content: flex-end;
+      .button {
+        &:not(:last-child) {
+          margin-right: 10px;
+        }
+      }
+  }
+
+  .textfield {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}

@@ -16,10 +16,10 @@ const { connect } = ReactRedux
 const App = ({ children, auth }) => {
   return (
     <FastClick>
-      <div className='mdl-layout'>
+      <div className='layout'>
         <Header />
 
-        <main className='mdl-layout__content'>
+        <main className='layout__content'>
           {auth.token ? children : null}
         </main>
 

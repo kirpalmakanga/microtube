@@ -16,7 +16,7 @@ const PlaylistCard = ({ auth, id, title, dispatch }) => {
   }
 
   return (
-    <div className='card mdl-shadow--2dp'>
+    <div className='card shadow--2dp'>
       <div className='card__text' onClick={openPlaylist}>
         <h2 className='card__text-title'>{title}</h2>
         <p className='card__text-subtitle'></p>

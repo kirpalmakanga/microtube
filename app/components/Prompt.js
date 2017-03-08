@@ -33,18 +33,21 @@ const Prompt = ({ auth, prompt, dispatch }) => {
 
   return (
     <div
-      className={['mdl-dialog__overlay', isVisible ? 'mdl-dialog__overlay--show': ''].join(' ')}
+      className={['dialog__overlay', isVisible ? 'dialog__overlay--show': ''].join(' ')}
       onClick={close}
     >
-      <div className='mdl-dialog'>
-        <div className='mdl-dialog__content'>
+      <div
+        className='dialog'
+        onClick={e => e.stopPropagation()}
+      >
+        <div className='dialog__content'>
           <p>{promptText}</p>
         </div>
         {form ? (
           <form onSubmit={handleSubmit}>
-            <div className='mdl-textfield' >
+            <div className='textfield' >
               <input
-                className='mdl-textfield__input'
+                className='textfield__input'
                 type='text'
                 autoFocus
                 placeholder='URL/ID...'
@@ -53,17 +56,16 @@ const Prompt = ({ auth, prompt, dispatch }) => {
                 onBlur={handleBlur}
               />
             </div>
-            <div className='mdl-dialog__actions'>
-              <button type='submit' className='mdl-button'>{confirmText}</button>
-              <button type='button' className='mdl-button close' onClick={close}>{cancelText}</button>
-            </div>
           </form>
-        ) : (
-          <div className='mdl-dialog__actions'>
-            <button type='button' className='mdl-button' onClick={callback}>{confirmText}</button>
-            <button type='button' className='mdl-button close' onClick={close}>{cancelText}</button>
-          </div>
-        )}
+        ) : null}
+        <div className='dialog__actions'>
+          <button className='button button--close' onClick={close}>{cancelText}</button>
+          {form ? (
+            <button type='submit' className='button'>{confirmText}</button>
+          ) : (
+            <button className='button' onClick={callback}>{confirmText}</button>
+          )}
+        </div>
       </div>
     </div>
   )

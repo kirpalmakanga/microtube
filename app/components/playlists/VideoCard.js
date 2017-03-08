@@ -9,7 +9,7 @@ const VideoCard = ({ video, dispatch }) => {
   const { videoId, title, publishedAt, duration, channelTitle } = video
 
   return (
-    <div className='card mdl-shadow--2dp'>
+    <div className='card shadow--2dp'>
       <div className='card__text'>
         <div>
           <h2 className='card__text-title'>{title}</h2>

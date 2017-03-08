@@ -94,7 +94,7 @@ class Queue extends React.Component {
   render() {
     const { player, dispatch } = this.props
     return (
-        <div className={['queue mdl-shadow--2dp', player.showQueue ? 'queue--show' : ''].join(' ')} onDragOver={this.dragOver.bind(this)}>
+        <div className={['queue shadow--2dp', player.showQueue ? 'queue--show' : ''].join(' ')} onDragOver={this.dragOver.bind(this)}>
             {player.queue.length ? player.queue.map((item, i) => {
               const isCurrentVideo = (player.video.videoId === item.videoId)
               return (
@@ -123,9 +123,9 @@ class Queue extends React.Component {
                   >
 
                   <div className='queue__item-button icon-button'>
-                    <span className='icon'>
+                    <span className={['icon', isCurrentVideo && player.isBuffering ? 'rotating': ''].join(' ')}>
                       {isCurrentVideo && player.isBuffering ? (
-                        <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
+                        <svg><use xlinkHref='#icon-loading'></use></svg>
                       )
                       : isCurrentVideo && player.isPlaying ? (
                         <svg><use xlinkHref='#icon-pause'></use></svg>

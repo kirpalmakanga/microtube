@@ -17,9 +17,15 @@ const Notifications = ({ notifications, dispatch }) => {
   }
 
   return (
-    <div className={'mdl-snackbar ' + notifications.className}>
-      <div className='mdl-snackbar__text'>{notifications.message || ''}</div>
-      <button className='mdl-snackbar__action' onClick={close} >Fermer</button>
+    <div className={['notification', notifications.className || ''].join(' ')}>
+      <div className='notification__content'>
+        <div className='notification__text'>{notifications.message || ''}</div>
+        <button className='notification__action icon-button' onClick={close} >
+          <span className='icon'>
+            <svg><use xlinkHref='#icon-close'></use></svg>
+          </span>
+        </button>
+      </div>
     </div>
   )
 }

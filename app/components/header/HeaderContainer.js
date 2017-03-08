@@ -49,7 +49,7 @@ const Header = ({ auth, playlistItems, player, search, dispatch }) => {
 
             </button>
 
-            <button className='navigation__link icon-button' onClick={auth.token ? () => dispatch({ type: 'UNLINK' }) : () => dispatch(logIn()) }>
+            <button className='navigation__link icon-button' onClick={auth.token ? () => dispatch({ type: 'UNLINK', notification: 'Déconnecté.' }) : () => dispatch(logIn()) }>
               {auth.token ? (
                 <span className='icon'>
                   <svg><use xlinkHref='#icon-exit'></use></svg>

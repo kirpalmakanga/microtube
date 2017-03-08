@@ -8,7 +8,7 @@ import Queue from './Queue'
 import Screen from './Screen'
 
 const PlayerContainer = () => (
-  <div className='mdl-player__container'>
+  <div className='player__container'>
     <Queue />
     <Screen />
     <Player />

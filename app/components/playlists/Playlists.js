@@ -27,15 +27,15 @@ const Playlists = ({ auth, playlists, dispatch }) => {
   }
 
   return (
-    <div className='mdl-grid'>
+    <div className='grid'>
       {playlists.items.map(({id, title}, i) => (
-        <div key={i} className='mdl-cell mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--12-col'>
+        <div key={i} className='grid__item'>
           <PlaylistCard id={id} title={title} />
         </div>
       ))}
 
-      <div className={['mdl-grid__loading', playlists.isLoading === 1 ? 'is-active': ''].join(' ')}>
-        <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
+      <div className={['grid__loading', playlists.isLoading === 1 ? 'is-active': ''].join(' ')}>
+        <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
       </div>
 
       {renderWaypoint()}

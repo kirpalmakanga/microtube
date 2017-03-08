@@ -1,22 +1,40 @@
-.mdl-layout-title {
+.layout-title {
   font-size: 20px;
 }
-.mdl-layout__header {
+.layout__header {
     @include transition();
     position: relative;
     background-color: $brand-primary;
-    @media screen and (max-width: 1024px) {
-        display: flex;
-    }
+    display: flex;
     &-row {
+      display: flex;
+      flex: 1;
+      align-items: center;
       padding: 0 16px 0 16px;
-      @media screen and (max-width: 1024px) {
-        padding: 0 16px 0 16px;
-      }
+      height: 56px;
     }
 }
 
-.mdl-navigation {
+.layout__back-button {
+  background-color: transparent;
+  border: none;
+  fill: $white;
+  height: 100%;
+  cursor: pointer;
+  &:focus {
+    outline: none;
+  }
+  svg {
+    height: 30px;
+    width: 30px;
+  }
+}
+
+.navigation {
+    height: 100%;
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
     svg {
         @include transition();
         height: 26px;
@@ -42,7 +60,7 @@
         border: none;
         cursor: pointer;
 
-        .mdl-layout__header-row & {
+        .layout__header-row & {
             padding: 0 12px;
             &:last-child {
               padding-right: 0;
@@ -62,57 +80,5 @@
             color: rgba($brand-secondary, 0.7);
             fill: rgba($brand-secondary, 0.7);
         }
-    }
-}
-
-.mdl-layout__drawer {
-    @include transition();
-    background-color: $brand-primary;
-    width: 250px;
-    border: none;
-
-    .mdl-navigation {
-        width: 100%;
-
-        &__link {
-            padding: 16px 24px;
-
-            svg {
-                margin-right: 15px;
-            }
-
-            &.is-active,
-            &:hover {
-                fill: $black;
-                color: $black;
-                background-color: $white;
-            }
-        }
-    }
-
-    .mdl-layout__header &-button {
-        position: relative;
-        margin-left: -16px;
-        @include transition();
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        fill: $brand-secondary;
-
-        svg {
-            @include transition();
-            width: 30px;
-            height: 30px;
-        }
-
-        &:focus {
-            outline: none;
-        }
-
-        &.active,
-        &:hover {
-            fill: rgba($brand-secondary, 0.7);
-        }
-
     }
 }

@@ -1,5 +1,4 @@
-@import 'node_modules/material-design-lite/src/material-design-lite.scss';
-
+@import 'common/_normalize';
 @import 'common/_variables';
 @import 'common/_mixins';
 @import 'common/_helpers';
@@ -12,7 +11,7 @@
 @import 'components/_modal';
 @import 'components/_notifications';
 
-@import 'components/_player';
+@import 'components/player/_player';
 @import 'components/player/_queue';
 @import 'components/player/_screen';
 

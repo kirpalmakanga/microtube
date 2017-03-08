@@ -12,16 +12,16 @@ const { connect } = ReactRedux
 
 const Header = ({ auth, playlistItems, player, search, dispatch }) => {
   return (
-    <header className='mdl-layout__header'>
+    <header className='layout__header'>
       {player.showQueue ? (
         <QueueHeader />
       ) : search.isOpen ? (
         <SearchHeader />
       ) : (
-        <div className='mdl-layout__header-row'>
+        <div className='layout__header-row'>
           {playlistItems.isOpen ? (
             <button
-              className='mdl-layout__drawer-button icon-button'
+              className='layout__back-button icon-button'
               onClick={() => dispatch({ type: 'PLAYLIST_CLOSE' })}
             >
               <span className='icon'>
@@ -30,12 +30,11 @@ const Header = ({ auth, playlistItems, player, search, dispatch }) => {
             </button>
           ) : null}
 
-          <span className='mdl-layout-title'>{playlistItems.isOpen ? playlistItems.title : 'Youtube Lite'}</span>
+          <span className='layout-title'>{playlistItems.isOpen ? playlistItems.title : 'Youtube Lite'}</span>
 
-          <div className='mdl-layout-spacer'></div>
-          <nav className='mdl-navigation'>
+          <nav className='navigation'>
             <button
-              className='mdl-navigation__link icon-button'
+              className='navigation__link icon-button'
               onClick={() => {
                 dispatch({ type: 'SCREEN_CLOSE' })
 
@@ -50,7 +49,7 @@ const Header = ({ auth, playlistItems, player, search, dispatch }) => {
 
             </button>
 
-            <button className='mdl-navigation__link icon-button' onClick={auth.token ? () => dispatch({ type: 'UNLINK' }) : () => dispatch(logIn()) }>
+            <button className='navigation__link icon-button' onClick={auth.token ? () => dispatch({ type: 'UNLINK' }) : () => dispatch(logIn()) }>
               {auth.token ? (
                 <span className='icon'>
                   <svg><use xlinkHref='#icon-exit'></use></svg>

@@ -82,7 +82,7 @@ const Screen = ({ player, dispatch }) => {
   const nextVideo = player.queue[currentIndex + 1]
 
   return (
-    <div className={['screen mdl-shadow--2dp', player.showScreen ? 'screen--show': ''].join(' ')}>
+    <div className={['screen shadow--2dp', player.showScreen ? 'screen--show': ''].join(' ')}>
           {videoId ? (
             <YoutubePlayer
               className={'screen__content'}

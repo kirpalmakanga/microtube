@@ -21,10 +21,12 @@ body {
   background-color: lighten($brand-primary, 20%);
   color: $brand-secondary;
   font-family: $font-secondary;
+  overflow: hidden;
 }
 
 h1, h2 {
   font-family: $font-primary;
+  font-weight: normal;
 }
 
 h1 {
@@ -47,26 +49,10 @@ button, a, input {
   display: none;
 }
 
-.loading {
+.rotating {
       -webkit-animation: rotating 2s linear infinite;
       -moz-animation: rotating 2s linear infinite;
       animation: rotating 2s linear infinite;
-}
-
-.arrow-up {
-  width: 0;
-  height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-bottom: 15px solid lighten($brand-primary, 40%);
-}
-
-.arrow-right {
-  width: 0;
-  height: 0;
-  border-top: 15px solid transparent;
-  border-bottom: 15px solid transparent;
-  border-left: 15px solid lighten($brand-primary, 40%);
 }
 
 .app-loader {
@@ -86,7 +72,7 @@ button, a, input {
   opacity: 0;
   visibility: hidden;
 
-  .loading {
+  svg {
     fill: $brand-secondary;
     height: 50px;
     width: 50px;
@@ -122,6 +108,7 @@ button, a, input {
     visibility: visible;
   }
 }
+
 .mdl-dialog {
   background-color: $white;
   .mdl-textfield {
@@ -144,21 +131,20 @@ button, a, input {
   @media screen and (min-width: 480px) {
     bottom: 50px;
   }
-  @media screen and (min-width: 1024px) {
-    top: 64px;
-  }
 
-  .mdl-grid {
+  .grid {
     height: 100%;
     overflow-y: auto;
   }
 }
+
 .playlist-items {
   z-index: 1;
 }
 .search {
   z-index: 2;
 }
+
 .playlist-items--show,
 .search--show {
   transform: translateY(0);

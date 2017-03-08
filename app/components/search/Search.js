@@ -26,16 +26,16 @@ const Search = ({ auth, search, dispatch }) => {
   }
 
   return (
-    <div className={['search mdl-shadow--2dp', search.isOpen ? 'search--show': ''].join(' ')}>
-      <div className='mdl-grid'>
+    <div className={['search', search.isOpen ? 'search--show': '', 'shadow--2dp'].join(' ')}>
+      <div className='grid'>
         {search.items.map((video, i) => (
-          <div key={i} className='mdl-cell mdl-cell--12-col-phone mdl-cell--12-col-tablet mdl-cell--12-col'>
+          <div key={i} className='grid__item'>
             <VideoCard video={video} />
           </div>
         ))}
 
-        <div className={['mdl-grid__loading', search.isLoading === 1 ? 'is-active': ''].join(' ')}>
-          <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
+        <div className={['grid__loading', search.isLoading === 1 ? 'is-active': ''].join(' ')}>
+          <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
         </div>
 
         {renderWaypoint()}

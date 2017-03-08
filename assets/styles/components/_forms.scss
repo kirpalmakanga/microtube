@@ -11,6 +11,13 @@
 .mdl-textfield {
   &__input {
     font-family: $font-primary;
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    color: $white;
+    &:focus {
+      outline: none;
+    }
   }
   &__label {
     color: rgba($white, 0.3);

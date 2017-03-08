@@ -1,4 +1,4 @@
-.mdl-layout {
+.layout {
     &:after {
         @include transition();
         opacity: 0;
@@ -16,29 +16,6 @@
         z-index: 4;
     }
 
-    &--drawer-open {
-        &:after {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(250px);
-        }
-
-        .mdl-layout__header {
-            transform: translateX(250px);
-        }
-
-        .mdl-layout__drawer {
-            transform: translateX(0);
-        }
-
-        .mdl-layout__content {
-            transform: translateX(250px);
-        }
-        .mdl-player__container {
-            transform: translateX(250px);
-        }
-    }
-
     &-title {
         font-family: $font-primary;
     }
@@ -46,9 +23,5 @@
     &__content {
         @include transition();
         margin-bottom: 50px;
-        @media screen and (min-width: 1024px) {
-          margin-bottom: 60px;
-        }
-
     }
 }

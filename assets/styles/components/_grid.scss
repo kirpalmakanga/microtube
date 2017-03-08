@@ -1,16 +1,16 @@
 $gutter: 16px;
 
-.mdl-grid {
+.grid {
   position: relative;
-  .mdl-cell {
-      display: flex;
-      height: calc((100vh - 56px - 50px - 6 * #{$gutter}) / 5);
+  height: calc(100vh - 56px - 50px);
+  overflow-y: auto;
 
-      @media screen and (min-width: 840px) {
-      }
+  &__item {
+      display: flex;
+      height: calc((100vh - 56px - 50px) / 5);
 
       @media screen and (min-width: 1024px) {
-        height: calc((100vh - 64px - 60px - 8 * #{$gutter}) / 7);
+        height: calc((100vh - 56px - 50px) / 7);
       }
   }
   &__loading {

@@ -1,13 +1,13 @@
-.mdl-player__container {
+.player__container {
     @include transition();
 }
 
-.mdl-player,
+.player,
 .queue {
     box-shadow: 0 -2px 2px 0 rgba($brand-primary, 0.14), 0 3px 1px -2px rgba($brand-primary, 0.2), 0 1px 5px 0 rgba($brand-primary, 0.12);
 }
 
-.mdl-player {
+.player {
     display: flex;
     flex-wrap: wrap;
     position: fixed;
@@ -88,7 +88,7 @@
             }
 
             &:hover {
-                .mdl-player__controls-volume-range {
+                .player__controls-volume-range {
                     opacity: 1;
                     transform: translateX(0);
                     visibility: visible;
@@ -240,8 +240,5 @@
 
     @media screen and (min-width: 480px) {
       bottom: 50px;
-    }
-    @media screen and (min-width: 1024px) {
-      top: 64px;
     }
 }

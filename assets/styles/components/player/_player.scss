@@ -55,19 +55,28 @@
                 width: 30px;
             }
 
-            &.mdl-badge[data-badge] {
-              &.mdl-badge--active {
-                &:after {
-                  opacity: 1;
-                }
-              }
+            &.badge[data-badge] {
+              position: relative;
               margin: 0;
               &:after {
+                position: absolute;
+                display: block;
                 @include transition();
+                font-family: $font-primary;
+                border-radius: 100%;
+                font-size: 9px;
+                padding: 4px;
                 opacity: 0;
+                color: $white;
                 background-color: $red;
                 top: 10px;
                 right: 10px;
+                content: attr(data-badge);
+              }
+              &.badge--active {
+                &:after {
+                  opacity: 1;
+                }
               }
             }
         }

@@ -1,5 +1,14 @@
-.mdl-button {
+.button {
     @include transition();
+    background-color: $black;
+    border: none;
+    padding: 6px 12px;
+    color: $white;
+    text-transform: uppercase;
+
+    &:focus {
+      outline: none;
+    }
 
     &--icon {
         display: flex;
@@ -19,22 +28,9 @@
             }
         }
     }
-
-    &.mdl-button--fab {
-        fill: $brand-secondary;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        svg {
-            height: 30px;
-            width: 30px;
-        }
-
-        &:active {
-            transform: scale(0.7);
-        }
-    }
+}
+.button--close {
+  background-color: lighten($black, 40%);
 }
 
 .icon-button {
@@ -48,6 +44,12 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      &.rotating {
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
   }
   &:active {
       .icon {

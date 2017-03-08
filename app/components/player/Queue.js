@@ -123,9 +123,9 @@ class Queue extends React.Component {
                   >
 
                   <div className='queue__item-button icon-button'>
-                    <span className='icon'>
+                    <span className={['icon', isCurrentVideo && player.isBuffering ? 'rotating': ''].join(' ')}>
                       {isCurrentVideo && player.isBuffering ? (
-                        <svg className='loading'><use xlinkHref='#icon-loading'></use></svg>
+                        <svg><use xlinkHref='#icon-loading'></use></svg>
                       )
                       : isCurrentVideo && player.isPlaying ? (
                         <svg><use xlinkHref='#icon-pause'></use></svg>

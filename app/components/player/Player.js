@@ -174,9 +174,9 @@ const Player = ({ player, dispatch }) => {
       <div className='player__controls'>
         <button
           className={[
-            'player__controls-button mdl-badge icon-button',
+            'player__controls-button badge icon-button',
             player.showQueue ? 'is-active' : '',
-            player.newQueueItems ? 'mdl-badge--active' : '',
+            player.newQueueItems ? 'badge--active' : '',
           ].join(' ')}
           onClick={() => dispatch({ type: player.showQueue ? 'QUEUE_CLOSE' : 'QUEUE_OPEN' })}
           data-badge={player.newQueueItems}

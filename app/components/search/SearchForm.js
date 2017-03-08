@@ -27,10 +27,10 @@ const SearchForm = ({ menu, auth, dispatch }) => {
 
   return (
     <form className='search-form' onSubmit={handleSubmit}>
-      <div className='mdl-textfield'>
+      <div className='textfield'>
         <input
           autoFocus
-          className='mdl-textfield__input'
+          className='textfield__input'
           id='search'
           type='text'
           placeholder='Search...'

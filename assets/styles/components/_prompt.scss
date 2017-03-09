@@ -23,12 +23,11 @@
   background-color: $white;
   padding: 20px;
   position: relative;
-
+  .textfield__input {
+    @extend .add-bottom;
+  }
   &__content {
     color: $black;
-    .textfield__input {
-      @extend .add-bottom;
-    }
   }
 
   &__actions {

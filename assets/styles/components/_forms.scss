@@ -15,8 +15,6 @@
     border: none;
     background-color: transparent;
     color: $white;
-    @extend .add-bottom;
-    color: $black;
     &:focus {
       outline: none;
     }

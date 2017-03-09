@@ -11,6 +11,9 @@
     position: relative;
     display: flex;
     height: calc(1em + 40px);
+    .textfield__input {
+      @extend .add-bottom;
+    }
   }
   &__text {
     flex: 1;

@@ -102,9 +102,8 @@ export default function(state = initialState, action) {
       })
 
     case 'QUEUE_REMOVE':
-      queue.splice(action.index, 1)
 
-      return Object.assign({}, state, { queue })
+      return Object.assign({}, state, { queue: queue.filter(item => item.videoId !== action.id) })
 
     case 'QUEUE_CLEAR':
       return Object.assign({}, state, { queue: action.currentVideo.videoId ? [action.currentVideo] : initialState.queue })

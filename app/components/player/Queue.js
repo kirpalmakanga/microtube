@@ -141,7 +141,7 @@ class Queue extends React.Component {
                       e.stopPropagation()
                       this.props.dispatch({
                         type: 'QUEUE_REMOVE',
-                        index: e.target.getAttribute('data-id')
+                        id: item.videoId
                       })
                     }}
                   >

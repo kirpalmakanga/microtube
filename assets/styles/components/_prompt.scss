@@ -26,6 +26,9 @@
 
   &__content {
     color: $black;
+    .textfield__input {
+      @extend .add-bottom;
+    }
   }
 
   &__actions {

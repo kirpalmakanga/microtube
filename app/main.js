@@ -1,6 +1,7 @@
 // jshint esversion: 6, asi:true
 // eslint-env es6
 
+import * as OfflinePluginRuntime from 'offline-plugin/runtime'
 import { Router, browserHistory } from 'react-router'
 
 import configureStore from './store/configureStore'
@@ -9,6 +10,8 @@ import getRoutes from './routes'
 const { Provider } = ReactRedux
 
 const store = configureStore(window.INITIAL_STATE)
+
+OfflinePluginRuntime.install()
 
 document.addEventListener('DOMContentLoaded', () => {
   ReactDOM.render(

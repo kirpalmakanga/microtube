@@ -3,7 +3,19 @@
 
 import api from '../api/database.js'
 
-exports.getPlaylists = (accessToken) => {
+exports.getPlaylists = (accessToken, pageId) => {
+  return dispatch => {
+    dispatch({ type: 'GET_PLAYLISTS' })
+    api.getPlaylists(accessToken, pageId)
+    .then(data => dispatch({
+      type: 'GET_PLAYLISTS_SUCCESS',
+      data
+    }))
+    .catch(err => console.error(err))
+  }
+}
+
+exports.getAllPlaylists = (accessToken) => {
   return dispatch => {
     dispatch({ type: 'GET_PLAYLISTS' })
     const getItems = nextPage => {

@@ -30,7 +30,7 @@ exports.logIn = () => {
           photoURL
         }
       })
-    }).catch(({ code, message, email, credential }) => {
+    }).catch(({ message }) => {
       dispatch({
         type: 'OAUTH_FAILURE',
         notification: message

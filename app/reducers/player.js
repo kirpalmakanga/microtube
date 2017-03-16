@@ -118,28 +118,15 @@ export default function(state = initialState, action) {
       return Object.assign({}, state, { showVolume: false })
 
     case 'SET_VOLUME':
-      let reachedLimits = action.data >= 0 && action.data <= 100
-      if(state.youtube.isMuted()) {
-        state.youtube.unMute()
-      }
-
-      if (reachedLimits) {
-        state.youtube.setVolume(action.data)
-      }
-
       return Object.assign({}, state, {
         isMuted: false,
-        volume: reachedLimits ? action.data : state.volume
+        volume: action.data
       })
 
     case 'MUTE':
-      state.youtube.mute()
-
       return Object.assign({}, state, { isMuted: true })
 
     case 'UNMUTE':
-      state.youtube.unMute()
-
       return Object.assign({}, state, { isMuted: false })
   }
 

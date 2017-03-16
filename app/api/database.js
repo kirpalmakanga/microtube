@@ -35,16 +35,17 @@ exports.getPlaylists = (accessToken, pageToken = '') => {
     request('playlists', {
       access_token: accessToken,
       pageToken,
-      part: 'snippet, status',
+      part: 'snippet, contentDetails, status',
       mine: true,
       maxResults: 25,
       key: apiKey
     })
     .then(({ items, nextPageToken, pageInfo }) => {
       resolve({
-        items: items.map(({ id, snippet, status }) => ({
+        items: items.map(({ id, contentDetails, snippet, status }) => ({
           id,
           title: snippet.title,
+          itemCount: contentDetails.itemCount,
           privacyStatus: status.privacyStatus
         })),
         nextPageToken,

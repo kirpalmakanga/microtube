@@ -4,6 +4,8 @@
 import DocumentTitle from 'react-document-title'
 const { connect } = ReactRedux
 
+const noop = () => {}
+
 function getPlayerTime(time) {
   let hours, minutes, seconds
 
@@ -45,6 +47,8 @@ const Player = ({ player, dispatch }) => {
   const loadProgress = {
     transform: 'translateX(' + parseFloat((player.loaded * 100) - 100).toFixed(2) + '%)'
   }
+
+  const youtubeReady = Object.keys(player.youtube).length
 
   function isEmpty (obj) {
     return Object.keys(obj).length
@@ -100,7 +104,7 @@ const Player = ({ player, dispatch }) => {
 
         <button
           className='player__controls-button icon-button'
-          onClick={() => player.youtube && !player.isBuffering ? playPause() : false}
+          onClick={youtubeReady && !player.isBuffering ? playPause : noop}
         >
           <span className={['icon', player.isBuffering ? 'rotating': ''].join(' ')}>
             {player.isBuffering ? (
@@ -157,17 +161,16 @@ const Player = ({ player, dispatch }) => {
           type='range'
           min='0'
           max='100'
-          onChange={({target}) => {
+          onChange={youtubeReady ? ({target}) => {
             const newTime = duration * (target.value / 100)
 
-            if (player.youtube) {
-              player.youtube.seekTo(newTime)
-              dispatch({
-                type: 'UPDATE_TIME',
-                currentTime: newTime
-              })
-            }
-          }}
+            player.youtube.seekTo(newTime)
+
+            dispatch({
+              type: 'UPDATE_TIME',
+              currentTime: newTime
+            })
+          } : noop}
         />
       </div>
 
@@ -202,15 +205,33 @@ const Player = ({ player, dispatch }) => {
         >
           <button
             className='player__controls-button icon-button'
-            onClick={() => dispatch({ type: player.isMuted ? 'UNMUTE' : 'MUTE' })}
-            onWheel={({ deltaY }) => {
-              if (player.youtube) {
+            onClick={youtubeReady ? () => {
+              if (player.isMuted) {
+                player.youtube.unMute()
+              } else {
+                player.youtube.mute()
+              }
+
+              dispatch({ type: player.isMuted ? 'UNMUTE' : 'MUTE' })
+            } : noop}
+
+            onWheel={youtubeReady ? ({ deltaY }) => {
+                const volume =  deltaY < 0 ? player.volume + 5 : player.volume - 5
+                const inRange = player.volume >= 0 && player.volume <= 100
+
+                if(player.isMuted) {
+                  player.youtube.unMute()
+                }
+
+                if (inRange) {
+                  player.youtube.setVolume(volume)
+                }
+
                 dispatch({
                   type: 'SET_VOLUME',
-                  data: deltaY < 0 ? player.volume + 5 : player.volume - 5
+                  data: inRange ? volume : player.volume
                 })
-              }
-            }}
+            } : noop}
           >
             <span className='icon'>
               {player.isMuted ? (
@@ -227,14 +248,12 @@ const Player = ({ player, dispatch }) => {
 
           <div
             className='player__controls-volume-range'
-            onWheel={({ deltaY }) => {
-              if (player.youtube) {
-                dispatch({
-                  type: 'SET_VOLUME',
-                  data: deltaY < 0 ? player.volume + 5 : player.volume - 5
-                })
-              }
-            }}
+            onWheel={youtubeReady ? ({ deltaY }) => {
+              dispatch({
+                type: 'SET_VOLUME',
+                data: deltaY < 0 ? player.volume + 5 : player.volume - 5
+              })
+            } : noop}
           >
             <input
               type='range'

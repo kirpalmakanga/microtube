@@ -26,7 +26,7 @@ function request(field, config) {
         resolve(response)
       })
     })
-    .catch(err => console.error(err))
+    .catch(err => reject(err))
   })
 }
 

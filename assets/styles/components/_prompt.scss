@@ -12,6 +12,7 @@
   justify-content: center;
   align-items: center;
   padding: 15px;
+  cursor: pointer;
   z-index: 6;
   &--show {
     opacity: 1;
@@ -20,6 +21,7 @@
 }
 
 .dialog {
+  cursor: default;
   background-color: $white;
   padding: 20px;
   position: relative;

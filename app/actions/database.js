@@ -11,7 +11,10 @@ exports.getPlaylists = (accessToken, pageId) => {
       type: 'GET_PLAYLISTS_SUCCESS',
       data
     }))
-    .catch(err => console.error(err))
+    .catch(err => dispatch({
+      type: 'GET_PLAYLISTS_ERROR',
+      notification: err
+    }))
   }
 }
 
@@ -32,7 +35,10 @@ exports.getAllPlaylists = (accessToken) => {
           getItems(nextPageToken)
         }
       })
-      .catch(err => console.error(err))
+      .catch(err => dispatch({
+        type: 'GET_PLAYLISTS_ERROR',
+        notification: err
+      }))
     }
     getItems()
   }
@@ -63,7 +69,10 @@ exports.queuePlaylistItems = (accessToken, playlistId, play) => {
           getItems(nextPageToken)
         }
       })
-      .catch(err => console.error(err))
+      .catch(err => dispatch({
+        type: 'QUEUE_PUSH_PLAYLIST_ERROR',
+        notification: err
+      }))
     }
 
     getItems()
@@ -86,7 +95,10 @@ exports.getPlaylistItems = (accessToken, playlistId) => {
           getItems(nextPageToken)
         }
       })
-      .catch(err => console.error(err))
+      .catch(err => dispatch({
+        type: 'GET_PLAYLIST_ITEMS_ERROR',
+        notification: err
+      }))
     }
     dispatch({ type: 'GET_PLAYLIST_ITEMS' })
     getItems()
@@ -106,7 +118,10 @@ exports.searchVideos = (accessToken, query, pageToken) => {
         data
       })
     })
-    .catch(err => console.error(err))
+    .catch(err => dispatch({
+      type: 'SEARCH_VIDEOS_ERROR',
+      notification: err
+    }))
   }
 }
 
@@ -119,6 +134,9 @@ exports.getVideo = (accessToken, urlOrId) => {
         data: video
       })
     })
-    .catch(err => console.error(err))
+    .catch(err => dispatch({
+      type: 'QUEUE_PUSH_ERROR',
+      notification: err
+    }))
   }
 }

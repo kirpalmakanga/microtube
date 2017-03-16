@@ -12,7 +12,7 @@ const { connect } = ReactRedux
 
 const Header = ({ auth, playlistItems, player, search, dispatch }) => {
   return (
-    <header className='layout__header'>
+    <header className='layout__header shadow--2dp'>
       {player.showQueue ? (
         <QueueHeader />
       ) : search.isOpen ? (

@@ -25,7 +25,6 @@ node_modules
 .DS_Store
 Thumbs.db
 
-public
-/sw.js
+*.hot-update.js
 
 .htaccess

@@ -37,7 +37,7 @@ const Prompt = ({ auth, prompt, dispatch }) => {
       onClick={close}
     >
       <div
-        className='dialog'
+        className='dialog shadow--2dp'
         onClick={e => e.stopPropagation()}
       >
         <div className='dialog__content'>

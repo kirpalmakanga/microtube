@@ -6,7 +6,7 @@
 const { connect } = ReactRedux
 import { getPlaylistItems, queuePlaylistItems } from '../../actions/database'
 
-const PlaylistCard = ({ auth, id, title, dispatch }) => {
+const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
   function openPlaylist() {
     dispatch({
       type: 'PLAYLIST_OPEN',
@@ -18,8 +18,10 @@ const PlaylistCard = ({ auth, id, title, dispatch }) => {
   return (
     <div className='card shadow--2dp'>
       <div className='card__text' onClick={openPlaylist}>
-        <h2 className='card__text-title'>{title}</h2>
-        <p className='card__text-subtitle'></p>
+        <div>
+          <h2 className='card__text-title'>{title}</h2>
+          <p className='card__text-subtitle'>{itemCount + ' Video' + (itemCount !== 1 ? 's' : '')}</p>
+        </div>
       </div>
 
       <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id))}>

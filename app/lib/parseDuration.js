@@ -1,3 +1,6 @@
+// jshint esversion: 6, asi: true
+// eslint-env es6
+
 export default function parseDuration(PT) {
   var output = []
   var durationInSec = 0
@@ -50,51 +53,4 @@ export default function parseDuration(PT) {
   output.push(('0' + durationInSec % 60).slice(-2))
 
   return output.join(':')
-}
-
-const VideoCard = ({ video, dispatch }) => {
-  const { videoId, title, publishedAt, duration, channelTitle } = video
-
-  return (
-    <div className='card shadow--2dp'>
-      <div className='card__text'>
-        <div>
-          <h2 className='card__text-title'>{title}</h2>
-          <p className='card__text-subtitle'>{channelTitle}</p>
-          <p className='card__text-subtitle'>{moment(publishedAt).format('MMMM Do YYYY')}</p>
-        </div>
-        <div>{parseDuration(duration)}</div>
-      </div>
-
-      <button
-        className='card__button'
-        onClick={() => dispatch({
-          type: 'QUEUE_PUSH',
-          data: video
-        })}
-      >
-        <svg><use xlinkHref='#icon-queue'></use></svg>
-      </button>
-
-      <button
-        className='card__button'
-        onClick={() => {
-          dispatch({ type: 'CLEAR_WATCHERS' })
-
-          dispatch({
-            type: 'QUEUE_PUSH',
-            data: video
-          })
-
-          dispatch({
-            type: 'PLAY',
-            data: video,
-            skip: true
-          })
-        }}
-      >
-        <svg><use xlinkHref='#icon-play'></use></svg>
-      </button>
-    </div>
-  )
 }

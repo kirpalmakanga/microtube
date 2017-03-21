@@ -2,7 +2,7 @@
 // eslint-env es6
 
 import cookie from 'react-cookie'
-import { logIn, googleLogin } from '../../actions/auth'
+import { logIn } from '../../actions/auth'
 import { getVideo } from '../../actions/database'
 import SearchHeader from './SearchHeader'
 import QueueHeader from './QueueHeader'
@@ -11,6 +11,13 @@ import SearchForm from '../search/SearchForm'
 const { connect } = ReactRedux
 
 const Header = ({ auth, playlistItems, player, search, dispatch }) => {
+  function handleConnection() {
+    if (auth.token) {
+      return dispatch({ type: 'UNLINK', notification: 'Déconnecté.' })
+    }
+    dispatch(logIn())
+  }
+
   return (
     <header className='layout__header shadow--2dp'>
       {player.showQueue ? (
@@ -49,7 +56,7 @@ const Header = ({ auth, playlistItems, player, search, dispatch }) => {
 
             </button>
 
-            <button className='navigation__link icon-button' onClick={auth.token ? () => dispatch({ type: 'UNLINK', notification: 'Déconnecté.' }) : () => dispatch(logIn()) }>
+            <button className='navigation__link icon-button' onClick={handleConnection}>
               {auth.token ? (
                 <span className='icon'>
                   <svg><use xlinkHref='#icon-exit'></use></svg>

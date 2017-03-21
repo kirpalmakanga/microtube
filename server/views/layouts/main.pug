@@ -1,12 +1,27 @@
 doctype html
 html
     head
+        meta(name='mobile-web-app-capable' content='yes')
+        meta(name='apple-mobile-web-app-capable' content='yes')
+        meta(name='application-name' content='Youtube Lite')
+        meta(name='apple-mobile-web-app-title' content='Youtube Lite')
+        meta(name='theme-color' content='#1C1B1B')
+        meta(name='msapplication-navbutton-color' content='#1C1B1B')
+        meta(name='apple-mobile-web-app-status-bar-style' content='black-translucent')
+        meta(name='msapplication-starturl' content='https://youtube.agence-de-com.online/')
+        meta(name='viewport' content='width=device-width, initial-scale=1')
         meta(http-equiv='content-type' content='text/html; charset=UTF-8')
         meta(http-equiv='x-ua-compatible' content='ie=edge')
         meta(name='viewport' content='width=device-width, initial-scale=1')
-        title= title
+          
+        link(rel='manifest' href='../manifest.json')
         link(rel='stylesheet' href='/app.css')
-
+        link(rel='preconnect' href='//cloudflare.com')
+        link(rel='preconnect' href='//google.com')
+        link(rel='dns-prefetch' href='//cloudflare.com')
+        link(rel='dns-prefetch' href='//google.com')
+          
+        title= title
 
     body
         include ../partials/sprite.pug
@@ -17,17 +32,17 @@ html
           svg(class='rotating')
             use(xlink:href='#icon-loading')
     
-        script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js' defer)
+        script(src='//cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js')
           
-        script(src='//cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.min.js' defer)
+        script(src='//cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.min.js')
         
-        script(src='//cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.min.js' defer)
+        script(src='//cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.min.js')
           
-        script(src='//cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.min.js' defer)
+        script(src='//cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.min.js')
           
-        script(src='//cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.2/react-redux.min.js' defer)
+        script(src='//cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.2/react-redux.min.js')
           
-        script(src='//apis.google.com/js/client.js' defer)
+        script(src='//apis.google.com/js/client.js')
 
         script.
             window.INITIAL_STATE = !{initialState}
@@ -37,6 +52,6 @@ html
         script.
           (function() {
             if('serviceWorker' in navigator) {
-              navigator.serviceWorker.register('public/sw.js')
+              navigator.serviceWorker.register('sw.js')
             }
           })()

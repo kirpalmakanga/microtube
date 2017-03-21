@@ -33,7 +33,7 @@ const enhancer = compose(
 			if (!storage) {
 			    return initialState
 			}
-			
+
 	    return Object.assign({}, initialState, {
 	        auth: storage.auth || initialState.auth,
 	        player: Object.assign({}, initialState.player, storage.player || initialState.player)

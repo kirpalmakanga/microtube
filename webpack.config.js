@@ -62,8 +62,7 @@ const config = {
         '//cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.min.js',
         '//cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.min.js',
         '//cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.min.js',
-        '//cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.2/react-redux.min.js',
-        '//apis.google.com/js/client.js'
+        '//cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.2/react-redux.min.js'
       ]
     })
   ],

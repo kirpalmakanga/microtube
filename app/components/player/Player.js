@@ -10,6 +10,10 @@ function getPlayerTime(time) {
     return ('0' + int).slice(-2)
   }
 
+  if(!time) {
+    return '00:00:00';
+  }
+
   hours = Math.floor(time / 3600) % 24
 
   time  = time - hours * 3600
@@ -144,9 +148,9 @@ const Player = ({ player, dispatch }) => {
         </DocumentTitle>
 
         <div className='player__info-time'>
-          <span>{getPlayerTime(currentTime) || '00:00:00'}</span>
+          <span>{getPlayerTime(currentTime)}</span>
           <span className="separator">/</span>
-          <span>{getPlayerTime(duration) || '00:00:00'}</span>
+          <span>{getPlayerTime(duration)}</span>
         </div>
 
         <input

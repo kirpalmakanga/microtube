@@ -3,8 +3,6 @@ import qs from 'querystring'
 import moment from 'moment'
 import cookie from 'react-cookie'
 
-import refreshToken from '../lib/refreshToken'
-
 function oauth2(config, dispatch) {
   return new Promise((resolve, reject) => {
     const params = {
@@ -131,27 +129,44 @@ function exchangeCodeForToken({ oauthData, config, popup, interval, dispatch }) 
   })
 }
 
+export function refreshAccessToken(refreshToken, callback) {
+  fetch(window.location.origin + '/auth/refresh', {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin', // By default, fetch won't send any cookies to the server
+    body: JSON.stringify({ refresh_token: refreshToken })
+  })
+  .then(response => {
+    if (response.ok) {
+      response.json().then(({ token }) => callback(token))
+    }
+  })
+}
+
 function signIn({ token, refresh, user, popup, interval, dispatch }) {
   // const { displayName, email, photoURL, uid } = user
   return new Promise((resolve, reject) => {
     const getExpirationDate = () => moment().add(1, 'hours').toDate()
     const setCookie = () => cookie.save('ytltoken', token, { expires: getExpirationDate() })
 
-    const watcher = refreshToken(refresh, token => {
-      setCookie()
-      dispatch({
-        type: 'OAUTH_REFRESH',
-        token
+    const refreshWatcher = setInterval(() => {
+      refreshAccessToken(refresh, token => {
+        setCookie()
+        dispatch({
+          type: 'OAUTH_REFRESH',
+          token
+        })
       })
-    })
+    }, 10000)
+    // }, 3540000)
 
     setCookie()
 
     dispatch({
       type: 'OAUTH_SUCCESS',
       token,
-      refresh,
-      user
+      user,
+      refreshWatcher
     })
 
     resolve({ popup, interval })

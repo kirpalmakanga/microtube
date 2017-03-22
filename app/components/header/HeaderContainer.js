@@ -10,6 +10,7 @@ const { connect } = ReactRedux
 const Header = ({ auth, playlistItems, player, search, dispatch }) => {
   function handleConnection() {
     if (auth.token) {
+      clearInterval(auth.refreshWatcher)
       return dispatch({ type: 'UNLINK', notification: 'Déconnecté.' })
     }
     dispatch(logIn())

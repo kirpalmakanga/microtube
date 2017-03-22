@@ -40,8 +40,6 @@ exports.authRefresh = (req, res) => {
   request.post(accessTokenUrl, { json: true, form: params }, (err, response, token) => {
     const headers = { Authorization: 'Bearer ' + token.access_token }
 
-    console.log('refreshed token', token.access_token)
-
     if (err) {
       return res.status(500).send({ message: err })
     }

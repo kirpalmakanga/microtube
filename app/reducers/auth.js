@@ -1,28 +1,25 @@
 const initialState = {
   token: null,
   refresh: null,
-  user: {}
+  user: {},
+  refreshWatcher: null
 }
 
 export default function(state = initialState, action) {
-  if (!state.hydrated) {
-    state = Object.assign({}, state, { hydrated: true })
-  }
   switch (action.type) {
     case 'OAUTH_SUCCESS':
       return Object.assign({}, state, {
         token: action.token,
-        refresh: action.refresh,
-        user: action.user
+        user: action.user,
+        refreshWatcher: action.refreshWatcher
       })
 
     case 'OAUTH_REFRESH':
-      return Object.assign({}, state, {
-        token: action.token
-      })
+      return Object.assign({}, state, { token: action.token })
 
     case 'UNLINK':
       return initialState
+
     default:
       return state
   }

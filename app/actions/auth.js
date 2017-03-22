@@ -157,8 +157,8 @@ function signIn({ token, refresh, user, popup, interval, dispatch }) {
           token
         })
       })
-    }, 10000)
-    // }, 3540000)
+    // }, 10000)
+    }, 3540000)
 
     setCookie()
 

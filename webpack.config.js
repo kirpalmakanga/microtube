@@ -56,11 +56,7 @@ const config = {
     new ExtractTextPlugin('app.css', {
         allChunks: true
     }),
-    new OfflinePlugin({
-      externals: [
-        'index.html'
-      ]
-    })
+    new OfflinePlugin()
   ],
   module: {
     loaders: [

@@ -1,5 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
 const initialState = {
   isOpen: false,
   items: [],

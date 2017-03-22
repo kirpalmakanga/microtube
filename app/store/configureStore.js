@@ -1,5 +1,5 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
+
+
 
 import thunk from 'redux-thunk'
 import persistState from 'redux-localstorage'
@@ -8,9 +8,9 @@ import rootReducer from '../reducers'
 const { applyMiddleware, compose, createStore } = Redux
 
 const hasStorage = (() => {
-	var uid = new Date
-	var storage
-	var result
+	const uid = new Date
+	let storage
+	let result
 	try {
 		(storage = window.localStorage).setItem(uid, uid)
 		result = storage.getItem(uid) == uid
@@ -23,14 +23,21 @@ const enhancer = compose(
    applyMiddleware(thunk),
    hasStorage ? persistState(['auth', 'player'], {
      key: 'ytlstate',
-     slicer: paths => ({ auth, player }) => ({ auth, queue: player.queue }),
+     slicer: paths => ({ auth, player }) => {
+			 return {
+				 auth,
+				 player: { queue: player.queue }
+			 }
+		 },
      merge: (initialState, storage) => {
-			 const auth = storage && storage.auth ? storage.auth : initialState.auth
-			 const queue = storage && storage.queue ? storage.queue : initialState.player.queue
+			if (!storage) {
+			    return initialState
+			}
 
-       const player = Object.assign({}, initialState.player, { queue })
-
-       return Object.assign({}, initialState, { auth, player })
+	    return Object.assign({}, initialState, {
+	        auth: storage.auth || initialState.auth,
+	        player: Object.assign({}, initialState.player, storage.player || initialState.player)
+	    })
      }
    }) : state => state
 )

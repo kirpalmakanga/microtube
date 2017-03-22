@@ -1,6 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
 import DocumentTitle from 'react-document-title'
 const { connect } = ReactRedux
 
@@ -48,11 +45,7 @@ const Player = ({ player, dispatch }) => {
     transform: 'translateX(' + parseFloat((player.loaded * 100) - 100).toFixed(2) + '%)'
   }
 
-  const youtubeReady = Object.keys(player.youtube).length
-
-  function isEmpty (obj) {
-    return Object.keys(obj).length
-  }
+  const youtubeReady = (typeof player.youtube === 'object' && player.youtube !== null)
 
   function getDocumentTitle () {
     let title = 'Youtube Lite'

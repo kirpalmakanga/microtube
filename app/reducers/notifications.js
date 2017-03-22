@@ -1,6 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
 export default function(state = {}, action) {
   console.log(action.type, action)
   switch (action.type) {

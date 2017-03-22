@@ -1,6 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
 const initialState = {
   form: false,
   isVisible: false,

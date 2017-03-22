@@ -1,11 +1,6 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
 export default function parseDuration(PT) {
-  var output = []
-  var durationInSec = 0
-  var matches = PT.match(/P(?:(\d*)Y)?(?:(\d*)M)?(?:(\d*)W)?(?:(\d*)D)?T?(?:(\d*)H)?(?:(\d*)M)?(?:(\d*)S)?/i)
-  var parts = [
+  const matches = PT.match(/P(?:(\d*)Y)?(?:(\d*)M)?(?:(\d*)W)?(?:(\d*)D)?T?(?:(\d*)H)?(?:(\d*)M)?(?:(\d*)S)?/i)
+  const parts = [
     { // years
       pos: 1,
       multiplier: 86400 * 365
@@ -35,8 +30,10 @@ export default function parseDuration(PT) {
       multiplier: 1
     }
   ]
+  let output = []
+  let durationInSec = 0
 
-  for (var i = 0; i < parts.length; i++) {
+  for (let i = 0; i < parts.length; i++) {
     if (typeof matches[parts[i].pos] != 'undefined') {
       durationInSec += parseInt(matches[parts[i].pos]) * parts[i].multiplier
     }

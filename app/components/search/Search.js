@@ -1,8 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
-
-
 import { searchVideos } from '../../actions/database'
 import VideoCard from '../playlists/VideoCard'
 import Waypoint from 'react-waypoint'

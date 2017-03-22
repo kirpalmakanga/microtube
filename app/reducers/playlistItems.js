@@ -1,5 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
 const initialState = {
   isOpen: false,
   playlistId: 0,
@@ -48,7 +46,7 @@ export default function(state = initialState, action) {
           isLoading: 2
         })
       }
-      
+
     case 'UNLINK_SUCCESS':
       return initialState
   }

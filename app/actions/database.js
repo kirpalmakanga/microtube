@@ -1,6 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
 import api from '../api/database.js'
 
 exports.getPlaylists = (accessToken, pageId) => {

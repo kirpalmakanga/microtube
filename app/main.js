@@ -1,5 +1,5 @@
 // jshint esversion: 6, asi:true
-// eslint-env es6
+
 
 import * as OfflinePluginRuntime from 'offline-plugin/runtime'
 import { Router, browserHistory } from 'react-router'

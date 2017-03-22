@@ -1,8 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
-
-
 import YoutubePlayer from 'react-youtube'
 const { connect } = ReactRedux
 

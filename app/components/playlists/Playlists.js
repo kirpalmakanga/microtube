@@ -1,8 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
-
-
 import { getPlaylists, getAllPlaylists } from '../../actions/database'
 import PlaylistCard from './PlaylistCard.js'
 import Waypoint from 'react-waypoint'

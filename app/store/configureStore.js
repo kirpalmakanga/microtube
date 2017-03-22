@@ -7,39 +7,32 @@ import rootReducer from '../reducers'
 
 const { applyMiddleware, compose, createStore } = Redux
 
-const hasStorage = (() => {
-	const uid = new Date
-	let storage
-	let result
-	try {
-		(storage = window.localStorage).setItem(uid, uid)
-		result = storage.getItem(uid) == uid
-		storage.removeItem(uid)
-		return result && storage
-	} catch (exception) {}
-})()
-
 const enhancer = compose(
    applyMiddleware(thunk),
-   hasStorage ? persistState(['auth', 'player'], {
+   persistState(['auth', 'player'], {
      key: 'ytlstate',
-     slicer: paths => ({ auth, player }) => {
-			 return {
-				 auth,
-				 player: { queue: player.queue }
+     slicer: paths => {
+			 return ({ auth, player }) => {
+				 return {
+					 auth,
+					 player: {
+						 queue: player.queue,
+						 video: player.video
+					 }
+				 }
 			 }
 		 },
      merge: (initialState, storage) => {
-			if (!storage) {
-			    return initialState
-			}
+				if (!storage) {
+					return initialState
+				}
 
-	    return Object.assign({}, initialState, {
-	        auth: storage.auth || initialState.auth,
-	        player: Object.assign({}, initialState.player, storage.player || initialState.player)
-	    })
+	 	    return {
+	 	        auth: storage.auth,
+	 	        player: storage.player
+	 	    }
      }
-   }) : state => state
+   })
 )
 
 export default function configureStore (initialState) {

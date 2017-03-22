@@ -56,7 +56,15 @@ const config = {
     new ExtractTextPlugin('app.css', {
         allChunks: true
     }),
-    new OfflinePlugin()
+    new OfflinePlugin({
+      externals: [
+        '//cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js',
+        '//cdnjs.cloudflare.com/ajax/libs/redux/3.6.0/redux.min.js',
+        '//cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.min.js',
+        '//cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.min.js',
+        '//cdnjs.cloudflare.com/ajax/libs/react-redux/5.0.2/react-redux.min.js'
+      ]
+    })
   ],
   module: {
     loaders: [

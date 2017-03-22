@@ -2,4 +2,5 @@
 
 ### Install
 
-npm install
+npm install / yarn
+npm start / npm run start:dev

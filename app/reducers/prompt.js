@@ -1,6 +1,3 @@
-
-
-
 const initialState = {
   form: false,
   isVisible: false,

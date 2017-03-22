@@ -3,6 +3,8 @@ import qs from 'querystring'
 import moment from 'moment'
 import cookie from 'react-cookie'
 
+import watchToken from '../lib/watchToken'
+
 function oauth2(config, dispatch) {
   return new Promise((resolve, reject) => {
     const params = {
@@ -10,7 +12,9 @@ function oauth2(config, dispatch) {
       redirect_uri: config.redirectUri,
       scope: config.scope,
       display: 'popup',
-      response_type: 'code'
+      response_type: 'code',
+      access_type: 'offline',
+      prompt: 'consent'
     }
     const url = config.authorizationUrl + '?' + qs.stringify(params)
     resolve({ url, config, dispatch })
@@ -33,11 +37,11 @@ function openPopup({ url, config, dispatch }) {
       popup.document.body.innerHTML = 'Loading...'
     }
 
-    resolve({ window: popup, config, dispatch })
+    resolve({ popup, config, dispatch })
   })
 }
 
-function getRequestToken({ window, config, dispatch }) {
+function getRequestToken({ popup, config, dispatch }) {
   return new Promise((resolve, reject) => {
     return fetch(config.url, {
       method: 'post',
@@ -48,32 +52,32 @@ function getRequestToken({ window, config, dispatch }) {
     }).then((response) => {
       if (response.ok) {
         return response.json().then((json) => {
-          resolve({ window, config, requestToken: json, dispatch })
+          resolve({ popup, config, requestToken: json, dispatch })
         })
       }
     })
   })
 }
 
-function pollPopup({ window, config, requestToken, dispatch }) {
+function pollPopup({ popup, config, requestToken, dispatch }) {
   return new Promise((resolve, reject) => {
     const redirectUri = url.parse(config.redirectUri)
     const redirectUriPath = redirectUri.host + redirectUri.pathname
 
     if (requestToken) {
-      window.location = config.authorizationUrl + '?' + qs.stringify(requestToken)
+      popup.location = config.authorizationUrl + '?' + qs.stringify(requestToken)
     }
 
     const polling = setInterval(() => {
-      if (!window || window.closed) {
+      if (!popup || popup.closed) {
         clearInterval(polling)
       }
       try {
-        const popupUrlPath = window.location.host + window.location.pathname
+        const popupUrlPath = popup.location.host + popup.location.pathname
         if (popupUrlPath === redirectUriPath) {
-          if (window.location.search || window.location.hash) {
-            const query = qs.parse(window.location.search.substring(1).replace(/\/$/, ''))
-            const hash = qs.parse(window.location.hash.substring(1).replace(/[\/$]/, ''))
+          if (popup.location.search || popup.location.hash) {
+            const query = qs.parse(popup.location.search.substring(1).replace(/\/$/, ''))
+            const hash = qs.parse(popup.location.hash.substring(1).replace(/[\/$]/, ''))
             const params = Object.assign({}, query, hash)
 
             if (params.error) {
@@ -82,7 +86,7 @@ function pollPopup({ window, config, requestToken, dispatch }) {
                 notification: params.error
               })
             } else {
-              resolve({ oauthData: params, config, window, interval: polling, dispatch })
+              resolve({ oauthData: params, config, popup, interval: polling, dispatch })
             }
           } else {
             dispatch({
@@ -99,7 +103,7 @@ function pollPopup({ window, config, requestToken, dispatch }) {
   })
 }
 
-function exchangeCodeForToken({ oauthData, config, window, interval, dispatch }) {
+function exchangeCodeForToken({ oauthData, config, popup, interval, dispatch }) {
   return new Promise((resolve, reject) => {
     const data = Object.assign({}, oauthData, config)
 
@@ -113,39 +117,69 @@ function exchangeCodeForToken({ oauthData, config, window, interval, dispatch })
     }).then((response) => {
       if (response.ok) {
         response.json()
-        .then(({ token, user }) => resolve({ token, user, window, interval, dispatch }))
+        .then(({ token, refresh, user }) => resolve({ token, refresh, user, popup, interval, dispatch }))
       } else {
         response.json().then((json) => {
           dispatch({
             type: 'OAUTH_FAILURE',
             notification: json.message
           })
-          closePopup({ window, interval })
+          closePopup({ popup, interval })
         })
       }
     })
   })
 }
 
-function signIn({ token, user, window, interval, dispatch }) {
+function signIn({ token, refresh, user, popup, interval, dispatch }) {
   // const { displayName, email, photoURL, uid } = user
   return new Promise((resolve, reject) => {
-    cookie.save('ytltoken', token, { expires: moment().add(1, 'hour').toDate() })
+    const setExpirationDate = () => moment().add(1, 'hours').toDate()
+    const expires = setExpirationDate()
+
+    const watcher = setInterval(() => {
+      fetch(window.location.origin + '/auth/refresh', {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin', // By default, fetch won't send any cookies to the server
+        body: JSON.stringify({ refresh_token: refresh })
+      })
+      .then(response => {
+        if (response.ok) {
+          response.json().then(({ token }) => {
+            cookie.save('ytltoken', token, { expires: setExpirationDate() })
+
+            dispatch({
+              type: 'OAUTH_REFRESH',
+              token
+            })
+          })
+        }
+      })
+    }, 1500000)
+
+    cookie.save('ytltoken', token, { expires })
 
     dispatch({
       type: 'OAUTH_SUCCESS',
       token,
+      refresh,
       user
     })
 
-    resolve({ window, interval })
+    dispatch({
+      type:'WATCH_COOKIE',
+      watcher
+    })
+
+    resolve({ popup, interval })
   })
 }
 
-function closePopup({ window, interval }) {
+function closePopup({ popup, interval }) {
   return new Promise((resolve, reject) => {
     clearInterval(interval)
-    window.close()
+    popup.close()
     resolve()
   })
 }

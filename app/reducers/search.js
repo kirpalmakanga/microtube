@@ -1,5 +1,3 @@
-
-
 const initialState = {
   isOpen: false,
   items: [],

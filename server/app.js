@@ -1,6 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
 const express = require('express')
 const path = require('path')
 const compression = require('compression')
@@ -28,8 +25,9 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, '../public')))
 
 //Routes
-app.post('/auth', userController.authGoogle)
-app.get('/auth/callback', userController.authGoogleCallback)
+app.post('/auth', userController.auth)
+app.post('/auth/refresh', userController.authRefresh)
+app.get('/auth/callback', userController.authCallback)
 
 app.use((req, res) => {
   res.render('layouts/main', {
@@ -37,6 +35,7 @@ app.use((req, res) => {
     initialState: JSON.stringify({
       auth: {
         token: null,
+        refresh: null,
         user: {}
       },
       player: {

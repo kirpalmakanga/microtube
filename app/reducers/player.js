@@ -1,6 +1,3 @@
-
-
-
 const initialState = {
   queue: [],
   isPlaying: false,

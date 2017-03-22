@@ -28,3 +28,6 @@ Thumbs.db
 *.hot-update.js
 
 .htaccess
+
+public/*
+!public/manifest.json

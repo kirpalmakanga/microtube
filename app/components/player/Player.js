@@ -1,6 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
 import DocumentTitle from 'react-document-title'
 const { connect } = ReactRedux
 

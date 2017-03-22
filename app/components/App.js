@@ -1,6 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
 require('../../assets/styles/app.scss')
 
 import FastClick from 'react-fastclick-alt';

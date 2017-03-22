@@ -1,9 +1,5 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
-const { connect } = ReactRedux
-
 import { getVideo } from '../actions/database'
+const { connect } = ReactRedux
 
 const Prompt = ({ auth, prompt, dispatch }) => {
   const {form, isVisible, promptText, confirmText, cancelText, callback } = prompt

@@ -1,6 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
 import cookie from 'react-cookie'
 import { logIn } from '../../actions/auth'
 import { getVideo } from '../../actions/database'

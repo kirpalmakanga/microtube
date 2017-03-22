@@ -1,6 +1,3 @@
-// jshint esversion: 6, asi: true
-// eslint-env es6
-
 const apiKey = 'AIzaSyCLDBo0aNwTTOp6yQMaD9b4mQX4B_rT2NE'
 
 function loadApi() {

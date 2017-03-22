@@ -18,10 +18,9 @@ export default function(state = initialState, action) {
 
     case 'OAUTH_REFRESH':
       return Object.assign({}, state, {
-        token: action.token,
-        refresh: action.refresh
+        token: action.token
       })
-      
+
     case 'UNLINK':
       return initialState
     default:

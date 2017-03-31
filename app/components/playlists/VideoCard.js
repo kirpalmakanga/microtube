@@ -7,7 +7,23 @@ const VideoCard = ({ video, dispatch }) => {
 
   return (
     <div className='card shadow--2dp'>
-      <div className='card__text'>
+      <div
+        className='card__text'
+        onClick={() => {
+          dispatch({ type: 'CLEAR_WATCHERS' })
+
+          dispatch({
+            type: 'QUEUE_PUSH',
+            data: video
+          })
+
+          dispatch({
+            type: 'PLAY',
+            data: video,
+            skip: true
+          })
+        }}
+      >
         <div>
           <h2 className='card__text-title'>{title}</h2>
           <p className='card__text-subtitle'>{channelTitle}</p>
@@ -25,28 +41,6 @@ const VideoCard = ({ video, dispatch }) => {
       >
         <span className='icon'>
           <svg><use xlinkHref='#icon-queue'></use></svg>
-        </span>
-      </button>
-
-      <button
-        className='card__button'
-        onClick={() => {
-          dispatch({ type: 'CLEAR_WATCHERS' })
-
-          dispatch({
-            type: 'QUEUE_PUSH',
-            data: video
-          })
-
-          dispatch({
-            type: 'PLAY',
-            data: video,
-            skip: true
-          })
-        }}
-      >
-        <span className='icon'>
-          <svg><use xlinkHref='#icon-play'></use></svg>
         </span>
       </button>
     </div>

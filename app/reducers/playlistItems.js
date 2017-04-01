@@ -1,5 +1,4 @@
 const initialState = {
-  isOpen: false,
   playlistId: 0,
   playlistTitle: '',
   items: [],
@@ -11,16 +10,10 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case 'PLAYLIST_OPEN':
-      return Object.assign({}, state, {
-        isOpen: true,
-        title: action.title
-      })
+      return Object.assign({}, state, action.data)
 
     case 'PLAYLIST_CLOSE':
       return Object.assign({}, state, initialState)
-
-    case 'CLEAR_PLAYLIST_ITEMS':
-      return initialState
 
     case 'GET_PLAYLIST_ITEMS':
       return Object.assign({}, state, { isLoading: 1 })
@@ -47,6 +40,7 @@ export default function(state = initialState, action) {
         })
       }
 
+    case 'CLEAR_PLAYLIST_ITEMS':
     case 'UNLINK_SUCCESS':
       return initialState
   }

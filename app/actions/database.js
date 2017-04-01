@@ -43,7 +43,7 @@ exports.getAllPlaylists = (accessToken) => {
 
 exports.queuePlaylistItems = (accessToken, playlistId, play) => {
   return dispatch => {
-    const getItems = (nextPage) => {
+    const getItems = nextPage => {
       api.getPlaylistItems(accessToken, playlistId, nextPage)
       .then(data => {
         const { items, nextPageToken } = data
@@ -161,5 +161,24 @@ exports.getSubscriptions = (accessToken) => {
       }))
     }
     getItems()
+  }
+}
+
+exports.getChannelVideos = (accessToken, channelId, pageToken) => {
+  return dispatch => {
+    dispatch({ type: 'GET_CHANNEL_VIDEOS' })
+
+    api.getChannelVideos(accessToken, channelId, pageToken)
+    .then(data => {
+      dispatch({
+        type: 'GET_CHANNEL_VIDEOS_SUCCESS',
+        data
+      })
+    })
+    
+    .catch(err => dispatch({
+      type: 'GET_CHANNEL_VIDEOS_ERROR',
+      notification: err
+    }))
   }
 }

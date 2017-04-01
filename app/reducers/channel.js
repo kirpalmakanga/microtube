@@ -8,9 +8,9 @@ const initialState = {
 }
 
 const mutations = {
-  'GET_SUBSCRIPTIONS': state => Object.assign({}, state, { isLoading: 1 }),
+  'GET_CHANNEL_VIDEOS': state => Object.assign({}, state, { isLoading: 1 }),
 
-  'GET_SUBSCRIPTIONS_SUCCESS': (state, { items, nextPageToken, totalResults }) => {
+  'GET_CHANNEL_VIDEOS_SUCCESS': (state, { items, nextPageToken, totalResults }) => {
     const isNewToken = typeof nextPageToken === 'string' && !state.pages.includes(nextPageToken)
     const endOfContent = typeof nextPageToken === 'undefined'
 
@@ -28,12 +28,10 @@ const mutations = {
       })
     }
   },
-  'UNSUBSCRIBE': (state, { id }) => Object.assign({}, state, { items: state.items.filter(item => item.id !== id) }),
 
+  'CLEAR_CHANNEL_VIDEOS': () => initialState,
+   
   'UNLINK_SUCCESS': () => initialState
 }
 
-export default (state = initialState, action) => {
-  console.log(action.type, action.data)
-  return updateState(mutations, state, action)
-}
+export default (state = initialState, action) => updateState(mutations, state, action)

@@ -14,7 +14,7 @@ const Subscriptions = ({ auth, subscriptions, dispatch }) => {
     }
   }
   return (
-    <div className='grid'>
+    <div className='grid channels'>
       {subscriptions.items.map((data, i) => (
         <div key={i} className='grid__item'>
           <SubscriptionCard {...data} />

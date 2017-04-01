@@ -55,8 +55,17 @@ export default function(state = initialState, action) {
         callback: action.callback
       })
 
+    case 'PROMPT_UNSUBSCRIBE':
+      return Object.assign({}, state, {
+        isVisible: true,
+        promptText: 'Se désinscrire de ' + action.data.title + ' ?',
+        confirmText: 'Se désinscrire',
+        cancelText: 'Annuler',
+        callback: action.callback
+      })
+
     case 'PROMPT_CLOSE':
-      return initialState
+      return Object.assign({}, state, { isVisible: false })
   }
 
   return state

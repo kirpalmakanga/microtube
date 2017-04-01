@@ -98,7 +98,7 @@ exports.getPlaylistItems = (accessToken, playlistId, pageToken = '') => {
   })
 }
 
-exports.searchVideos = (accessToken, query, pageToken) => {
+exports.searchVideos = (accessToken, query, pageToken, channelId) => {
   return new Promise((resolve, reject) => {
     request('search', {
       access_token: accessToken,
@@ -201,6 +201,49 @@ exports.getSubscriptions = (accessToken, pageToken = '') => {
         nextPageToken,
         totalResults: pageInfo.totalResults
       })
+    })
+    .catch(message => reject(message))
+  })
+}
+
+exports.getChannelVideos = (accessToken, channelId, pageToken) => {
+  return new Promise((resolve, reject) => {
+    request('search', {
+      access_token: accessToken,
+      part: 'snippet',
+      type: 'video',
+      channelId,
+      pageToken,
+      key: apiKey,
+      maxResults: 50,
+    })
+    .then(({ items, nextPageToken, pageInfo }) => {
+      const ids = items.map(({ id }) => id.videoId).join(', ')
+
+      request('videos', {
+        access_token: accessToken,
+        part: 'contentDetails, snippet, status',
+        id: ids,
+        maxResults: 50,
+        key: apiKey
+      })
+      .then(({ items }) => {
+        resolve({
+          items: items.map(({ id, contentDetails, snippet, status }, i) => ({
+            videoId: id,
+            title: snippet.title,
+            duration: contentDetails.duration,
+            publishedAt: snippet.publishedAt,
+            channelId: snippet.channelId,
+            channelTitle: snippet.channelTitle,
+            privacyStatus: status.privacyStatus
+          })),
+          nextPageToken,
+          totalResults: pageInfo.totalResults
+        })
+
+      })
+      .catch(message => reject(message))
     })
     .catch(message => reject(message))
   })

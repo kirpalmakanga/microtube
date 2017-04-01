@@ -7,7 +7,8 @@ import SearchForm from '../search/SearchForm.jsx'
 
 const { connect } = ReactRedux
 
-const Header = ({ auth, playlistItems, player, search, dispatch }) => {
+const Header = ({ auth, playlistItems, player, search, path, dispatch }) => {
+  const isHome = (path === '/')
   function handleConnection() {
     if (auth.token) {
       clearInterval(auth.refreshWatcher)
@@ -24,18 +25,15 @@ const Header = ({ auth, playlistItems, player, search, dispatch }) => {
         <SearchHeader />
       ) : (
         <div className='layout__header-row'>
-          {playlistItems.isOpen ? (
-            <button
-              className='layout__back-button icon-button'
-              onClick={() => dispatch({ type: 'PLAYLIST_CLOSE' })}
-            >
+          {!isHome ? (
+            <Link className='layout__back-button icon-button' to='/'>
               <span className='icon'>
                 <svg><use xlinkHref='#icon-back'></use></svg>
               </span>
-            </button>
+            </Link>
           ) : null}
 
-          <span className='layout-title'>{playlistItems.isOpen ? playlistItems.title : 'Youtube Lite'}</span>
+          <span className='layout-title'>Youtube Lite</span>
 
           <nav className='navigation'>
             <button

@@ -10,17 +10,15 @@ import Prompt from './Prompt.jsx'
 
 const { connect } = ReactRedux
 
-const App = ({ children, auth }) => {
+const App = ({ children, location, auth }) => {
   return (
     <FastClick>
       <div className='layout'>
-        <Header />
+        <Header path={location.pathname}/>
 
         <main className='layout__content'>
           {auth.token ? children : null}
         </main>
-
-        <PlaylistItems />
 
         <Search />
 

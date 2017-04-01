@@ -11,6 +11,28 @@ const SubscriptionCard = ({ id, title, itemCount, dispatch }) => {
           <p className='card__text-subtitle'>{itemCount + ' Video' + (itemCount !== 1 ? 's' : '')}</p>
         </div>
       </Link>
+
+      <button
+        className='card__button icon-button'
+        type='button'
+        onClick={() => {
+          dispatch({
+            type: 'PROMPT_UNSUBSCRIBE',
+            data: { title },
+            callback: () => {
+              dispatch({
+                type: 'UNSUBSCRIBE',
+                data: { id }
+              })
+              dispatch({ type: 'PROMPT_CLOSE' })
+            } 
+          })
+        }}
+      >
+        <span className='icon'>
+          <svg><use xlinkHref='#icon-close'></use></svg>
+        </span>
+      </button>
     </div>
   )
 }

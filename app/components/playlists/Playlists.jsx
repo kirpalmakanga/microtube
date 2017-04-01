@@ -1,10 +1,10 @@
+import Waypoint from 'react-waypoint'
 import { getPlaylists, getAllPlaylists } from '../../actions/database'
 import PlaylistCard from './PlaylistCard.jsx'
-import Waypoint from 'react-waypoint'
+
 const { connect } = ReactRedux
 
 const Playlists = ({ auth, playlists, dispatch }) => {
-
   function loadMoreContent () {
     dispatch(getAllPlaylists(auth.token))
   }

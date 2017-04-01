@@ -1,5 +1,5 @@
 import { getPlaylistItems } from '../../actions/database'
-import VideoCard from './VideoCard'
+import VideoCard from './VideoCard.jsx'
 import Waypoint from 'react-waypoint'
 const { connect } = ReactRedux
 

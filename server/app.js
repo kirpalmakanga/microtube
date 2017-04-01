@@ -11,6 +11,36 @@ const app = express()
 
 const userController = require('./controllers/user')
 
+const initialState = JSON.stringify({
+  auth: {
+    token: null,
+    refresh: null,
+    user: {}
+  },
+  player: {
+    queue: [],
+    isPlaying: false,
+    isBuffering: false,
+    showQueue: false,
+    showScreen: false,
+    showVolume: false,
+    isMuted: false,
+    volume: 100,
+    video: {
+      videoId: null
+    },
+    loaded: 0,
+    currentTime: 0,
+    duration: 0,
+    youtube: {},
+    watchers: {
+      time: null,
+      loading: null
+    },
+    newQueueItems: 0
+  }
+})
+
 dotenv.load()
 
 app.set('view engine', 'pug')
@@ -32,35 +62,7 @@ app.get('/auth/callback', userController.authCallback)
 app.use((req, res) => {
   res.render('layouts/main', {
     title: 'Youtube Lite',
-    initialState: JSON.stringify({
-      auth: {
-        token: null,
-        refresh: null,
-        user: {}
-      },
-      player: {
-        queue: [],
-        isPlaying: false,
-        isBuffering: false,
-        showQueue: false,
-        showScreen: false,
-        showVolume: false,
-        isMuted: false,
-        volume: 100,
-        video: {
-          videoId: null
-        },
-        loaded: 0,
-        currentTime: 0,
-        duration: 0,
-        youtube: {},
-        watchers: {
-          time: null,
-          loading: null
-        },
-        newQueueItems: 0
-      }
-    })
+    initialState
   })
 })
 

@@ -137,3 +137,29 @@ exports.getVideo = (accessToken, urlOrId) => {
     }))
   }
 }
+
+exports.getSubscriptions = (accessToken) => {
+  return dispatch => {
+    dispatch({ type: 'GET_SUBSCRIPTIONS' })
+    const getItems = nextPage => {
+      api.getSubscriptions(accessToken, nextPage)
+      .then(data => {
+        const { nextPageToken } = data
+
+        dispatch({
+          type: 'GET_SUBSCRIPTIONS_SUCCESS',
+          data
+        })
+
+        if (nextPageToken) {
+          getItems(nextPageToken)
+        }
+      })
+      .catch(err => dispatch({
+        type: 'GET_SUBSCRIPTIONS_ERROR',
+        notification: err
+      }))
+    }
+    getItems()
+  }
+}

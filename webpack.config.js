@@ -78,6 +78,15 @@ const config = {
         }
       },
       {
+        test: /\.jsx$/,
+        exclude: /node_modules/,
+        loader: 'babel',
+        query: {
+          plugins: ['lodash'],
+          presets: ['es2015']
+        }
+      },
+      {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract('css!sass'),
         options: {

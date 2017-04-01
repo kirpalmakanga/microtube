@@ -1,12 +1,12 @@
-require('../../assets/styles/app.scss')
+require('../assets/styles/app.scss')
 
 import FastClick from 'react-fastclick-alt';
-import Header from './header/HeaderContainer'
-import PlaylistItems from './playlists/PlaylistItems'
-import Search from './search/Search'
-import PlayerContainer from './player/PlayerContainer'
-import Notifications from './Notifications'
-import Prompt from './Prompt'
+import Header from './header/HeaderContainer.jsx'
+import PlaylistItems from './playlists/PlaylistItems.jsx'
+import Search from './search/Search.jsx'
+import PlayerContainer from './player/PlayerContainer.jsx'
+import Notifications from './Notifications.jsx'
+import Prompt from './Prompt.jsx'
 
 const { connect } = ReactRedux
 

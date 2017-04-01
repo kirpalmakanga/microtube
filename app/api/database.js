@@ -179,3 +179,29 @@ exports.getVideo = (accessToken, urlOrId) => {
     .catch(message => reject(message))
   })
 }
+
+exports.getSubscriptions = (accessToken, pageToken = '') => {
+  return new Promise((resolve, reject) => {
+    request('subscriptions', {
+      access_token: accessToken,
+      pageToken,
+      part: 'snippet, contentDetails',
+      mine: true,
+      maxResults: 25,
+      order: 'alphabetical',
+      key: apiKey
+    })
+    .then(({ items, nextPageToken, pageInfo }) => {
+      resolve({
+        items: items.map(({ contentDetails, snippet }) => ({
+          id: snippet.resourceId.channelId,
+          title: snippet.title,
+          itemCount: contentDetails.totalItemCount
+        })),
+        nextPageToken,
+        totalResults: pageInfo.totalResults
+      })
+    })
+    .catch(message => reject(message))
+  })
+}

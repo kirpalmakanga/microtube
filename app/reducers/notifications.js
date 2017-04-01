@@ -1,5 +1,4 @@
 export default function(state = {}, action) {
-  console.log(action.type, action)
   switch (action.type) {
     case 'GET_PLAYLISTS_ERROR':
     case 'QUEUE_PUSH_PLAYLIST_ERROR':

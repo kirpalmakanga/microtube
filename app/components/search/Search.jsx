@@ -1,5 +1,5 @@
 import { searchVideos } from '../../actions/database'
-import VideoCard from '../playlists/VideoCard'
+import VideoCard from '../playlists/VideoCard.jsx'
 import Waypoint from 'react-waypoint'
 const { connect } = ReactRedux
 

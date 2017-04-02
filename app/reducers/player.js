@@ -23,7 +23,6 @@ const initialState = {
 
 export default function(state = initialState, action) {
   const { queue, video, duration } = state
-  let currentIndex
 
   switch (action.type) {
     case 'GET_YOUTUBE':

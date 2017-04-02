@@ -1,3 +1,5 @@
+import updateState from '../lib/updateState'
+
 const initialState = {
   items: [],
   pages: [],
@@ -5,33 +7,29 @@ const initialState = {
   totalResults: 0
 }
 
-export default function(state = initialState, action) {
-  switch (action.type) {
-    case 'GET_PLAYLISTS':
-      return Object.assign({}, state, { isLoading: 1 })
+const mutations = {
+  'GET_PLAYLISTS': state => Object.assign({}, state, { isLoading: 1 }),
 
-    case 'GET_PLAYLISTS_SUCCESS':
-      let { items, nextPageToken, totalResults } = action.data
-      let isNewToken = typeof nextPageToken === 'string' && !state.pages.includes(nextPageToken)
-      let endOfContent = typeof nextPageToken === 'undefined'
+  'GET_PLAYLISTS_SUCCESS': (state, { items, nextPageToken, totalResults }) => {
+    const isNewToken = typeof nextPageToken === 'string' && !state.pages.includes(nextPageToken)
+    const endOfContent = typeof nextPageToken === 'undefined'
 
-      if (isNewToken) {
-        return Object.assign({}, state, {
-          items: [...state.items, ...items],
-          pages: [...state.pages, nextPageToken],
-          isLoading: 0,
-          totalResults
-        })
-      } else if (endOfContent) {
-        return Object.assign({} , state, {
-          items: [...state.items, ...items],
-          isLoading: 2
-        })
-      }
+    if (isNewToken) {
+      return Object.assign({}, state, {
+        items: [...state.items, ...items],
+        pages: [...state.pages, nextPageToken],
+        isLoading: 0,
+        totalResults
+      })
+    } else if (endOfContent) {
+      return Object.assign({} , state, {
+        items: [...state.items, ...items],
+        isLoading: 2
+      })
+    }
+  },
 
-    case 'UNLINK_SUCCESS':
-      return initialState
-  }
-
-  return state
+  'UNLINK_SUCCESS': () => initialState
 }
+
+export default (state = initialState, action) => updateState(mutations, state, action)

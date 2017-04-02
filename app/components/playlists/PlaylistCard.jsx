@@ -7,10 +7,7 @@ const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
   function openPlaylist() {
     dispatch({
       type: 'PLAYLIST_OPEN',
-      data: {
-        playlistId: id,
-        playlistTitle: title
-      }
+      data: title
     })
   }
   return (

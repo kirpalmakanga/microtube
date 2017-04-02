@@ -1,21 +1,21 @@
+import Waypoint from 'react-waypoint'
 import { searchVideos } from '../../actions/database'
 import VideoCard from '../playlists/VideoCard.jsx'
-import Waypoint from 'react-waypoint'
+
 const { connect } = ReactRedux
 
 const Search = ({ auth, search, dispatch }) => {
   const nextPage = search.pages[search.pages.length - 1] || ''
 
   function loadMoreContent () {
+    console.log('load more content')
     dispatch(searchVideos(auth.token, search.query, nextPage))
   }
 
   function renderWaypoint() {
     if (nextPage && search.isLoading !== 2) {
       return (
-        <Waypoint
-          onEnter={loadMoreContent}
-        />
+        <Waypoint onEnter={loadMoreContent}/>
       )
     }
   }

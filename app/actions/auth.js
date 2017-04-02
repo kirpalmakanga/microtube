@@ -154,7 +154,7 @@ function signIn({ token, refresh, user, popup, interval, dispatch }) {
         setCookie()
         dispatch({
           type: 'OAUTH_REFRESH',
-          token
+          data: token
         })
       })
     // }, 10000)
@@ -164,9 +164,11 @@ function signIn({ token, refresh, user, popup, interval, dispatch }) {
 
     dispatch({
       type: 'OAUTH_SUCCESS',
-      token,
-      user,
-      refreshWatcher
+      data: {
+        token,
+        user,
+        refreshWatcher
+      }
     })
 
     resolve({ popup, interval })

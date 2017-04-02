@@ -16,8 +16,6 @@ const PlaylistItems = ({ auth, playlistItems, params, dispatch }) => {
     }
   }
 
-  console.log('playlistItems', playlistItems)
-
   return (
     <div className='grid'>
       {playlistItems.items.map((video, i) => (

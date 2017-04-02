@@ -1,4 +1,4 @@
-export default function updateState(mutations, state, { type, data }) {
-    const mutation = mutations[type]
-    return mutation ? mutation(state, data) : state
+export default function updateState(actions, state, { type, data }) {
+    const action = actions[type]
+    return action ? action(state, data) : state
 }

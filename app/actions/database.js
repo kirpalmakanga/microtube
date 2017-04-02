@@ -106,7 +106,7 @@ exports.searchVideos = (accessToken, query, pageToken) => {
   return dispatch => {
     dispatch({
       type: 'SEARCH_VIDEOS',
-      query
+      data: query
     })
     api.searchVideos(accessToken, query, pageToken)
     .then(data => {
@@ -175,7 +175,7 @@ exports.getChannelVideos = (accessToken, channelId, pageToken) => {
         data
       })
     })
-    
+
     .catch(err => dispatch({
       type: 'GET_CHANNEL_VIDEOS_ERROR',
       notification: err

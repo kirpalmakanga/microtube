@@ -11,14 +11,18 @@ const SearchHeader = ({ player, dispatch }) => {
           <svg><use xlinkHref='#icon-back'></use></svg>
         </span>
       </button>
-      
+
       <span className='layout-title'>{'Queue (' + player.queue.length + ' Items)'}</span>
 
       <nav className='navigation'>
         <button className='navigation__link icon-button' onClick={() => {
           dispatch({
             type: 'PROMPT_ADD_VIDEO',
-            callback: () => dispatch({ type: 'PROMPT_CLOSE' })
+            data: {
+              promptText: 'Vider la file d\'attente ?',
+              confirmText: 'Vider',
+              callback: () => dispatch({ type: 'PROMPT_CLOSE' })
+            }
           })
         }}>
           <span className='icon'>
@@ -28,13 +32,17 @@ const SearchHeader = ({ player, dispatch }) => {
 
         <button className='navigation__link icon-button' onClick={() => {
           dispatch({
-            type: 'PROMPT_CLEAR_QUEUE',
-            callback: () => {
-              dispatch({
-                type: 'QUEUE_CLEAR',
-                currentVideo: player.video
-              })
-              dispatch({ type: 'PROMPT_CLOSE' })
+            type: 'PROMPT',
+            data: {
+              promptText: 'Vider la file d\'attente ?',
+              confirmText: 'Vider',
+              callback: () => {
+                dispatch({
+                  type: 'QUEUE_CLEAR',
+                  currentVideo: player.video
+                })
+                dispatch({ type: 'PROMPT_CLOSE' })
+              }
             }
           })
         }}>

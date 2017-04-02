@@ -17,15 +17,18 @@ const SubscriptionCard = ({ id, title, itemCount, dispatch }) => {
         type='button'
         onClick={() => {
           dispatch({
-            type: 'PROMPT_UNSUBSCRIBE',
-            data: { title },
-            callback: () => {
-              dispatch({
-                type: 'UNSUBSCRIBE',
-                data: { id }
-              })
-              dispatch({ type: 'PROMPT_CLOSE' })
-            } 
+            type: 'PROMPT',
+            data: {
+              promptText: 'Se désinscrire de ' + title + ' ?',
+              confirmText: 'Se désinscrire',
+              callback: () => {
+                dispatch({
+                  type: 'UNSUBSCRIBE',
+                  data: id
+                })
+                dispatch({ type: 'PROMPT_CLOSE' })
+              }
+            }
           })
         }}
       >

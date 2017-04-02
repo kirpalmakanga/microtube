@@ -1,6 +1,5 @@
 import updateState from '../lib/updateState'
 
-
 const initialState = {
   items: [],
   pages: [],
@@ -28,7 +27,8 @@ const mutations = {
       })
     }
   },
-  'UNSUBSCRIBE': (state, { id }) => Object.assign({}, state, { items: state.items.filter(item => item.id !== id) }),
+  
+  'UNSUBSCRIBE': (state, key) => Object.assign({}, state, { items: state.items.filter(({ id }) => id !== key) }),
 
   'UNLINK_SUCCESS': () => initialState
 }

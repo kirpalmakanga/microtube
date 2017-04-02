@@ -15,13 +15,17 @@ function request(field, config) {
   return new Promise((resolve, reject) => {
     loadApi()
     .then(youtube => {
-      youtube[field].list(config).execute(response => {
-        if (response.error) {
-          return reject(response.message)
-        }
+      youtube[field].list(config).execute(res => res.error ? reject(res.message) : resolve(res))
+    })
+    .catch(err => reject(err))
+  })
+}
 
-        resolve(response)
-      })
+function remove(field, config) {
+  return new Promise((resolve, reject) => {
+    loadApi()
+    .then(youtube => {
+      youtube[field].delete(config).execute(res => res.error ? reject(res.message) : resolve(res))
     })
     .catch(err => reject(err))
   })
@@ -185,7 +189,7 @@ exports.getSubscriptions = (accessToken, pageToken = '') => {
     request('subscriptions', {
       access_token: accessToken,
       pageToken,
-      part: 'snippet, contentDetails',
+      part: 'id, snippet, contentDetails',
       mine: true,
       maxResults: 25,
       order: 'alphabetical',
@@ -193,8 +197,9 @@ exports.getSubscriptions = (accessToken, pageToken = '') => {
     })
     .then(({ items, nextPageToken, pageInfo }) => {
       resolve({
-        items: items.map(({ contentDetails, snippet }) => ({
-          id: snippet.resourceId.channelId,
+        items: items.map(({ id, contentDetails, snippet }) => ({
+          id,
+          channelId: snippet.resourceId.channelId,
           title: snippet.title,
           itemCount: contentDetails.totalItemCount
         })),
@@ -202,6 +207,18 @@ exports.getSubscriptions = (accessToken, pageToken = '') => {
         totalResults: pageInfo.totalResults
       })
     })
+    .catch(message => reject(message))
+  })
+}
+
+exports.unsubscribe = (accessToken, id) => {
+  return new Promise((resolve, reject) => {
+    remove('subscriptions', {
+      access_token: accessToken,
+      id,
+      key: apiKey
+    })
+    .then(data => resolve(data))
     .catch(message => reject(message))
   })
 }

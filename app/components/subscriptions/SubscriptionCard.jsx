@@ -1,43 +1,21 @@
 import { Link } from 'react-router'
+import { unsubscribe } from '../../actions/database'
 
 const { connect } = ReactRedux
 
-const SubscriptionCard = ({ id, title, itemCount, dispatch }) => {
+const SubscriptionCard = ({ id, channelId, title, itemCount, dispatch }) => {
   return (
     <div className='card shadow--2dp'>
-      <Link className='card__text' to={'/channel/' + id}>
+      <Link className='card__text' to={'/channel/' + channelId}>
         <div>
           <h2 className='card__text-title'>{title}</h2>
           <p className='card__text-subtitle'>{itemCount + ' Video' + (itemCount !== 1 ? 's' : '')}</p>
         </div>
       </Link>
-
-      <button
-        className='card__button icon-button'
-        type='button'
-        onClick={() => {
-          dispatch({
-            type: 'PROMPT',
-            data: {
-              promptText: 'Se désinscrire de ' + title + ' ?',
-              confirmText: 'Se désinscrire',
-              callback: () => {
-                dispatch({
-                  type: 'UNSUBSCRIBE',
-                  data: id
-                })
-                dispatch({ type: 'PROMPT_CLOSE' })
-              }
-            }
-          })
-        }}
-      >
-        <span className='icon'>
-          <svg><use xlinkHref='#icon-close'></use></svg>
-        </span>
-      </button>
     </div>
   )
 }
 
-export default connect()(SubscriptionCard)
+const mapStateToProps = ({ auth, subscriptions }) => ({ auth, subscriptions })
+
+export default connect(mapStateToProps)(SubscriptionCard)

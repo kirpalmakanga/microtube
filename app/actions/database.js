@@ -164,6 +164,25 @@ exports.getSubscriptions = (accessToken) => {
   }
 }
 
+exports.unsubscribe = (id) => {
+  return dispatch => {
+    dispatch({ type: 'UNSUBSCRIBE'})
+
+    api.unsubscribe(id)
+    .then(data => {
+      console.log('unsubscribed', data)
+      // dispatch({
+      //   type: 'UNSUBSCRIBE_SUCCESS',
+      //   data
+      // })
+    })
+    .catch(err => dispatch({
+      type: 'UNSUBSCRIBE_ERROR',
+      notification: err
+    }))
+  }
+}
+
 exports.getChannelVideos = (accessToken, channelId, pageToken) => {
   return dispatch => {
     dispatch({ type: 'GET_CHANNEL_VIDEOS' })

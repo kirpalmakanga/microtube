@@ -23,7 +23,6 @@ const initialState = {
 
 export default function(state = initialState, action) {
   const { queue, video, duration } = state
-  let currentIndex
 
   switch (action.type) {
     case 'GET_YOUTUBE':
@@ -100,7 +99,7 @@ export default function(state = initialState, action) {
 
     case 'QUEUE_REMOVE':
 
-      return Object.assign({}, state, { queue: queue.filter(item => item.videoId !== action.id) })
+      return Object.assign({}, state, { queue: queue.filter((item, index) => index !== action.index) })
 
     case 'QUEUE_CLEAR':
       return Object.assign({}, state, { queue: action.currentVideo.videoId ? [action.currentVideo] : initialState.queue })

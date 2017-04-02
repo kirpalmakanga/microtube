@@ -92,17 +92,20 @@ class Queue extends React.Component {
     const { player, dispatch } = this.props
     return (
         <div className={['queue shadow--2dp', player.showQueue ? 'queue--show' : ''].join(' ')} onDragOver={this.dragOver.bind(this)}>
-            {player.queue.length ? player.queue.map((item, i) => {
-              const isCurrentVideo = (player.video.videoId === item.videoId)
+            {player.queue.length ? player.queue.map((item, index) => {
+              const isCurrentVideo = (player.video.index === index && player.video.videoId === item.videoId)
               return (
                 <div
-                  key={i}
+                  key={index}
                   className={['queue__item', isCurrentVideo ? 'queue__item--active' : ''].join(' ')}
                   onClick={() => {
                     if(!isCurrentVideo) {
                       dispatch({
                         type: 'PLAY',
-                        data: item,
+                        data: {
+                          ...item,
+                          index
+                        },
                         skip: true
                       })
                     } else if (player.isPlaying) {
@@ -113,7 +116,7 @@ class Queue extends React.Component {
                   }}
                   onDragEnd={this.dragEnd.bind(this)}
                   onDragStart={this.dragStart.bind(this)}
-                  data-id={i}
+                  data-id={index}
                   data-title={item.title}
                   data-duration={parseDuration(item.duration)}
                   draggable
@@ -138,7 +141,7 @@ class Queue extends React.Component {
                       e.stopPropagation()
                       this.props.dispatch({
                         type: 'QUEUE_REMOVE',
-                        id: item.videoId
+                        index
                       })
                     }}
                   >

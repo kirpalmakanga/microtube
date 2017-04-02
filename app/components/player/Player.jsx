@@ -199,6 +199,23 @@ const Player = ({ player, dispatch }) => {
           className='player__controls-volume'
           onMouseEnter={() => dispatch({ type: 'OPEN_VOLUME' })}
           onMouseLeave={() => dispatch({ type: 'CLOSE_VOLUME' })}
+          onWheel={youtubeReady ? ({ deltaY }) => {
+              const volume =  deltaY < 0 ? player.volume + 5 : player.volume - 5
+              const inRange = volume >= 0 && volume <= 100
+
+              if(player.isMuted) {
+                player.youtube.unMute()
+              }
+
+              if (inRange) {
+                player.youtube.setVolume(volume)
+              }
+
+              dispatch({
+                type: 'SET_VOLUME',
+                data: inRange ? volume : player.volume
+              })
+          } : noop}
         >
           <button
             className='player__controls-button icon-button'
@@ -210,24 +227,6 @@ const Player = ({ player, dispatch }) => {
               }
 
               dispatch({ type: player.isMuted ? 'UNMUTE' : 'MUTE' })
-            } : noop}
-
-            onWheel={youtubeReady ? ({ deltaY }) => {
-                const volume =  deltaY < 0 ? player.volume + 5 : player.volume - 5
-                const inRange = player.volume >= 0 && player.volume <= 100
-
-                if(player.isMuted) {
-                  player.youtube.unMute()
-                }
-
-                if (inRange) {
-                  player.youtube.setVolume(volume)
-                }
-
-                dispatch({
-                  type: 'SET_VOLUME',
-                  data: inRange ? volume : player.volume
-                })
             } : noop}
           >
             <span className='icon'>
@@ -243,15 +242,7 @@ const Player = ({ player, dispatch }) => {
             </span>
           </button>
 
-          <div
-            className='player__controls-volume-range'
-            onWheel={youtubeReady ? ({ deltaY }) => {
-              dispatch({
-                type: 'SET_VOLUME',
-                data: deltaY < 0 ? player.volume + 5 : player.volume - 5
-              })
-            } : noop}
-          >
+          <div className='player__controls-volume-range'>
             <input
               type='range'
               min='0'

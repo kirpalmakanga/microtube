@@ -1,6 +1,6 @@
-import Player from './Player'
-import Queue from './Queue'
-import Screen from './Screen'
+import Player from './Player.jsx'
+import Queue from './Queue.jsx'
+import Screen from './Screen.jsx'
 
 const PlayerContainer = () => (
   <div className='player__container'>

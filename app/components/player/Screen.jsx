@@ -65,8 +65,6 @@ const Screen = ({ player, dispatch }) => {
     }
   }
 
-  console.log('player', player)
-
   const videoId = player.video.videoId
 
   const currentIndex = player.queue.reduce((result, item, i) => {

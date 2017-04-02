@@ -5,6 +5,8 @@ import player from './player'
 import search from './search'
 import auth from './auth'
 import prompt from './prompt'
+import subscriptions from './subscriptions'
+import channel from './channel'
 
 const { combineReducers } = Redux
 
@@ -15,5 +17,7 @@ export default combineReducers({
   playlistItems,
   player,
   search,
-  prompt
+  prompt,
+  subscriptions,
+  channel
 })

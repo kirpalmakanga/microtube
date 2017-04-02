@@ -20,6 +20,7 @@ $gutter: 16px;
         height: calc((100vh - 56px - 50px) / 7);
       }
   }
+
   &__loading {
     @include transition(opacity);
     opacity: 0;
@@ -37,6 +38,14 @@ $gutter: 16px;
     svg {
         height: 30px;
         width: 30px;
+    }
+  }
+}
+
+.grid.channels {
+  .grid__item {
+    @media screen and (min-width: 1024px) {
+      height: calc((100vh - 56px - 50px) / 10);
     }
   }
 }

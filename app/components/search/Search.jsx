@@ -1,6 +1,7 @@
-import { searchVideos } from '../../actions/database'
-import VideoCard from '../playlists/VideoCard'
 import Waypoint from 'react-waypoint'
+import { searchVideos } from '../../actions/database'
+import VideoCard from '../playlists/VideoCard.jsx'
+
 const { connect } = ReactRedux
 
 const Search = ({ auth, search, dispatch }) => {
@@ -13,9 +14,7 @@ const Search = ({ auth, search, dispatch }) => {
   function renderWaypoint() {
     if (nextPage && search.isLoading !== 2) {
       return (
-        <Waypoint
-          onEnter={loadMoreContent}
-        />
+        <Waypoint onEnter={loadMoreContent}/>
       )
     }
   }
@@ -30,10 +29,9 @@ const Search = ({ auth, search, dispatch }) => {
         ))}
 
         <div className={['grid__loading', search.isLoading === 1 ? 'is-active': ''].join(' ')}>
+          {renderWaypoint()}
           <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
         </div>
-
-        {renderWaypoint()}
       </div>
     </div>
   )

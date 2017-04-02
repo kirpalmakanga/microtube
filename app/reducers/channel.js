@@ -1,16 +1,16 @@
 import updateState from '../lib/updateState'
 
+
 const initialState = {
   items: [],
   pages: [],
-  isLoading: 0,
-  totalResults: 0
+  isLoading: 0
 }
 
-const mutations = {
-  'GET_PLAYLISTS': state => Object.assign({}, state, { isLoading: 1 }),
+const actions = {
+  'GET_CHANNEL_VIDEOS': state => Object.assign({}, state, { isLoading: 1 }),
 
-  'GET_PLAYLISTS_SUCCESS': (state, { items, nextPageToken, totalResults }) => {
+  'GET_CHANNEL_VIDEOS_SUCCESS': (state, { items, nextPageToken, totalResults }) => {
     const isNewToken = typeof nextPageToken === 'string' && !state.pages.includes(nextPageToken)
     const endOfContent = typeof nextPageToken === 'undefined'
 
@@ -29,7 +29,9 @@ const mutations = {
     }
   },
 
+  'CLEAR_CHANNEL_VIDEOS': () => initialState,
+
   'UNLINK_SUCCESS': () => initialState
 }
 
-export default (state = initialState, action) => updateState(mutations, state, action)
+export default (state = initialState, action) => updateState(actions, state, action)

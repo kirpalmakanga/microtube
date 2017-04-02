@@ -1,4 +1,5 @@
-import { getPlaylistItems, queuePlaylistItems } from '../../actions/database'
+import { Link } from 'react-router'
+import { queuePlaylistItems } from '../../actions/database'
 
 const { connect } = ReactRedux
 
@@ -6,19 +7,17 @@ const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
   function openPlaylist() {
     dispatch({
       type: 'PLAYLIST_OPEN',
-      title
+      data: title
     })
-    dispatch(getPlaylistItems(auth.token, id))
   }
-
   return (
     <div className='card shadow--2dp'>
-      <div className='card__text' onClick={openPlaylist}>
+      <Link className='card__text' to={'/playlist/' + id} onClick={openPlaylist}>
         <div>
           <h2 className='card__text-title'>{title}</h2>
           <p className='card__text-subtitle'>{itemCount + ' Video' + (itemCount !== 1 ? 's' : '')}</p>
         </div>
-      </div>
+      </Link>
 
       <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id))}>
         <span className='icon'>

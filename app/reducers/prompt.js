@@ -1,63 +1,18 @@
+import updateState from '../lib/updateState'
+
 const initialState = {
   form: false,
   isVisible: false,
   promptText: '',
   confirmText: '',
-  cancelText: '',
+  cancelText: 'Annuler',
   callback: () => {}
 }
 
-export default function(state = initialState, action) {
-  switch (action.type) {
-    case 'PROMPT_DELETE_PLAYLIST':
-      return Object.assign({}, state, {
-        isVisible: true,
-        promptText: 'Supprimer la playlist ?',
-        confirmText: 'Supprimer',
-        cancelText: 'Annuler',
-        callback: action.callback
-      })
+const mutations = {
+  'PROMPT': (state, data) => Object.assign({}, state, { isVisible: true, ...data }),
 
-    case 'PROMPT_DELETE_PLAYLIST_ITEM':
-      return Object.assign({}, state, {
-        isVisible: true,
-        promptText: 'Supprimer ' + action.title + ' de la playlist ?',
-        confirmText: 'Supprimer',
-        cancelText: 'Annuler',
-        callback: action.callback
-      })
-
-    case 'PROMPT_UNLINK_ACCOUNT':
-      return Object.assign({}, state, {
-        isVisible: true,
-        promptText: 'Déconnecter le profil ?',
-        confirmText: 'Déconnecter',
-        cancelText: 'Annuler',
-        callback: action.callback
-      })
-
-    case 'PROMPT_CLEAR_QUEUE':
-      return Object.assign({}, state, {
-        isVisible: true,
-        promptText: 'Vider la file d\'attente ?',
-        confirmText: 'Vider',
-        cancelText: 'Annuler',
-        callback: action.callback
-      })
-
-    case 'PROMPT_ADD_VIDEO':
-      return Object.assign({}, state, {
-        form: true,
-        isVisible: true,
-        promptText: 'Ajouter à la file d\'attente',
-        confirmText: 'Ajouter',
-        cancelText: 'Annuler',
-        callback: action.callback
-      })
-
-    case 'PROMPT_CLOSE':
-      return initialState
-  }
-
-  return state
+  'PROMPT_CLOSE': state => Object.assign({}, state, { isVisible: false })
 }
+
+export default (state = initialState, action) => updateState(mutations, state, action)

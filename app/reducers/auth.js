@@ -1,3 +1,5 @@
+import updateState from '../lib/updateState'
+
 const initialState = {
   token: null,
   refresh: null,
@@ -5,22 +7,12 @@ const initialState = {
   refreshWatcher: null
 }
 
-export default function(state = initialState, action) {
-  switch (action.type) {
-    case 'OAUTH_SUCCESS':
-      return Object.assign({}, state, {
-        token: action.token,
-        user: action.user,
-        refreshWatcher: action.refreshWatcher
-      })
+const mutations = {
+    'OAUTH_SUCCESS' : (state, data) => Object.assign({}, state, data),
 
-    case 'OAUTH_REFRESH':
-      return Object.assign({}, state, { token: action.token })
+    'OAUTH_REFRESH': (state, token) => Object.assign({}, state, { token }),
 
-    case 'UNLINK':
-      return initialState
-
-    default:
-      return state
-  }
+    'UNLINK': () => initialState
 }
+
+export default (state = initialState, action) => updateState(mutations, state, action)

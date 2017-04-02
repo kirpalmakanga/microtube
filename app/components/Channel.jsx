@@ -4,8 +4,10 @@ import Waypoint from 'react-waypoint'
 const { connect } = ReactRedux
 
 const Channel = ({ auth, channel, params, dispatch }) => {
+  const nextPage = channel.pages[channel.pages.length - 1] || ''
+
   function loadMoreContent () {
-    dispatch(getChannelVideos(auth.token, params.id))
+    dispatch(getChannelVideos(auth.token, params.id, nextPage))
   }
 
   function renderWaypoint() {
@@ -22,10 +24,11 @@ const Channel = ({ auth, channel, params, dispatch }) => {
       ))}
 
       <div className={['grid__loading', auth.token && channel.isLoading === 1 ? 'is-active': ''].join(' ')}>
+        {renderWaypoint()}
         <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
       </div>
 
-      {renderWaypoint()}
+
     </div>
   )
 }

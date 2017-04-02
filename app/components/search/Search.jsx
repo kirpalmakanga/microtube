@@ -8,7 +8,6 @@ const Search = ({ auth, search, dispatch }) => {
   const nextPage = search.pages[search.pages.length - 1] || ''
 
   function loadMoreContent () {
-    console.log('load more content')
     dispatch(searchVideos(auth.token, search.query, nextPage))
   }
 
@@ -30,10 +29,9 @@ const Search = ({ auth, search, dispatch }) => {
         ))}
 
         <div className={['grid__loading', search.isLoading === 1 ? 'is-active': ''].join(' ')}>
+          {renderWaypoint()}
           <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
         </div>
-
-        {renderWaypoint()}
       </div>
     </div>
   )

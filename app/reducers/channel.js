@@ -7,7 +7,7 @@ const initialState = {
   isLoading: 0
 }
 
-const mutations = {
+const actions = {
   'GET_CHANNEL_VIDEOS': state => Object.assign({}, state, { isLoading: 1 }),
 
   'GET_CHANNEL_VIDEOS_SUCCESS': (state, { items, nextPageToken, totalResults }) => {
@@ -30,8 +30,8 @@ const mutations = {
   },
 
   'CLEAR_CHANNEL_VIDEOS': () => initialState,
-   
+
   'UNLINK_SUCCESS': () => initialState
 }
 
-export default (state = initialState, action) => updateState(mutations, state, action)
+export default (state = initialState, action) => updateState(actions, state, action)

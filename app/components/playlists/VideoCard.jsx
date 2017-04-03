@@ -3,7 +3,7 @@ import parseDuration from '../../lib/parseDuration'
 const { connect } = ReactRedux
 
 const VideoCard = ({ video, dispatch }) => {
-  const { videoId, title, thumb, publishedAt, duration, channelTitle } = video
+  const { videoId, title, publishedAt, duration, channelTitle } = video
 
   return (
     <div className='card shadow--2dp'>

@@ -3,7 +3,7 @@ import { queuePlaylistItems } from '../../actions/database'
 
 const { connect } = ReactRedux
 
-const PlaylistCard = ({ auth, id, thumb, title, itemCount, dispatch }) => {
+const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
   const backgroundStyle = { backgroundImage: 'url(' + thumb + ')' }
   function openPlaylist() {
     dispatch({

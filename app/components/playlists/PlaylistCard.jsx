@@ -3,7 +3,8 @@ import { queuePlaylistItems } from '../../actions/database'
 
 const { connect } = ReactRedux
 
-const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
+const PlaylistCard = ({ auth, id, thumb, title, itemCount, dispatch }) => {
+  const backgroundStyle = { backgroundImage: 'url(' + thumb + ')' }
   function openPlaylist() {
     dispatch({
       type: 'PLAYLIST_OPEN',
@@ -12,8 +13,8 @@ const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
   }
   return (
     <div className='card shadow--2dp'>
-      <Link className='card__text' to={'/playlist/' + id} onClick={openPlaylist}>
-        <div>
+      <Link className='card__content' to={'/playlist/' + id} onClick={openPlaylist}>
+        <div className='card__text'>
           <h2 className='card__text-title'>{title}</h2>
           <p className='card__text-subtitle'>{itemCount + ' Video' + (itemCount !== 1 ? 's' : '')}</p>
         </div>

@@ -9,14 +9,40 @@
         background-color: lighten($black, 60%);
     }
 
+    &__thumb {
+      overflow: hidden;
+      img {
+        display: inline-block;
+        height: 100%;
+        width: auto;
+      }
+    }
+
+    &__content {
+      text-decoration: none;
+      padding: 16px;
+      display: flex;
+      flex: 1;
+    }
+
+    &__content &__text {
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    > .card__text {
+      cursor: pointer;
+      padding: 16px;
+    }
+
+    &.has-thumb .card__text {
+      padding-left: 16px;
+    }
+
     &__text {
-        cursor: pointer;
-        padding: 16px;
         display: flex;
         flex: 1;
         color: $white;
-        text-decoration: none;
-
         div {
           &:first-child {
             flex-grow: 1;

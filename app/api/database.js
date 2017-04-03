@@ -45,6 +45,7 @@ exports.getPlaylists = (accessToken, pageToken = '') => {
       resolve({
         items: items.map(({ id, contentDetails, snippet, status }) => ({
           id,
+          thumb: snippet.thumbnails.medium.url,
           title: snippet.title,
           itemCount: contentDetails.itemCount,
           privacyStatus: status.privacyStatus
@@ -84,6 +85,7 @@ exports.getPlaylistItems = (accessToken, playlistId, pageToken = '') => {
           items: items.map(({ id, contentDetails, snippet, status }, i) => ({
             id: playlistItemIds[i],
             videoId: id,
+            thumb: snippet.thumbnails.medium.url,
             title: snippet.title,
             duration: contentDetails.duration,
             publishedAt: snippet.publishedAt,

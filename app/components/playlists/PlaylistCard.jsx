@@ -12,8 +12,8 @@ const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
   }
   return (
     <div className='card shadow--2dp'>
-      <Link className='card__text' to={'/playlist/' + id} onClick={openPlaylist}>
-        <div>
+      <Link className='card__content' to={'/playlist/' + id} onClick={openPlaylist}>
+        <div className='card__text'>
           <h2 className='card__text-title'>{title}</h2>
           <p className='card__text-subtitle'>{itemCount + ' Video' + (itemCount !== 1 ? 's' : '')}</p>
         </div>

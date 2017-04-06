@@ -8,7 +8,7 @@ const VideoCard = ({ video, dispatch }) => {
   return (
     <div className='card shadow--2dp'>
       <div
-        className='card__text'
+        className='card__content'
         onClick={() => {
           dispatch({ type: 'CLEAR_WATCHERS' })
 
@@ -24,7 +24,7 @@ const VideoCard = ({ video, dispatch }) => {
           })
         }}
       >
-        <div>
+        <div className='card__text'>
           <h2 className='card__text-title'>{title}</h2>
           <p className='card__text-subtitle'>{channelTitle}</p>
           <p className='card__text-subtitle'>{moment(publishedAt).format('MMMM Do YYYY')}</p>

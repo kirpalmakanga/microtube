@@ -27,6 +27,7 @@
   position: relative;
   .textfield__input {
     @extend .add-bottom;
+    color: $black;
   }
   &__content {
     color: $black;
@@ -40,10 +41,5 @@
           margin-right: 10px;
         }
       }
-  }
-
-  .textfield {
-    padding-left: 24px;
-    padding-right: 24px;
   }
 }

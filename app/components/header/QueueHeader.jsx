@@ -17,11 +17,14 @@ const SearchHeader = ({ player, dispatch }) => {
       <nav className='navigation'>
         <button className='navigation__link icon-button' onClick={() => {
           dispatch({
-            type: 'PROMPT_ADD_VIDEO',
+            type: 'PROMPT',
             data: {
-              promptText: 'Vider la file d\'attente ?',
-              confirmText: 'Vider',
-              callback: () => dispatch({ type: 'PROMPT_CLOSE' })
+              promptText: 'Ajouter une vidéo',
+              confirmText: 'Ajouter',
+              form: true,
+              callback: () => {
+                dispatch({ type: 'PROMPT_CLOSE' })
+              }
             }
           })
         }}>

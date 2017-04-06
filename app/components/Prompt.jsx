@@ -5,18 +5,11 @@ const Prompt = ({ auth, prompt, dispatch }) => {
   const {form, isVisible, promptText, confirmText, cancelText, callback } = prompt
 
   function close(e) {
-    e.stopPropagation()
+    if(e) {
+        e.stopPropagation()
+    }
+
     dispatch({ type: 'PROMPT_CLOSE' })
-  }
-
-  function handleFocus(e) {
-    e.preventDefault()
-    e.target.parentNode.classList.add('is-focused')
-  }
-
-  function handleBlur(e) {
-    e.preventDefault()
-    e.target.parentNode.classList.remove('is-focused')
   }
 
   function handleSubmit(e) {
@@ -48,20 +41,19 @@ const Prompt = ({ auth, prompt, dispatch }) => {
                 autoFocus
                 placeholder='URL/ID...'
                 id='videoId'
-                onFocus={handleFocus}
-                onBlur={handleBlur}
               />
             </div>
+            <div className='dialog__actions'>
+              <button className='button button--close' onClick={close}>{cancelText}</button>
+              <button type='submit' className='button'>{confirmText}</button>
+            </div>
           </form>
-        ) : null}
-        <div className='dialog__actions'>
-          <button className='button button--close' onClick={close}>{cancelText}</button>
-          {form ? (
-            <button type='submit' className='button'>{confirmText}</button>
-          ) : (
+        ) : (
+          <div className='dialog__actions'>
+            <button className='button button--close' onClick={close}>{cancelText}</button>
             <button className='button' onClick={callback}>{confirmText}</button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   )

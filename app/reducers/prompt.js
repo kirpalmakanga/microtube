@@ -10,6 +10,8 @@ const initialState = {
 }
 
 const mutations = {
+  'PROMPT_RESET': state => Object.assign({}, state, initialState),
+
   'PROMPT': (state, data) => Object.assign({}, state, { isVisible: true, ...data }),
 
   'PROMPT_CLOSE': state => Object.assign({}, state, { isVisible: false })

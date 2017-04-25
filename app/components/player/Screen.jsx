@@ -74,7 +74,10 @@ const Screen = ({ player, dispatch }) => {
     return result
   }, 0)
 
-  const nextVideo = player.queue[currentIndex + 1]
+  const nextVideo = {
+    ...player.queue[currentIndex + 1],
+    index: currentIndex + 1
+  }
 
   return (
     <div className={['screen shadow--2dp', player.showScreen ? 'screen--show': ''].join(' ')}>

@@ -38,8 +38,15 @@ const Player = ({ player, dispatch }) => {
     return result
   }, 0)
 
-  const previousVideo = player.queue[currentIndex - 1]
-  const nextVideo = player.queue[currentIndex + 1]
+  const previousVideo = {
+    ...player.queue[currentIndex - 1],
+    index: currentIndex - 1
+  }
+
+  const nextVideo = {
+    ...player.queue[currentIndex + 1],
+    index: currentIndex + 1
+  }
 
   const timeProgress = {
     transform: 'translateX(' + parseFloat((currentTime / duration * 100) - 100).toFixed(2) + '%)'

@@ -144,7 +144,6 @@ export function refreshAccessToken(refreshToken, callback) {
 }
 
 function signIn({ token, refresh, user, popup, interval, dispatch }) {
-  // const { displayName, email, photoURL, uid } = user
   return new Promise((resolve, reject) => {
     const getExpirationDate = () => moment().add(1, 'hours').toDate()
     const setCookie = () => cookie.save('ytltoken', token, { expires: getExpirationDate() })
@@ -152,24 +151,14 @@ function signIn({ token, refresh, user, popup, interval, dispatch }) {
     const refreshWatcher = setInterval(() => {
       refreshAccessToken(refresh, token => {
         setCookie()
-        dispatch({
-          type: 'OAUTH_REFRESH',
-          data: token
-        })
+        dispatch({ type: 'OAUTH_REFRESH', data: token })
       })
     // }, 10000)
     }, 3540000)
 
     setCookie()
 
-    dispatch({
-      type: 'OAUTH_SUCCESS',
-      data: {
-        token,
-        user,
-        refreshWatcher
-      }
-    })
+    dispatch({ type: 'OAUTH_SUCCESS', data: { token, user, refreshWatcher } })
 
     resolve({ popup, interval })
   })

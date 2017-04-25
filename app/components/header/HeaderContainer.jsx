@@ -59,9 +59,7 @@ const Header = ({ auth, playlistItems, player, search, path, dispatch }) => {
 
             <button className='navigation__link icon-button' onClick={handleConnection}>
               {auth.token ? (
-                <span className='icon'>
-                  <svg><use xlinkHref='#icon-exit'></use></svg>
-                </span>
+                <img src={auth.user.picture} />
               ) : (
                 <span className='icon'>
                   <svg><use xlinkHref='#icon-user'></use></svg>

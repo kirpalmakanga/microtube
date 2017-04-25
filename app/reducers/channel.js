@@ -26,6 +26,8 @@ const actions = {
         items: [...state.items, ...items],
         isLoading: 2
       })
+    } else {
+      return Object.assign({}, state)
     }
   },
 

@@ -2,10 +2,11 @@
     @include transition();
     background-color: $black;
     border: none;
-    padding: 9px 15px;
+    padding: 10px 16px;
     color: $white;
     text-transform: uppercase;
     cursor: pointer;
+    font-size: 12px;
     border-radius: 4px;
 
     &:focus {

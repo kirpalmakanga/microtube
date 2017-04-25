@@ -11,9 +11,13 @@ $gutter: 16px;
 
   &__item {
       display: flex;
-      height: calc((100vh - 56px - 50px) / 5);
+      height: calc((100vh - 56px - 100px) / 5);
       &:not(:last-child) {
         border-bottom: 2px solid lighten($brand-primary, 20%);
+      }
+
+      @media screen and (min-width: 480px) {
+        height: calc((100vh - 56px - 50px) / 6);
       }
 
       @media screen and (min-width: 1024px) {

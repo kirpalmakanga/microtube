@@ -29,7 +29,6 @@
 
     &__content &__text {
       flex-direction: column;
-      justify-content: space-between;
     }
 
     &__text {
@@ -41,7 +40,6 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
           }
           &:last-child {
             font-size: 14px;
@@ -52,20 +50,41 @@
         }
 
         &-title {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
             letter-spacing: 0.1em;
-            font-size: 14px;
+            font-size: 16px;
+            @media screen and (min-width: 480px) {
+              width: 400px;
+            }
+            @media screen and (min-width: 768px) {
+              width: 600px;
+            }
             @media screen and (min-width: 1024px) {
-                font-size: 20px;
+              width: 992px;
             }
             line-height: 19px;
             margin-top: 0;
-            margin-bottom: 5px;
+            margin-bottom: 15px;
         }
 
         &-subtitle {
             font-size: 14px;
             line-height: 13px;
             margin: 0;
+            &:not(:last-child) {
+              margin-bottom: 10px;
+            }
+
+            &.channel {
+              font-size: 15px;
+              line-height: 14px;
+            }
+
+            &.date {
+
+            }
         }
     }
 
@@ -93,10 +112,12 @@
 
         svg {
             @include transition();
-            height: 30px;
-            width: 30px;
+            height: 22px;
+            width: 22px;
+            @media screen and (min-width: 480px) {
+              height: 24px;
+              width: 24px;
+            }
         }
     }
-
-
 }

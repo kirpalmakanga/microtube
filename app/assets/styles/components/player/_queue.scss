@@ -45,8 +45,12 @@
             cursor: pointer;
 
             svg {
-                height: 36px;
-                width: 36px;
+                height: 22px;
+                width: 22px;
+                @media screen and (min-width: 480px) {
+                  height: 24px;
+                  width: 24px;
+                }
             }
 
             &:focus {

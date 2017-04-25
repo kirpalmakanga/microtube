@@ -26,14 +26,14 @@ const VideoCard = ({ video, dispatch }) => {
       >
         <div className='card__text'>
           <h2 className='card__text-title'>{title}</h2>
-          <p className='card__text-subtitle'>{channelTitle}</p>
-          <p className='card__text-subtitle'>{moment(publishedAt).format('MMMM Do YYYY')}</p>
+          <p className='card__text-subtitle channel'>{channelTitle}</p>
+          <p className='card__text-subtitle date'>{moment(publishedAt).format('MMMM Do YYYY')}</p>
         </div>
         <div>{parseDuration(duration)}</div>
       </div>
 
       <button
-        className='card__button'
+        className='card__button icon-button'
         onClick={() => dispatch({
           type: 'QUEUE_PUSH',
           data: video

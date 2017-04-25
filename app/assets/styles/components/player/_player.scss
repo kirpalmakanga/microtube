@@ -51,8 +51,12 @@
             }
 
             svg {
-                height: 30px;
-                width: 30px;
+                height: 22px;
+                width: 22px;
+                @media screen and (min-width: 480px) {
+                  height: 24px;
+                  width: 24px;
+                }
             }
 
             &.badge[data-badge] {

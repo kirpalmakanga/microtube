@@ -74,9 +74,19 @@ const Screen = ({ player, dispatch }) => {
     return result
   }, 0)
 
-  const nextVideo = {
-    ...player.queue[currentIndex + 1],
-    index: currentIndex + 1
+  function goToNext() {
+    const index = currentIndex + 1
+    const video = player.queue[index]
+
+    if(video) {
+      dispatch({ type: 'CLEAR_WATCHERS' })
+
+      dispatch({
+        type: 'PLAY',
+        data: { ...video, index },
+        skip: true
+      })
+    }
   }
 
   return (
@@ -97,15 +107,7 @@ const Screen = ({ player, dispatch }) => {
                   data: target.getVolume()
                 })
               }}
-              onEnd={() => {
-                if (nextVideo) {
-                  dispatch({
-                    type: 'PLAY',
-                    data: nextVideo,
-                    skip: true
-                  })
-                }
-              }}
+              onEnd={goToNext}
               onStateChange={({data, target}) => {
                 const playerState = data.toString()
 

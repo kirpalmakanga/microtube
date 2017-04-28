@@ -1,4 +1,5 @@
 import DocumentTitle from 'react-document-title'
+
 const { connect } = ReactRedux
 
 const noop = () => {}
@@ -38,16 +39,6 @@ const Player = ({ player, dispatch }) => {
     return result
   }, 0)
 
-  const previousVideo = {
-    ...player.queue[currentIndex - 1],
-    index: currentIndex - 1
-  }
-
-  const nextVideo = {
-    ...player.queue[currentIndex + 1],
-    index: currentIndex + 1
-  }
-
   const timeProgress = {
     transform: 'translateX(' + parseFloat((currentTime / duration * 100) - 100).toFixed(2) + '%)'
   }
@@ -57,6 +48,23 @@ const Player = ({ player, dispatch }) => {
   }
 
   const youtubeReady = (typeof player.youtube === 'object' && player.youtube !== null)
+
+  function goTo(direction) {
+    const index = currentIndex + (direction === 'next' ? 1 : -1)
+    const video = player.queue[index]
+
+    return () => {
+      if(video) {
+        dispatch({ type: 'CLEAR_WATCHERS' })
+
+        dispatch({
+          type: 'PLAY',
+          data: { ...video, index },
+          skip: true
+        })
+      }
+    }
+  }
 
   function getDocumentTitle () {
     let title = 'Youtube Lite'
@@ -88,18 +96,7 @@ const Player = ({ player, dispatch }) => {
       <div className='player__controls'>
         <button
           className='player__controls-button icon-button'
-          onClick={() => {
-            if(previousVideo) {
-
-              dispatch({ type: 'CLEAR_WATCHERS' })
-
-              dispatch({
-                type: 'PLAY',
-                data: previousVideo,
-                skip: true
-              })
-            }
-          }}
+          onClick={goTo('prev')}
         >
           <span className='icon'>
             <svg><use xlinkHref='#icon-skip-previous'></use></svg>
@@ -124,17 +121,7 @@ const Player = ({ player, dispatch }) => {
 
         <button
           className='player__controls-button icon-button'
-          onClick={() => {
-            if(nextVideo) {
-              dispatch({ type: 'CLEAR_WATCHERS' })
-
-              dispatch({
-                type: 'PLAY',
-                data: nextVideo,
-                skip: true
-              })
-            }
-          }}
+          onClick={goTo('next')}
         >
           <span className='icon'>
             <svg><use xlinkHref='#icon-skip-next'></use></svg>

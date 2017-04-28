@@ -32,17 +32,31 @@ const VideoCard = ({ video, dispatch }) => {
         <div>{parseDuration(duration)}</div>
       </div>
 
-      <button
-        className='card__button icon-button'
-        onClick={() => dispatch({
-          type: 'QUEUE_PUSH',
-          data: video
-        })}
-      >
-        <span className='icon'>
-          <svg><use xlinkHref='#icon-queue'></use></svg>
-        </span>
-      </button>
+      <div className='card__buttons'>
+        <button
+          className='card__button icon-button'
+          onClick={() => dispatch({
+            type: 'QUEUE_PUSH',
+            data: video
+          })}
+        >
+          <span className='icon'>
+            <svg><use xlinkHref='#icon-playlist-add'></use></svg>
+          </span>
+        </button>
+
+        <button
+          className='card__button icon-button'
+          onClick={() => dispatch({
+            type: 'QUEUE_PUSH',
+            data: video
+          })}
+        >
+          <span className='icon'>
+            <svg><use xlinkHref='#icon-queue'></use></svg>
+          </span>
+        </button>
+      </div>
     </div>
   )
 }

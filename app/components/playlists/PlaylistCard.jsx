@@ -15,21 +15,23 @@ const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
       <Link className='card__content' to={'/playlist/' + id} onClick={openPlaylist}>
         <div className='card__text'>
           <h2 className='card__text-title'>{title}</h2>
-          <p className='card__text-subtitle'>{itemCount + ' Video' + (itemCount !== 1 ? 's' : '')}</p>
+          <p className='card__text-subtitle nb-videos'>{itemCount + ' Video' + (itemCount !== 1 ? 's' : '')}</p>
         </div>
       </Link>
 
-      <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id))}>
-        <span className='icon'>
-          <svg><use xlinkHref='#icon-queue'></use></svg>
-        </span>
-      </button>
+      <div className="card__buttons">
+        <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id))}>
+          <span className='icon'>
+            <svg><use xlinkHref='#icon-queue'></use></svg>
+          </span>
+        </button>
 
-      <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id, true))}>
-        <span className='icon'>
-          <svg><use xlinkHref='#icon-play'></use></svg>
-        </span>
-      </button>
+        <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id, true))}>
+          <span className='icon'>
+            <svg><use xlinkHref='#icon-play'></use></svg>
+          </span>
+        </button>
+      </div>
     </div>
   )
 }

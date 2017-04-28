@@ -1,32 +1,10 @@
 import DocumentTitle from 'react-document-title'
 
+import formatTime from '../../lib/formatTime'
+
 const { connect } = ReactRedux
 
 const noop = () => {}
-
-function getPlayerTime(time) {
-  let hours, minutes, seconds
-
-  function format(int) {
-    return ('0' + int).slice(-2)
-  }
-
-  if(!time) {
-    return '00:00:00';
-  }
-
-  hours = Math.floor(time / 3600) % 24
-
-  time  = time - hours * 3600
-
-  minutes = Math.floor(time / 60) % 60
-
-  time  = time - minutes * 60
-
-  seconds = Math.floor(time)
-
-  return [hours, minutes, seconds].map(t => format(t)).join(':')
-}
 
 const Player = ({ player, dispatch }) => {
   const currentTime = player.currentTime
@@ -70,11 +48,7 @@ const Player = ({ player, dispatch }) => {
     let title = 'Youtube Lite'
 
     if (player.video.title) {
-      title = player.video.title
-      + ' - '
-      + getPlayerTime(currentTime)
-      + ' / '
-      + getPlayerTime(duration)
+      title = [player.video.title, '-', formatTime(currentTime), '/', formatTime(duration)].join(' ')
     }
     return title
   }
@@ -142,9 +116,9 @@ const Player = ({ player, dispatch }) => {
         </DocumentTitle>
 
         <div className='player__info-time'>
-          <span>{getPlayerTime(currentTime)}</span>
+          <span>{formatTime(currentTime)}</span>
           <span className="separator">/</span>
-          <span>{getPlayerTime(duration)}</span>
+          <span>{formatTime(duration)}</span>
         </div>
 
         <input

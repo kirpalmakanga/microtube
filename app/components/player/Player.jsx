@@ -60,9 +60,7 @@ const Player = ({ player, dispatch }) => {
       player.youtube.playVideo()
     }
 
-    dispatch({
-      type: player.isPlaying ? 'PAUSE' : 'PLAY',
-    })
+    dispatch({ type: player.isPlaying ? 'PAUSE' : 'PLAY' })
   }
 
   return (

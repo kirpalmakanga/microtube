@@ -10,7 +10,7 @@ const Prompt = ({ auth, prompt, dispatch }) => {
     }
 
     dispatch({ type: 'PROMPT_CLOSE' })
-    setTimeout(() => dispatch({ type: 'PROMPT_RESET' }), 300)
+    setTimeout(() => dispatch({ type: 'PROMPT_RESET' }), 250)
   }
 
   function handleSubmit(e) {

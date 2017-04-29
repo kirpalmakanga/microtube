@@ -12,7 +12,7 @@ const Header = ({ auth, playlistItems, player, search, path, dispatch }) => {
   function handleConnection() {
     if (auth.token) {
       clearInterval(auth.refreshWatcher)
-      return dispatch({ type: 'UNLINK', notification: 'Déconnecté.' })
+      return dispatch({ type: 'NOTIFY', data: 'Déconnecté.' })
     }
     dispatch(logIn())
   }
@@ -33,7 +33,7 @@ const Header = ({ auth, playlistItems, player, search, path, dispatch }) => {
             </Link>
           ) : null}
 
-          <span className='layout-title'>Youtube Lite</span>
+          <span className='layout-title'>{playlistItems.playlistTitle || 'Youtube Lite'}</span>
 
           <nav className='navigation'>
             <button

@@ -79,18 +79,12 @@ function pollPopup({ popup, config, requestToken, dispatch }) {
             const params = Object.assign({}, query, hash)
 
             if (params.error) {
-              dispatch({
-                type: 'OAUTH_FAILURE',
-                notification: params.error
-              })
+              dispatch({ type: 'NOTIFY', data: params.error })
             } else {
               resolve({ oauthData: params, config, popup, interval: polling, dispatch })
             }
           } else {
-            dispatch({
-              type: 'OAUTH_FAILURE',
-              notification: 'OAuth redirect has occurred but no query or hash parameters were found.'
-            })
+            dispatch({ type: 'NOTIFY', data: 'OAuth redirect has occurred but no query or hash parameters were found.' })
           }
         }
       } catch (error) {
@@ -118,10 +112,8 @@ function exchangeCodeForToken({ oauthData, config, popup, interval, dispatch }) 
         .then(({ token, refresh, user }) => resolve({ token, refresh, user, popup, interval, dispatch }))
       } else {
         response.json().then((json) => {
-          dispatch({
-            type: 'OAUTH_FAILURE',
-            notification: json.message
-          })
+          dispatch({ type: 'NOTIFY', data: json.message })
+
           closePopup({ popup, interval })
         })
       }

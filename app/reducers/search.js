@@ -10,31 +10,32 @@ const initialState = {
 }
 
 const actions = {
-  'SEARCH_OPEN': state => Object.assign({}, state, { isOpen: true }),
+  'SEARCH_OPEN': () => ({ isOpen: true }),
 
-  'SEARCH_VIDEOS': (state, query) => {
-    let newQuery = state.query !== query
-    return Object.assign({}, state, {
-      items: newQuery ? [] : state.items,
-      pages: newQuery ? [] : state.pages,
+  'SEARCH_VIDEOS': (newQuery, { query }) => {
+    const isNewQuery = newQuery !== query
+
+    return {
+      items: isNewQuery ? [] : state.items,
+      pages: isNewQuery ? [] : state.pages,
       isLoading: 1,
-      query
-    })
+      query: newQuery
+    }
   },
 
-  'SEARCH_VIDEOS_SUCCESS': (state, { items, nextPageToken, totalResults }) => {
+  'SEARCH_VIDEOS_SUCCESS': ({ items, nextPageToken, totalResults }, state) => {
     let isNewToken = typeof nextPageToken === 'string' && !state.pages.includes(nextPageToken)
     let endOfContent = typeof nextPageToken === 'undefined'
 
     console.log('totalResults', totalResults)
 
     // if (isNewToken) {
-    return Object.assign({}, state, {
+    return {
       items: [...state.items, ...items],
       pages: [...state.pages, nextPageToken],
       isLoading: 0,
       totalResults
-    })
+    }
     // } else if (endOfContent) {
     //   return Object.assign({} , state, { isLoading: 2 })
     // }
@@ -43,4 +44,4 @@ const actions = {
   'SEARCH_CLOSE': () => initialState
 }
 
-export default (state = initialState, action) => updateState(actions, state, action)
+export default updateState(actions, initialState)

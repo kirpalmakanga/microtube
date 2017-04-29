@@ -22,13 +22,13 @@ const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
       <div className="card__buttons">
         <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id))}>
           <span className='icon'>
-            <svg><use xlinkHref='#icon-queue'></use></svg>
+            <svg><use xlinkHref='#icon-playlist-add'></use></svg>
           </span>
         </button>
 
         <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id, true))}>
           <span className='icon'>
-            <svg><use xlinkHref='#icon-play'></use></svg>
+            <svg><use xlinkHref='#icon-playlist-play'></use></svg>
           </span>
         </button>
       </div>

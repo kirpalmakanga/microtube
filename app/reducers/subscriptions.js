@@ -6,34 +6,31 @@ const initialState = {
   isLoading: 0
 }
 
-const mutations = {
-  'GET_SUBSCRIPTIONS': state => Object.assign({}, state, { isLoading: 1 }),
+const actions = {
+  'GET_SUBSCRIPTIONS': () => ({ isLoading: 1 }),
 
-  'GET_SUBSCRIPTIONS_SUCCESS': (state, { items, nextPageToken, totalResults }) => {
+  'GET_SUBSCRIPTIONS_SUCCESS': ({ items, nextPageToken, totalResults }, state) => {
     const isNewToken = typeof nextPageToken === 'string' && !state.pages.includes(nextPageToken)
     const endOfContent = typeof nextPageToken === 'undefined'
 
     if (isNewToken) {
-      return Object.assign({}, state, {
+      return {
         items: [...state.items, ...items],
         pages: [...state.pages, nextPageToken],
         isLoading: 0,
         totalResults
-      })
+      }
     } else if (endOfContent) {
-      return Object.assign({} , state, {
+      return {
         items: [...state.items, ...items],
         isLoading: 2
-      })
+      }
     }
   },
-  
-  'UNSUBSCRIBE': (state, key) => Object.assign({}, state, { items: state.items.filter(({ id }) => id !== key) }),
+
+  'UNSUBSCRIBE': (key, { items }) => ({ items: state.items.filter(({ id }) => id !== key) }),
 
   'UNLINK_SUCCESS': () => initialState
 }
 
-export default (state = initialState, action) => {
-  console.log(action.type, action.data)
-  return updateState(mutations, state, action)
-}
+export default updateState(actions, initialState)

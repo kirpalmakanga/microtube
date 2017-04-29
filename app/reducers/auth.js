@@ -7,12 +7,12 @@ const initialState = {
   refreshWatcher: null
 }
 
-const mutations = {
-    'OAUTH_SUCCESS' : (state, data) => Object.assign({}, state, data),
+const actions = {
+    'OAUTH_SUCCESS' : data => data,
 
-    'OAUTH_REFRESH': (state, token) => Object.assign({}, state, { token }),
+    'OAUTH_REFRESH': token => ({ token }),
 
     'UNLINK': () => initialState
 }
 
-export default (state = initialState, action) => updateState(mutations, state, action)
+export default updateState(actions, initialState)

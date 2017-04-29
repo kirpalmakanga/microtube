@@ -1,4 +1,4 @@
-import api from '../api/database.js'
+import api from '../api/database'
 
 exports.getPlaylists = (accessToken, pageId) => {
   return dispatch => {
@@ -8,10 +8,7 @@ exports.getPlaylists = (accessToken, pageId) => {
       type: 'GET_PLAYLISTS_SUCCESS',
       data
     }))
-    .catch(err => dispatch({
-      type: 'GET_PLAYLISTS_ERROR',
-      notification: err
-    }))
+    .catch(err => dispatch({ type: 'NOTIFY', data: err }))
   }
 }
 
@@ -32,10 +29,7 @@ exports.getAllPlaylists = (accessToken) => {
           getItems(nextPageToken)
         }
       })
-      .catch(err => dispatch({
-        type: 'GET_PLAYLISTS_ERROR',
-        notification: err
-      }))
+      .catch(err => dispatch({ type: 'NOTIFY', data: err }))
     }
     getItems()
   }
@@ -58,7 +52,6 @@ exports.queuePlaylistItems = (accessToken, playlistId, play) => {
 
         dispatch({
           type: 'QUEUE_PUSH_PLAYLIST',
-          playlistId,
           data: items
         })
 
@@ -66,10 +59,7 @@ exports.queuePlaylistItems = (accessToken, playlistId, play) => {
           getItems(nextPageToken)
         }
       })
-      .catch(err => dispatch({
-        type: 'QUEUE_PUSH_PLAYLIST_ERROR',
-        notification: err
-      }))
+      .catch(err => dispatch({ type: 'NOTIFY', data: err }))
     }
 
     getItems()
@@ -92,10 +82,7 @@ exports.getPlaylistItems = (accessToken, playlistId) => {
           getItems(nextPageToken)
         }
       })
-      .catch(err => dispatch({
-        type: 'GET_PLAYLIST_ITEMS_ERROR',
-        notification: err
-      }))
+      .catch(err => dispatch({ type: 'NOTIFY', data: err }))
     }
     dispatch({ type: 'GET_PLAYLIST_ITEMS' })
     getItems()
@@ -115,10 +102,7 @@ exports.searchVideos = (accessToken, query, pageToken) => {
         data
       })
     })
-    .catch(err => dispatch({
-      type: 'SEARCH_VIDEOS_ERROR',
-      notification: err
-    }))
+    .catch(err => dispatch({ type: 'NOTIFY', data: err }))
   }
 }
 
@@ -131,10 +115,7 @@ exports.getVideo = (accessToken, urlOrId) => {
         data: video
       })
     })
-    .catch(err => dispatch({
-      type: 'QUEUE_PUSH_ERROR',
-      notification: err
-    }))
+    .catch(err => dispatch({ type: 'NOTIFY', data: err }))
   }
 }
 
@@ -155,10 +136,7 @@ exports.getSubscriptions = (accessToken) => {
           getItems(nextPageToken)
         }
       })
-      .catch(err => dispatch({
-        type: 'GET_SUBSCRIPTIONS_ERROR',
-        notification: err
-      }))
+      .catch(err => dispatch({ type: 'NOTIFY', data: err }))
     }
     getItems()
   }
@@ -176,10 +154,7 @@ exports.unsubscribe = (id) => {
       //   data
       // })
     })
-    .catch(err => dispatch({
-      type: 'UNSUBSCRIBE_ERROR',
-      notification: err
-    }))
+    .catch(err => dispatch({ type: 'NOTIFY', data: err }))
   }
 }
 
@@ -194,9 +169,6 @@ exports.getChannelVideos = (accessToken, channelId, pageToken) => {
         data
       })
     })
-    .catch(err => dispatch({
-      type: 'GET_CHANNEL_VIDEOS_ERROR',
-      notification: err
-    }))
+    .catch(err => dispatch({ type: 'NOTIFY', data: err }))
   }
 }

@@ -1,4 +1,6 @@
-export default function updateState(actions, state, { type, data }) {
+export default function updateState(actions, initialState) {
+  return (state = initialState, { type, data }) => {
     const action = actions[type]
-    return action ? action(state, data) : state
+    return action ? Object.assign({}, state, action(data, state)) : state
+  }
 }

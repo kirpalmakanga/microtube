@@ -51,7 +51,7 @@ function getVideosFromIds({ accessToken, items, nextPageToken, pageInfo }, resol
     access_token: accessToken,
     part: 'contentDetails, snippet, status',
     id: ids,
-    maxResults: 50,
+    maxResults: 20,
     key: API_KEY
   })
   .then(({ items }) => resolve({

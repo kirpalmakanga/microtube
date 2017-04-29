@@ -28,7 +28,7 @@ const actions = {
     }
   },
 
-  'UNSUBSCRIBE': (key, { items }) => ({ items: state.items.filter(({ id }) => id !== key) }),
+  'UNSUBSCRIBE': (key, { items }) => ({ items: items.filter(({ id }) => id !== key) }),
 
   'CLEAR_SUBSCRIPTIONS': () => initialState,
 

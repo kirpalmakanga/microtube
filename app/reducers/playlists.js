@@ -29,6 +29,7 @@ const actions = {
     }
   },
 
+  'CLEAR_PLAYLISTS': () => initialState,
   'UNLINK_SUCCESS': () => initialState
 }
 

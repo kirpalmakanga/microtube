@@ -30,6 +30,8 @@ const actions = {
 
   'UNSUBSCRIBE': (key, { items }) => ({ items: state.items.filter(({ id }) => id !== key) }),
 
+  'CLEAR_SUBSCRIPTIONS': () => initialState,
+
   'UNLINK_SUCCESS': () => initialState
 }
 

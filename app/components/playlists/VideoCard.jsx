@@ -49,15 +49,6 @@ const VideoCard = ({ player, video, dispatch }) => {
             <svg><use xlinkHref='#icon-playlist-add'></use></svg>
           </span>
         </button>
-
-        <button
-          className='card__button icon-button'
-          onClick={pushToQueue}
-        >
-          <span className='icon'>
-            <svg><use xlinkHref='#icon-queue'></use></svg>
-          </span>
-        </button>
       </div>
     </div>
   )

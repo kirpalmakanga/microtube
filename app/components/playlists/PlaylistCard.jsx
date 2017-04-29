@@ -28,7 +28,7 @@ const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
 
         <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id, true))}>
           <span className='icon'>
-            <svg><use xlinkHref='#icon-play'></use></svg>
+            <svg><use xlinkHref='#icon-playlist-play'></use></svg>
           </span>
         </button>
       </div>

@@ -1,31 +1,10 @@
 import DocumentTitle from 'react-document-title'
+
+import formatTime from '../../lib/formatTime'
+
 const { connect } = ReactRedux
 
 const noop = () => {}
-
-function getPlayerTime(time) {
-  let hours, minutes, seconds
-
-  function format(int) {
-    return ('0' + int).slice(-2)
-  }
-
-  if(!time) {
-    return '00:00:00';
-  }
-
-  hours = Math.floor(time / 3600) % 24
-
-  time  = time - hours * 3600
-
-  minutes = Math.floor(time / 60) % 60
-
-  time  = time - minutes * 60
-
-  seconds = Math.floor(time)
-
-  return [hours, minutes, seconds].map(t => format(t)).join(':')
-}
 
 const Player = ({ player, dispatch }) => {
   const currentTime = player.currentTime
@@ -38,16 +17,6 @@ const Player = ({ player, dispatch }) => {
     return result
   }, 0)
 
-  const previousVideo = {
-    ...player.queue[currentIndex - 1],
-    index: currentIndex - 1
-  }
-
-  const nextVideo = {
-    ...player.queue[currentIndex + 1],
-    index: currentIndex + 1
-  }
-
   const timeProgress = {
     transform: 'translateX(' + parseFloat((currentTime / duration * 100) - 100).toFixed(2) + '%)'
   }
@@ -58,15 +27,28 @@ const Player = ({ player, dispatch }) => {
 
   const youtubeReady = (typeof player.youtube === 'object' && player.youtube !== null)
 
+  function goTo(direction) {
+    const index = currentIndex + (direction === 'next' ? 1 : -1)
+    const video = player.queue[index]
+
+    return () => {
+      if(video) {
+        dispatch({ type: 'CLEAR_WATCHERS' })
+
+        dispatch({
+          type: 'PLAY',
+          data: { ...video, index },
+          skip: true
+        })
+      }
+    }
+  }
+
   function getDocumentTitle () {
     let title = 'Youtube Lite'
 
     if (player.video.title) {
-      title = player.video.title
-      + ' - '
-      + getPlayerTime(currentTime)
-      + ' / '
-      + getPlayerTime(duration)
+      title = [player.video.title, '-', formatTime(currentTime), '/', formatTime(duration)].join(' ')
     }
     return title
   }
@@ -78,9 +60,7 @@ const Player = ({ player, dispatch }) => {
       player.youtube.playVideo()
     }
 
-    dispatch({
-      type: player.isPlaying ? 'PAUSE' : 'PLAY',
-    })
+    dispatch({ type: player.isPlaying ? 'PAUSE' : 'PLAY' })
   }
 
   return (
@@ -88,18 +68,7 @@ const Player = ({ player, dispatch }) => {
       <div className='player__controls'>
         <button
           className='player__controls-button icon-button'
-          onClick={() => {
-            if(previousVideo) {
-
-              dispatch({ type: 'CLEAR_WATCHERS' })
-
-              dispatch({
-                type: 'PLAY',
-                data: previousVideo,
-                skip: true
-              })
-            }
-          }}
+          onClick={goTo('prev')}
         >
           <span className='icon'>
             <svg><use xlinkHref='#icon-skip-previous'></use></svg>
@@ -124,17 +93,7 @@ const Player = ({ player, dispatch }) => {
 
         <button
           className='player__controls-button icon-button'
-          onClick={() => {
-            if(nextVideo) {
-              dispatch({ type: 'CLEAR_WATCHERS' })
-
-              dispatch({
-                type: 'PLAY',
-                data: nextVideo,
-                skip: true
-              })
-            }
-          }}
+          onClick={goTo('next')}
         >
           <span className='icon'>
             <svg><use xlinkHref='#icon-skip-next'></use></svg>
@@ -155,9 +114,9 @@ const Player = ({ player, dispatch }) => {
         </DocumentTitle>
 
         <div className='player__info-time'>
-          <span>{getPlayerTime(currentTime)}</span>
+          <span>{formatTime(currentTime)}</span>
           <span className="separator">/</span>
-          <span>{getPlayerTime(duration)}</span>
+          <span>{formatTime(duration)}</span>
         </div>
 
         <input

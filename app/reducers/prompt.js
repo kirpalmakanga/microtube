@@ -9,7 +9,7 @@ const initialState = {
   callback: () => {}
 }
 
-const mutations = {
+const actions = {
   'PROMPT_RESET': () => initialState,
 
   'PROMPT': data => ({ isVisible: true, ...data }),
@@ -17,4 +17,4 @@ const mutations = {
   'PROMPT_CLOSE': () => ({ isVisible: false })
 }
 
-export default (state = initialState, action) => updateState(mutations, state, action)
+export default updateState(actions, initialState)

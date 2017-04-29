@@ -7,7 +7,7 @@ const initialState = {
   totalResults: 0
 }
 
-const mutations = {
+const actions = {
   'GET_PLAYLISTS': () => ({ isLoading: 1 }),
 
   'GET_PLAYLISTS_SUCCESS': ({ items, nextPageToken, totalResults }, state) => {
@@ -32,4 +32,4 @@ const mutations = {
   'UNLINK_SUCCESS': () => initialState
 }
 
-export default (state = initialState, action) => updateState(mutations, state, action)
+export default updateState(actions, initialState)

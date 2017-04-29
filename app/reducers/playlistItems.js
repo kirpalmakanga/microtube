@@ -8,7 +8,7 @@ const initialState = {
   totalResults: 0
 }
 
-const mutations = {
+const actions = {
   'PLAYLIST_OPEN': playlistTitle => ({ playlistTitle }),
 
   'GET_PLAYLIST_ITEMS': () => ({ isLoading: 1 }),
@@ -39,4 +39,4 @@ const mutations = {
   'UNLINK_SUCCESS': () => initialState
 }
 
-export default (state = initialState, action) => updateState(mutations, state, action)
+export default updateState(actions, initialState)

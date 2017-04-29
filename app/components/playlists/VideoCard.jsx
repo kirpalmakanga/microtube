@@ -6,22 +6,23 @@ const VideoCard = ({ player, video, dispatch }) => {
   const { videoId, title, publishedAt, duration, channelTitle } = video
 
   function pushToQueue(index = player.queue.length) {
+    video.index = player.queue.length
     dispatch({
       type: 'QUEUE_PUSH',
-      data: { ...video, index }
+      data: video
     })
   }
 
   function playVideo() {
     const index = player.queue.length
+
+    video.index = player.queue.length
+
     pushToQueue(index)
     dispatch({ type: 'CLEAR_WATCHERS' })
     dispatch({
       type: 'PLAY',
-      data: {
-        ...video,
-        index
-      },
+      data: video,
       skip: true
     })
   }

@@ -44,4 +44,4 @@ const actions = {
   'SEARCH_CLOSE': () => initialState
 }
 
-export default (state = initialState, action) => updateState(actions, state, action)
+export default updateState(actions, initialState)

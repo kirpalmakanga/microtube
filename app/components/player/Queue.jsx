@@ -100,9 +100,10 @@ class Queue extends React.Component {
                   className={['queue__item', isCurrentVideo ? 'queue__item--active' : ''].join(' ')}
                   onClick={() => {
                     if(!isCurrentVideo) {
+                      item.index = index
                       dispatch({
                         type: 'PLAY',
-                        data: { ...item, index },
+                        data: item,
                         skip: true
                       })
                     } else if (player.isPlaying) {

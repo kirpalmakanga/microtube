@@ -10,12 +10,12 @@ const enhancer = compose(
      key: 'ytlstate',
      slicer: paths => {
 			 return ({ auth, player }) => {
+         const { queue, video } = player
+         const { refresh, token, user } = auth
+
 				 return {
-					 auth,
-					 player: {
-						 queue: player.queue,
-						 video: player.video
-					 }
+					 auth: { refresh, token, user },
+					 player: { queue , video }
 				 }
 			 }
 		 },

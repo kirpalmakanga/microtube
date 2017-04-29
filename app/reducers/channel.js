@@ -36,4 +36,4 @@ const actions = {
   'UNLINK_SUCCESS': () => initialState
 }
 
-export default (state = initialState, action) => updateState(actions, state, action)
+export default updateState(actions, initialState)

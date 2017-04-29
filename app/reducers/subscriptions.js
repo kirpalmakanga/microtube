@@ -6,7 +6,7 @@ const initialState = {
   isLoading: 0
 }
 
-const mutations = {
+const actions = {
   'GET_SUBSCRIPTIONS': () => ({ isLoading: 1 }),
 
   'GET_SUBSCRIPTIONS_SUCCESS': ({ items, nextPageToken, totalResults }, state) => {
@@ -33,7 +33,4 @@ const mutations = {
   'UNLINK_SUCCESS': () => initialState
 }
 
-export default (state = initialState, action) => {
-  console.log(action.type, action.data)
-  return updateState(mutations, state, action)
-}
+export default updateState(actions, initialState)

@@ -77,7 +77,7 @@ exports.getPlaylists = (accessToken, pageToken = '') => {
       pageToken,
       part: 'snippet, contentDetails, status',
       mine: true,
-      maxResults: 50,
+      maxResults: 20,
       key: API_KEY
     })
     .then(({ items, nextPageToken, pageInfo }) => {
@@ -103,7 +103,7 @@ exports.getPlaylistItems = (accessToken, playlistId, pageToken = '') => {
       playlistId,
       pageToken,
       part: 'snippet, status',
-      maxResults: 50,
+      maxResults: 20,
       key: API_KEY
     })
     .then(({ items, nextPageToken, pageInfo }) => {
@@ -114,7 +114,7 @@ exports.getPlaylistItems = (accessToken, playlistId, pageToken = '') => {
         access_token: accessToken,
         part: 'contentDetails, snippet, status',
         id: videoIds,
-        maxResults: 50,
+        maxResults: 20,
         key: API_KEY
       })
       .then(({ items }) => {
@@ -150,7 +150,7 @@ exports.searchVideos = (accessToken, query, pageToken, channelId) => {
       q: query,
       pageToken,
       key: API_KEY,
-      maxResults: 50,
+      maxResults: 20,
     })
     .then(({ items, nextPageToken, pageInfo }) => getVideosFromIds({ accessToken, items, nextPageToken, pageInfo }, resolve, reject))
     .catch(message => reject(message))
@@ -190,7 +190,7 @@ exports.getSubscriptions = (accessToken, pageToken = '') => {
       pageToken,
       part: 'id, snippet, contentDetails',
       mine: true,
-      maxResults: 25,
+      maxResults: 20,
       order: 'alphabetical',
       key: API_KEY
     })
@@ -231,7 +231,7 @@ exports.getChannelVideos = (accessToken, channelId, pageToken) => {
       channelId,
       pageToken,
       key: API_KEY,
-      maxResults: 50,
+      maxResults: 20,
     })
     .then(({ items, nextPageToken, pageInfo }) => getVideosFromIds({ accessToken, items, nextPageToken, pageInfo }, resolve, reject))
     .catch(message => reject(message))

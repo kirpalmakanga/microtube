@@ -1,4 +1,5 @@
 const API_KEY = 'AIzaSyCLDBo0aNwTTOp6yQMaD9b4mQX4B_rT2NE'
+const ITEMS_PER_REQUEST = 20
 
 function loadApi() {
   return new Promise((resolve, reject) => {
@@ -51,7 +52,7 @@ function getVideosFromIds({ accessToken, items, nextPageToken, pageInfo }, resol
     access_token: accessToken,
     part: 'contentDetails, snippet, status',
     id: ids,
-    maxResults: 20,
+    mxResults: ITEMS_PER_REQUEST,
     key: API_KEY
   })
   .then(({ items }) => resolve({
@@ -77,7 +78,7 @@ exports.getPlaylists = (accessToken, pageToken = '') => {
       pageToken,
       part: 'snippet, contentDetails, status',
       mine: true,
-      maxResults: 20,
+      mxResults: ITEMS_PER_REQUEST,
       key: API_KEY
     })
     .then(({ items, nextPageToken, pageInfo }) => {
@@ -103,7 +104,7 @@ exports.getPlaylistItems = (accessToken, playlistId, pageToken = '') => {
       playlistId,
       pageToken,
       part: 'snippet, status',
-      maxResults: 20,
+      mxResults: ITEMS_PER_REQUEST,
       key: API_KEY
     })
     .then(({ items, nextPageToken, pageInfo }) => {
@@ -114,7 +115,7 @@ exports.getPlaylistItems = (accessToken, playlistId, pageToken = '') => {
         access_token: accessToken,
         part: 'contentDetails, snippet, status',
         id: videoIds,
-        maxResults: 20,
+        mxResults: ITEMS_PER_REQUEST,
         key: API_KEY
       })
       .then(({ items }) => {
@@ -150,7 +151,7 @@ exports.searchVideos = (accessToken, query, pageToken, channelId) => {
       q: query,
       pageToken,
       key: API_KEY,
-      maxResults: 20,
+      mxResults: ITEMS_PER_REQUEST,
     })
     .then(({ items, nextPageToken, pageInfo }) => getVideosFromIds({ accessToken, items, nextPageToken, pageInfo }, resolve, reject))
     .catch(message => reject(message))
@@ -190,7 +191,7 @@ exports.getSubscriptions = (accessToken, pageToken = '') => {
       pageToken,
       part: 'id, snippet, contentDetails',
       mine: true,
-      maxResults: 20,
+      mxResults: ITEMS_PER_REQUEST,
       order: 'alphabetical',
       key: API_KEY
     })
@@ -231,7 +232,7 @@ exports.getChannelVideos = (accessToken, channelId, pageToken) => {
       channelId,
       pageToken,
       key: API_KEY,
-      maxResults: 20,
+      mxResults: ITEMS_PER_REQUEST,
     })
     .then(({ items, nextPageToken, pageInfo }) => getVideosFromIds({ accessToken, items, nextPageToken, pageInfo }, resolve, reject))
     .catch(message => reject(message))

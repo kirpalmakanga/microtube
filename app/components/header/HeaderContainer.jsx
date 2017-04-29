@@ -33,7 +33,7 @@ const Header = ({ auth, playlistItems, player, search, path, dispatch }) => {
             </Link>
           ) : null}
 
-          <span className='layout-title'>{playlistItems.playlistTitle || 'Youtube Lite'}</span>
+          <span className='layout-title'>{playlistItems.playlistTitle || 'MicroTube'}</span>
 
           <nav className='navigation'>
             <button

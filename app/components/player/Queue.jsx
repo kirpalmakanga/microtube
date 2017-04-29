@@ -102,10 +102,7 @@ class Queue extends React.Component {
                     if(!isCurrentVideo) {
                       dispatch({
                         type: 'PLAY',
-                        data: {
-                          ...item,
-                          index
-                        },
+                        data: { ...item, index },
                         skip: true
                       })
                     } else if (player.isPlaying) {

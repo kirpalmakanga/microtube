@@ -8,7 +8,8 @@ const initialState = {
   isMuted: false,
   volume: 100,
   video: {
-    videoId: null
+    videoId: null,
+    index: 0
   },
   loaded: 0,
   currentTime: 0,

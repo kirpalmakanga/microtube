@@ -2,8 +2,15 @@ import parseDuration from '../../lib/parseDuration'
 
 const { connect } = ReactRedux
 
-const VideoCard = ({ video, dispatch }) => {
+const VideoCard = ({ player, video, dispatch }) => {
   const { videoId, title, publishedAt, duration, channelTitle } = video
+
+  const currentIndex = player.queue.reduce((result, item, i) => {
+    if (player.video.videoId === item.videoId) {
+      return i
+    }
+    return result
+  }, 0)
 
   return (
     <div className='card shadow--2dp'>
@@ -14,7 +21,10 @@ const VideoCard = ({ video, dispatch }) => {
 
           dispatch({
             type: 'QUEUE_PUSH',
-            data: video
+            data: {
+              ...video,
+              index: currentIndex + 1
+            }
           })
 
           dispatch({
@@ -60,5 +70,7 @@ const VideoCard = ({ video, dispatch }) => {
     </div>
   )
 }
+
+const mapStateToProps = ({ player }) => ({ player })
 
 export default connect()(VideoCard)

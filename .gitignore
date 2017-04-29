@@ -29,5 +29,4 @@ Thumbs.db
 
 .htaccess
 
-public/*
-!public/manifest.json
+public/*.hot-update.*

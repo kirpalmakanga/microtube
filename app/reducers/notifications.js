@@ -8,7 +8,7 @@ const initialState = {
 const actions = {
   'NOTIFY': data => ({
     className: 'notification--active',
-    message: action.notification
+    message: data
   }),
 
   'CLEAR_NOTIFICATIONS': () => initialState

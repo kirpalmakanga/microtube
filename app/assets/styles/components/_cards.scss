@@ -109,6 +109,10 @@
         cursor: pointer;
         border-left: 2px solid lighten($brand-primary, 20%);
 
+        &:not(:last-child) {
+          border-bottom: 2px solid lighten($brand-primary, 20%);
+        }
+
         &:hover {
             background-color: lighten($black, 10%);
         }

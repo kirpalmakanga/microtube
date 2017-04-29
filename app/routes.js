@@ -9,10 +9,6 @@ import Subscriptions from './components/subscriptions/Subscriptions.jsx'
 import Channel from './components/Channel.jsx'
 
 export default function getRoutes ({ getState, dispatch }) {
-  const { auth } = getState()
-
-  console.log('auth', auth)
-
   return (
     <Route path='/' component={App}>
       <IndexRoute

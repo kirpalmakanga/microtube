@@ -9,28 +9,28 @@ const initialState = {
 }
 
 const mutations = {
-  'PLAYLIST_OPEN': (state, playlistTitle) => Object.assign({}, state, { playlistTitle }),
+  'PLAYLIST_OPEN': playlistTitle => ({ playlistTitle }),
 
-  'GET_PLAYLIST_ITEMS': state => Object.assign({}, state, { isLoading: 1 }),
+  'GET_PLAYLIST_ITEMS': () => ({ isLoading: 1 }),
 
-  'GET_PLAYLIST_ITEMS_SUCCESS': (state, { items, nextPageToken, totalResults }) => {
+  'GET_PLAYLIST_ITEMS_SUCCESS': ({ items, nextPageToken, totalResults }, state) => {
     let isNewToken = typeof nextPageToken === 'string' && !state.pages.includes(nextPageToken)
     let endOfContent = typeof nextPageToken === 'undefined'
 
     // let newItems = items.filter(item => item.status.privacyStatus !== 'private').filter(item => item.snippet.title !== 'Deleted video')
 
     if (isNewToken) {
-      return Object.assign({}, state, {
+      return {
         items: [...state.items, ...items],
         pages: [...state.pages, nextPageToken],
         isLoading: typeof nextPageToken === 'undefined' ? 2 : 0,
         totalResults
-      })
+      }
     } else if (endOfContent) {
-      return Object.assign({} , state, {
+      return {
         items: [...state.items, ...items],
         isLoading: 2
-      })
+      }
     }
   },
 

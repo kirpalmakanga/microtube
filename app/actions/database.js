@@ -1,4 +1,4 @@
-import api from '../api/database.js'
+import api from '../api/database'
 
 exports.getPlaylists = (accessToken, pageId) => {
   return dispatch => {
@@ -58,7 +58,6 @@ exports.queuePlaylistItems = (accessToken, playlistId, play) => {
 
         dispatch({
           type: 'QUEUE_PUSH_PLAYLIST',
-          playlistId,
           data: items
         })
 

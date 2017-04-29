@@ -8,9 +8,9 @@ const initialState = {
 }
 
 const mutations = {
-    'OAUTH_SUCCESS' : (state, data) => Object.assign({}, state, data),
+    'OAUTH_SUCCESS' : data => data,
 
-    'OAUTH_REFRESH': (state, token) => Object.assign({}, state, { token }),
+    'OAUTH_REFRESH': token => ({ token }),
 
     'UNLINK': () => initialState
 }

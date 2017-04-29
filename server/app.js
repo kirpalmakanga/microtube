@@ -7,6 +7,10 @@ const logger = require('morgan')
 const dotenv = require('dotenv')
 const argv = require('yargs').argv
 
+const webpack = require('webpack')
+const webpackConfig = require('../webpack.config')
+const compiler = webpack(webpackConfig)
+
 const app = express()
 
 const userController = require('./controllers/user')
@@ -53,6 +57,14 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, '../public')))
+
+if (argv.dev) {
+  app.use(require('webpack-dev-middleware')(compiler, {
+    noInfo: true,
+    publicPath: webpackConfig.output.publicPath
+  }))
+  app.use(require('webpack-hot-middleware')(compiler));
+}
 
 //Routes
 app.post('/auth', userController.auth)

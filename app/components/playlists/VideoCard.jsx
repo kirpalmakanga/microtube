@@ -5,34 +5,32 @@ const { connect } = ReactRedux
 const VideoCard = ({ player, video, dispatch }) => {
   const { videoId, title, publishedAt, duration, channelTitle } = video
 
-  const currentIndex = player.queue.reduce((result, item, i) => {
-    if (player.video.videoId === item.videoId) {
-      return i
-    }
-    return result
-  }, 0)
+  function pushToQueue(index = player.queue.length) {
+    dispatch({
+      type: 'QUEUE_PUSH',
+      data: { ...video, index }
+    })
+  }
+
+  function playVideo() {
+    const index = player.queue.length
+    pushToQueue(index)
+    dispatch({ type: 'CLEAR_WATCHERS' })
+    dispatch({
+      type: 'PLAY',
+      data: {
+        ...video,
+        index
+      },
+      skip: true
+    })
+  }
 
   return (
     <div className='card shadow--2dp'>
       <div
         className='card__content'
-        onClick={() => {
-          dispatch({ type: 'CLEAR_WATCHERS' })
-
-          dispatch({
-            type: 'QUEUE_PUSH',
-            data: {
-              ...video,
-              index: currentIndex + 1
-            }
-          })
-
-          dispatch({
-            type: 'PLAY',
-            data: video,
-            skip: true
-          })
-        }}
+        onClick={playVideo}
       >
         <div className='card__text'>
           <h2 className='card__text-title'>{title}</h2>
@@ -45,10 +43,7 @@ const VideoCard = ({ player, video, dispatch }) => {
       <div className='card__buttons'>
         <button
           className='card__button icon-button'
-          onClick={() => dispatch({
-            type: 'QUEUE_PUSH',
-            data: video
-          })}
+          onClick={pushToQueue}
         >
           <span className='icon'>
             <svg><use xlinkHref='#icon-playlist-add'></use></svg>
@@ -57,10 +52,7 @@ const VideoCard = ({ player, video, dispatch }) => {
 
         <button
           className='card__button icon-button'
-          onClick={() => dispatch({
-            type: 'QUEUE_PUSH',
-            data: video
-          })}
+          onClick={pushToQueue}
         >
           <span className='icon'>
             <svg><use xlinkHref='#icon-queue'></use></svg>

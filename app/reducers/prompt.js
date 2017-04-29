@@ -10,11 +10,11 @@ const initialState = {
 }
 
 const mutations = {
-  'PROMPT_RESET': state => Object.assign({}, state, initialState),
+  'PROMPT_RESET': () => initialState,
 
-  'PROMPT': (state, data) => Object.assign({}, state, { isVisible: true, ...data }),
+  'PROMPT': data => ({ isVisible: true, ...data }),
 
-  'PROMPT_CLOSE': state => Object.assign({}, state, { isVisible: false })
+  'PROMPT_CLOSE': () => ({ isVisible: false })
 }
 
 export default (state = initialState, action) => updateState(mutations, state, action)

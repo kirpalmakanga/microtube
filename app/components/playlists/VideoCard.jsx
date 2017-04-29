@@ -73,4 +73,4 @@ const VideoCard = ({ player, video, dispatch }) => {
 
 const mapStateToProps = ({ player }) => ({ player })
 
-export default connect()(VideoCard)
+export default connect(mapStateToProps)(VideoCard)

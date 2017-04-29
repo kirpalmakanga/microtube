@@ -19,7 +19,7 @@ const config = {
     open: true,
     outputPath: path.join(__dirname, 'public'),
     noInfo: true,
-    publicPath: './',
+    publicPath: './public',
     contentBase: './'
   },
   entry: [

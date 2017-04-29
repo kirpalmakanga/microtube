@@ -1,6 +1,5 @@
 import updateState from '../lib/updateState'
 
-
 const initialState = {
   items: [],
   pages: [],

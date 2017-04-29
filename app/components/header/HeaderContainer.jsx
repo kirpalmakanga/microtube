@@ -12,7 +12,7 @@ const Header = ({ auth, playlistItems, player, search, path, dispatch }) => {
   function handleConnection() {
     if (auth.token) {
       clearInterval(auth.refreshWatcher)
-      return dispatch({ type: 'UNLINK', notification: 'Déconnecté.' })
+      return dispatch({ type: 'NOTIFY', data: 'Déconnecté.' })
     }
     dispatch(logIn())
   }

@@ -1,25 +1,17 @@
-export default function(state = {}, action) {
-  switch (action.type) {
-    case 'GET_PLAYLISTS_ERROR':
-    case 'GET_SUBSCRIPTIONS_ERROR':
-    case 'UNSUBSCRIBE_ERROR':
-    case 'GET_CHANNEL_VIDEOS_ERROR':
-    case 'QUEUE_PUSH_PLAYLIST_ERROR':
-    case 'GET_PLAYLIST_ITEMS_ERROR':
-    case 'SEARCH_VIDEOS_ERROR':
-    case 'QUEUE_PUSH_ERROR':
-    case 'OAUTH_FAILURE':
-    case 'LINK_FAILURE':
-    case 'UNLINK':
-      return {
-        className: 'notification--active',
-        message: action.notification
-      }
+import updateState from '../lib/updateState'
 
-    case 'CLEAR_NOTIFICATIONS':
-      return {}
-
-    default:
-      return state
-  }
+const initialState = {
+  className: '',
+  message: ''
 }
+
+const actions = {
+  'NOTIFY': data => ({
+    className: 'notification--active',
+    message: action.notification
+  }),
+
+  'CLEAR_NOTIFICATIONS': () => initialState
+}
+
+export default updateState(actions, initialState)

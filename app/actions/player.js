@@ -4,7 +4,6 @@ exports.setActiveQueueItem = ({ queue, video, index }) => {
       index = queue.length
       queue.push(video)
     }
-    dispatch({ type: 'ENABLE_AUTOPLAY' })
     dispatch({
       type: 'QUEUE_SET',
       data: queue.map((v, i) => {

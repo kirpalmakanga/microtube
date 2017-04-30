@@ -42,7 +42,7 @@ const actions = {
 
     'BUFFER': () => ({ isBuffering: true }),
 
-    'PLAY': () => ({ isPlaying: true, isBuffering: false, autoplay: 1 }),
+    'PLAY': () => ({ isPlaying: true, isBuffering: false }),
 
     'PAUSE': () => ({ isPlaying: false }),
 
@@ -69,7 +69,6 @@ const actions = {
       newQueueItems += items.length
       return {
         queue: [...queue, ...items],
-        autoplay: 1,
         newQueueItems
       }
     },
@@ -84,7 +83,7 @@ const actions = {
       } : {})
     },
 
-    'QUEUE_SET': queue => ({ queue, autoplay: 1 }),
+    'QUEUE_SET': queue => ({ queue }),
 
     'OPEN_VOLUME': () => ({ showVolume: true }),
 

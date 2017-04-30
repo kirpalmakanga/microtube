@@ -13,6 +13,7 @@ const initialState = {
   currentTime: 0,
   duration: 0,
   youtube: null,
+  autoplay: 0,
   watchers: {
     time: null,
     loading: null
@@ -34,7 +35,7 @@ const actions = {
 
     'BUFFER': () => ({ isBuffering: true }),
 
-    'PLAY': () => ({ isPlaying: true, isBuffering: false }),
+    'PLAY': () => ({ isPlaying: true, isBuffering: false, autoplay: 1 }),
 
     'PAUSE': () => ({ isPlaying: false }),
 
@@ -61,6 +62,7 @@ const actions = {
       newQueueItems += items.length
       return {
         queue: [...queue, ...items],
+        autoplay: 1,
         newQueueItems
       }
     },
@@ -69,7 +71,7 @@ const actions = {
 
     'QUEUE_CLEAR': video => ({ queue: video.videoId ? [video] : initialState.queue }),
 
-    'QUEUE_SET': queue => ({ queue }),
+    'QUEUE_SET': queue => ({ queue, autoplay: 1 }),
 
     'OPEN_VOLUME': () => ({ showVolume: true }),
 

@@ -34,7 +34,7 @@ const Player = ({ player, dispatch }) => {
         dispatch({ type: 'CLEAR_WATCHERS' })
 
         dispatch(setActiveQueueItem({ queue: player.queue, index}))
-        player.youtube.playVideo()
+        //player.youtube.playVideo()
       }
     }
   }

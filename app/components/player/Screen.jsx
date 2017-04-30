@@ -49,7 +49,7 @@ const Screen = ({ player, dispatch }) => {
       autohide: 1,
       modestbranding: 1,
       iv_load_policy: 3,
-      autoplay: 1,
+      autoplay: player.autoplay,
       controls: 0,
       showinfo: 0
     }

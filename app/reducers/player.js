@@ -33,6 +33,8 @@ const actions = {
       return { watchers: initialState.watchers }
     },
 
+    'ENABLE_AUTOPLAY': () => ({ autoplay: 1 }),
+
     'RESET_TIME': () => ({
       currentTime: 0,
       loaded: 0,
@@ -74,7 +76,13 @@ const actions = {
 
     'QUEUE_REMOVE': (index, { queue }) => ({ queue: queue.filter((item, i) => i !== index) }),
 
-    'QUEUE_CLEAR': (data, { queue }) => ({ queue: queue.filter(v => v.active) }),
+    'QUEUE_CLEAR': (data, { queue }) => {
+      queue = queue.filter(v => v.active)
+      return Object.assign({ queue }, !queue.length ? {
+        currentTime: 0,
+        loaded: 0,
+      } : {})
+    },
 
     'QUEUE_SET': queue => ({ queue, autoplay: 1 }),
 

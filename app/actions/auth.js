@@ -135,20 +135,14 @@ export function refreshAccessToken(refreshToken, callback) {
 
 function signIn({ token, refresh, user, popup, interval, dispatch }) {
   return new Promise((resolve, reject) => {
-    const getExpirationDate = () => moment().add(1, 'hours').toDate()
-    const setCookie = () => cookie.save('ytltoken', token, { expires: getExpirationDate() })
-
     const refreshWatcher = setInterval(() => {
       refreshAccessToken(refresh, token => {
-        setCookie()
         if (token) {
+            console.log('refresh', token)
             dispatch({ type: 'OAUTH_REFRESH', data: token })
         }
       })
-    // }, 10000)
     }, 3540000)
-
-    setCookie()
 
     dispatch({ type: 'OAUTH_SUCCESS', data: { token, refresh, user, refreshWatcher } })
 

@@ -79,6 +79,7 @@ const Screen = ({ player, dispatch }) => {
               opts={opts}
               onReady={({ target }) => {
                 target.pauseVideo()
+                dispatch({ type: 'ENABLE_AUTOPLAY' })
                 dispatch({ type: 'GET_YOUTUBE', data: target })
                 dispatch({ type: 'SET_VOLUME', data: target.getVolume() })
               }}

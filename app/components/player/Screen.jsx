@@ -1,4 +1,7 @@
 import YoutubePlayer from 'react-youtube'
+
+import { setActiveQueueItem } from '../../actions/player'
+
 const { connect } = ReactRedux
 
 function getTimeWatcher(yt, dispatch) {
@@ -8,10 +11,7 @@ function getTimeWatcher(yt, dispatch) {
     const currentTime = yt.getCurrentTime()
 
     if (currentTime < duration && playerState === 1) {
-      dispatch({
-        type: 'UPDATE_TIME',
-        currentTime
-      })
+      dispatch({ type: 'UPDATE_TIME', data: { currentTime, duration } })
     } else {
       clearInterval(interval)
     }
@@ -19,8 +19,7 @@ function getTimeWatcher(yt, dispatch) {
 
   dispatch({
     type: 'UPDATE_TIME',
-    currentTime: yt.getCurrentTime(),
-    duration
+    data: { currentTime: yt.getCurrentTime(), duration }
   })
 
   return interval
@@ -32,23 +31,14 @@ function getLoadingWatcher(yt, dispatch) {
     const loaded = yt.getVideoLoadedFraction()
 
     if (loaded < 1) {
-      dispatch({
-        type: 'UPDATE_LOAD',
-        loaded
-      })
+      dispatch({ type: 'UPDATE_LOAD', data: loaded })
     } else {
       clearInterval(interval)
-      dispatch({
-        type: 'UPDATE_LOAD',
-        loaded: 1
-      })
+      dispatch({ type: 'UPDATE_LOAD', loaded: 1 })
     }
   }, 500)
 
-  dispatch({
-    type: 'UPDATE_LOAD',
-    loaded: yt.getVideoLoadedFraction()
-  })
+  dispatch({ type: 'UPDATE_LOAD', data: yt.getVideoLoadedFraction() })
 
   return interval
 }
@@ -65,14 +55,8 @@ const Screen = ({ player, dispatch }) => {
     }
   }
 
-  const videoId = player.video.videoId
-
-  const currentIndex = player.queue.reduce((result, item, i) => {
-    if (videoId === item.videoId) {
-      return i
-    }
-    return result
-  }, 0)
+  const currentIndex = player.queue.findIndex(item => item.active)
+  const video = player.queue[currentIndex]
 
   function goToNext() {
     const index = currentIndex + 1
@@ -81,31 +65,21 @@ const Screen = ({ player, dispatch }) => {
     if(video) {
       dispatch({ type: 'CLEAR_WATCHERS' })
 
-      dispatch({
-        type: 'PLAY',
-        data: { ...video, index },
-        skip: true
-      })
+      dispatch(setActiveQueueItem({ queue: player.queue, index }))
     }
   }
 
   return (
     <div className={['screen shadow--2dp', player.showScreen ? 'screen--show': ''].join(' ')}>
-          {videoId ? (
+          {video ? (
             <YoutubePlayer
               className='screen__content'
-              videoId={videoId}
+              videoId={video.videoId}
               opts={opts}
               onReady={({ target }) => {
-                target.playVideo()
-                dispatch({
-                  type: 'GET_YOUTUBE',
-                  youtube: target
-                })
-                dispatch({
-                  type: 'SET_VOLUME',
-                  data: target.getVolume()
-                })
+                target.pauseVideo()
+                dispatch({ type: 'GET_YOUTUBE', data: target })
+                dispatch({ type: 'SET_VOLUME', data: target.getVolume() })
               }}
               onEnd={goToNext}
               onStateChange={({data, target}) => {
@@ -123,11 +97,13 @@ const Screen = ({ player, dispatch }) => {
 
                     dispatch({
                       type: 'SET_WATCHERS',
-                      time: getTimeWatcher(target, dispatch),
-                      loading: getLoadingWatcher(target, dispatch)
+                      data: {
+                        time: getTimeWatcher(target, dispatch),
+                        loading: getLoadingWatcher(target, dispatch)
+                      }
                     })
 
-                    dispatch({ type: 'PLAY' })
+                    dispatch({ type: 'PLAY', data: player.video })
                   }],
                   ['2', () => {
                     dispatch({ type: 'CLEAR_WATCHERS' })

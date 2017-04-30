@@ -1,9 +1,9 @@
 import { Link } from 'react-router'
-import { queuePlaylistItems } from '../../actions/database'
+import { queuePlaylist } from '../../actions/database'
 
 const { connect } = ReactRedux
 
-const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
+const PlaylistCard = ({ auth, id, title, itemCount, player, dispatch }) => {
   function openPlaylist() {
     dispatch({
       type: 'PLAYLIST_OPEN',
@@ -20,13 +20,13 @@ const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
       </Link>
 
       <div className="card__buttons">
-        <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id))}>
+        <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylist({ token: auth.token, playlistId: id, queue: player.queue }))}>
           <span className='icon'>
             <svg><use xlinkHref='#icon-playlist-add'></use></svg>
           </span>
         </button>
 
-        <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylistItems(auth.token, id, true))}>
+        <button className='card__button icon-button' type='button' onClick={() => dispatch(queuePlaylist({ token: auth.token, playlistId: id, queue: player.queue, play: true }))}>
           <span className='icon'>
             <svg><use xlinkHref='#icon-playlist-play'></use></svg>
           </span>
@@ -36,6 +36,6 @@ const PlaylistCard = ({ auth, id, title, itemCount, dispatch }) => {
   )
 }
 
-const mapStateToProps = ({ auth }) => ({ auth })
+const mapStateToProps = ({ auth, player }) => ({ auth, player })
 
 export default connect(mapStateToProps)(PlaylistCard)

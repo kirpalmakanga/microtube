@@ -40,10 +40,7 @@ const SearchHeader = ({ player, dispatch }) => {
               promptText: 'Vider la file d\'attente ?',
               confirmText: 'Vider',
               callback: () => {
-                dispatch({
-                  type: 'QUEUE_CLEAR',
-                  currentVideo: player.video
-                })
+                dispatch({ type: 'QUEUE_CLEAR', data: player.video })
                 dispatch({ type: 'PROMPT_CLOSE' })
               }
             }

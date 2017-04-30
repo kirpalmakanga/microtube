@@ -26,9 +26,6 @@ const actions = {
   'SEARCH_VIDEOS_SUCCESS': ({ items, nextPageToken, totalResults }, state) => {
     let isNewToken = typeof nextPageToken === 'string' && !state.pages.includes(nextPageToken)
     let endOfContent = typeof nextPageToken === 'undefined'
-
-    console.log('totalResults', totalResults)
-
     // if (isNewToken) {
     return {
       items: [...state.items, ...items],

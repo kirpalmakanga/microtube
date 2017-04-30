@@ -141,7 +141,9 @@ function signIn({ token, refresh, user, popup, interval, dispatch }) {
     const refreshWatcher = setInterval(() => {
       refreshAccessToken(refresh, token => {
         setCookie()
-        dispatch({ type: 'OAUTH_REFRESH', data: token })
+        if (token) {
+            dispatch({ type: 'OAUTH_REFRESH', data: token })
+        }
       })
     // }, 10000)
     }, 3540000)

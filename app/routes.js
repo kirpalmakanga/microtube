@@ -1,6 +1,7 @@
 import { IndexRoute, Route } from 'react-router'
 
 import { getAllPlaylists, getPlaylistItems, getSubscriptions } from './actions/database'
+import { refreshAccessToken } from './actions/auth'
 
 import App from './components/App.jsx'
 import Playlists from './components/playlists/Playlists.jsx'
@@ -9,8 +10,18 @@ import Subscriptions from './components/subscriptions/Subscriptions.jsx'
 import Channel from './components/Channel.jsx'
 
 export default function getRoutes ({ getState, dispatch }) {
+   function refreshToken () {
+     const { auth } = getState()
+     refreshAccessToken(auth.refresh, token => {
+        console.log('token', token)
+        if (token) {
+            dispatch({ type: 'OAUTH_REFRESH', data: token })
+        }
+     })
+   }
+
   return (
-    <Route path='/' component={App}>
+    <Route path='/' onEnter={refreshToken} component={App}>
       <IndexRoute
         component={Playlists}
         onLeave={() => dispatch({ type: 'CLEAR_PLAYLISTS' })}

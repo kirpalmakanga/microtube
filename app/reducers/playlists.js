@@ -21,11 +21,13 @@ const actions = {
         isLoading: 0,
         totalResults
       }
-    } else if (endOfContent) {
+    } else if (endOfContent && state.isLoading !== 2) {
       return {
         items: [...state.items, ...items],
         isLoading: 2
       }
+    } else {
+      return state
     }
   },
 

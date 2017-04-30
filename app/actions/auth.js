@@ -148,7 +148,7 @@ function signIn({ token, refresh, user, popup, interval, dispatch }) {
 
     setCookie()
 
-    dispatch({ type: 'OAUTH_SUCCESS', data: { token, user, refreshWatcher } })
+    dispatch({ type: 'OAUTH_SUCCESS', data: { token, refresh, user, refreshWatcher } })
 
     resolve({ popup, interval })
   })

@@ -12,12 +12,12 @@ const initialState = {
 const actions = {
   'SEARCH_OPEN': () => ({ isOpen: true }),
 
-  'SEARCH_VIDEOS': (newQuery, { query }) => {
+  'SEARCH_VIDEOS': (newQuery, { items, pages, query }) => {
     const isNewQuery = newQuery !== query
 
     return {
-      items: isNewQuery ? [] : state.items,
-      pages: isNewQuery ? [] : state.pages,
+      items: isNewQuery ? [] : items,
+      pages: isNewQuery ? [] : pages,
       isLoading: 1,
       query: newQuery
     }

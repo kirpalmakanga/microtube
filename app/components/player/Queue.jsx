@@ -98,6 +98,7 @@ class Queue extends React.Component {
                   className={['queue__item', active ? 'queue__item--active' : ''].join(' ')}
                   onClick={() => {
                     if(!active) {
+                      dispatch({ type: 'RESET_TIME' })
                       dispatch(setActiveQueueItem({ queue: player.queue, index}))
                     } else if (player.isPlaying) {
                       player.youtube.pauseVideo()

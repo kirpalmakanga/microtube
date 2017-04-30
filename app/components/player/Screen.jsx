@@ -64,6 +64,7 @@ const Screen = ({ player, dispatch }) => {
 
     if(video) {
       dispatch({ type: 'CLEAR_WATCHERS' })
+      dispatch({ type: 'RESET_TIME' })
 
       dispatch(setActiveQueueItem({ queue: player.queue, index }))
     }

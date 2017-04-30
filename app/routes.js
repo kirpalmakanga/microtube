@@ -15,7 +15,6 @@ export default function getRoutes ({ getState, dispatch }) {
 
      const requestToken = auth.refresh ? () => refreshAccessToken(auth.refresh, token => {
        if (token) {
-          console.log('refresh', token)
            dispatch({ type: 'OAUTH_REFRESH', data: token })
        }
      }) : () => {}

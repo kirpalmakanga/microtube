@@ -13,6 +13,7 @@ const initialState = {
   currentTime: 0,
   duration: 0,
   youtube: null,
+  autoplay: 0,
   watchers: {
     time: null,
     loading: null
@@ -32,13 +33,20 @@ const actions = {
       return { watchers: initialState.watchers }
     },
 
+    'ENABLE_AUTOPLAY': () => ({ autoplay: 1 }),
+
+    'RESET_TIME': () => ({
+      currentTime: 0,
+      loaded: 0,
+    }),
+
     'BUFFER': () => ({ isBuffering: true }),
 
-    'PLAY': () => ({ isPlaying: true, isBuffering: false }),
+    'PLAY': () => ({ isPlaying: true, isBuffering: false, autoplay: 1 }),
 
     'PAUSE': () => ({ isPlaying: false }),
 
-    'UPDATE_TIME': ({ currentTime, duration }) => ({ currentTime, duration }),
+    'UPDATE_TIME': ({ currentTime, duration }, state) => ({ currentTime, duration: duration || state.duration }),
 
     'UPDATE_LOAD': loaded => ({ loaded }),
 
@@ -61,15 +69,22 @@ const actions = {
       newQueueItems += items.length
       return {
         queue: [...queue, ...items],
+        autoplay: 1,
         newQueueItems
       }
     },
 
     'QUEUE_REMOVE': (index, { queue }) => ({ queue: queue.filter((item, i) => i !== index) }),
 
-    'QUEUE_CLEAR': video => ({ queue: video.videoId ? [video] : initialState.queue }),
+    'QUEUE_CLEAR': (data, { queue }) => {
+      queue = queue.filter(v => v.active)
+      return Object.assign({ queue }, !queue.length ? {
+        currentTime: 0,
+        loaded: 0,
+      } : {})
+    },
 
-    'QUEUE_SET': queue => ({ queue }),
+    'QUEUE_SET': queue => ({ queue, autoplay: 1 }),
 
     'OPEN_VOLUME': () => ({ showVolume: true }),
 

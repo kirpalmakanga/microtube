@@ -9,11 +9,11 @@ const { connect } = ReactRedux
 const noop = () => {}
 
 const Player = ({ player, dispatch }) => {
-  const currentTime = player.currentTime
-  const duration = player.duration
-
   const currentIndex = player.queue.findIndex(item => item.active)
   const currentVideo = player.queue[currentIndex]
+
+  const currentTime = player.currentTime
+  const duration = player.duration
 
   const timeProgress = {
     transform: 'translateX(' + parseFloat((currentTime / duration * 100) - 100).toFixed(2) + '%)'
@@ -32,9 +32,9 @@ const Player = ({ player, dispatch }) => {
     return () => {
       if(video) {
         dispatch({ type: 'CLEAR_WATCHERS' })
+        dispatch({ type: 'RESET_TIME' })
 
         dispatch(setActiveQueueItem({ queue: player.queue, index}))
-        player.youtube.playVideo()
       }
     }
   }
@@ -126,7 +126,7 @@ const Player = ({ player, dispatch }) => {
 
             dispatch({
               type: 'UPDATE_TIME',
-              currentTime: newTime
+              data: { currentTime: newTime }
             })
           } : noop}
         />

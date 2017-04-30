@@ -93,7 +93,7 @@ const Screen = ({ player, dispatch }) => {
     <div className={['screen shadow--2dp', player.showScreen ? 'screen--show': ''].join(' ')}>
           {videoId ? (
             <YoutubePlayer
-              className={'screen__content'}
+              className='screen__content'
               videoId={videoId}
               opts={opts}
               onReady={({ target }) => {

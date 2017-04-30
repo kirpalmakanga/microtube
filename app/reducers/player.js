@@ -1,3 +1,5 @@
+import updateState from '../lib/updateState'
+
 const initialState = {
   queue: [],
   isPlaying: false,
@@ -7,10 +9,6 @@ const initialState = {
   showVolume: false,
   isMuted: false,
   volume: 100,
-  video: {
-    videoId: null,
-    index: 0
-  },
   loaded: 0,
   currentTime: 0,
   duration: 0,
@@ -22,110 +20,66 @@ const initialState = {
   newQueueItems: 0
 }
 
-export default function(state = initialState, action) {
-  const { queue, video, duration } = state
+const actions = {
 
-  switch (action.type) {
-    case 'GET_YOUTUBE':
-      return Object.assign({}, state, { youtube: action.youtube })
+    'GET_YOUTUBE': youtube => ({ youtube }),
 
-    case 'SET_WATCHERS':
-      return Object.assign({}, state, {
-        watchers: {
-          time: action.time,
-          loading: action.loading
-        }
-      })
+    'SET_WATCHERS': ({ time, loading }) => ({ watchers: { time, loading } }),
 
-    case 'CLEAR_WATCHERS':
-      clearInterval(state.watchers.time)
-      clearInterval(state.watchers.loading)
-      return Object.assign({}, state, { watchers: initialState.watchers })
+    'CLEAR_WATCHERS': (data, { watchers }) => {
+      clearInterval(watchers.time)
+      clearInterval(watchers.loading)
+      return { watchers: initialState.watchers }
+    },
 
-    case 'BUFFER':
-      return Object.assign({}, state, { isBuffering: true })
+    'BUFFER': () => ({ isBuffering: true }),
 
-    case 'PLAY':
-      return Object.assign({}, state, {
-          isPlaying: true,
-          isBuffering: false,
-          video: action.data || video
-        },
-        action.skip ? { currentTime: 0, loaded: 0 } : {}
-      )
+    'PLAY': () => ({ isPlaying: true, isBuffering: false }),
 
-    case 'PAUSE':
-      return Object.assign({}, state, { isPlaying: false })
+    'PAUSE': () => ({ isPlaying: false }),
 
-    case 'UPDATE_TIME':
-      return Object.assign({}, state, {
-        currentTime: action.currentTime,
-        duration: action.duration || duration
-      })
+    'UPDATE_TIME': ({ currentTime, duration }) => ({ currentTime, duration }),
 
-    case 'UPDATE_LOAD':
-      return Object.assign({}, state, { loaded: action.loaded })
+    'UPDATE_LOAD': loaded => ({ loaded }),
 
-    case 'SCREEN_OPEN':
-      return Object.assign({}, state, {
-        showScreen: true,
-        showQueue: false
-      })
+    'SCREEN_OPEN': () => ({
+      showScreen: true,
+      showQueue: false
+    }),
 
-    case 'SCREEN_CLOSE':
-      return Object.assign({}, state, { showScreen: false })
+    'SCREEN_CLOSE': () => ({ showScreen: false }),
 
+    'QUEUE_OPEN': () => ({
+      showQueue: true,
+      showScreen: false,
+      newQueueItems: initialState.newQueueItems
+    }),
 
-    case 'QUEUE_OPEN':
-      return Object.assign({}, state, {
-        showQueue: true,
-        showScreen: false,
-        newQueueItems: initialState.newQueueItems
-      })
+    'QUEUE_CLOSE': () => ({ showQueue: false }),
 
-    case 'QUEUE_CLOSE':
-      return Object.assign({}, state, { showQueue: false })
+    'QUEUE_PUSH': (items, { queue, newQueueItems }) => {
+      newQueueItems += items.length
+      return {
+        queue: [...queue, ...items],
+        newQueueItems
+      }
+    },
 
-    case 'QUEUE_PUSH':
-      return Object.assign({}, state, {
-        queue: [...queue, action.data],
-        newQueueItems: state.newQueueItems + 1
-      })
+    'QUEUE_REMOVE': (index, { queue }) => ({ queue: queue.filter((item, i) => i !== index) }),
 
-    case 'QUEUE_PUSH_PLAYLIST':
-      return Object.assign({}, state, {
-        queue: [...queue, ...action.data],
-        newQueueItems: state.newQueueItems + action.data.length
-      })
+    'QUEUE_CLEAR': video => ({ queue: video.videoId ? [video] : initialState.queue }),
 
-    case 'QUEUE_REMOVE':
+    'QUEUE_SET': queue => ({ queue }),
 
-      return Object.assign({}, state, { queue: queue.filter((item, index) => index !== action.index) })
+    'OPEN_VOLUME': () => ({ showVolume: true }),
 
-    case 'QUEUE_CLEAR':
-      return Object.assign({}, state, { queue: action.currentVideo.videoId ? [action.currentVideo] : initialState.queue })
+    'CLOSE_VOLUME': () => ({ showVolume: false }),
 
-    case 'QUEUE_SET':
-      return Object.assign({}, state, { queue: action.newQueue })
+    'SET_VOLUME': data => ({ isMuted: false, volume: data }),
 
-    case 'OPEN_VOLUME':
-      return Object.assign({}, state, { showVolume: true })
+    'MUTE': () => ({ isMuted: true }),
 
-    case 'CLOSE_VOLUME':
-      return Object.assign({}, state, { showVolume: false })
-
-    case 'SET_VOLUME':
-      return Object.assign({}, state, {
-        isMuted: false,
-        volume: action.data
-      })
-
-    case 'MUTE':
-      return Object.assign({}, state, { isMuted: true })
-
-    case 'UNMUTE':
-      return Object.assign({}, state, { isMuted: false })
-  }
-
-  return state
+    'UNMUTE': () => ({ isMuted: false })
 }
+
+export default updateState(actions, initialState)

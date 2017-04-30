@@ -2,6 +2,8 @@ import DocumentTitle from 'react-document-title'
 
 import formatTime from '../../lib/formatTime'
 
+import { setActiveQueueItem } from '../../actions/player'
+
 const { connect } = ReactRedux
 
 const noop = () => {}
@@ -10,12 +12,8 @@ const Player = ({ player, dispatch }) => {
   const currentTime = player.currentTime
   const duration = player.duration
 
-  const currentIndex = player.queue.reduce((result, item, i) => {
-    if (player.video.videoId === item.videoId) {
-      return i
-    }
-    return result
-  }, 0)
+  const currentIndex = player.queue.findIndex(item => item.active)
+  const currentVideo = player.queue[currentIndex]
 
   const timeProgress = {
     transform: 'translateX(' + parseFloat((currentTime / duration * 100) - 100).toFixed(2) + '%)'
@@ -35,11 +33,8 @@ const Player = ({ player, dispatch }) => {
       if(video) {
         dispatch({ type: 'CLEAR_WATCHERS' })
 
-        dispatch({
-          type: 'PLAY',
-          data: { ...video, index },
-          skip: true
-        })
+        dispatch(setActiveQueueItem({ queue: player.queue, index}))
+        player.youtube.playVideo()
       }
     }
   }
@@ -47,8 +42,8 @@ const Player = ({ player, dispatch }) => {
   function getDocumentTitle () {
     let title = 'Youtube Lite'
 
-    if (player.video.title) {
-      title = [player.video.title, '-', formatTime(currentTime), '/', formatTime(duration)].join(' ')
+    if (currentVideo) {
+      title = [currentVideo.title, '-', formatTime(currentTime), '/', formatTime(duration)].join(' ')
     }
     return title
   }
@@ -110,7 +105,7 @@ const Player = ({ player, dispatch }) => {
         </div>
 
         <DocumentTitle title={getDocumentTitle()}>
-          <div className='player__info-title'>{player.video.title || 'No video.'}</div>
+          <div className='player__info-title'>{currentVideo ? currentVideo.title : 'No video.'}</div>
         </DocumentTitle>
 
         <div className='player__info-time'>

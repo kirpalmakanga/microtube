@@ -1,13 +1,12 @@
 import api from '../api/database'
 
+import { setActiveQueueItem } from './player.js'
+
 exports.getPlaylists = (accessToken, pageId) => {
   return dispatch => {
     dispatch({ type: 'GET_PLAYLISTS' })
     api.getPlaylists(accessToken, pageId)
-    .then(data => dispatch({
-      type: 'GET_PLAYLISTS_SUCCESS',
-      data
-    }))
+    .then(data => dispatch({ type: 'GET_PLAYLISTS_SUCCESS', data }))
     .catch(err => dispatch({ type: 'NOTIFY', data: err }))
   }
 }
@@ -20,10 +19,7 @@ exports.getAllPlaylists = (accessToken) => {
       .then(data => {
         const { nextPageToken } = data
 
-        dispatch({
-          type: 'GET_PLAYLISTS_SUCCESS',
-          data
-        })
+        dispatch({ type: 'GET_PLAYLISTS_SUCCESS', data })
 
         if (nextPageToken) {
           getItems(nextPageToken)
@@ -35,7 +31,7 @@ exports.getAllPlaylists = (accessToken) => {
   }
 }
 
-exports.queuePlaylistItems = (accessToken, playlistId, play) => {
+exports.queuePlaylist = ({ accessToken, playlistId, queue, play }) => {
   return dispatch => {
     const getItems = nextPage => {
       api.getPlaylistItems(accessToken, playlistId, nextPage)
@@ -43,17 +39,11 @@ exports.queuePlaylistItems = (accessToken, playlistId, play) => {
         const { items, nextPageToken } = data
 
         if (play && !nextPage && items.length > 0) {
-          dispatch({
-            type: 'PLAY',
-            data: items[0],
-            skip: true
-          })
+          dispatch(setActiveQueueItem({ queue, video: items[0] }))
+          items.shift()
         }
 
-        dispatch({
-          type: 'QUEUE_PUSH_PLAYLIST',
-          data: items
-        })
+        dispatch({ type: 'QUEUE_PUSH', data: items })
 
         if (nextPageToken) {
           getItems(nextPageToken)
@@ -73,10 +63,7 @@ exports.getPlaylistItems = (accessToken, playlistId) => {
       .then(data => {
         const { nextPageToken } = data
 
-        dispatch({
-          type: 'GET_PLAYLIST_ITEMS_SUCCESS',
-          data
-        })
+        dispatch({ type: 'GET_PLAYLIST_ITEMS_SUCCESS', data })
 
         if (nextPageToken) {
           getItems(nextPageToken)
@@ -91,16 +78,10 @@ exports.getPlaylistItems = (accessToken, playlistId) => {
 
 exports.searchVideos = (accessToken, query, pageToken) => {
   return dispatch => {
-    dispatch({
-      type: 'SEARCH_VIDEOS',
-      data: query
-    })
+    dispatch({ type: 'SEARCH_VIDEOS', data: query })
     api.searchVideos(accessToken, query, pageToken)
     .then(data => {
-      dispatch({
-        type: 'SEARCH_VIDEOS_SUCCESS',
-        data
-      })
+      dispatch({ type: 'SEARCH_VIDEOS_SUCCESS', data })
     })
     .catch(err => dispatch({ type: 'NOTIFY', data: err }))
   }
@@ -110,10 +91,7 @@ exports.getVideo = (accessToken, urlOrId) => {
   return dispatch => {
     api.getVideo(accessToken, urlOrId)
     .then(video => {
-      dispatch({
-        type: 'QUEUE_PUSH',
-        data: video
-      })
+      dispatch({ type: 'QUEUE_PUSH', data: video })
     })
     .catch(err => dispatch({ type: 'NOTIFY', data: err }))
   }
@@ -127,10 +105,7 @@ exports.getSubscriptions = (accessToken) => {
       .then(data => {
         const { nextPageToken } = data
 
-        dispatch({
-          type: 'GET_SUBSCRIPTIONS_SUCCESS',
-          data
-        })
+        dispatch({ type: 'GET_SUBSCRIPTIONS_SUCCESS', data })
 
         if (nextPageToken) {
           getItems(nextPageToken)
@@ -164,10 +139,7 @@ exports.getChannelVideos = (accessToken, channelId, pageToken) => {
 
     api.getChannelVideos(accessToken, channelId, pageToken)
     .then(data => {
-      dispatch({
-        type: 'GET_CHANNEL_VIDEOS_SUCCESS',
-        data
-      })
+      dispatch({ type: 'GET_CHANNEL_VIDEOS_SUCCESS', data })
     })
     .catch(err => dispatch({ type: 'NOTIFY', data: err }))
   }

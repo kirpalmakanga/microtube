@@ -12,6 +12,7 @@ const VideoCard = ({ player, video, dispatch }) => {
   }
 
   function playVideo() {
+    dispatch({ type: 'RESET_TIME' })
     dispatch(setActiveQueueItem({ queue: player.queue, video }))
   }
 

@@ -1,6 +1,6 @@
 require('../assets/styles/app.scss')
 
-import FastClick from 'react-fastclick-alt';
+import FastClick from 'react-fastclick-alt'
 import Header from './header/HeaderContainer.jsx'
 import PlaylistItems from './playlists/PlaylistItems.jsx'
 import Search from './search/Search.jsx'

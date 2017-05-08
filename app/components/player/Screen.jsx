@@ -1,4 +1,5 @@
 import YoutubePlayer from 'react-youtube'
+import Notification from 'react-web-notification'
 
 import { setActiveQueueItem } from '../../actions/player'
 
@@ -128,6 +129,7 @@ const Screen = ({ player, dispatch }) => {
               }}
             />
           ) : null}
+          {player.notify ? (<Notification title={video.title} />) : null}
     </div>
   )
 }

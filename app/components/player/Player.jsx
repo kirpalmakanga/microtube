@@ -58,6 +58,18 @@ const Player = ({ player, dispatch }) => {
     dispatch({ type: player.isPlaying ? 'PAUSE' : 'PLAY' })
   }
 
+  function setVolume({ target }) {
+    player.youtube.setVolume(target.value)
+    dispatch({
+      type: 'SET_VOLUME',
+      data: target.value
+    })
+  }
+
+  function stopPropagation(e) {
+    e.stopPropagation()
+  }
+
   return (
     <div className='player shadow--2dp'>
       <div className='player__controls'>
@@ -124,6 +136,7 @@ const Player = ({ player, dispatch }) => {
 
             player.youtube.seekTo(newTime)
 
+            dispatch({ type: 'CLEAR_WATCHERS' })
             dispatch({
               type: 'UPDATE_TIME',
               data: { currentTime: newTime }
@@ -160,26 +173,27 @@ const Player = ({ player, dispatch }) => {
           className='player__controls-volume'
           onMouseEnter={() => dispatch({ type: 'OPEN_VOLUME' })}
           onMouseLeave={() => dispatch({ type: 'CLOSE_VOLUME' })}
-          onWheel={youtubeReady ? ({ deltaY }) => {
+          onWheel={youtubeReady ? e => {
+              const { target, deltaY } = e
+              const range = target.querySelector('input')
               const volume =  deltaY < 0 ? player.volume + 5 : player.volume - 5
               const inRange = volume >= 0 && volume <= 100
+
+              e.stopPropagation()
 
               if(player.isMuted) {
                 player.youtube.unMute()
               }
 
               if (inRange) {
-                player.youtube.setVolume(volume)
+                // range.value = volume
+                // range.dispatchEvent(new Event('change'))
               }
-
-              dispatch({
-                type: 'SET_VOLUME',
-                data: inRange ? volume : player.volume
-              })
           } : noop}
         >
           <button
             className='player__controls-button icon-button'
+            onWheel={stopPropagation}
             onClick={youtubeReady ? () => {
               if (player.isMuted) {
                 player.youtube.unMute()
@@ -190,7 +204,10 @@ const Player = ({ player, dispatch }) => {
               dispatch({ type: player.isMuted ? 'UNMUTE' : 'MUTE' })
             } : noop}
           >
-            <span className='icon'>
+            <span
+              className='icon'
+              onWheel={stopPropagation}
+            >
               {player.isMuted ? (
                 <svg><use xlinkHref='#icon-volume-mute'></use></svg>
               ) : player.volume >= 50 ? (
@@ -209,12 +226,8 @@ const Player = ({ player, dispatch }) => {
               min='0'
               max='100'
               value={player.volume}
-              onChange={({ target }) => {
-                dispatch({
-                  type: 'SET_VOLUME',
-                  data: target.value
-                })
-              }} />
+              onChange={setVolume}
+            />
           </div>
         </div>
       </div>

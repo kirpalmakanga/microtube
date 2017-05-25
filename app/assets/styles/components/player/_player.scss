@@ -111,7 +111,6 @@
             &-range {
                 @include transition();
                 background-color: $brand-primary;
-                padding: 10px 15px;
                 position: absolute;
                 visibility: hidden;
                 opacity: 0;
@@ -119,6 +118,11 @@
                 bottom: 100%;
                 width: 180px;
                 transform: translateX(100%);
+                input[type="range"] {
+                  cursor: pointer;
+                  margin: 0;
+                  padding: 10px;
+                }
 
                 &.is-active {
                     transform: translateX(0);

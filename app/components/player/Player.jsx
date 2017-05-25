@@ -58,11 +58,11 @@ const Player = ({ player, dispatch }) => {
     dispatch({ type: player.isPlaying ? 'PAUSE' : 'PLAY' })
   }
 
-  function setVolume({ target }) {
-    player.youtube.setVolume(target.value)
+  function setVolume(val) {
+    player.youtube.setVolume(val)
     dispatch({
       type: 'SET_VOLUME',
-      data: target.value
+      data: val
     })
   }
 
@@ -173,27 +173,21 @@ const Player = ({ player, dispatch }) => {
           className='player__controls-volume'
           onMouseEnter={() => dispatch({ type: 'OPEN_VOLUME' })}
           onMouseLeave={() => dispatch({ type: 'CLOSE_VOLUME' })}
-          onWheel={youtubeReady ? e => {
-              const { target, deltaY } = e
-              const range = target.querySelector('input')
+          onWheel={youtubeReady ? ({ deltaY }) => {
               const volume =  deltaY < 0 ? player.volume + 5 : player.volume - 5
               const inRange = volume >= 0 && volume <= 100
-
-              e.stopPropagation()
 
               if(player.isMuted) {
                 player.youtube.unMute()
               }
 
               if (inRange) {
-                // range.value = volume
-                // range.dispatchEvent(new Event('change'))
+                setVolume(volume)
               }
           } : noop}
         >
           <button
             className='player__controls-button icon-button'
-            onWheel={stopPropagation}
             onClick={youtubeReady ? () => {
               if (player.isMuted) {
                 player.youtube.unMute()
@@ -204,10 +198,7 @@ const Player = ({ player, dispatch }) => {
               dispatch({ type: player.isMuted ? 'UNMUTE' : 'MUTE' })
             } : noop}
           >
-            <span
-              className='icon'
-              onWheel={stopPropagation}
-            >
+            <span className='icon'>
               {player.isMuted ? (
                 <svg><use xlinkHref='#icon-volume-mute'></use></svg>
               ) : player.volume >= 50 ? (
@@ -226,7 +217,7 @@ const Player = ({ player, dispatch }) => {
               min='0'
               max='100'
               value={player.volume}
-              onChange={setVolume}
+              onChange={({ target }) => setVolume(target.value)}
             />
           </div>
         </div>

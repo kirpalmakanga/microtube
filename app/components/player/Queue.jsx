@@ -5,8 +5,8 @@ const { connect } = ReactRedux
 
 class Queue extends React.Component {
   constructor(props) {
-
     super(props)
+    
     this.state = {
       data: props.player.queue
     }

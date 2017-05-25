@@ -73,8 +73,7 @@ const config = {
         exclude: /node_modules/,
         loader: 'babel',
         query: {
-          plugins: ['lodash'],
-          presets: ['es2015']
+          plugins: ['lodash']
         }
       },
       {
@@ -82,8 +81,7 @@ const config = {
         exclude: /node_modules/,
         loader: 'babel',
         query: {
-          plugins: ['lodash'],
-          presets: ['es2015']
+          plugins: ['lodash']
         }
       },
       {

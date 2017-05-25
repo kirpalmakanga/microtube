@@ -73,7 +73,7 @@ app.get('/auth/callback', userController.authCallback)
 
 app.use((req, res) => {
   res.render('layouts/main', {
-    title: 'Youtube Lite',
+    title: 'Microtube',
     initialState
   })
 })

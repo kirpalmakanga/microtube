@@ -18,7 +18,8 @@ const initialState = {
     time: null,
     loading: null
   },
-  newQueueItems: 0
+  newQueueItems: 0,
+  notify: false
 }
 
 const actions = {
@@ -42,9 +43,9 @@ const actions = {
 
     'BUFFER': () => ({ isBuffering: true }),
 
-    'PLAY': () => ({ isPlaying: true, isBuffering: false }),
+    'PLAY': () => ({ isPlaying: true, isBuffering: false, notify: true }),
 
-    'PAUSE': () => ({ isPlaying: false }),
+    'PAUSE': () => ({ isPlaying: false, notify: false }),
 
     'UPDATE_TIME': ({ currentTime, duration }, state) => ({ currentTime, duration: duration || state.duration }),
 
@@ -83,7 +84,7 @@ const actions = {
       } : {})
     },
 
-    'QUEUE_SET': queue => ({ queue }),
+    'QUEUE_SET': queue => ({ queue, notify: true }),
 
     'OPEN_VOLUME': () => ({ showVolume: true }),
 

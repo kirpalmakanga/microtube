@@ -58,6 +58,18 @@ const Player = ({ player, dispatch }) => {
     dispatch({ type: player.isPlaying ? 'PAUSE' : 'PLAY' })
   }
 
+  function setVolume(val) {
+    player.youtube.setVolume(val)
+    dispatch({
+      type: 'SET_VOLUME',
+      data: val
+    })
+  }
+
+  function stopPropagation(e) {
+    e.stopPropagation()
+  }
+
   return (
     <div className='player shadow--2dp'>
       <div className='player__controls'>
@@ -124,6 +136,7 @@ const Player = ({ player, dispatch }) => {
 
             player.youtube.seekTo(newTime)
 
+            dispatch({ type: 'CLEAR_WATCHERS' })
             dispatch({
               type: 'UPDATE_TIME',
               data: { currentTime: newTime }
@@ -169,13 +182,8 @@ const Player = ({ player, dispatch }) => {
               }
 
               if (inRange) {
-                player.youtube.setVolume(volume)
+                setVolume(volume)
               }
-
-              dispatch({
-                type: 'SET_VOLUME',
-                data: inRange ? volume : player.volume
-              })
           } : noop}
         >
           <button
@@ -209,12 +217,8 @@ const Player = ({ player, dispatch }) => {
               min='0'
               max='100'
               value={player.volume}
-              onChange={({ target }) => {
-                dispatch({
-                  type: 'SET_VOLUME',
-                  data: target.value
-                })
-              }} />
+              onChange={({ target }) => setVolume(target.value)}
+            />
           </div>
         </div>
       </div>

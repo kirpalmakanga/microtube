@@ -15,6 +15,7 @@ const Channel = ({ auth, channel, params, dispatch }) => {
       return (<Waypoint onEnter={loadMoreContent} topOffset={1} />)
     }
   }
+
   return (
     <div className='grid'>
       {channel.items.map((data, i) => (
@@ -27,8 +28,6 @@ const Channel = ({ auth, channel, params, dispatch }) => {
         {renderWaypoint()}
         <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
       </div>
-
-
     </div>
   )
 }

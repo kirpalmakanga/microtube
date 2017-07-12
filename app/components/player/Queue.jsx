@@ -6,7 +6,7 @@ const { connect } = ReactRedux
 class Queue extends React.Component {
   constructor(props) {
     super(props)
-    
+
     this.state = {
       data: props.player.queue
     }
@@ -88,9 +88,10 @@ class Queue extends React.Component {
 
   render() {
     const { player, dispatch } = this.props
+    const { youtube, queue, showQueue, isPlaying, isBuffering } = player
     return (
-        <div className={['queue shadow--2dp', player.showQueue ? 'queue--show' : ''].join(' ')} onDragOver={this.dragOver.bind(this)}>
-            {player.queue.length ? player.queue.map((video, index) => {
+        <div className={['queue shadow--2dp', showQueue ? 'queue--show' : ''].join(' ')} onDragOver={this.dragOver.bind(this)}>
+            {queue.length ? queue.map((video, index) => {
               const { title, active } = video
               return (
                 <div
@@ -99,11 +100,11 @@ class Queue extends React.Component {
                   onClick={() => {
                     if(!active) {
                       dispatch({ type: 'RESET_TIME' })
-                      dispatch(setActiveQueueItem({ queue: player.queue, index}))
-                    } else if (player.isPlaying) {
-                      player.youtube.pauseVideo()
+                      dispatch(setActiveQueueItem({ queue, index }))
+                    } else if (isPlaying) {
+                      youtube.pauseVideo()
                     } else {
-                      player.youtube.playVideo()
+                      youtube.playVideo()
                     }
                   }}
                   onDragEnd={this.dragEnd.bind(this)}
@@ -114,11 +115,11 @@ class Queue extends React.Component {
                 >
 
                   <div className='queue__item-button icon-button'>
-                    <span className={['icon', active && player.isBuffering ? 'rotating': ''].join(' ')}>
-                      {active && player.isBuffering ? (
+                    <span className={['icon', active && isBuffering ? 'rotating': ''].join(' ')}>
+                      {active && isBuffering ? (
                         <svg><use xlinkHref='#icon-loading'></use></svg>
                       )
-                      : active && player.isPlaying ? (
+                      : active && isPlaying ? (
                         <svg><use xlinkHref='#icon-pause'></use></svg>
                       ) : (
                         <svg><use xlinkHref='#icon-play'></use></svg>
@@ -130,7 +131,7 @@ class Queue extends React.Component {
                     className='queue__item-button icon-button'
                     onClick={e => {
                       e.stopPropagation()
-                      this.props.dispatch({ type: 'QUEUE_REMOVE', data: index })
+                      dispatch({ type: 'QUEUE_REMOVE', data: index })
                     }}
                   >
                     <span className='icon'>

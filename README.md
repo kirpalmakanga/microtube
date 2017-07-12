@@ -2,5 +2,8 @@
 
 ### Install
 
-npm install / yarn
-npm start / npm run start:dev
+npm install
+
+### Start app
+
+npm run build && npm run start

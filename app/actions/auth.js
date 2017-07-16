@@ -1,6 +1,5 @@
 import url from 'url'
 import qs from 'querystring'
-import moment from 'moment'
 import cookie from 'react-cookie'
 
 function oauth2(config, dispatch) {

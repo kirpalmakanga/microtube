@@ -1,6 +1,8 @@
 import parseDuration from '../../lib/parseDuration'
 import { setActiveQueueItem } from '../../actions/player'
 
+import QueueItem from './QueueItem.jsx'
+
 const { connect } = ReactRedux
 
 class Queue extends React.Component {
@@ -25,7 +27,7 @@ class Queue extends React.Component {
     return placeholder
   }
 
-  dragStart({ currentTarget, dataTransfer }) {
+  dragStart = ({ currentTarget, dataTransfer }) => {
     dataTransfer.effectAllowed = 'move'
     dataTransfer.setData('text/html', currentTarget)
 
@@ -36,7 +38,7 @@ class Queue extends React.Component {
     })
   }
 
-  dragEnd() {
+  dragEnd = () => {
     const { data, dragged, over, placeholder } = this.state
     const from = Number(dragged.dataset.id)
     let to = Number(over.dataset.id)
@@ -57,7 +59,7 @@ class Queue extends React.Component {
     this.props.dispatch({ type: 'QUEUE_SET', data })
   }
 
-  dragOver(e) {
+  dragOver = (e) => {
     const { target, pageY } = e
     const { dragged, container, placeholder } = this.state
 
@@ -87,16 +89,20 @@ class Queue extends React.Component {
   }
 
   render() {
+    const { dragEnd, dragStart, dragOver } = this
     const { player, dispatch } = this.props
     const { youtube, queue, showQueue, isPlaying, isBuffering } = player
     return (
-        <div className={['queue shadow--2dp', showQueue ? 'queue--show' : ''].join(' ')} onDragOver={this.dragOver.bind(this)}>
-            {queue.length ? queue.map((video, index) => {
-              const { title, active } = video
+        <div className={['queue shadow--2dp', showQueue ? 'queue--show' : ''].join(' ')} onDragOver={dragOver}>
+            {queue.length ? queue.map(({ active, title }, index) => {
               return (
-                <div
+                <QueueItem
                   key={index}
-                  className={['queue__item', active ? 'queue__item--active' : ''].join(' ')}
+                  id={index}
+                  title={title}
+                  isActive={active}
+                  onDragStart={dragStart}
+                  onDragEnd={dragEnd}
                   onClick={() => {
                     if(!active) {
                       dispatch({ type: 'RESET_TIME' })
@@ -107,38 +113,11 @@ class Queue extends React.Component {
                       youtube.playVideo()
                     }
                   }}
-                  onDragEnd={this.dragEnd.bind(this)}
-                  onDragStart={this.dragStart.bind(this)}
-                  data-id={index}
-                  data-title={title}
-                  draggable
-                >
-
-                  <div className='queue__item-button icon-button'>
-                    <span className={['icon', active && isBuffering ? 'rotating': ''].join(' ')}>
-                      {active && isBuffering ? (
-                        <svg><use xlinkHref='#icon-loading'></use></svg>
-                      )
-                      : active && isPlaying ? (
-                        <svg><use xlinkHref='#icon-pause'></use></svg>
-                      ) : (
-                        <svg><use xlinkHref='#icon-play'></use></svg>
-                      )}
-                    </span>
-                  </div>
-
-                  <button
-                    className='queue__item-button icon-button'
-                    onClick={e => {
-                      e.stopPropagation()
-                      dispatch({ type: 'QUEUE_REMOVE', data: index })
-                    }}
-                  >
-                    <span className='icon'>
-                      <svg><use xlinkHref='#icon-close'></use></svg>
-                    </span>
-                  </button>
-                </div>
+                  onClickRemove={(e) => {
+                    e.stopPropagation()
+                    dispatch({ type: 'QUEUE_REMOVE', data: index })
+                  }}
+                />
               )
             }, this) : null }
         </div>

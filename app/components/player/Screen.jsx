@@ -123,8 +123,6 @@ const Screen = ({ player, dispatch }) => {
 
                 if (action && typeof action === 'function') {
                   action()
-                } else {
-                  console.error('onStateChange callback must be a function')
                 }
               }}
             />

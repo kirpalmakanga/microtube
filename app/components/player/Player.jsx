@@ -45,7 +45,7 @@ const Player = ({ player, dispatch }) => {
   function setVideoTime ({ target }) {
     let newTime
 
-    if (youtubeReady) {
+    if (isYoutubeReady) {
       newTime = duration * (target.value / 100)
       youtube.seekTo(newTime)
 
@@ -85,7 +85,7 @@ const Player = ({ player, dispatch }) => {
   }
 
   function mute () {
-    if (!youtubeReady) {
+    if (!isYoutubeReady) {
       return
     }
 

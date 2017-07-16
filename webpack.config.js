@@ -22,13 +22,13 @@ const config = {
     publicPath: './public',
     contentBase: './'
   },
-  entry: [
-    './app/main.js'
-  ],
+  entry: {
+    app: './app/main.js'
+  },
   output: {
     path: path.join(__dirname, 'public'),
     publicPath: './',
-    filename: 'app.js'
+    filename: '[name].js'
   },
   plugins: [
     new LodashModuleReplacementPlugin({
@@ -39,11 +39,24 @@ const config = {
     new webpack.IgnorePlugin(/^\.\/lang$/, /moment$/),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin(),
+    new webpack.optimize.UglifyJsPlugin({minimize: true}),
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.CommonsChunkPlugin({
+        async: 'used-twice',
+        minChunks(module, count) {
+            return count >= 2;
+        },
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+        name: 'vendor',
+        minChunks(module, count) {
+            var context = module.context;
+            return context && context.indexOf('node_modules') >= 0;
+        },
+    }),
     new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
@@ -71,18 +84,12 @@ const config = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel',
-        query: {
-          plugins: ['lodash']
-        }
+        loader: 'babel'
       },
       {
         test: /\.jsx$/,
         exclude: /node_modules/,
-        loader: 'babel',
-        query: {
-          plugins: ['lodash']
-        }
+        loader: 'babel'
       },
       {
         test: /\.scss$/,

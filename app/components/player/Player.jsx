@@ -1,225 +1,174 @@
-import DocumentTitle from 'react-document-title'
-
-import formatTime from '../../lib/formatTime'
+import Button from './controls/Button.jsx'
+import VolumeRange from './controls/VolumeRange.jsx'
+import InfoTime from './controls/InfoTime.jsx'
+import InfoTitle from './controls/InfoTitle.jsx'
+import InfoProgress from './controls/InfoProgress.jsx'
 
 import { setActiveQueueItem } from '../../actions/player'
 
 const { connect } = ReactRedux
 
-const noop = () => {}
-
 const Player = ({ player, dispatch }) => {
-  const currentIndex = player.queue.findIndex(item => item.active)
-  const currentVideo = player.queue[currentIndex]
+  const { queue, youtube, currentTime, duration, volume, loaded, isPlaying, isBuffering, isMuted, showQueue, newQueueItems, showScreen } = player
+  const isYoutubeReady = (typeof youtube === 'object' && youtube !== null)
 
-  const currentTime = player.currentTime
-  const duration = player.duration
-
-  const timeProgress = {
-    transform: 'translateX(' + parseFloat((currentTime / duration * 100) - 100).toFixed(2) + '%)'
-  }
-
-  const loadProgress = {
-    transform: 'translateX(' + parseFloat((player.loaded * 100) - 100).toFixed(2) + '%)'
-  }
-
-  const youtubeReady = (typeof player.youtube === 'object' && player.youtube !== null)
+  const currentIndex = queue.findIndex(item => item.active)
+  const currentVideo = queue[currentIndex] || {}
 
   function goTo(direction) {
     const index = currentIndex + (direction === 'next' ? 1 : -1)
-    const video = player.queue[index]
 
     return () => {
-      if(video) {
+      if(queue[index]) {
         dispatch({ type: 'CLEAR_WATCHERS' })
         dispatch({ type: 'RESET_TIME' })
 
-        dispatch(setActiveQueueItem({ queue: player.queue, index}))
+        dispatch(setActiveQueueItem({ queue: queue, index}))
       }
     }
   }
 
-  function getDocumentTitle () {
-    let title = 'Youtube Lite'
-
-    if (currentVideo) {
-      title = [currentVideo.title, '-', formatTime(currentTime), '/', formatTime(duration)].join(' ')
+  function playPause () {
+    if (!isYoutubeReady || isBuffering ) {
+      return
     }
-    return title
+
+    if (isPlaying) {
+      youtube.pauseVideo()
+    } else {
+      youtube.playVideo()
+    }
+
+    dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })
   }
 
-  function playPause () {
-    if (player.isPlaying) {
-      player.youtube.pauseVideo()
-    } else {
-      player.youtube.playVideo()
-    }
+  function setVideoTime ({ target }) {
+    let newTime
 
-    dispatch({ type: player.isPlaying ? 'PAUSE' : 'PLAY' })
+    if (youtubeReady) {
+      newTime = duration * (target.value / 100)
+      youtube.seekTo(newTime)
+
+      dispatch({ type: 'CLEAR_WATCHERS' })
+      dispatch({
+        type: 'UPDATE_TIME',
+        data: { currentTime: newTime }
+      })
+    }
   }
 
   function setVolume(val) {
-    player.youtube.setVolume(val)
+    youtube.setVolume(val)
     dispatch({
       type: 'SET_VOLUME',
       data: val
     })
   }
 
-  function stopPropagation(e) {
-    e.stopPropagation()
+  function handleWheelVolume({ deltaY }) {
+      let newVolume, inRange
+
+      if (!isYoutubeReady) {
+        return
+      }
+
+      newVolume =  deltaY < 0 ? volume + 5 : volume - 5
+      inRange = newVolume >= 0 && newVolume <= 100
+
+      if(isMuted) {
+        youtube.unMute()
+      }
+
+      if (inRange) {
+        setVolume(volume)
+      }
+  }
+
+  function mute() {
+    if (!youtubeReady) {
+      return
+    }
+
+    if (isMuted) {
+      youtube.unMute()
+    } else {
+      youtube.mute()
+    }
+
+    dispatch({ type: isMuted ? 'UNMUTE' : 'MUTE' })
   }
 
   return (
     <div className='player shadow--2dp'>
       <div className='player__controls'>
-        <button
-          className='player__controls-button icon-button'
-          onClick={goTo('prev')}
-        >
-          <span className='icon'>
-            <svg><use xlinkHref='#icon-skip-previous'></use></svg>
-          </span>
-        </button>
+        <Button className='player__controls-button icon-button' onClick={goTo('prev')} icon='icon-skip-previous' />
 
-        <button
+        <Button
           className='player__controls-button icon-button'
-          onClick={youtubeReady && !player.isBuffering ? playPause : noop}
-        >
-          <span className={['icon', player.isBuffering ? 'rotating': ''].join(' ')}>
-            {player.isBuffering ? (
-              <svg><use xlinkHref='#icon-loading'></use></svg>
-            )
-            : player.isPlaying ? (
-              <svg><use xlinkHref='#icon-pause'></use></svg>
-            ) : (
-              <svg><use xlinkHref='#icon-play'></use></svg>
-            )}
-          </span>
-        </button>
+          onClick={playPause}
+          icon={isBuffering ? 'icon-loading' : isPlaying ? 'icon-pause' : 'icon-play' }
+          iconTransitionClass={isBuffering ? 'rotating': ''}
+        />
 
-        <button
-          className='player__controls-button icon-button'
-          onClick={goTo('next')}
-        >
-          <span className='icon'>
-            <svg><use xlinkHref='#icon-skip-next'></use></svg>
-          </span>
-        </button>
+        <Button className='player__controls-button icon-button' onClick={goTo('next')} icon='icon-skip-next' />
       </div>
 
       <div className='player__info'>
-        <div className='player__info-progress'>
-          <div className='player__info-progress-gutter'>
-            <div className='player__info-progress-loaded' style={loadProgress}></div>
-            <div className='player__info-progress-played' style={timeProgress}></div>
-          </div>
-        </div>
+        <InfoProgress percentElapsed={currentTime / duration} percentLoaded={loaded} />
 
-        <DocumentTitle title={getDocumentTitle()}>
-          <div className='player__info-title'>{currentVideo ? currentVideo.title : 'No video.'}</div>
-        </DocumentTitle>
+        <InfoTitle title={currentVideo.title || 'No Video.'} currentTime={currentTime} duration={duration} />
 
-        <div className='player__info-time'>
-          <span>{formatTime(currentTime)}</span>
-          <span className="separator">/</span>
-          <span>{formatTime(duration)}</span>
-        </div>
+        <InfoTime currentTime={currentTime} duration={duration} />
 
         <input
           className='player__info-progress-loaded'
           type='range'
           min='0'
           max='100'
-          onChange={youtubeReady ? ({target}) => {
-            const newTime = duration * (target.value / 100)
-
-            player.youtube.seekTo(newTime)
-
-            dispatch({ type: 'CLEAR_WATCHERS' })
-            dispatch({
-              type: 'UPDATE_TIME',
-              data: { currentTime: newTime }
-            })
-          } : noop}
+          onChange={setVideoTime}
         />
       </div>
 
       <div className='player__controls'>
-        <button
+        <Button
           className={[
             'player__controls-button badge icon-button',
-            player.showQueue ? 'is-active' : '',
-            player.newQueueItems ? 'badge--active' : '',
+            showQueue ? 'is-active' : '',
+            newQueueItems ? 'badge--active' : '',
           ].join(' ')}
-          onClick={() => dispatch({ type: player.showQueue ? 'QUEUE_CLOSE' : 'QUEUE_OPEN' })}
-          data-badge={player.newQueueItems}
-        >
-          <span className='icon'>
-            <svg><use xlinkHref='#icon-list'></use></svg>
-          </span>
-        </button>
+          onClick={() => dispatch({ type: showQueue ? 'QUEUE_CLOSE' : 'QUEUE_OPEN' })}
+          badge={newQueueItems}
+          icon='icon-list'
+        />
 
-        <button
-          className={['player__controls-button icon-button', player.showScreen ? 'is-active' : ''].join(' ')}
-          onClick={() => dispatch({ type: player.showScreen ? 'SCREEN_CLOSE' : 'SCREEN_OPEN' })}
-        >
-          <span className='icon'>
-            <svg><use xlinkHref='#icon-film'></use></svg>
-          </span>
-        </button>
+        <Button
+          className={['player__controls-button icon-button', showScreen ? 'is-active' : ''].join(' ')}
+          onClick={() => dispatch({ type: showScreen ? 'SCREEN_CLOSE' : 'SCREEN_OPEN' })}
+          icon='icon-film'
+        />
 
         <div
           className='player__controls-volume'
           onMouseEnter={() => dispatch({ type: 'OPEN_VOLUME' })}
           onMouseLeave={() => dispatch({ type: 'CLOSE_VOLUME' })}
-          onWheel={youtubeReady ? ({ deltaY }) => {
-              const volume =  deltaY < 0 ? player.volume + 5 : player.volume - 5
-              const inRange = volume >= 0 && volume <= 100
-
-              if(player.isMuted) {
-                player.youtube.unMute()
-              }
-
-              if (inRange) {
-                setVolume(volume)
-              }
-          } : noop}
+          onWheel={handleWheelVolume}
         >
-          <button
+          <Button
             className='player__controls-button icon-button'
-            onClick={youtubeReady ? () => {
-              if (player.isMuted) {
-                player.youtube.unMute()
-              } else {
-                player.youtube.mute()
-              }
+            onClick={mute}
+            icon={
+            isMuted ?
+              'icon-volume-mute'
+            : volume >= 50 ?
+              'icon-volume-up'
+            : volume > 0 && volume <= 50 ?
+              'icon-volume-down'
+            :
+              'icon-volume-off'
+            }
+          />
 
-              dispatch({ type: player.isMuted ? 'UNMUTE' : 'MUTE' })
-            } : noop}
-          >
-            <span className='icon'>
-              {player.isMuted ? (
-                <svg><use xlinkHref='#icon-volume-mute'></use></svg>
-              ) : player.volume >= 50 ? (
-                <svg><use xlinkHref='#icon-volume-up'></use></svg>
-              ) : player.volume > 0 && player.volume <= 50 ? (
-                <svg><use xlinkHref='#icon-volume-down'></use></svg>
-              ) : (
-                <svg><use xlinkHref='#icon-volume-off'></use></svg>
-              ) }
-            </span>
-          </button>
-
-          <div className='player__controls-volume-range'>
-            <input
-              type='range'
-              min='0'
-              max='100'
-              value={player.volume}
-              onChange={({ target }) => setVolume(target.value)}
-            />
-          </div>
+          <VolumeRange value={volume} onChange={({ target }) => setVolume(target.value)} />
         </div>
       </div>
     </div>

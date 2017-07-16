@@ -15,7 +15,7 @@ const Player = ({ player, dispatch }) => {
   const currentIndex = queue.findIndex(item => item.active)
   const currentVideo = queue[currentIndex] || {}
 
-  function goTo(direction) {
+  function goTo (direction) {
     const index = currentIndex + (direction === 'next' ? 1 : -1)
 
     return () => {
@@ -57,7 +57,7 @@ const Player = ({ player, dispatch }) => {
     }
   }
 
-  function setVolume(val) {
+  function setVolume (val) {
     youtube.setVolume(val)
     dispatch({
       type: 'SET_VOLUME',
@@ -65,7 +65,7 @@ const Player = ({ player, dispatch }) => {
     })
   }
 
-  function handleWheelVolume({ deltaY }) {
+  function handleWheelVolume ({ deltaY }) {
       let newVolume, inRange
 
       if (!isYoutubeReady) {
@@ -84,7 +84,7 @@ const Player = ({ player, dispatch }) => {
       }
   }
 
-  function mute() {
+  function mute () {
     if (!youtubeReady) {
       return
     }

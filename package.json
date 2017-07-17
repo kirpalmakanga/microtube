@@ -7,7 +7,6 @@
     "start:dev": "nodemon server/app.js --watch server --dev",
     "build": "webpack --progress -p --optimize-minimize",
     "clean": "rm public/*.hot-update.js",
-    "postinstall": "npm run build",
     "watch": "webpack-dev-server --progress --colors --inline --hot --port 3000",
     "test": "npm run test:client && npm run test:server",
     "test:client": "mocha test/client --recursive --compilers js:babel-register",

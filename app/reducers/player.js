@@ -12,7 +12,7 @@ const initialState = {
   loaded: 0,
   currentTime: 0,
   duration: 0,
-  youtube: null,
+  youtube: {},
   autoplay: 0,
   watchers: {
     time: null,

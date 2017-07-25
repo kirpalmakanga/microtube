@@ -70,9 +70,5 @@
     "webpack-hot-middleware": "^2.18.0",
     "write-file-webpack-plugin": "^3.1.8",
     "yargs": "^6.6.0"
-  },
-  "engines": {
-    "node": "6.9.4",
-    "npm": "4.0.5"
   }
 }

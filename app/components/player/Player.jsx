@@ -10,7 +10,7 @@ const { connect } = ReactRedux
 
 const Player = ({ player, dispatch }) => {
   const { queue, youtube, currentTime, duration, volume, loaded, isPlaying, isBuffering, isMuted, showQueue, newQueueItems, showScreen } = player
-  const isYoutubeReady = (typeof youtube === 'object' && youtube !== null)
+  const isYoutubeReady = (typeof youtube === 'object' && Object.keys(youtube).length)
 
   const currentIndex = queue.findIndex(item => item.active)
   const currentVideo = queue[currentIndex] || {}

@@ -1,4 +1,4 @@
-import updateState from '../lib/updateState'
+import updateState from '../updateState'
 
 const initialState = {
   queue: [],

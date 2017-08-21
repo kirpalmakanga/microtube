@@ -78,7 +78,7 @@ exports.getPlaylistItems = (accessToken, playlistId) => {
 
 exports.searchVideos = (accessToken, query, pageToken) => {
   return dispatch => {
-    dispatch({ type: 'SEARCH_VIDEOS', data: query })
+    dispatch({ type: 'SEARCH_VIDEOS', data: { query } })
     api.searchVideos(accessToken, query, pageToken)
     .then(data => {
       dispatch({ type: 'SEARCH_VIDEOS_SUCCESS', data })

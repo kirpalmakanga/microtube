@@ -51,11 +51,14 @@ export default function (state = initialState, { type, data }) {
       return { ...state, isLoading: 1 }
 
     case 'GET_PLAYLIST_ITEMS_SUCCESS':
-      const { items, nextPageToken, totalResults }
+      const { items, nextPageToken, totalResults } = data
       const isNewToken = typeof nextPageToken === 'string' && !state.pages.includes(nextPageToken)
       const endOfContent = typeof nextPageToken === 'undefined'
 
       let newData
+
+      console.log('end of content ?', endOfContent)
+      console.log('end of content ?', state.isLoading)
 
       // let newItems = items.filter(item => item.status.privacyStatus !== 'private').filter(item => item.snippet.title !== 'Deleted video')
 
@@ -67,13 +70,16 @@ export default function (state = initialState, { type, data }) {
           totalResults
         }
       } else if (endOfContent && state.isLoading !== 2) {
+        console.log('hey')
         newData = {
           items: [...state.items, ...items],
           isLoading: 2
         }
       }
 
-      return { ...state, newData }
+      console.log('new data', newData)
+
+      return { ...state, ...newData }
 
     case 'PLAYLIST_CLOSE':
     case 'CLEAR_PLAYLIST_ITEMS':

@@ -8,10 +8,10 @@ const initialState = {
 export default function (state = initialState, { type, data }) {
   switch (type) {
     case 'GET_PLAYLISTS':
-      return { ...state, isLoading: 1 },
+      return { ...state, isLoading: 1 }
 
     case 'GET_PLAYLISTS_SUCCESS':
-      const { items, nextPageToken, totalResults }
+      const { items, nextPageToken, totalResults } = data
       const isNewToken = typeof nextPageToken === 'string' && !state.pages.includes(nextPageToken)
       const endOfContent = typeof nextPageToken === 'undefined'
 

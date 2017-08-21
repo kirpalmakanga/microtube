@@ -75,6 +75,8 @@ const Player = ({ player, dispatch }) => {
       newVolume =  deltaY < 0 ? volume + 5 : volume - 5
       inRange = newVolume >= 0 && newVolume <= 100
 
+      console.log('newVolume', newVolume)
+
       if(isMuted) {
         youtube.unMute()
       }

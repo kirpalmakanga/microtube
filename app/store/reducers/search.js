@@ -22,7 +22,6 @@ export default function (state = initialState, { type, data }) {
         isLoading: 1,
         query
       }
-    },
 
     case 'SEARCH_VIDEOS_SUCCESS':
       const { items, nextPageToken, totalResults } = data

@@ -14,7 +14,9 @@ function loadApi() {
 
 function parseID(url){
   var ID = ''
+
   url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/)
+
   if(url[2] !== undefined) {
     ID = url[2].split(/[^0-9a-z_\-]/i)
     ID = ID[0]
@@ -59,7 +61,7 @@ function getVideosFromIds({ accessToken, items, nextPageToken, pageInfo }, resol
     items: items.map(({ id, contentDetails, snippet, status }) => ({
       videoId: id,
       title: snippet.title,
-      // thumbnails: snippet.thumbnails,
+      thumbnails: snippet.thumbnails,
       duration: contentDetails.duration,
       publishedAt: snippet.publishedAt,
       channelId: snippet.channelId,
@@ -214,17 +216,17 @@ exports.getSubscriptions = (accessToken, pageToken = '') => {
   })
 }
 
-exports.unsubscribe = (accessToken, id) => {
-  return new Promise((resolve, reject) => {
-    remove('subscriptions', {
-      access_token: accessToken,
-      id,
-      key: API_KEY
-    })
-    .then(data => resolve(data))
-    .catch(message => reject(message))
-  })
-}
+// exports.unsubscribe = (accessToken, id) => {
+//   return new Promise((resolve, reject) => {
+//     remove('subscriptions', {
+//       access_token: accessToken,
+//       id,
+//       key: API_KEY
+//     })
+//     .then(data => resolve(data))
+//     .catch(message => reject(message))
+//   })
+// }
 
 exports.getChannelVideos = (accessToken, channelId, pageToken) => {
   return new Promise((resolve, reject) => {

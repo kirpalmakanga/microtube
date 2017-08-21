@@ -13,10 +13,6 @@ const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch
     })
   }
 
-  console.log('thumbnails', thumbnails)
-
-  console.log('thumb', getThumbnails(thumbnails))
-
   return (
     <div className='card shadow--2dp'>
       <Link className='card__content' to={'/playlist/' + id} onClick={openPlaylist}>

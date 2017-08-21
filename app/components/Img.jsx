@@ -8,10 +8,8 @@ class Img extends React.Component {
   }
 
   componentDidMount() {
-    console.log('image mounted');
     this.loadImage(this.props.src)
     .then(() => {
-      console.log('image loaded')
       this.setState({ isLoaded: true })
     })
   }

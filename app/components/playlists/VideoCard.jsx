@@ -1,3 +1,6 @@
+import Img from '../Img.jsx'
+
+import getThumbnails from '../../lib/getThumbnails'
 import parseDuration from '../../lib/parseDuration'
 
 import { setActiveQueueItem } from '../../actions/player'
@@ -5,7 +8,7 @@ import { setActiveQueueItem } from '../../actions/player'
 const { connect } = ReactRedux
 
 const VideoCard = ({ player, video, dispatch }) => {
-  const { videoId, title, publishedAt, duration, channelTitle } = video
+  const { videoId, title, thumbnails, publishedAt, duration, channelTitle } = video
 
   function pushToQueue() {
     dispatch({ type: 'QUEUE_PUSH', data: [video] })
@@ -22,6 +25,7 @@ const VideoCard = ({ player, video, dispatch }) => {
         className='card__content'
         onClick={playVideo}
       >
+        <Img src={getThumbnails(thumbnails)} background />
         <div className='card__text'>
           <h2 className='card__text-title'>{title}</h2>
           <p className='card__text-subtitle channel'>{channelTitle}</p>

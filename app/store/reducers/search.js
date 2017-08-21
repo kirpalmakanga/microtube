@@ -17,6 +17,7 @@ export default function (state = initialState, { type, data }) {
       const isNewQuery = query !== state.query
 
       return {
+        ...state,
         items: isNewQuery ? [] : items,
         pages: isNewQuery ? [] : pages,
         isLoading: 1,

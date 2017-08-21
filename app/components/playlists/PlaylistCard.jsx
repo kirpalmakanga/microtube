@@ -17,6 +17,7 @@ const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch
     <div className='card shadow--2dp'>
       <Link className='card__content' to={'/playlist/' + id} onClick={openPlaylist}>
         <Img src={getThumbnails(thumbnails)} background/>
+        
         <div className='card__text'>
           <h2 className='card__text-title'>{title}</h2>
           <p className='card__text-subtitle nb-videos'>{itemCount + ' Video' + (itemCount !== 1 ? 's' : '')}</p>

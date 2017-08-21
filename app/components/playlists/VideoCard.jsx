@@ -26,6 +26,7 @@ const VideoCard = ({ player, video, dispatch }) => {
         onClick={playVideo}
       >
         <Img src={getThumbnails(thumbnails)} background />
+        
         <div className='card__text'>
           <h2 className='card__text-title'>{title}</h2>
           <p className='card__text-subtitle channel'>{channelTitle}</p>

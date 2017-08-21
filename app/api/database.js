@@ -59,6 +59,7 @@ function getVideosFromIds({ accessToken, items, nextPageToken, pageInfo }, resol
     items: items.map(({ id, contentDetails, snippet, status }) => ({
       videoId: id,
       title: snippet.title,
+      // thumbnails: snippet.thumbnails,
       duration: contentDetails.duration,
       publishedAt: snippet.publishedAt,
       channelId: snippet.channelId,
@@ -86,6 +87,7 @@ exports.getPlaylists = (accessToken, pageToken = '') => {
         items: items.map(({ id, contentDetails, snippet, status }) => ({
           id,
           title: snippet.title,
+          thumbnails: snippet.thumbnails,
           itemCount: contentDetails.itemCount,
           privacyStatus: status.privacyStatus
         })),
@@ -125,6 +127,7 @@ exports.getPlaylistItems = (accessToken, playlistId, pageToken = '') => {
             id: playlistItemIds[i],
             videoId: id,
             title: snippet.title,
+            thumbnails: snippet.thumbnails,
             duration: contentDetails.duration,
             publishedAt: snippet.publishedAt,
             channelId: snippet.channelId,

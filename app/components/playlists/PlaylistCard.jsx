@@ -1,20 +1,26 @@
 import { Link } from 'react-router'
 import Img from '../Img.jsx'
 import { queuePlaylist } from '../../actions/database'
+import getThumbnails from '../../lib/getThumbnails'
 
 const { connect } = ReactRedux
 
-const PlaylistCard = ({ auth, id, title, itemCount, player, dispatch }) => {
+const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch }) => {
   function openPlaylist() {
     dispatch({
       type: 'PLAYLIST_OPEN',
       data: title
     })
   }
+
+  console.log('thumbnails', thumbnails)
+
+  console.log('thumb', getThumbnails(thumbnails))
+
   return (
     <div className='card shadow--2dp'>
       <Link className='card__content' to={'/playlist/' + id} onClick={openPlaylist}>
-        <Img src='http://via.placeholder.com/1600x900' background/>
+        <Img src={getThumbnails(thumbnails)} background/>
         <div className='card__text'>
           <h2 className='card__text-title'>{title}</h2>
           <p className='card__text-subtitle nb-videos'>{itemCount + ' Video' + (itemCount !== 1 ? 's' : '')}</p>

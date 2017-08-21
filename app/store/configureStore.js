@@ -24,10 +24,11 @@ const enhancer = compose(
 					return initialState
 				}
 
-	 	    return Object.assign({}, initialState, {
-	 	        auth: Object.assign({}, initialState.auth, storage.auth),
-	 	        player: Object.assign({}, initialState.player, storage.player)
-	 	    })
+	 	    return {
+          ...initialState,
+          auth: { ...initialState.auth, ...storage.auth },
+          player: { ...initialState.player, ...storage.player }
+        }
      }
    })
 )

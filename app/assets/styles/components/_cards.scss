@@ -25,6 +25,11 @@
       display: flex;
       flex: 1;
       cursor: pointer;
+
+      .image {
+        flex: 0.5;
+        margin-right: 16px;
+      }
     }
 
     &__content &__text {

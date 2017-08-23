@@ -1,12 +1,14 @@
 import Waypoint from 'react-waypoint'
-import { getPlaylists, getAllPlaylists } from '../../actions/database'
+import { getPlaylists } from '../../actions/database'
 import PlaylistCard from './PlaylistCard.jsx'
 
 const { connect } = ReactRedux
 
 const Playlists = ({ auth, playlists, dispatch }) => {
+  const nextPage = playlists.pages[playlists.pages.length - 1]
+
   function loadMoreContent () {
-    dispatch(getAllPlaylists(auth.token))
+    dispatch(getPlaylists(auth.token, nextPage))
   }
 
   function renderWaypoint() {
@@ -24,10 +26,9 @@ const Playlists = ({ auth, playlists, dispatch }) => {
       ))}
 
       <div className={['grid__loading', auth.token && playlists.isLoading === 1 ? 'is-active': ''].join(' ')}>
+        {renderWaypoint()}
         <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
       </div>
-
-      {renderWaypoint()}
     </div>
   )
 }

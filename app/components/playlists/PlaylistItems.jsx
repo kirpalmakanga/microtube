@@ -6,8 +6,10 @@ import { getPlaylistItems } from '../../actions/database'
 const { connect } = ReactRedux
 
 const PlaylistItems = ({ auth, playlistItems, params, dispatch }) => {
+  const nextPage = playlistItems.pages[playlistItems.pages.length - 1]
+
   function loadMoreContent () {
-    dispatch(getPlaylistItems(auth.token, params.id))
+    dispatch(getPlaylistItems(auth.token, params.id, nextPage))
   }
 
   function renderWaypoint() {
@@ -25,10 +27,9 @@ const PlaylistItems = ({ auth, playlistItems, params, dispatch }) => {
       ))}
 
       <div className={['grid__loading', playlistItems.isLoading === 1 ? 'is-active': ''].join(' ')}>
+        {renderWaypoint()}
         <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
       </div>
-
-      {renderWaypoint()}
     </div>
   )
 }

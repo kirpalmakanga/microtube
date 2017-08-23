@@ -26,20 +26,13 @@ export default function getRoutes ({ getState, dispatch }) {
 
   return (
     <Route path='/' onEnter={refreshToken} component={App}>
-      <IndexRoute
-        component={Playlists}
-        onLeave={() => dispatch({ type: 'CLEAR_PLAYLISTS' })}
-      />
+      <IndexRoute component={Playlists} />
        <Route
         path='/playlist/:id'
         component={PlaylistItems}
         onLeave={() => dispatch({ type: 'CLEAR_PLAYLIST_ITEMS' })}
       />
-       <Route
-        path='/subscriptions'
-        component={Subscriptions}
-        onLeave={() => dispatch({ type: 'CLEAR_SUBSCRIPTIONS' })}
-      />
+       <Route path='/subscriptions' component={Subscriptions} />
        <Route
         path='/channel/:id'
         component={Channel}

@@ -60,13 +60,13 @@ const Screen = ({ player, dispatch }) => {
   const currentIndex = player.queue.findIndex(item => item.active)
   const video = player.queue[currentIndex]
 
-  // const notificationProps = {
-  //   title: video.title,
-  //   options: {
-  //     image: getThumbnails(video.thumbnails),
-  //     body: video.channelTitle
-  //   }
-  // }
+  const notificationProps = {
+    title: video.title,
+    options: {
+      image: getThumbnails(video.thumbnails),
+      body: video.channelTitle
+    }
+  }
 
   function goToNext() {
     const index = currentIndex + 1

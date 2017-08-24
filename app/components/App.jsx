@@ -2,9 +2,8 @@ require('../assets/styles/app.scss')
 
 import FastClick from 'react-fastclick-alt'
 import Header from './header/HeaderContainer.jsx'
-import PlaylistItems from './playlists/PlaylistItems.jsx'
-import Search from './search/Search.jsx'
-import PlayerContainer from './player/PlayerContainer.jsx'
+import Search from './containers/Search.jsx'
+import Player from './containers/Player.jsx'
 import Notifications from './Notifications.jsx'
 import Prompt from './Prompt.jsx'
 
@@ -22,7 +21,7 @@ const App = ({ children, location, auth }) => {
 
         <Search />
 
-        <PlayerContainer />
+        <Player />
 
         <Notifications />
 

@@ -3,7 +3,7 @@ import { logIn } from '../../actions/auth'
 import { getVideo } from '../../actions/database'
 import SearchHeader from './SearchHeader.jsx'
 import QueueHeader from './QueueHeader.jsx'
-import SearchForm from '../search/SearchForm.jsx'
+import SearchForm from '../SearchForm.jsx'
 
 const { connect } = ReactRedux
 

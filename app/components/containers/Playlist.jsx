@@ -1,6 +1,8 @@
 import Waypoint from 'react-waypoint'
 import { Link } from 'react-router'
-import VideoCard from './VideoCard.jsx'
+
+import VideoCard from '../cards/VideoCard.jsx'
+
 import { getPlaylistItems } from '../../actions/database'
 
 const { connect } = ReactRedux

@@ -1,3 +1,5 @@
+// https://apis.google.com/js/client.js
+
 const API_KEY = 'AIzaSyCLDBo0aNwTTOp6yQMaD9b4mQX4B_rT2NE'
 const ITEMS_PER_REQUEST = 20
 

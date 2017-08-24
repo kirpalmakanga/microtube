@@ -1,6 +1,8 @@
-import { getSubscriptions } from '../../actions/database'
-import SubscriptionCard from './SubscriptionCard.jsx'
 import Waypoint from 'react-waypoint'
+
+import { getSubscriptions } from '../../actions/database'
+import SubscriptionCard from '../cards/SubscriptionCard.jsx'
+
 const { connect } = ReactRedux
 
 const Subscriptions = ({ auth, subscriptions, dispatch }) => {

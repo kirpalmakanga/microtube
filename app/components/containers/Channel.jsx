@@ -1,6 +1,9 @@
-import { getChannelVideos } from '../actions/database'
-import VideoCard from './playlists/VideoCard.jsx'
 import Waypoint from 'react-waypoint'
+import VideoCard from '../cards/VideoCard.jsx'
+
+import { getChannelVideos } from '../../actions/database'
+
+
 const { connect } = ReactRedux
 
 const Channel = ({ auth, channel, params, dispatch }) => {

@@ -1,6 +1,7 @@
 import Waypoint from 'react-waypoint'
+import PlaylistCard from '../cards/PlaylistCard.jsx'
+
 import { getPlaylists } from '../../actions/database'
-import PlaylistCard from './PlaylistCard.jsx'
 
 const { connect } = ReactRedux
 

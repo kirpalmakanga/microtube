@@ -1,4 +1,5 @@
-import api from '../api/database'
+// import api from '../api/database'
+import api from '../api/youtube'
 
 import { setActiveQueueItem } from './player.js'
 
@@ -11,7 +12,7 @@ export function getPlaylists (accessToken, pageToken) {
       const data = await api.getPlaylists(accessToken, pageToken)
       dispatch({ type: 'GET_PLAYLISTS_SUCCESS', data })
     } catch (err) {
-      dispatch({ type: 'NOTIFY', data: err })
+      dispatch({ type: 'NOTIFY', data: 'Error fetching playlists.' })
     }
   }
 }
@@ -37,31 +38,6 @@ export function getPlaylists (accessToken, pageToken) {
 //   }
 // }
 
-export function queuePlaylist ({ accessToken, playlistId, queue, play }) {
-  return (dispatch) => {
-    const getItems = async (pageToken) => {
-      try {
-        const { items, nextPageToken } = await api.getPlaylistItems(accessToken, playlistId, pageToken)
-
-        if (play && !nextPage && items.length > 0) {
-          dispatch(setActiveQueueItem({ queue, video: items[0] }))
-          items.shift()
-        }
-
-        dispatch({ type: 'QUEUE_PUSH', data: items })
-
-        if (nextPageToken) {
-          getItems(nextPageToken)
-        }
-      } catch (err) {
-        dispatch({ type: 'NOTIFY', data: err })
-      }
-    }
-
-    getItems()
-  }
-}
-
 export function getPlaylistItems (accessToken, playlistId, pageToken) {
   return async (dispatch) => {
     dispatch({ type: 'GET_PLAYLIST_ITEMS' })
@@ -70,7 +46,7 @@ export function getPlaylistItems (accessToken, playlistId, pageToken) {
 
       dispatch({ type: 'GET_PLAYLIST_ITEMS_SUCCESS', data })
     } catch (err) {
-      dispatch({ type: 'NOTIFY', data: err })
+      dispatch({ type: 'NOTIFY', data: 'Error fetching playlist items.' })
     }
   }
 }
@@ -97,14 +73,43 @@ export function getPlaylistItems (accessToken, playlistId, pageToken) {
 //   }
 // }
 
-export function searchVideos (accessToken, query, pageToken) {
+export function queuePlaylist ({ accessToken, playlistId, queue, play }) {
   return (dispatch) => {
+    const getItems = async (pageToken) => {
+      try {
+        const { items, nextPageToken } = await api.getPlaylistItems(accessToken, playlistId, pageToken)
+
+        if (play && !pageToken && items.length > 0) {
+          dispatch(setActiveQueueItem({ queue, video: items[0] }))
+          items.shift()
+        }
+
+        dispatch({ type: 'QUEUE_PUSH', data: items })
+
+        if (nextPageToken) {
+          getItems(nextPageToken)
+        }
+      } catch (err) {
+        dispatch({ type: 'NOTIFY', data: 'Error fetching playlist items.' })
+      }
+    }
+
+    getItems()
+  }
+}
+
+export function searchVideos (accessToken, query, pageToken) {
+  return async (dispatch) => {
     dispatch({ type: 'SEARCH_VIDEOS', data: { query } })
-    api.searchVideos(accessToken, query, pageToken)
-    .then(data => {
-      dispatch({ type: 'SEARCH_VIDEOS_SUCCESS', data })
-    })
-    .catch(err => dispatch({ type: 'NOTIFY', data: err }))
+
+    try {
+        const data = await api.searchVideos(accessToken, query, pageToken)
+
+        dispatch({ type: 'SEARCH_VIDEOS_SUCCESS', data })
+    } catch (err) {
+      console.error(err)
+      dispatch({ type: 'NOTIFY', data: 'Error searching videos.' })
+    }
   }
 }
 
@@ -115,7 +120,7 @@ export function getVideo (accessToken, urlOrId) {
 
       dispatch({ type: 'QUEUE_PUSH', data: [data] })
     } catch (err) {
-      dispatch({ type: 'NOTIFY', data: err })
+      dispatch({ type: 'NOTIFY', data: 'Error fetching video.' })
     }
   }
 }
@@ -128,7 +133,7 @@ export function getSubscriptions (accessToken, pageToken) {
 
       dispatch({ type: 'GET_SUBSCRIPTIONS_SUCCESS', data })
     } catch (err) {
-      dispatch({ type: 'NOTIFY', data: err })
+      dispatch({ type: 'NOTIFY', data: 'Error fetching subscriptions.' })
     }
   }
 }
@@ -157,7 +162,7 @@ export function getChannelVideos (accessToken, channelId, pageToken) {
 
         dispatch({ type: 'GET_CHANNEL_VIDEOS_SUCCESS', data })
     } catch (err) {
-      dispatch({ type: 'NOTIFY', data: err })
+      dispatch({ type: 'NOTIFY', data: 'Error fetching channel videos.' })
     }
   }
 }

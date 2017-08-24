@@ -18,8 +18,8 @@ export default function (state = initialState, { type, data }) {
 
       return {
         ...state,
-        items: isNewQuery ? [] : items,
-        pages: isNewQuery ? [] : pages,
+        items: isNewQuery ? [] : state.items,
+        pages: isNewQuery ? [] : state.pages,
         isLoading: 1,
         query
       }

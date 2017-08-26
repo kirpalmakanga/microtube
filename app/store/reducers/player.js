@@ -2,7 +2,7 @@ const initialState = {
   queue: [],
   showQueue: false,
   showScreen: false,
-  // volume: 100,
+  volume: 100,
   // autoplay: 0,
   newQueueItems: 0
 }
@@ -17,10 +17,10 @@ export default function (state = initialState, { type, data }) {
       }
 
     case 'SCREEN_CLOSE':
-     return {
-       ...state,
-       showScreen: false
-     }
+      return {
+        ...state,
+        showScreen: false
+      }
 
     case 'QUEUE_OPEN':
       return {
@@ -73,6 +73,12 @@ export default function (state = initialState, { type, data }) {
       return {
         ...state,
         queue: queue.map((v, i) => ({ ...v, active: i === index ? true : false }))
+      }
+
+    case 'SET_VOLUME':
+      return {
+        ...state,
+        volume: data
       }
   }
   return state

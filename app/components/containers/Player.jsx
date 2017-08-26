@@ -45,7 +45,7 @@ class Player extends React.Component {
         youtube.unMute()
       }
 
-      // this.props.dispatch({ type: 'SET_VOLUME', data: volume })
+      this.props.dispatch({ type: 'SET_VOLUME', data: volume })
       youtube.setVolume(volume)
       this.setState({ volume })
   }
@@ -188,10 +188,10 @@ class Player extends React.Component {
   }
 
   onYoutubeIframeReady = ({ target }) => {
+    const { volume } = this.props.player
+
     target.pauseVideo()
-    // dispatch({ type: 'ENABLE_AUTOPLAY' })
-    this.setState({ youtube: target })
-    this.setVolume(target.getVolume())
+    this.setState({ youtube: target }, () => this.setVolume(volume))
   }
 
   onYoutubeIframeStateChange = ({ data }) => {
@@ -202,7 +202,6 @@ class Player extends React.Component {
       break
 
       case 1:
-        this.state.youtube.setVolume(this.props.player.volume)
         this.setState({ isPlaying: true, isBuffering: false }, () => {
           this.watchTime()
           this.watchLoading()

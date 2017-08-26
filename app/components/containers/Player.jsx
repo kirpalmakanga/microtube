@@ -1,6 +1,12 @@
-import Controls from '../player/Controls.jsx'
+// import Controls from '../player/Controls.jsx'
 import Queue from '../player/Queue.jsx'
 import Screen from '../player/Screen.jsx'
+
+import Button from '../player/controls/Button.jsx'
+import VolumeRange from '../player/controls/VolumeRange.jsx'
+import InfoTime from '../player/controls/InfoTime.jsx'
+import InfoTitle from '../player/controls/InfoTitle.jsx'
+import InfoProgress from '../player/controls/InfoProgress.jsx'
 
 const { connect } = ReactRedux
 
@@ -45,6 +51,7 @@ class Player extends React.Component {
   }
 
   handleWheelVolume = ({ deltaY }) => {
+      const { volume } = this.state
       let newVolume, inRange
 
       if (!this.isIframeReady()) {
@@ -53,10 +60,6 @@ class Player extends React.Component {
 
       newVolume =  deltaY < 0 ? volume + 5 : volume - 5
       inRange = newVolume >= 0 && newVolume <= 100
-
-      if(isMuted) {
-        this.state.youtube.unMute()
-      }
 
       if (inRange) {
         this.setVolume(newVolume)
@@ -223,38 +226,83 @@ class Player extends React.Component {
   }
 
   render() {
+    const { handleWheelVolume, setVideoTime, togglePlay, goToVideo, onYoutubeIframeReady, onYoutubeIframeStateChange } = this
     const { isPlaying, isBuffering, isMuted, volume, loaded, currentTime, duration } = this.state
-    const [currentVideo] = this.getCurrentVideo()
+    const { showQueue, showScreen, newQueueItems } = this.props.player
+    const [ currentVideo ] = this.getCurrentVideo()
 
     return (
       <div className='player__container'>
-        <Queue isPlaying={isPlaying} isBuffering={isBuffering} handleClickPlay={this.togglePlay} />
+        <Queue isPlaying={isPlaying} isBuffering={isBuffering} handleClickPlay={togglePlay} />
 
         <Screen
           video={currentVideo}
-          onReady={this.onYoutubeIframeReady}
-          onEnd={this.goToVideo}
-          onStateChange={this.onYoutubeIframeStateChange}
+          onReady={onYoutubeIframeReady}
+          onEnd={goToVideo}
+          onStateChange={onYoutubeIframeStateChange}
         />
 
-        <Controls
-          info={{
-            isPlaying,
-            isBuffering,
-            isMuted,
-            volume,
-            loaded,
-            currentTime,
-            duration,
-            currentVideo
-          }}
-          togglePlay={this.togglePlay}
-          toggleMute={this.toggleMute}
-          goToVideo={this.goToVideo}
-          setVolume={this.setVolume}
-          handleWheelVolume={this.handleWheelVolume}
-          setVideoTime={this.setVideoTime}
-        />
+        <div className='player shadow--2dp'>
+          <div className='player__controls'>
+            <Button className='player__controls-button icon-button' onClick={() => goToVideo(false)} icon='icon-skip-previous' />
+
+            <Button
+              className='player__controls-button icon-button'
+              onClick={togglePlay}
+              icon={isBuffering ? 'icon-loading' : isPlaying ? 'icon-pause' : 'icon-play' }
+              iconTransitionClass={isBuffering ? 'rotating': ''}
+            />
+
+            <Button className='player__controls-button icon-button' onClick={() => goToVideo(true)} icon='icon-skip-next' />
+          </div>
+
+          <div className='player__info'>
+            <InfoProgress percentElapsed={currentTime / duration} percentLoaded={loaded} />
+
+            <InfoTitle title={currentVideo.title} currentTime={currentTime} duration={duration} />
+
+            <InfoTime currentTime={currentTime} duration={duration} />
+
+            <input className='player__info-progress-loaded' type='range' min='0' max='100' onChange={setVideoTime} />
+          </div>
+
+          <div className='player__controls'>
+            <Button
+              className={[
+                'player__controls-button badge icon-button',
+                showQueue ? 'is-active' : '',
+                newQueueItems ? 'badge--active' : '',
+              ].join(' ')}
+              onClick={() => dispatch({ type: showQueue ? 'QUEUE_CLOSE' : 'QUEUE_OPEN' })}
+              badge={newQueueItems}
+              icon='icon-list'
+            />
+
+            <Button
+              className={['player__controls-button icon-button', showScreen ? 'is-active' : ''].join(' ')}
+              onClick={() => dispatch({ type: showScreen ? 'SCREEN_CLOSE' : 'SCREEN_OPEN' })}
+              icon='icon-film'
+            />
+
+            <div className='player__controls-volume' onWheel={handleWheelVolume}>
+              <Button
+                className='player__controls-button icon-button'
+                icon={
+                isMuted ?
+                  'icon-volume-mute'
+                : volume >= 50 ?
+                  'icon-volume-up'
+                : volume > 0 && volume <= 50 ?
+                  'icon-volume-down'
+                :
+                  'icon-volume-off'
+                }
+              />
+
+              <VolumeRange value={volume} onChange={({ target }) => setVolume(target.value)} />
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

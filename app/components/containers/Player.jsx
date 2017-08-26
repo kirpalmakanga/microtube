@@ -70,26 +70,22 @@ class Player extends React.Component {
       return
     }
 
-    newTime = duration * (target.value / 100)
+    newTime = this.state.duration * (target.value / 100)
     this.state.youtube.seekTo(newTime)
 
     this.setState({ currentTime: newTime })
   }
 
   watchTime() {
-    let { youtube, duration } = this.state
+    const { youtube } = this.state
+    const duration = youtube.getDuration()
 
-    const newDuration = youtube.getDuration()
-
-    if(newDuration !== duration) {
-      this.setState({ duration: newDuration })
-    }
+    this.setState({ duration: duration })
 
     const timeWatcher = setInterval(() => {
-      const playerState = youtube.getPlayerState()
       const currentTime = youtube.getCurrentTime()
 
-      if (currentTime < duration && playerState === 1) {
+      if (currentTime < duration) {
         this.setState({ currentTime })
       } else {
         clearInterval(timeWatcher)
@@ -150,8 +146,6 @@ class Player extends React.Component {
     youtube.playVideo()
   }
 
-  // togglePlay = () => this.setState(({ isPlaying }) => ({ isPlaying: !isPlaying  }))
-
   clearWatchers () {
     const { timeWatcher, loadingWatcher } = this.state
     clearInterval(timeWatcher)
@@ -167,26 +161,27 @@ class Player extends React.Component {
   }
 
   goToVideo = (next = true) => {
-    let [video, index] = this.getCurrentVideo()
-    let newIndex
+    const { queue } = this.props.player
 
-    if(video) {
-      this.clearWatchers()
+    const [video, index] = this.getCurrentVideo()
 
-      this.setState({
-        currentTime: 0,
-        loaded: 0
-      })
+    const newIndex = index + (next ? 1 : -1)
 
-      newIndex = index + (next ? 1 : -1)
-
-      console.log('go to')
-
-      this.props.dispatch({
-        type: 'QUEUE_SET_ACTIVE_ITEM',
-        data: { index: newIndex }
-      })
+    if(!video || newIndex < 0 || newIndex > queue.length - 1) {
+      return
     }
+
+    this.clearWatchers()
+
+    this.setState({
+      currentTime: 0,
+      loaded: 0
+    })
+
+    this.props.dispatch({
+      type: 'QUEUE_SET_ACTIVE_ITEM',
+      data: { index: newIndex }
+    })
   }
 
   onYoutubeIframeReady = ({ target }) => {
@@ -201,22 +196,29 @@ class Player extends React.Component {
       case -1:
       case 0:
         this.setState({ isPlaying: false })
+      break
 
       case 1:
         this.state.youtube.setVolume(this.props.player.volume)
-        this.watchTime()
-        this.watchLoading()
-        this.setState({
-          isPlaying: true,
-          isBuffering: false
+        this.setState({ isPlaying: true, isBuffering: false }, () => {
+          this.watchTime()
+          this.watchLoading()
         })
+      break
 
       case 2:
         this.clearWatchers()
         this.setState({ isPlaying: false })
+      break
+
       case 3:
         this.clearWatchers()
         this.setState({ isBuffering: true })
+      break
+
+      case 5:
+        this.togglePlay()
+      break
     }
   }
 

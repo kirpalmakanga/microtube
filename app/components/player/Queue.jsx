@@ -1,5 +1,4 @@
 import parseDuration from '../../lib/parseDuration'
-import { setActiveQueueItem } from '../../actions/player'
 
 import QueueItem from './QueueItem.jsx'
 
@@ -56,6 +55,8 @@ class Queue extends React.Component {
 
     data.splice(to, 0, data.splice(from, 1)[0])
 
+    console.log('drag end ?')
+
     this.props.dispatch({ type: 'QUEUE_SET', data })
   }
 
@@ -90,8 +91,9 @@ class Queue extends React.Component {
 
   render() {
     const { dragEnd, dragStart, dragOver } = this
-    const { player, dispatch } = this.props
-    const { youtube, queue, showQueue, isPlaying, isBuffering } = player
+    const { player, handleClickPlay, dispatch } = this.props
+    const { queue, showQueue, isBuffering } = player
+
     return (
         <div className={['queue shadow--2dp', showQueue ? 'queue--show' : ''].join(' ')} onDragOver={dragOver}>
             {queue.length ? queue.map(({ active, title }, index) => {
@@ -101,16 +103,17 @@ class Queue extends React.Component {
                   id={index}
                   title={title}
                   isActive={active}
+                  isBuffering={isBuffering}
                   onDragStart={dragStart}
                   onDragEnd={dragEnd}
                   onClick={() => {
                     if(!active) {
-                      dispatch({ type: 'RESET_TIME' })
-                      dispatch(setActiveQueueItem({ queue, index }))
-                    } else if (isPlaying) {
-                      youtube.pauseVideo()
+                      dispatch({
+                        type: 'QUEUE_SET_ACTIVE_ITEM',
+                        data: { index }
+                      })
                     } else {
-                      youtube.playVideo()
+                      handleClickPlay()
                     }
                   }}
                   onClickRemove={(e) => {

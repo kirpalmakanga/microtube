@@ -4,119 +4,40 @@ import InfoTime from './controls/InfoTime.jsx'
 import InfoTitle from './controls/InfoTitle.jsx'
 import InfoProgress from './controls/InfoProgress.jsx'
 
-import { setActiveQueueItem } from '../../actions/player'
-
 const { connect } = ReactRedux
 
-const Player = ({ player, dispatch }) => {
-  const { queue, youtube, currentTime, duration, volume, loaded, isPlaying, isBuffering, isMuted, showQueue, newQueueItems, showScreen } = player
-  const isYoutubeReady = (typeof youtube === 'object' && Object.keys(youtube).length)
+const Player = ({ player, info, togglePlay, toggleMute, goToVideo, setVolume, handleWheelVolume, setVideoTime, dispatch }) => {
+  const { isPlaying, isBuffering, isMuted, volume, loaded, currentTime, duration, currentVideo = { title: 'No Video.' } } = info
 
-  const currentIndex = queue.findIndex(item => item.active)
-  const currentVideo = queue[currentIndex] || {}
-
-  function goTo (direction) {
-    const index = currentIndex + (direction === 'next' ? 1 : -1)
-
-    return () => {
-      if(queue[index]) {
-        dispatch({ type: 'CLEAR_WATCHERS' })
-        dispatch({ type: 'RESET_TIME' })
-
-        dispatch(setActiveQueueItem({ queue: queue, index}))
-      }
-    }
-  }
-
-  function playPause () {
-    if (!isYoutubeReady || isBuffering ) {
-      return
-    }
-
-    if (isPlaying) {
-      youtube.pauseVideo()
-    } else {
-      youtube.playVideo()
-    }
-
-    dispatch({ type: isPlaying ? 'PAUSE' : 'PLAY' })
-  }
-
-  function setVideoTime ({ target }) {
-    let newTime
-
-    if (isYoutubeReady) {
-      newTime = duration * (target.value / 100)
-      youtube.seekTo(newTime)
-
-      dispatch({ type: 'CLEAR_WATCHERS' })
-      dispatch({
-        type: 'UPDATE_TIME',
-        data: { currentTime: newTime }
-      })
-    }
-  }
-
-  function setVolume (val) {
-    youtube.setVolume(val)
-    dispatch({
-      type: 'SET_VOLUME',
-      data: val
-    })
-  }
-
-  function handleWheelVolume ({ deltaY }) {
-      let newVolume, inRange
-
-      if (!isYoutubeReady) {
-        return
-      }
-
-      newVolume =  deltaY < 0 ? volume + 5 : volume - 5
-      inRange = newVolume >= 0 && newVolume <= 100
-
-      if(isMuted) {
-        youtube.unMute()
-      }
-
-      if (inRange) {
-        setVolume(newVolume)
-      }
-  }
-
-  function mute () {
-    if (!isYoutubeReady) {
-      return
-    }
-
-    if (isMuted) {
-      youtube.unMute()
-    } else {
-      youtube.mute()
-    }
-
-    dispatch({ type: isMuted ? 'UNMUTE' : 'MUTE' })
-  }
+  const { queue, showQueue, newQueueItems, showScreen } = player
 
   return (
     <div className='player shadow--2dp'>
       <div className='player__controls'>
-        <Button className='player__controls-button icon-button' onClick={goTo('prev')} icon='icon-skip-previous' />
+        <Button
+          className='player__controls-button icon-button'
+          onClick={() => goToVideo(false)}
+          icon='icon-skip-previous'
+        />
 
         <Button
           className='player__controls-button icon-button'
-          onClick={playPause}
+          onClick={togglePlay}
           icon={isBuffering ? 'icon-loading' : isPlaying ? 'icon-pause' : 'icon-play' }
           iconTransitionClass={isBuffering ? 'rotating': ''}
         />
 
-        <Button className='player__controls-button icon-button' onClick={goTo('next')} icon='icon-skip-next' />
+        <Button
+          className='player__controls-button icon-button'
+          onClick={() => goToVideo(true)}
+          icon='icon-skip-next'
+        />
       </div>
 
       <div className='player__info'>
         <InfoProgress percentElapsed={currentTime / duration} percentLoaded={loaded} />
 
-        <InfoTitle title={currentVideo.title || 'No Video.'} currentTime={currentTime} duration={duration} />
+        <InfoTitle title={currentVideo.title} currentTime={currentTime} duration={duration} />
 
         <InfoTime currentTime={currentTime} duration={duration} />
 
@@ -147,15 +68,9 @@ const Player = ({ player, dispatch }) => {
           icon='icon-film'
         />
 
-        <div
-          className='player__controls-volume'
-          onMouseEnter={() => dispatch({ type: 'OPEN_VOLUME' })}
-          onMouseLeave={() => dispatch({ type: 'CLOSE_VOLUME' })}
-          onWheel={handleWheelVolume}
-        >
+        <div className='player__controls-volume' onWheel={handleWheelVolume}>
           <Button
             className='player__controls-button icon-button'
-            onClick={mute}
             icon={
             isMuted ?
               'icon-volume-mute'

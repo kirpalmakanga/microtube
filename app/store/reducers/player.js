@@ -1,100 +1,79 @@
-import updateState from '../updateState'
-
 const initialState = {
   queue: [],
-  isPlaying: false,
-  isBuffering: false,
   showQueue: false,
   showScreen: false,
-  showVolume: false,
-  isMuted: false,
-  volume: 100,
-  loaded: 0,
-  currentTime: 0,
-  duration: 0,
-  youtube: {},
-  autoplay: 0,
-  watchers: {
-    time: null,
-    loading: null
-  },
-  newQueueItems: 0,
-  notify: false
+  // volume: 100,
+  // autoplay: 0,
+  newQueueItems: 0
 }
 
-const actions = {
-
-    'GET_YOUTUBE': youtube => ({ youtube }),
-
-    'SET_WATCHERS': ({ time, loading }) => ({ watchers: { time, loading } }),
-
-    'CLEAR_WATCHERS': (data, { watchers }) => {
-      clearInterval(watchers.time)
-      clearInterval(watchers.loading)
-      return { watchers: initialState.watchers }
-    },
-
-    'ENABLE_AUTOPLAY': () => ({ autoplay: 1 }),
-
-    'RESET_TIME': () => ({
-      currentTime: 0,
-      loaded: 0,
-    }),
-
-    'BUFFER': () => ({ isBuffering: true }),
-
-    'PLAY': () => ({ isPlaying: true, isBuffering: false, notify: true }),
-
-    'PAUSE': () => ({ isPlaying: false, notify: false }),
-
-    'UPDATE_TIME': ({ currentTime, duration }, state) => ({ currentTime, duration: duration || state.duration }),
-
-    'UPDATE_LOAD': loaded => ({ loaded }),
-
-    'SCREEN_OPEN': () => ({
-      showScreen: true,
-      showQueue: false
-    }),
-
-    'SCREEN_CLOSE': () => ({ showScreen: false }),
-
-    'QUEUE_OPEN': () => ({
-      showQueue: true,
-      showScreen: false,
-      newQueueItems: initialState.newQueueItems
-    }),
-
-    'QUEUE_CLOSE': () => ({ showQueue: false }),
-
-    'QUEUE_PUSH': (items, { queue, newQueueItems }) => {
-      newQueueItems += items.length
+export default function (state = initialState, { type, data }) {
+  switch (type) {
+    case 'SCREEN_OPEN':
       return {
-        queue: [...queue, ...items],
-        newQueueItems
+        ...state,
+        showScreen: true,
+        showQueue: false
       }
-    },
 
-    'QUEUE_REMOVE': (index, { queue }) => ({ queue: queue.filter((item, i) => i !== index) }),
+    case 'SCREEN_CLOSE':
+     return {
+       ...state,
+       showScreen: false
+     }
 
-    'QUEUE_CLEAR': (data, { queue }) => {
-      queue = queue.filter(v => v.active)
-      return Object.assign({ queue }, !queue.length ? {
-        currentTime: 0,
-        loaded: 0,
-      } : {})
-    },
+    case 'QUEUE_OPEN':
+      return {
+        ...state,
+        showQueue: true,
+        showScreen: false,
+        newQueueItems: 0
+      }
 
-    'QUEUE_SET': queue => ({ queue, notify: true }),
+    case 'QUEUE_CLOSE':
+      return {
+        ...state,
+        showQueue: false
+      }
 
-    'OPEN_VOLUME': () => ({ showVolume: true }),
+    case 'QUEUE_PUSH':
+      return {
+        ...state,
+        queue: [...state.queue, ...data],
+        newQueueItems: state.newQueueItems += data.length
+      }
 
-    'CLOSE_VOLUME': () => ({ showVolume: false }),
+    case 'QUEUE_REMOVE':
+      return {
+        ...state,
+        queue: state.queue.filter((item, i) => i !== data)
+      }
 
-    'SET_VOLUME': data => ({ isMuted: false, volume: data }),
+    case 'QUEUE_CLEAR':
+      return {
+        ...state,
+        queue: state.queue.filter(v => v.active)
+      }
 
-    'MUTE': () => ({ isMuted: true }),
+    case 'QUEUE_SET':
+      return {
+        ...state,
+        queue: data
+      }
 
-    'UNMUTE': () => ({ isMuted: false })
+    case 'QUEUE_SET_ACTIVE_ITEM':
+      const { queue } = state
+      let { video, index } = data
+
+      if (video) {
+        index = queue.length
+        queue.push(video)
+      }
+
+      return {
+        ...state,
+        queue: queue.map((v, i) => ({ ...v, active: i === index ? true : false }))
+      }
+  }
+  return state
 }
-
-export default updateState(actions, initialState)

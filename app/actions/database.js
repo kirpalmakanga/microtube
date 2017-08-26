@@ -1,9 +1,6 @@
 // import api from '../api/database'
 import api from '../api/youtube'
 
-import { setActiveQueueItem } from './player.js'
-
-
 export function getPlaylists (accessToken, pageToken) {
   return async (dispatch) => {
     dispatch({ type: 'GET_PLAYLISTS' })
@@ -74,13 +71,17 @@ export function getPlaylistItems (accessToken, playlistId, pageToken) {
 // }
 
 export function queuePlaylist ({ accessToken, playlistId, queue, play }) {
+  console.log('queue playlist ?')
   return (dispatch) => {
     const getItems = async (pageToken) => {
       try {
         const { items, nextPageToken } = await api.getPlaylistItems(accessToken, playlistId, pageToken)
 
         if (play && !pageToken && items.length > 0) {
-          dispatch(setActiveQueueItem({ queue, video: items[0] }))
+          dispatch({
+            type: 'QUEUE_SET_ACTIVE_ITEM',
+            data: { video: items[0] }
+          })
           items.shift()
         }
 

@@ -228,7 +228,7 @@ class Player extends React.Component {
 
     return (
       <div className='player__container'>
-        <Queue handleClickPlay={this.togglePlay} />
+        <Queue isPlaying={isPlaying} isBuffering={isBuffering} handleClickPlay={this.togglePlay} />
 
         <Screen
           video={currentVideo}

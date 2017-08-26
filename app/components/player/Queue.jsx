@@ -9,12 +9,12 @@ class Queue extends React.Component {
     super(props)
 
     this.state = {
-      data: props.player.queue
+      queue: props.player.queue
     }
   }
 
   componentWillReceiveProps(props){
-   this.setState({ data: props.player.queue})
+   this.setState({ queue: props.player.queue})
   }
 
   getPlaceholder() {
@@ -55,8 +55,6 @@ class Queue extends React.Component {
 
     data.splice(to, 0, data.splice(from, 1)[0])
 
-    console.log('drag end ?')
-
     this.props.dispatch({ type: 'QUEUE_SET', data })
   }
 
@@ -90,9 +88,10 @@ class Queue extends React.Component {
   }
 
   render() {
-    const { dragEnd, dragStart, dragOver } = this
-    const { player, handleClickPlay, dispatch } = this.props
-    const { queue, showQueue, isBuffering } = player
+    const { state, props, dragEnd, dragStart, dragOver } = this
+    const { queue } = state
+    const { player, isPlaying, isBuffering, handleClickPlay, dispatch } = props
+    const { showQueue } = player
 
     return (
         <div className={['queue shadow--2dp', showQueue ? 'queue--show' : ''].join(' ')} onDragOver={dragOver}>
@@ -104,6 +103,7 @@ class Queue extends React.Component {
                   title={title}
                   isActive={active}
                   isBuffering={isBuffering}
+                  isPlaying={isPlaying}
                   onDragStart={dragStart}
                   onDragEnd={dragEnd}
                   onClick={() => {

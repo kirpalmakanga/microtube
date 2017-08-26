@@ -11,13 +11,19 @@ import Channel from './components/containers/Channel.jsx'
 
 export default function getRoutes ({ getState, dispatch }) {
    function refreshToken () {
-     const { auth } = getState()
+     const requestToken = () => {
+       const { auth } = getState()
 
-     const requestToken = auth.refresh ? () => refreshAccessToken(auth.refresh, token => {
-       if (token) {
-           dispatch({ type: 'OAUTH_REFRESH', data: { token } })
+       if(!auth.refresh) {
+         return
        }
-     }) : () => {}
+
+       refreshAccessToken(auth.refresh, token => {
+         if (token) {
+             dispatch({ type: 'OAUTH_REFRESH', data: { token } })
+         }
+       })
+     }
 
      const refreshWatcher = setInterval(requestToken, 3540000)
 

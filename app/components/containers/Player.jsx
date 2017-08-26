@@ -228,7 +228,8 @@ class Player extends React.Component {
   render() {
     const { handleWheelVolume, setVideoTime, togglePlay, goToVideo, onYoutubeIframeReady, onYoutubeIframeStateChange } = this
     const { isPlaying, isBuffering, isMuted, volume, loaded, currentTime, duration } = this.state
-    const { showQueue, showScreen, newQueueItems } = this.props.player
+    const { player, dispatch } = this.props
+    const { showQueue, showScreen, newQueueItems } = player
     const [ currentVideo ] = this.getCurrentVideo()
 
     return (
@@ -259,7 +260,7 @@ class Player extends React.Component {
           <div className='player__info'>
             <InfoProgress percentElapsed={currentTime / duration} percentLoaded={loaded} />
 
-            <InfoTitle title={currentVideo.title} currentTime={currentTime} duration={duration} />
+            <InfoTitle title={currentVideo ? currentVideo.title : 'No Video.'} currentTime={currentTime} duration={duration} />
 
             <InfoTime currentTime={currentTime} duration={duration} />
 

@@ -7,7 +7,6 @@ const QueueItem = ({ id, isActive, isPlaying, isBuffering, title, onClick, onCli
       onClick={onClick}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      data-id={id}
       data-title={title}
       draggable
     >

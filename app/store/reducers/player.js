@@ -3,7 +3,6 @@ const initialState = {
   showQueue: false,
   showScreen: false,
   volume: 100,
-  // autoplay: 0,
   newQueueItems: 0
 }
 

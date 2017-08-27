@@ -3,39 +3,53 @@ import { Link } from 'react-router'
 
 import VideoCard from '../cards/VideoCard.jsx'
 
-import { getPlaylistItems } from '../../actions/database'
+import { getPlaylistTitle, getPlaylistItems } from '../../actions/database'
 
 const { connect } = ReactRedux
 
-const PlaylistItems = ({ auth, playlistItems, params, dispatch }) => {
-  const nextPage = playlistItems.pages[playlistItems.pages.length - 1]
+class Playlist extends React.Component {
+  componentWillMount() {
+    const { dispatch, auth, params } = this.props
 
-  function loadMoreContent () {
+    dispatch(getPlaylistTitle(auth.token, params.id))
+  }
+
+  loadMoreContent = () => {
+    const { dispatch, auth, params, playlistItems } = this.props
+    const nextPage = playlistItems.pages[playlistItems.pages.length - 1]
+
     dispatch(getPlaylistItems(auth.token, params.id, nextPage))
   }
 
-  function renderWaypoint() {
+  renderWaypoint = () => {
+    const { auth, playlistItems } = this.props
+
     if (auth.token && playlistItems.isLoading !== 2) {
-      return (<Waypoint onEnter={loadMoreContent} topOffset={1} />)
+      return (<Waypoint onEnter={this.loadMoreContent} topOffset={1} />)
     }
   }
 
-  return (
-    <div className='grid'>
-      {playlistItems.items.map((video, i) => (
-        <div key={i} className='grid__item'>
-          <VideoCard video={video} />
-        </div>
-      ))}
+  render() {
+    const { props, renderWaypoint } = this
+    const { auth, playlistItems, dispatch } = props
 
-      <div className={['grid__loading', playlistItems.isLoading === 1 ? 'is-active': ''].join(' ')}>
-        {renderWaypoint()}
-        <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
+    return (
+      <div className='grid'>
+        {playlistItems.items.map((video, i) => (
+          <div key={i} className='grid__item'>
+            <VideoCard video={video} />
+          </div>
+        ))}
+
+        <div className={['grid__loading', playlistItems.isLoading === 1 ? 'is-active': ''].join(' ')}>
+          {renderWaypoint()}
+          <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 const mapStateToProps = ({ auth, playlistItems }) => ({ auth, playlistItems })
 
-export default connect(mapStateToProps)(PlaylistItems)
+export default connect(mapStateToProps)(Playlist)

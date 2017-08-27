@@ -35,13 +35,25 @@ export function getPlaylists (accessToken, pageToken) {
 //   }
 // }
 
+export function getPlaylistTitle (accessToken, playlistId) {
+  return async (dispatch) => {
+    try {
+      const data = await api.getPlaylistTitle(accessToken, [playlistId])
+
+      dispatch({ type: 'GET_PLAYLIST_TITLE', data })
+    } catch (err) {
+      dispatch({ type: 'NOTIFY', data: 'Error fetching playlist title.' })
+    }
+  }
+}
+
 export function getPlaylistItems (accessToken, playlistId, pageToken) {
   return async (dispatch) => {
-    dispatch({ type: 'GET_PLAYLIST_ITEMS' })
+    dispatch({ type: 'GET_PLAYLIST' })
     try {
       const data = await api.getPlaylistItems(accessToken, playlistId, pageToken)
 
-      dispatch({ type: 'GET_PLAYLIST_ITEMS_SUCCESS', data })
+      dispatch({ type: 'GET_PLAYLIST_SUCCESS', data })
     } catch (err) {
       dispatch({ type: 'NOTIFY', data: 'Error fetching playlist items.' })
     }

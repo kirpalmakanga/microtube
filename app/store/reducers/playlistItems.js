@@ -12,10 +12,14 @@ export default function (state = initialState, { type, data }) {
       const { playlistTitle } = data
       return { ...state, playlistTitle }
 
-    case 'GET_PLAYLIST_ITEMS':
+    case 'GET_PLAYLIST_TITLE':
+      const { title } = data
+      return { ...state, playlistTitle: title }
+
+    case 'GET_PLAYLIST':
       return { ...state, isLoading: 1 }
 
-    case 'GET_PLAYLIST_ITEMS_SUCCESS':
+    case 'GET_PLAYLIST_SUCCESS':
       const { items, nextPageToken, totalResults } = data
       const isNewToken = typeof nextPageToken === 'string' && !state.pages.includes(nextPageToken)
       const endOfContent = typeof nextPageToken === 'undefined'

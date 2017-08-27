@@ -114,6 +114,23 @@ class Api {
     }
   })
 
+  getPlaylistTitle = async (accessToken, id) => new Promise(async (resolve, reject) => {
+    try {
+      const { items } = await this.list('playlists', {
+        id,
+        access_token: accessToken,
+        part: 'snippet',
+        key: API_KEY
+      })
+
+      const { title } = items[0].snippet
+
+      resolve({ title })
+    } catch (err) {
+      reject(err)
+    }
+  })
+
   getPlaylistItems = (accessToken, playlistId, pageToken = '') => new Promise(async (resolve, reject) => {
     try {
       const { items, nextPageToken, pageInfo } = await this.list('playlistItems', {

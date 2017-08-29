@@ -34,13 +34,13 @@ class Api {
       const youtube = await this.loadApi()
 
       youtube[field]
-      .list(config)
+      .list({ ...config, key: API_KEY })
       .execute(res => res.error ? reject(res.message) : resolve(res))
   })
 
-  list = async (...args) => await this.callApi('list', ...args)
+  list = (...args) => this.callApi('list', ...args)
 
-  remove = async (...args) => await this.callApi('delete', ...args)
+  remove = (...args) => this.callApi('delete', ...args)
 
 
   getVideosFromIds = async (ids, accessToken) => {
@@ -48,8 +48,7 @@ class Api {
         access_token: accessToken,
         part: 'contentDetails, snippet, status',
         id: ids.join(', '),
-        maxResults: ITEMS_PER_REQUEST,
-        key: API_KEY
+        maxResults: ITEMS_PER_REQUEST
       })
 
       const videos = items.map(({ id, contentDetails, snippet, status }) => ({
@@ -72,8 +71,7 @@ class Api {
         pageToken,
         part: 'snippet, contentDetails, status',
         mine: true,
-        maxResults: ITEMS_PER_REQUEST,
-        key: API_KEY
+        maxResults: ITEMS_PER_REQUEST
       })
 
       return {
@@ -93,8 +91,7 @@ class Api {
     const { items } = await this.list('playlists', {
       id,
       access_token: accessToken,
-      part: 'snippet',
-      key: API_KEY
+      part: 'snippet'
     })
 
     const { title } = items[0].snippet
@@ -108,8 +105,7 @@ class Api {
         playlistId,
         pageToken,
         part: 'snippet, status',
-        maxResults: ITEMS_PER_REQUEST,
-        key: API_KEY
+        maxResults: ITEMS_PER_REQUEST
       })
 
       const videoIds = items.map(({ snippet }) => snippet.resourceId.videoId)
@@ -130,7 +126,6 @@ class Api {
         type: 'video',
         q: query,
         pageToken,
-        key: API_KEY,
         maxResults: ITEMS_PER_REQUEST,
       })
 
@@ -149,8 +144,7 @@ class Api {
       const { items } = await this.list('videos', {
         access_token: accessToken,
         id: parseID(urlOrId),
-        part: 'contentDetails, snippet, status',
-        key: API_KEY
+        part: 'contentDetails, snippet, status'
       })
 
       const { id, contentDetails, snippet, status } = items[0]
@@ -173,8 +167,7 @@ class Api {
         part: 'id, snippet, contentDetails',
         mine: true,
         maxResults: ITEMS_PER_REQUEST,
-        order: 'alphabetical',
-        key: API_KEY
+        order: 'alphabetical'
       })
 
       return {
@@ -196,7 +189,6 @@ class Api {
         type: 'video',
         channelId,
         pageToken,
-        key: API_KEY,
         maxResults: ITEMS_PER_REQUEST,
       })
 

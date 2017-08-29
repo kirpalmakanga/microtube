@@ -13,7 +13,6 @@ const OfflinePlugin = require('offline-plugin')
 const packageJSON = require('./package.json')
 
 const config = {
-  devtool: 'cheap-module-eval-source-map',
   devServer: {
     hot: true,
     open: true,
@@ -39,7 +38,7 @@ const config = {
     new webpack.IgnorePlugin(/^\.\/lang$/, /moment$/),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({minimize: true}),
+    new webpack.optimize.UglifyJsPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
@@ -104,6 +103,10 @@ const config = {
       }
     ]
   }
+}
+
+if (process.env.NODE_ENV !== 'production') {
+  config.devtool = 'cheap-module-eval-source-map'
 }
 
 module.exports = config

@@ -67,13 +67,14 @@ class Player extends React.Component {
   }
 
   setVideoTime = ({ target }) => {
-    let newTime
-
     if(!this.isIframeReady()) {
       return
     }
 
-    newTime = this.state.duration * (target.value / 100)
+    let { duration } = this.state
+
+    let newTime = duration * (target.value / duration)
+    this.clearWatchers()
     this.state.youtube.seekTo(newTime)
 
     this.setState({ currentTime: newTime })
@@ -88,9 +89,9 @@ class Player extends React.Component {
     const timeWatcher = setInterval(() => {
       const currentTime = youtube.getCurrentTime()
 
-      if (currentTime < duration) {
-        this.setState({ currentTime })
-      } else {
+      this.setState({ currentTime })
+      
+      if(currentTime === duration) {
         clearInterval(timeWatcher)
       }
     }, 250)
@@ -106,11 +107,10 @@ class Player extends React.Component {
     const loadingWatcher = setInterval(() => {
       const loaded = youtube.getVideoLoadedFraction()
 
-      if (loaded < 1) {
-        this.setState({ loaded })
-      } else {
+      this.setState({ loaded })
+
+      if (loaded === 1){
         clearInterval(loadingWatcher)
-        dispatch({ type: 'UPDATE_LOAD', loaded: 1 })
       }
     }, 500)
 
@@ -263,7 +263,7 @@ class Player extends React.Component {
 
             <InfoTime currentTime={currentTime} duration={duration} />
 
-            <input className='player__info-progress-loaded' type='range' min='0' max='100' onChange={setVideoTime} />
+            <input className='player__info-progress-loaded' type='range' min='0' max={parseInt(duration)} onChange={setVideoTime} />
           </div>
 
           <div className='player__controls'>

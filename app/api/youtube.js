@@ -38,9 +38,9 @@ class Api {
       .execute(res => res.error ? reject(res.message) : resolve(res))
   })
 
-  list = async (field, config) => await this.callApi('list', field, config)
+  list = async (...args) => await this.callApi('list', ...args)
 
-  remove = async (field, config) => await this.callApi('delete', field, config)
+  remove = async (...args) => await this.callApi('delete', ...args)
 
 
   getVideosFromIds = async (ids, accessToken) => {

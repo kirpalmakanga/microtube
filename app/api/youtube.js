@@ -30,38 +30,29 @@ class Api {
     })
   }
 
-  list = (field, config) => new Promise(async (resolve, reject) => {
-    try {
+  callApi = (action, field, config) => new Promise(async (resolve, reject) => {
       const youtube = await this.loadApi()
 
-      youtube[field].list(config).execute(res => {
-        if (res.error) {
-            return reject(res.message)
-        }
-        resolve(res)
-      })
-    } catch (err) {
-      reject(err)
-    }
+      youtube[field]
+      .list(config)
+      .execute(res => res.error ? reject(res.message) : resolve(res))
   })
 
-  remove = (field, config) => new Promise(async (resolve, reject) => {
-    try {
-      const youtube = await this.loadApi()
+  list = async (field, config) => {
+      const response = await this.callApi('list', field, config)
 
-      youtube[field].delete(config).execute(res => {
-        if (res.error) {
-            return reject(res.message)
-        }
-        resolve(res)
-      })
-    } catch (err) {
-      reject(err)
-    }
-  })
+      console.log('response', response)
 
-  getVideosFromIds = (ids, accessToken) => new Promise(async (resolve, reject) => {
-    try {
+      return response
+  }
+
+  remove = async (field, config) => {
+      const response = await this.callApi('delete', field, config)
+
+      return response
+  }
+
+  getVideosFromIds = async (ids, accessToken) => {
       const { items } = await this.list('videos', {
         access_token: accessToken,
         part: 'contentDetails, snippet, status',
@@ -81,14 +72,10 @@ class Api {
         privacyStatus: status.privacyStatus
       }))
 
-      resolve(videos)
-    } catch (err) {
-      reject(err)
-    }
-  })
+      return videos
+  }
 
-  getPlaylists = async (accessToken, pageToken = '') => new Promise(async (resolve, reject) => {
-    try {
+  getPlaylists = async (accessToken, pageToken = '') => {
       const { items, nextPageToken, pageInfo } = await this.list('playlists', {
         access_token: accessToken,
         pageToken,
@@ -98,7 +85,7 @@ class Api {
         key: API_KEY
       })
 
-      resolve({
+      return {
         items: items.map(({ id, contentDetails, snippet, status }) => ({
           id,
           title: snippet.title,
@@ -108,31 +95,23 @@ class Api {
         })),
         nextPageToken,
         totalResults: pageInfo.totalResults
-      })
-    } catch (err) {
-      reject(err)
-    }
-  })
+      }
+  }
 
-  getPlaylistTitle = async (accessToken, id) => new Promise(async (resolve, reject) => {
-    try {
-      const { items } = await this.list('playlists', {
-        id,
-        access_token: accessToken,
-        part: 'snippet',
-        key: API_KEY
-      })
+  getPlaylistTitle = async (accessToken, id) => {
+    const { items } = await this.list('playlists', {
+      id,
+      access_token: accessToken,
+      part: 'snippet',
+      key: API_KEY
+    })
 
-      const { title } = items[0].snippet
+    const { title } = items[0].snippet
 
-      resolve({ title })
-    } catch (err) {
-      reject(err)
-    }
-  })
+    return { title }
+  }
 
-  getPlaylistItems = (accessToken, playlistId, pageToken = '') => new Promise(async (resolve, reject) => {
-    try {
+  getPlaylistItems = async (accessToken, playlistId, pageToken = '') => {
       const { items, nextPageToken, pageInfo } = await this.list('playlistItems', {
         access_token: accessToken,
         playlistId,
@@ -146,19 +125,14 @@ class Api {
 
       const videos = await this.getVideosFromIds(videoIds, accessToken)
 
-      resolve({
+      return {
         items: videos,
         nextPageToken,
         totalResults: pageInfo.totalResults
-      })
+      }
+  }
 
-    } catch (err) {
-      reject(err)
-    }
-  })
-
-  searchVideos = (accessToken, query, pageToken, channelId) => new Promise(async (resolve, reject) => {
-    try {
+  searchVideos = async(accessToken, query, pageToken, channelId) => {
       const { items, nextPageToken, pageInfo } = await this.list('search', {
         access_token: accessToken,
         part: 'snippet',
@@ -173,18 +147,14 @@ class Api {
 
       const videos = await this.getVideosFromIds(videoIds, accessToken)
 
-      resolve({
+      return {
         items: videos,
         nextPageToken,
         totalResults: pageInfo.totalResults
-      })
-    } catch (err) {
-      reject(err)
-    }
-  })
+      }
+  }
 
-  getVideo = (accessToken, urlOrId) => new Promise(async (resolve, reject) => {
-    try {
+  getVideo = async (accessToken, urlOrId) => {
       const { items } = await this.list('videos', {
         access_token: accessToken,
         id: parseID(urlOrId),
@@ -194,7 +164,7 @@ class Api {
 
       const { id, contentDetails, snippet, status } = items[0]
 
-      resolve({
+      return {
         videoId: id,
         title: snippet.title,
         duration: contentDetails.duration,
@@ -202,14 +172,10 @@ class Api {
         channelTitle: snippet.channelTitle,
         publishedAt: snippet.publishedAt,
         privacyStatus: status.privacyStatus
-      })
-    } catch (err) {
-      reject(err)
-    }
-  })
+      }
+  }
 
-  getSubscriptions = (accessToken, pageToken = '') => new Promise(async (resolve, reject) => {
-    try {
+  getSubscriptions = async (accessToken, pageToken = '') => {
       const { items, nextPageToken, pageInfo } = await this.list('subscriptions', {
         access_token: accessToken,
         pageToken,
@@ -220,7 +186,7 @@ class Api {
         key: API_KEY
       })
 
-      resolve({
+      return {
         items: items.map(({ id, contentDetails, snippet }) => ({
           id,
           channelId: snippet.resourceId.channelId,
@@ -229,14 +195,10 @@ class Api {
         })),
         nextPageToken,
         totalResults: pageInfo.totalResults
-      })
-    } catch (err) {
-      reject(err)
-    }
-  })
+      }
+  }
 
-  getChannelVideos = (accessToken, channelId, pageToken) => new Promise(async (resolve, reject) => {
-    try {
+  getChannelVideos = async (accessToken, channelId, pageToken) => {
       const { items, nextPageToken, pageInfo } = await this.list('search', {
         access_token: accessToken,
         part: 'snippet',
@@ -251,15 +213,12 @@ class Api {
 
       const videos = await this.getVideosFromIds(videoIds, accessToken)
 
-      resolve({
+      return {
         items: videos,
         nextPageToken,
         totalResults: pageInfo.totalResults
-      })
-    } catch (err) {
-      reject(err)
-    }
-  })
+      }
+  }
 }
 
 export default new Api()

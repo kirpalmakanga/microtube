@@ -12,6 +12,8 @@ const OfflinePlugin = require('offline-plugin')
 
 const packageJSON = require('./package.json')
 
+let isDevelopmentMode = !(require('yargs').argv.p || false)
+
 const config = {
   devServer: {
     hot: true,
@@ -105,7 +107,9 @@ const config = {
   }
 }
 
-if (process.env.NODE_ENV !== 'production') {
+if (isDevelopmentMode) {
+  console.log('env', process.env.NODE_ENV)
+  console.log('dev')
   config.devtool = 'cheap-module-eval-source-map'
 }
 

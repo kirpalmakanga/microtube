@@ -38,19 +38,10 @@ class Api {
       .execute(res => res.error ? reject(res.message) : resolve(res))
   })
 
-  list = async (field, config) => {
-      const response = await this.callApi('list', field, config)
+  list = async (field, config) => await this.callApi('list', field, config)
 
-      console.log('response', response)
+  remove = async (field, config) => await this.callApi('delete', field, config)
 
-      return response
-  }
-
-  remove = async (field, config) => {
-      const response = await this.callApi('delete', field, config)
-
-      return response
-  }
 
   getVideosFromIds = async (ids, accessToken) => {
       const { items } = await this.list('videos', {

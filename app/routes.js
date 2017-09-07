@@ -4,20 +4,26 @@ import { getAllPlaylists, getPlaylistItems, getSubscriptions } from './actions/d
 import { refreshAccessToken } from './actions/auth'
 
 import App from './components/App.jsx'
-import Playlists from './components/playlists/Playlists.jsx'
-import PlaylistItems from './components/playlists/PlaylistItems.jsx'
-import Subscriptions from './components/subscriptions/Subscriptions.jsx'
-import Channel from './components/Channel.jsx'
+import Playlists from './components/containers/Playlists.jsx'
+import Playlist from './components/containers/Playlist.jsx'
+import Subscriptions from './components/containers/Subscriptions.jsx'
+import Channel from './components/containers/Channel.jsx'
 
 export default function getRoutes ({ getState, dispatch }) {
    function refreshToken () {
-     const { auth } = getState()
+     const requestToken = () => {
+       const { auth } = getState()
 
-     const requestToken = auth.refresh ? () => refreshAccessToken(auth.refresh, token => {
-       if (token) {
-           dispatch({ type: 'OAUTH_REFRESH', data: token })
+       if(!auth.refresh) {
+         return
        }
-     }) : () => {}
+
+       refreshAccessToken(auth.refresh, token => {
+         if (token) {
+             dispatch({ type: 'OAUTH_REFRESH', data: { token } })
+         }
+       })
+     }
 
      const refreshWatcher = setInterval(requestToken, 3540000)
 
@@ -26,20 +32,13 @@ export default function getRoutes ({ getState, dispatch }) {
 
   return (
     <Route path='/' onEnter={refreshToken} component={App}>
-      <IndexRoute
-        component={Playlists}
-        onLeave={() => dispatch({ type: 'CLEAR_PLAYLISTS' })}
-      />
+      <IndexRoute component={Playlists} />
        <Route
         path='/playlist/:id'
-        component={PlaylistItems}
+        component={Playlist}
         onLeave={() => dispatch({ type: 'CLEAR_PLAYLIST_ITEMS' })}
       />
-       <Route
-        path='/subscriptions'
-        component={Subscriptions}
-        onLeave={() => dispatch({ type: 'CLEAR_SUBSCRIPTIONS' })}
-      />
+       <Route path='/subscriptions' component={Subscriptions} />
        <Route
         path='/channel/:id'
         component={Channel}

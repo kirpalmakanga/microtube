@@ -1,4 +1,4 @@
-import SearchForm from '../search/SearchForm.jsx'
+import SearchForm from '../SearchForm.jsx'
 
 const { connect } = ReactRedux
 

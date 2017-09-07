@@ -29,4 +29,8 @@ Thumbs.db
 
 .htaccess
 
-public/vendor.js
+public/appcache/
+public/*.js
+public/*.css
+public/*.ttf
+public/*.woff

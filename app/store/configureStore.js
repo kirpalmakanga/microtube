@@ -1,6 +1,6 @@
 import thunk from 'redux-thunk'
 import persistState from 'redux-localstorage'
-import rootReducer from '../reducers'
+import rootReducer from './reducers'
 
 const { applyMiddleware, compose, createStore } = Redux
 
@@ -10,12 +10,12 @@ const enhancer = compose(
      key: 'ytlstate',
      slicer: paths => {
 			 return ({ auth, player }) => {
-         const { queue } = player
+         const { queue, volume } = player
          const { refresh, token, user } = auth
 
 				 return {
 					 auth: { refresh, token, user },
-					 player: { queue }
+					 player: { queue, volume }
 				 }
 			 }
 		 },
@@ -24,10 +24,11 @@ const enhancer = compose(
 					return initialState
 				}
 
-	 	    return Object.assign({}, initialState, {
-	 	        auth: Object.assign({}, initialState.auth, storage.auth),
-	 	        player: Object.assign({}, initialState.player, storage.player)
-	 	    })
+	 	    return {
+          ...initialState,
+          auth: { ...initialState.auth, ...storage.auth },
+          player: { ...initialState.player, ...storage.player }
+        }
      }
    })
 )

@@ -1,9 +1,12 @@
-import { getSubscriptions } from '../../actions/database'
-import SubscriptionCard from './SubscriptionCard.jsx'
 import Waypoint from 'react-waypoint'
+
+import { getSubscriptions } from '../../actions/database'
+import SubscriptionCard from '../cards/SubscriptionCard.jsx'
+
 const { connect } = ReactRedux
 
 const Subscriptions = ({ auth, subscriptions, dispatch }) => {
+  const nextPage = subscriptions.pages[subscriptions.pages.length - 1]
   function loadMoreContent () {
     dispatch(getSubscriptions(auth.token))
   }
@@ -22,10 +25,9 @@ const Subscriptions = ({ auth, subscriptions, dispatch }) => {
       ))}
 
       <div className={['grid__loading', auth.token && subscriptions.isLoading === 1 ? 'is-active': ''].join(' ')}>
+        {renderWaypoint()}
         <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
       </div>
-
-      {renderWaypoint()}
     </div>
   )
 }

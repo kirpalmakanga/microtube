@@ -1,27 +1,24 @@
-import parseDuration from '../../lib/parseDuration'
+import Img from '../Img.jsx'
 
-import { setActiveQueueItem } from '../../actions/player'
+import getThumbnails from '../../lib/getThumbnails'
+import parseDuration from '../../lib/parseDuration'
 
 const { connect } = ReactRedux
 
 const VideoCard = ({ player, video, dispatch }) => {
-  const { videoId, title, publishedAt, duration, channelTitle } = video
-
-  function pushToQueue() {
-    dispatch({ type: 'QUEUE_PUSH', data: [video] })
-  }
-
-  function playVideo() {
-    dispatch({ type: 'RESET_TIME' })
-    dispatch(setActiveQueueItem({ queue: player.queue, video }))
-  }
+  const { videoId, title, thumbnails, publishedAt, duration, channelTitle } = video
 
   return (
     <div className='card shadow--2dp'>
       <div
         className='card__content'
-        onClick={playVideo}
+        onClick={() => dispatch({
+          type: 'QUEUE_SET_ACTIVE_ITEM',
+          data: { video }
+        })}
       >
+        <Img src={getThumbnails(thumbnails)} background />
+
         <div className='card__text'>
           <h2 className='card__text-title'>{title}</h2>
           <p className='card__text-subtitle channel'>{channelTitle}</p>
@@ -33,7 +30,7 @@ const VideoCard = ({ player, video, dispatch }) => {
       <div className='card__buttons'>
         <button
           className='card__button icon-button'
-          onClick={pushToQueue}
+          onClick={() => dispatch({ type: 'QUEUE_PUSH', data: [video] })}
         >
           <span className='icon'>
             <svg><use xlinkHref='#icon-playlist-add'></use></svg>

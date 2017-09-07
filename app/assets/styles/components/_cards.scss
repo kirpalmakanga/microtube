@@ -25,6 +25,15 @@
       display: flex;
       flex: 1;
       cursor: pointer;
+
+      .image {
+        width: 100px;
+        @media screen and (min-width: 480px) {
+          width: 200px;
+        }
+
+        margin-right: 16px;
+      }
     }
 
     &__content &__text {

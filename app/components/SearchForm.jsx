@@ -1,4 +1,4 @@
-import { searchVideos } from '../../actions/database'
+import { searchVideos } from '../actions/database'
 const { connect } = ReactRedux
 
 const SearchForm = ({ menu, auth, dispatch }) => {

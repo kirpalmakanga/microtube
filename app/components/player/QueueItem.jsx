@@ -1,14 +1,12 @@
 const { connect } = ReactRedux
 
-const QueueItem = ({ id, isActive, title, onClick, onClickRemove, onDragEnd, onDragStart, player }) => {
-  const { isPlaying, isBuffering } = player
+const QueueItem = ({ id, isActive, isPlaying, isBuffering, title, onClick, onClickRemove, onDragEnd, onDragStart, player }) => {
   return (
     <div
       className={['queue__item', isActive ? 'queue__item--active' : ''].join(' ')}
       onClick={onClick}
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
-      data-id={id}
       data-title={title}
       draggable
     >

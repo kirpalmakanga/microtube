@@ -38,7 +38,7 @@ class Queue extends React.Component {
   }
 
   dragEnd = () => {
-    const { data, dragged, over, placeholder } = this.state
+    const { queue, dragged, over, placeholder } = this.state
     const from = Number(dragged.dataset.id)
     let to = Number(over.dataset.id)
 
@@ -53,9 +53,9 @@ class Queue extends React.Component {
       to++
     }
 
-    data.splice(to, 0, data.splice(from, 1)[0])
+    queue.splice(to, 0, queue.splice(from, 1)[0])
 
-    this.props.dispatch({ type: 'QUEUE_SET', data })
+    this.props.dispatch({ type: 'QUEUE_SET', data: queue })
   }
 
   dragOver = (e) => {

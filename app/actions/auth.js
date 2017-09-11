@@ -118,29 +118,31 @@ function exchangeCodeForToken({ oauthData, config, popup, interval, dispatch }) 
   })
 }
 
-export function refreshAccessToken(refreshToken, callback) {
-  fetch(window.location.origin + '/auth/refresh', {
-    method: 'post',
-    headers: { 'Content-Type': 'application/json' },
-    credentials: 'same-origin', // By default, fetch won't send any cookies to the server
-    body: JSON.stringify({ refresh_token: refreshToken })
-  })
-  .then(response => {
-    if (response.ok) {
-      response.json().then(({ token }) => callback(token))
-    }
-  })
+export async function refreshAccessToken(refreshToken) {
+  try {
+    const response = await fetch(window.location.origin + '/auth/refresh', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin', // By default, fetch won't send any cookies to the server
+      body: JSON.stringify({ refresh_token: refreshToken })
+    })
+
+    const { token } =  await response.json()
+
+    return token
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 function signIn({ token, refresh, user, popup, interval, dispatch }) {
   return new Promise((resolve, reject) => {
-    const refreshWatcher = setInterval(() => {
-      refreshAccessToken(refresh, token => {
-        if (token) {
-            console.log('refresh', token)
-            dispatch({ type: 'OAUTH_REFRESH', data: token })
-        }
-      })
+    const refreshWatcher = setInterval(async () => {
+      const token = await refreshAccessToken(refresh)
+      
+      if (token) {
+          dispatch({ type: 'OAUTH_REFRESH', data: { token } })
+      }
     }, 3540000)
 
     dispatch({ type: 'OAUTH_SUCCESS', data: { token, refresh, user, refreshWatcher } })

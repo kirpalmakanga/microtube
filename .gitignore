@@ -34,3 +34,5 @@ public/*.js
 public/*.css
 public/*.ttf
 public/*.woff
+
+.env

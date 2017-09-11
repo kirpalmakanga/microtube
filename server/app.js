@@ -71,7 +71,7 @@ app.post('/auth', userController.auth)
 app.post('/auth/refresh', userController.authRefresh)
 app.get('/auth/callback', userController.authCallback)
 
-app.use((req, res) => {
+app.use('/*', (req, res) => {
   res.render('layouts/main', {
     title: 'Microtube',
     initialState

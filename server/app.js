@@ -50,7 +50,7 @@ dotenv.load()
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
 app.set('partials', path.join(__dirname, 'views', 'partials'))
-app.set('port', argv.dev ? 3000 : process.env.PORT)
+app.set('port', process.end.NODE_ENV === 'production' ? process.env.PORT : 3000)
 app.use(compression())
 app.use(logger('dev'))
 app.use(bodyParser.json())
@@ -58,12 +58,12 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, '../public/')))
 
-if (argv.dev) {
+if (process.end.NODE_ENV !== 'production') {
   app.use(require('webpack-dev-middleware')(compiler, {
     noInfo: true,
     publicPath: webpackConfig.output.publicPath
   }))
-  app.use(require('webpack-hot-middleware')(compiler));
+  app.use(require('webpack-hot-middleware')(compiler))
 }
 
 //Routes

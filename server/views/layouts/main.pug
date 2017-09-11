@@ -1,7 +1,6 @@
 doctype html
 html
     head
-        base(href='https://microtube.herokuapp.com/')
         meta(name='mobile-web-app-capable' content='yes')
         meta(name='apple-mobile-web-app-capable' content='yes')
         meta(name='application-name' content='MicroTube')
@@ -48,9 +47,9 @@ html
         script.
             window.INITIAL_STATE = !{initialState}
 
-        script(src='/vendor.js')
+        script(src='https://microtube.herokuapp.com/vendor.js')
           
-        script(src='/app.js')
+        script(src='https://microtube.herokuapp.com/app.js')
 
         script(type='text/javascript').
           (function() {

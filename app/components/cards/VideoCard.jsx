@@ -1,17 +1,19 @@
-import Img from '../Img.jsx'
+import { h } from 'preact'
+import { connect } from 'preact-redux'
+import { Link } from 'preact-router'
+
+import moment from 'moment'
 
 import getThumbnails from '../../lib/getThumbnails'
 import parseDuration from '../../lib/parseDuration'
 
-const { connect } = ReactRedux
+import Img from '../Img.jsx'
 
-const VideoCard = ({ player, video, dispatch }) => {
-  const { videoId, title, thumbnails, publishedAt, duration, channelTitle } = video
-
+const VideoCard = ({ videoId, title, thumbnails, publishedAt, duration, channelTitle, player, dispatch }) => {
   return (
-    <div className='card shadow--2dp'>
+    <div class='card shadow--2dp'>
       <div
-        className='card__content'
+        class='card__content'
         onClick={() => dispatch({
           type: 'QUEUE_SET_ACTIVE_ITEM',
           data: { video }
@@ -19,20 +21,20 @@ const VideoCard = ({ player, video, dispatch }) => {
       >
         <Img src={getThumbnails(thumbnails)} background />
 
-        <div className='card__text'>
-          <h2 className='card__text-title'>{title}</h2>
-          <p className='card__text-subtitle channel'>{channelTitle}</p>
-          <p className='card__text-subtitle date'>{moment(publishedAt).format('MMMM Do YYYY')}</p>
+        <div class='card__text'>
+          <h2 class='card__text-title'>{title}</h2>
+          <p class='card__text-subtitle channel'>{channelTitle}</p>
+          <p class='card__text-subtitle date'>{moment(publishedAt).format('MMMM Do YYYY')}</p>
         </div>
         <div>{parseDuration(duration)}</div>
       </div>
 
-      <div className='card__buttons'>
+      <div class='card__buttons'>
         <button
-          className='card__button icon-button'
+          class='card__button icon-button'
           onClick={() => dispatch({ type: 'QUEUE_PUSH', data: [video] })}
         >
-          <span className='icon'>
+          <span class='icon'>
             <svg><use xlinkHref='#icon-playlist-add'></use></svg>
           </span>
         </button>

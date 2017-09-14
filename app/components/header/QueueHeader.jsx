@@ -1,21 +1,22 @@
-const { connect } = ReactRedux
+import { h } from 'preact'
+import { connect } from 'preact-redux'
 
 const SearchHeader = ({ player, dispatch }) => {
   return (
-    <div className='layout__header-row'>
+    <div class='layout__header-row'>
       <button
-        className='layout__back-button icon-button'
+        class='layout__back-button icon-button'
         onClick={() => dispatch({ type: 'QUEUE_CLOSE' })}
       >
-        <span className='icon'>
+        <span class='icon'>
           <svg><use xlinkHref='#icon-back'></use></svg>
         </span>
       </button>
 
-      <span className='layout-title'>{'Queue (' + player.queue.length + ' Items)'}</span>
+      <span class='layout-title'>{'Queue (' + player.queue.length + ' Items)'}</span>
 
-      <nav className='navigation'>
-        <button className='navigation__link icon-button' onClick={() => {
+      <nav class='navigation'>
+        <button class='navigation__link icon-button' onClick={() => {
           dispatch({
             type: 'PROMPT',
             data: {
@@ -28,12 +29,12 @@ const SearchHeader = ({ player, dispatch }) => {
             }
           })
         }}>
-          <span className='icon'>
+          <span class='icon'>
             <svg><use xlinkHref='#icon-add'></use></svg>
           </span>
         </button>
 
-        <button className='navigation__link icon-button' onClick={() => {
+        <button class='navigation__link icon-button' onClick={() => {
           dispatch({
             type: 'PROMPT',
             data: {
@@ -46,7 +47,7 @@ const SearchHeader = ({ player, dispatch }) => {
             }
           })
         }}>
-          <span className='icon'>
+          <span class='icon'>
             <svg><use xlinkHref='#icon-clear'></use></svg>
           </span>
         </button>

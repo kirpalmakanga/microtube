@@ -108,8 +108,6 @@ const config = {
 }
 
 if (isDevelopmentMode) {
-  console.log('env', process.env.NODE_ENV)
-  console.log('dev')
   config.devtool = 'cheap-module-eval-source-map'
 }
 

@@ -1,4 +1,5 @@
-const { connect } = ReactRedux
+import { h } from 'preact'
+import { connect } from 'preact-redux'
 
 const QueueItem = ({ id, isActive, isPlaying, isBuffering, title, onClick, onClickRemove, onDragEnd, onDragStart, player }) => {
   return (

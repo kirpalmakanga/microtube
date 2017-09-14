@@ -1,3 +1,5 @@
+import { h } from 'preact'
+
 const Button = ({ className, icon, iconTransitionClass = '', badge, onClick }) => (
   <button
     className={className}

@@ -1,4 +1,10 @@
-// import Controls from '../player/Controls.jsx'
+import { h, Component } from 'preact'
+import { connect } from 'preact-redux'
+
+import formatTime from '../../lib/formatTime'
+
+import Helmet from 'preact-helmet'
+
 import Queue from '../player/Queue.jsx'
 import Screen from '../player/Screen.jsx'
 
@@ -8,9 +14,7 @@ import InfoTime from '../player/controls/InfoTime.jsx'
 import InfoTitle from '../player/controls/InfoTitle.jsx'
 import InfoProgress from '../player/controls/InfoProgress.jsx'
 
-const { connect } = ReactRedux
-
-class Player extends React.Component {
+class Player extends Component {
   constructor(props) {
     super(props)
 
@@ -90,7 +94,7 @@ class Player extends React.Component {
       const currentTime = youtube.getCurrentTime()
 
       this.setState({ currentTime })
-      
+
       if(currentTime === duration) {
         clearInterval(timeWatcher)
       }
@@ -224,15 +228,16 @@ class Player extends React.Component {
     }
   }
 
-  render() {
+  render({ player, dispatch }, { isPlaying, isBuffering, isMuted, volume, loaded, currentTime, duration }) {
     const { handleWheelVolume, setVideoTime, togglePlay, goToVideo, onYoutubeIframeReady, onYoutubeIframeStateChange } = this
-    const { isPlaying, isBuffering, isMuted, volume, loaded, currentTime, duration } = this.state
-    const { player, dispatch } = this.props
     const { showQueue, showScreen, newQueueItems } = player
     const [ currentVideo ] = this.getCurrentVideo()
+    const documentTitle = ['Youtube Lite', '|', currentVideo.title, '-', formatTime(currentTime), '/', formatTime(duration)].join(' ')
 
     return (
       <div className='player__container'>
+        <Helmet title={documentTitle} />
+
         <Queue isPlaying={isPlaying} isBuffering={isBuffering} handleClickPlay={togglePlay} />
 
         <Screen

@@ -43,6 +43,7 @@
     "node-sass": "^4.3.0",
     "offline-plugin": "^4.8.3",
     "preact": "^8.2.5",
+    "preact-helmet": "^4.0.0-alpha-3",
     "preact-redux": "^2.0.2",
     "preact-router": "^2.5.7",
     "preact-waypoint": "^1.0.7",

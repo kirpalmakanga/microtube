@@ -1,10 +1,11 @@
+import { h, Component } from 'preact'
+import { connect } from 'preact-redux'
+
 import parseDuration from '../../lib/parseDuration'
 
 import QueueItem from './QueueItem.jsx'
 
-const { connect } = ReactRedux
-
-class Queue extends React.Component {
+class Queue extends Component {
   constructor(props) {
     super(props)
 
@@ -87,10 +88,8 @@ class Queue extends React.Component {
     }
   }
 
-  render() {
-    const { state, props, dragEnd, dragStart, dragOver } = this
-    const { queue } = state
-    const { player, isPlaying, isBuffering, handleClickPlay, dispatch } = props
+  render({ player, isPlaying, isBuffering, handleClickPlay, dispatch }, { queue }) {
+    const { dragEnd, dragStart, dragOver } = this
     const { showQueue } = player
 
     return (

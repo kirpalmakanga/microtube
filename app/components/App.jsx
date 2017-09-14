@@ -4,15 +4,14 @@ import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
 
 import Header from './header/HeaderContainer.jsx'
-// import Search from './containers/Search.jsx'
-// import Player from './containers/Player.jsx'
+import Search from './containers/Search.jsx'
+import Player from './containers/Player.jsx'
 // import Notifications from './Notifications.jsx'
 // import Prompt from './Prompt.jsx'
 
 import { refreshAccessToken } from '../actions/auth'
 
 class App extends Component {
-// const App = ({ children, location, auth }) => {
 
   refreshAuthToken() {
     const { auth, dispatch } = this.props
@@ -34,9 +33,7 @@ class App extends Component {
     requestToken()
   }
 
-  componentDidMount() {
-    this.refreshAuthToken()
-  }
+  componentDidMount = () => this.refreshAuthToken()
 
   render({ children, auth }) {
     return (
@@ -47,6 +44,9 @@ class App extends Component {
           {auth.token ? children : null}
         </main>
 
+        <Search />
+
+        <Player />
       </div>
     )
   }

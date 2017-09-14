@@ -16,15 +16,16 @@ class SearchForm extends Component {
   }
 
   handleSubmit = (e) => {
+    const { auth, dispatch } = this.props
     const query = e.target.querySelector('#search').value
     e.preventDefault()
 
-    this.props.dispatch(searchVideos(auth.token, query))
+    dispatch(searchVideos(auth.token, query))
   }
 
   render() {
     const { handleFocus, handleBlur, handleSubmit } = this
-    
+
     return (
       <form class='search-form' onSubmit={handleSubmit}>
         <div class='textfield'>

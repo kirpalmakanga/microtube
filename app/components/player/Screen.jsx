@@ -1,6 +1,7 @@
-import YoutubePlayer from 'react-youtube'
+import { h } from 'preact'
+import { connect } from 'preact-redux'
 
-const { connect } = ReactRedux
+import YoutubePlayer from '../YoutubePlayer.jsx'
 
 const Screen = ({ player, video, onReady, onEnd, onStateChange, dispatch }) => {
   const opts = {
@@ -16,16 +17,16 @@ const Screen = ({ player, video, onReady, onEnd, onStateChange, dispatch }) => {
 
   return (
     <div className={['screen shadow--2dp', player.showScreen ? 'screen--show': ''].join(' ')}>
-          {video ? (
-            <YoutubePlayer
-              className='screen__content'
-              videoId={video.videoId}
-              opts={opts}
-              onReady={onReady}
-              onEnd={onEnd}
-              onStateChange={onStateChange}
-            />
-          ) : null}
+        {video ? (
+          <YoutubePlayer
+            className='screen__content'
+            videoId={video.videoId}
+            opts={opts}
+            onReady={onReady}
+            onEnd={onEnd}
+            onStateChange={onStateChange}
+          />
+        ) : null}
     </div>
   )
 }

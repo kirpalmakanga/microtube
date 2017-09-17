@@ -92,13 +92,13 @@ class Queue extends Component {
     }
   }
 
-  removeItem = (e) => {
+  makeRemoveItem = (index) => (e) => {
     e.stopPropagation()
     this.props.dispatch({ type: 'QUEUE_REMOVE', data: index })
   }
 
   render({ player, isPlaying, isBuffering, handleClickPlay }, { queue }) {
-    const { dragEnd, dragStart, dragOver, makeSetActiveItem, removeItem } = this
+    const { dragEnd, dragStart, dragOver, makeSetActiveItem, makeRemoveItem } = this
     const { showQueue } = player
 
     return (
@@ -114,7 +114,7 @@ class Queue extends Component {
                 onDragStart={dragStart}
                 onDragEnd={dragEnd}
                 onClick={makeSetActiveItem(active, index)}
-                onClickRemove={removeItem}
+                onClickRemove={makeRemoveItem(index)}
               />
             ), this) : null}
         </div>

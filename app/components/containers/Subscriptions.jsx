@@ -1,35 +1,43 @@
-import Waypoint from 'react-waypoint'
+import { h, Component } from 'preact'
+import { connect } from 'preact-redux'
+import Waypoint from 'preact-waypoint'
 
 import { getSubscriptions } from '../../actions/database'
 import SubscriptionCard from '../cards/SubscriptionCard.jsx'
 
-const { connect } = ReactRedux
+class Subscriptions extends Component {
 
-const Subscriptions = ({ auth, subscriptions, dispatch }) => {
-  const nextPage = subscriptions.pages[subscriptions.pages.length - 1]
-  function loadMoreContent () {
-    dispatch(getSubscriptions(auth.token))
+  loadMoreContent = () => {
+    const { auth, subscriptions, dispatch } = this.props
+    const nextPage = subscriptions.pages[subscriptions.pages.length - 1]
+
+    this.props.dispatch(getSubscriptions(auth.token))
   }
 
-  function renderWaypoint() {
+  renderWaypoint = () => {
+    const { auth, subscriptions } = this.props
+
     if (auth.token && subscriptions.isLoading !== 2) {
-      return (<Waypoint onEnter={loadMoreContent} topOffset={1} />)
+      return (<Waypoint onEnter={this.loadMoreContent} topOffset={1} />)
     }
   }
-  return (
-    <div className='grid channels'>
-      {subscriptions.items.map((data, i) => (
-        <div key={i} className='grid__item'>
-          <SubscriptionCard {...data} />
-        </div>
-      ))}
 
-      <div className={['grid__loading', auth.token && subscriptions.isLoading === 1 ? 'is-active': ''].join(' ')}>
-        {renderWaypoint()}
-        <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
+  render ({ auth, subscriptions }) {
+    return (
+      <div class='grid channels'>
+        {subscriptions.items.map((data, i) => (
+          <div key={i} class='grid__item'>
+            <SubscriptionCard {...data} />
+          </div>
+        ))}
+
+        <div class={['grid__loading', auth.token && subscriptions.isLoading === 1 ? 'is-active': ''].join(' ')}>
+          {this.renderWaypoint()}
+          <svg class='rotating'><use xlinkHref='#icon-loading'></use></svg>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 

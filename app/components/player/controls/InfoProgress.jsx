@@ -1,3 +1,5 @@
+import { h } from 'preact'
+
 const formatPercent = (progress) => parseFloat((progress * 100) - 100).toFixed(2)
 
 const InfoProgress = ({ percentElapsed, percentLoaded}) => {

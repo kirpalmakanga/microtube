@@ -1,24 +1,24 @@
-import Waypoint from 'react-waypoint'
-import { Link } from 'react-router'
+import { h, Component } from 'preact'
+import { connect } from 'preact-redux'
+
+import Waypoint from 'preact-waypoint'
 
 import VideoCard from '../cards/VideoCard.jsx'
 
 import { getPlaylistTitle, getPlaylistItems } from '../../actions/database'
 
-const { connect } = ReactRedux
-
-class Playlist extends React.Component {
+class Playlist extends Component {
   componentWillMount() {
-    const { dispatch, auth, params } = this.props
-
-    dispatch(getPlaylistTitle(auth.token, params.id))
+    const { dispatch, auth, id } = this.props
+    
+    dispatch(getPlaylistTitle(auth.token, id))
   }
 
   loadMoreContent = () => {
-    const { dispatch, auth, params, playlistItems } = this.props
+    const { dispatch, auth, id, playlistItems } = this.props
     const nextPage = playlistItems.pages[playlistItems.pages.length - 1]
 
-    dispatch(getPlaylistItems(auth.token, params.id, nextPage))
+    dispatch(getPlaylistItems(auth.token, id, nextPage))
   }
 
   renderWaypoint = () => {
@@ -29,21 +29,18 @@ class Playlist extends React.Component {
     }
   }
 
-  render() {
-    const { props, renderWaypoint } = this
-    const { auth, playlistItems, dispatch } = props
-
+  render({ auth, playlistItems, dispatch }) {
     return (
-      <div className='grid'>
-        {playlistItems.items.map((video, i) => (
-          <div key={i} className='grid__item'>
-            <VideoCard video={video} />
+      <div class='grid'>
+        {playlistItems.items.map((data, i) => (
+          <div key={i} class='grid__item'>
+            <VideoCard {...data} />
           </div>
         ))}
 
-        <div className={['grid__loading', playlistItems.isLoading === 1 ? 'is-active': ''].join(' ')}>
-          {renderWaypoint()}
-          <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
+        <div class={['grid__loading', playlistItems.isLoading === 1 ? 'is-active': ''].join(' ')}>
+          {this.renderWaypoint()}
+          <svg class='rotating'><use xlinkHref='#icon-loading'></use></svg>
         </div>
       </div>
     )

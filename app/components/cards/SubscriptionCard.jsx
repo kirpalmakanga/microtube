@@ -1,12 +1,13 @@
-import { Link } from 'react-router'
-import { unsubscribe } from '../../actions/database'
+import { h } from 'preact'
+import { Link } from 'preact-router'
+import { connect } from 'preact-redux'
 
-const { connect } = ReactRedux
+import { unsubscribe } from '../../actions/database'
 
 const SubscriptionCard = ({ id, channelId, title, itemCount, dispatch }) => {
   return (
     <div className='card shadow--2dp'>
-      <Link className='card__content' to={'/channel/' + channelId}>
+      <Link className='card__content' href={'/channel/' + channelId}>
         <div className='card__text'>
           <h2 className='card__text-title'>{title}</h2>
           <p className='card__text-subtitle'>{itemCount + ' Video' + (itemCount !== 1 ? 's' : '')}</p>
@@ -16,6 +17,4 @@ const SubscriptionCard = ({ id, channelId, title, itemCount, dispatch }) => {
   )
 }
 
-const mapStateToProps = ({ auth, subscriptions }) => ({ auth, subscriptions })
-
-export default connect(mapStateToProps)(SubscriptionCard)
+export default connect()(SubscriptionCard)

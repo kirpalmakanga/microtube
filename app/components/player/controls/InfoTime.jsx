@@ -1,3 +1,5 @@
+import { h } from 'preact'
+
 import formatTime from '../../../lib/formatTime'
 
 const InfoTime = ({ currentTime, duration }) => {

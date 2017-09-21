@@ -1,12 +1,4 @@
 import { IndexRoute, Route } from 'react-router'
-import { refreshAccessToken } from './actions/auth'
-import { getAllPlaylists, getPlaylistItems, getSubscriptions } from './actions/database'
-
-import App from './components/App.jsx'
-import Playlists from './components/containers/Playlists.jsx'
-import Playlist from './components/containers/Playlist.jsx'
-import Subscriptions from './components/containers/Subscriptions.jsx'
-import Channel from './components/containers/Channel.jsx'
 
 export default function getRoutes({ getState, dispatch }) {
   function refreshToken() {

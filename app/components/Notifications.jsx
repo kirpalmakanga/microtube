@@ -9,8 +9,7 @@ class Notifications extends Component {
   }
 
   componentDidMount = () => {
-    this.setState({ show: true })
-    setTimeout(this.close, 3000)
+    this.setState({ show: true }, () => setTimeout(this.close, 3000))
   }
 
   close = () => {

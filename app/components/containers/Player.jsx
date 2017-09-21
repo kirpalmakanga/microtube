@@ -235,7 +235,7 @@ class Player extends Component {
     const documentTitle = ['Microtube', '|', currentVideo.title, '-', formatTime(currentTime), '/', formatTime(duration)].join(' ')
 
     return (
-      <div className='player__container'>
+      <div class='player__container'>
         <Helmet title={documentTitle} />
 
         <Queue isPlaying={isPlaying} isBuffering={isBuffering} handleClickPlay={togglePlay} />
@@ -247,8 +247,8 @@ class Player extends Component {
           onStateChange={onYoutubeIframeStateChange}
         />
 
-        <div className='player shadow--2dp'>
-          <div className='player__controls'>
+        <div class='player shadow--2dp'>
+          <div class='player__controls'>
             <Button className='player__controls-button icon-button' onClick={() => goToVideo(false)} icon='icon-skip-previous' />
 
             <Button
@@ -261,17 +261,17 @@ class Player extends Component {
             <Button className='player__controls-button icon-button' onClick={() => goToVideo(true)} icon='icon-skip-next' />
           </div>
 
-          <div className='player__info'>
+          <div class='player__info'>
             <InfoProgress percentElapsed={currentTime / duration} percentLoaded={loaded} />
 
             <InfoTitle title={currentVideo ? currentVideo.title : 'No Video.'} currentTime={currentTime} duration={duration} />
 
             <InfoTime currentTime={currentTime} duration={duration} />
 
-            <input className='player__info-progress-loaded' type='range' min='0' max={parseInt(duration)} onChange={setVideoTime} />
+            <input class='player__info-progress-loaded' type='range' min='0' max={parseInt(duration)} onChange={setVideoTime} />
           </div>
 
-          <div className='player__controls'>
+          <div class='player__controls'>
             <Button
               className={[
                 'player__controls-button badge icon-button',
@@ -289,7 +289,7 @@ class Player extends Component {
               icon='icon-film'
             />
 
-            <div className='player__controls-volume' onWheel={handleWheelVolume}>
+            <div class='player__controls-volume' onWheel={handleWheelVolume}>
               <Button
                 className='player__controls-button icon-button'
                 icon={

@@ -2,11 +2,11 @@ import { h } from 'preact'
 
 const Button = ({ className, icon, iconTransitionClass = '', badge, onClick }) => (
   <button
-    className={className}
+    class={className}
     onClick={onClick}
     data-badge={badge}
   >
-    <span className={['icon', iconTransitionClass].join(' ')}>
+    <span class={['icon', iconTransitionClass].join(' ')}>
       <svg><use xlinkHref={['#',icon].join('')}></use></svg>
     </span>
   </button>

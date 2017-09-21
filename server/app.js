@@ -45,25 +45,18 @@ const initialState = JSON.stringify({
   }
 })
 
-const routes = [
-  '/',
-  '/playlist/:id',
-  '/subscriptions',
-  '/channel/:id'
-]
-
 dotenv.load()
 
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
 app.set('partials', path.join(__dirname, 'views', 'partials'))
-app.set('port', process.env.NODE_ENV === 'production' ? process.env.PORT : 3000)
+app.set('port', process.env.PORT)
 app.use(compression())
 app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use('/static', express.static(path.join(__dirname, '../public')))
+app.use(express.static(path.join(__dirname, '../public')))
 
 if (process.env.NODE_ENV !== 'production') {
   app.use(require('webpack-dev-middleware')(compiler, {
@@ -78,10 +71,8 @@ app.post('/auth', userController.auth)
 app.post('/auth/refresh', userController.authRefresh)
 app.get('/auth/callback', userController.authCallback)
 
-routes.forEach((route) => {
-  app.get(route, (req, res) => {
-      res.render('layouts/main', { title: 'Microtube', initialState })
-  })
+app.use((req, res) => {
+  res.render('layouts/main', { title: 'Microtube', initialState })
 })
 
 app.listen(app.get('port'), () => console.log('Express listening on port ' + app.get('port')))

@@ -1,30 +1,37 @@
-const { connect } = ReactRedux
+import { h, Component } from 'preact'
+import { connect } from 'preact-redux'
 
-const Notifications = ({ notifications, dispatch }) => {
-  const close = ({ target }) => {
-    const notification = target.parentNode
+class Notifications extends Component {
+  close = () => {
+    const { container } = this
+    const { notifications, dispatch } = this.props
 
-    notification.classList.remove(notifications.className)
-
-    notification.addEventListener('transitionend', () => {
-      target.removeEventListener('transitionend', close)
+    const handler = () => {
+      container.removeEventListener('transitionend', handler)
 
       dispatch({ type: 'CLEAR_NOTIFICATIONS' })
-    })
+    }
+
+    container.classList.remove(notifications.className)
+
+    container.addEventListener('transitionend', handler)
   }
 
-  return (
-    <div className={['notification', notifications.className || ''].join(' ')}>
-      <div className='notification__content'>
-        <div className='notification__text'>{notifications.message || ''}</div>
-        <button className='notification__action icon-button' onClick={close} >
-          <span className='icon'>
-            <svg><use xlinkHref='#icon-close'></use></svg>
-          </span>
-        </button>
+  render({ notifications, dispatch }) {
+    const { close } = this
+    return (
+      <div class={['notification', notifications.className || ''].join(' ')} ref={(el) => this.container = el}>
+        <div class='notification__content'>
+          <div class='notification__text'>{notifications.message || ''}</div>
+          <button class='notification__action icon-button' onClick={close} >
+            <span class='icon'>
+              <svg><use xlinkHref='#icon-close'></use></svg>
+            </span>
+          </button>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 const mapStateToProps = ({ notifications }) => ({ notifications })

@@ -15,7 +15,7 @@ html
         meta(name='viewport' content='width=device-width, initial-scale=1')
 
         link(rel='manifest' href='/manifest.json')
-        link(rel='stylesheet' href='/app.css')
+        link(rel='stylesheet' href='/static/app.css')
         link(rel='preconnect' href='//cloudflare.com')
         link(rel='preconnect' href='//google.com')
         link(rel='dns-prefetch' href='//cloudflare.com')
@@ -41,9 +41,9 @@ html
         script.
             window.INITIAL_STATE = !{initialState}
 
-        script(src='/vendor.js')
+        script(src='/static/vendor.js')
           
-        script(src='/app.js')
+        script(src='/static/app.js')
 
         script.
           (function() {

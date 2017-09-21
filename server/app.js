@@ -56,7 +56,7 @@ app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieParser())
-app.use(express.static(path.join(__dirname, '../public')))
+app.use('/static', express.static(path.join(__dirname, '../public')))
 
 if (process.env.NODE_ENV !== 'production') {
   app.use(require('webpack-dev-middleware')(compiler, {
@@ -71,7 +71,7 @@ app.post('/auth', userController.auth)
 app.post('/auth/refresh', userController.authRefresh)
 app.get('/auth/callback', userController.authCallback)
 
-app.use('/*', (req, res) => {
+app.use((req, res) => {
   res.render('layouts/main', {
     title: 'Microtube',
     initialState

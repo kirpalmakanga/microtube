@@ -41,11 +41,11 @@ html
         script.
             window.INITIAL_STATE = !{initialState}
 
-        script(type='text/javascript' src='/vendor.js')
+        script(src='/vendor.js')
           
-        script(type='text/javascript' src='/app.js')
+        script(src='/app.js')
 
-        script(type='text/javascript').
+        script.
           (function() {
             if('serviceWorker' in navigator) {
               navigator.serviceWorker.register('/sw.js')

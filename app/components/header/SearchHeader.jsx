@@ -1,15 +1,16 @@
-import SearchForm from '../SearchForm.jsx'
+import { h } from 'preact'
+import { connect } from 'preact-redux'
 
-const { connect } = ReactRedux
+import SearchForm from '../SearchForm.jsx'
 
 const SearchHeader = ({ dispatch }) => {
   return (
-    <div className='layout__header-row'>
+    <div class='layout__header-row'>
       <button
-        className='layout__back-button icon-button'
+        class='layout__back-button icon-button'
         onClick={() => dispatch({ type: 'SEARCH_CLOSE' })}
       >
-        <span className='icon'>
+        <span class='icon'>
           <svg><use xlinkHref='#icon-back'></use></svg>
         </span>
       </button>

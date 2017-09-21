@@ -1,37 +1,45 @@
-import Waypoint from 'react-waypoint'
+import { h, Component } from 'preact'
+import { connect } from 'preact-redux'
+
+import Waypoint from 'preact-waypoint'
+
 import PlaylistCard from '../cards/PlaylistCard.jsx'
 
 import { getPlaylists } from '../../actions/database'
 
-const { connect } = ReactRedux
+class Playlists extends Component {
+  loadMoreContent = () => {
+    const { auth, playlists, dispatch } = this.props
+    const nextPage = playlists.pages[playlists.pages.length - 1]
 
-const Playlists = ({ auth, playlists, dispatch }) => {
-  const nextPage = playlists.pages[playlists.pages.length - 1]
-
-  function loadMoreContent () {
     dispatch(getPlaylists(auth.token, nextPage))
   }
 
-  function renderWaypoint() {
+  renderWaypoint = () => {
+    const { auth, playlists } = this.props
+
     if (auth.token && playlists.isLoading !== 2) {
-      return (<Waypoint onEnter={loadMoreContent} topOffset={1} />)
+      return (<Waypoint onEnter={this.loadMoreContent} topOffset={1} />)
     }
   }
 
-  return (
-    <div className='grid'>
-      {playlists.items.map((data, i) => (
-        <div key={i} className='grid__item'>
-          <PlaylistCard {...data} />
-        </div>
-      ))}
+  render({ auth, playlists }) {
 
-      <div className={['grid__loading', auth.token && playlists.isLoading === 1 ? 'is-active': ''].join(' ')}>
-        {renderWaypoint()}
-        <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
+    return (
+      <div class='grid'>
+        {playlists.items.map((data, i) => (
+          <div key={i} class='grid__item'>
+            <PlaylistCard {...data} />
+          </div>
+        ))}
+
+        <div class={['grid__loading', auth.token && playlists.isLoading === 1 ? 'is-active': ''].join(' ')}>
+          {this.renderWaypoint()}
+          <svg class='rotating'><use xlinkHref='#icon-loading'></use></svg>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 const mapStateToProps = ({ auth, playlists }) => ({ auth, playlists })

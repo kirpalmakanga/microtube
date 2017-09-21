@@ -1,6 +1,5 @@
 import url from 'url'
 import qs from 'querystring'
-import cookie from 'react-cookie'
 
 function oauth2(config, dispatch) {
   return new Promise((resolve, reject) => {
@@ -139,7 +138,7 @@ function signIn({ token, refresh, user, popup, interval, dispatch }) {
   return new Promise((resolve, reject) => {
     const refreshWatcher = setInterval(async () => {
       const token = await refreshAccessToken(refresh)
-      
+
       if (token) {
           dispatch({ type: 'OAUTH_REFRESH', data: { token } })
       }

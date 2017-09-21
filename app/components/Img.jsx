@@ -1,17 +1,12 @@
-class Img extends React.Component {
+import { h, Component } from 'preact'
+
+class Img extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       isLoaded: false
     }
-  }
-
-  componentDidMount() {
-    this.loadImage(this.props.src)
-    .then(() => {
-      this.setState({ isLoaded: true })
-    })
   }
 
   loadImage = (src) => new Promise((resolve, reject) => {
@@ -23,19 +18,26 @@ class Img extends React.Component {
     img.src = src
   })
 
-  render() {
-    const { isLoaded } = this.state
-    const { className, src, alt = 'image', background } = this.props
+  componentDidMount = async () => {
+    try {
+        await this.loadImage(this.props.src)
+        this.setState({ isLoaded: true })
+    } catch (e) {
+        console.error(e)
+    }
+  }
+
+  render({ src, alt = 'image', background }, { isLoaded }) {
     return (
-      <figure className={['image', isLoaded ? 'loaded' : ''].join(' ')}>
+      <figure class={['image', isLoaded ? 'loaded' : ''].join(' ')}>
         {background ? (
-          <div className='image-background' style={{ backgroundImage: `url(${src})`}}></div>
+          <div class='image-background' style={{ backgroundImage: `url(${src})`}}></div>
         ) : (
           <img src={src} alt={alt}></img>
         )}
 
-        <span className='image-loader'>
-          <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
+        <span class='image-loader'>
+          <svg class='rotating'><use xlinkHref='#icon-loading'></use></svg>
         </span>
       </figure>
     )

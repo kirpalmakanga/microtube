@@ -232,7 +232,7 @@ class Player extends Component {
     const { handleWheelVolume, setVideoTime, togglePlay, goToVideo, onYoutubeIframeReady, onYoutubeIframeStateChange } = this
     const { showQueue, showScreen, newQueueItems } = player
     const [ currentVideo ] = this.getCurrentVideo()
-    const documentTitle = ['Youtube Lite', '|', currentVideo.title, '-', formatTime(currentTime), '/', formatTime(duration)].join(' ')
+    const documentTitle = ['Microtube', '|', currentVideo.title, '-', formatTime(currentTime), '/', formatTime(duration)].join(' ')
 
     return (
       <div className='player__container'>

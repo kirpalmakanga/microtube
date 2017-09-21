@@ -7,7 +7,7 @@ import Header from './header/HeaderContainer.jsx'
 import Search from './containers/Search.jsx'
 import Player from './containers/Player.jsx'
 // import Notifications from './Notifications.jsx'
-// import Prompt from './Prompt.jsx'
+import Prompt from './Prompt.jsx'
 
 import { refreshAccessToken } from '../actions/auth'
 
@@ -47,6 +47,8 @@ class App extends Component {
         <Search />
 
         <Player />
+
+        <Prompt />
       </div>
     )
   }

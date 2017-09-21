@@ -35,7 +35,7 @@ class App extends Component {
 
   componentDidMount = () => this.refreshAuthToken()
 
-  render({ children, auth }) {
+  render({ children, auth, notifications }) {
     return (
       <div class='layout'>
         <Header path={location.pathname}/>
@@ -50,12 +50,12 @@ class App extends Component {
 
         <Prompt />
 
-        <Notifications />
+        {notifications.message ? (<Notifications />) : null}
       </div>
     )
   }
 }
 
-const mapStateToProps = (({ auth }) => ({ auth }))
+const mapStateToProps = (({ auth, notifications }) => ({ auth, notifications }))
 
 export default connect(mapStateToProps)(App)

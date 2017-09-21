@@ -45,6 +45,13 @@ const initialState = JSON.stringify({
   }
 })
 
+const routes = [
+  '/',
+  '/playlist/:id',
+  '/subscriptions',
+  '/channel/:id'
+]
+
 dotenv.load()
 
 app.set('view engine', 'pug')
@@ -71,10 +78,9 @@ app.post('/auth', userController.auth)
 app.post('/auth/refresh', userController.authRefresh)
 app.get('/auth/callback', userController.authCallback)
 
-app.use((req, res) => {
-  res.render('layouts/main', {
-    title: 'Microtube',
-    initialState
+routes.forEach((route) => {
+  app.get(route, (req, res) => {
+      res.render('layouts/main', { title: 'Microtube', initialState })
   })
 })
 

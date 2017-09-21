@@ -81,8 +81,8 @@ const config = {
   }
 }
 
-if (isDevelopmentMode) {
+// if (isDevelopmentMode) {
   config.devtool = 'cheap-module-eval-source-map'
-}
+// }
 
 module.exports = config

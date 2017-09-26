@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "light youtube player",
   "scripts": {
+    "postinstall": "npm run build",
     "start": "node server/app.js",
     "start:dev": "nodemon server/app.js --watch server --dev",
     "build": "webpack --progress -p --optimize-minimize",

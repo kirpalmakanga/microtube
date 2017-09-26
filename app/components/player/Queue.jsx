@@ -84,11 +84,11 @@ class Queue extends Component {
     this.props.dispatch({ type: 'QUEUE_SET', data: queue })
   }
 
-  makeSetActiveItem = (isActive, index) => () => {
-    if(!isActive) {
+  makeOnClickItem = (index, currentIndex) => () => {
+    if(index !== currentIndex) {
       this.props.dispatch({ type: 'QUEUE_SET_ACTIVE_ITEM', data: { index } })
     } else {
-      this.handleClickPlay()
+      this.props.togglePlay()
     }
   }
 
@@ -97,23 +97,23 @@ class Queue extends Component {
     this.props.dispatch({ type: 'QUEUE_REMOVE', data: index })
   }
 
-  render({ player, isPlaying, isBuffering, handleClickPlay }, { queue }) {
-    const { dragEnd, dragStart, dragOver, makeSetActiveItem, makeRemoveItem } = this
-    const { showQueue } = player
+  render({ player, isPlaying, isBuffering }, { queue }) {
+    const { dragEnd, dragStart, dragOver, makeOnClickItem, makeRemoveItem } = this
+    const { showQueue, currentIndex } = player
 
     return (
         <div className={['queue shadow--2dp', showQueue ? 'queue--show' : ''].join(' ')} onDragOver={dragOver} ref={el => this.container = el} >
-            {queue.length ? queue.map(({ active, title }, index) => (
+            {queue.length ? queue.map(({ title }, index) => (
               <QueueItem
                 key={index}
                 id={index}
                 title={title}
-                isActive={active}
+                isActive={index === currentIndex}
                 isBuffering={isBuffering}
                 isPlaying={isPlaying}
                 onDragStart={dragStart}
                 onDragEnd={dragEnd}
-                onClick={makeSetActiveItem(active, index)}
+                onClick={makeOnClickItem(index, currentIndex)}
                 onClickRemove={makeRemoveItem(index)}
               />
             ), this) : null}

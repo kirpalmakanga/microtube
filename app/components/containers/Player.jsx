@@ -11,7 +11,6 @@ import Screen from '../player/Screen.jsx'
 import Button from '../player/controls/Button.jsx'
 import VolumeRange from '../player/controls/VolumeRange.jsx'
 import InfoTime from '../player/controls/InfoTime.jsx'
-import InfoTitle from '../player/controls/InfoTitle.jsx'
 import InfoProgress from '../player/controls/InfoProgress.jsx'
 
 class Player extends Component {
@@ -32,7 +31,12 @@ class Player extends Component {
       youtube: null,
       autoplay: 0,
       timeWatcher: null,
-      loadingWatcher: null
+      loadingWatcher: null,
+      currentIndex: null,
+      currentVideo: {
+        title: 'No video.',
+        videoId: null
+      }
     }
   }
 
@@ -160,21 +164,20 @@ class Player extends Component {
   }
 
   getCurrentVideo() {
-    const { queue } = this.props.player
-    const currentIndex = queue.findIndex(item => item.active)
-    const video = queue[currentIndex]
+    const { queue, currentIndex } = this.props.player
 
-    return [video, currentIndex]
+    return queue[currentIndex] || {
+      title: 'No video.',
+      videoId: null
+    }
   }
 
   goToVideo = (next = true) => {
-    const { queue } = this.props.player
+    const { queue, currentIndex } = this.props.player
 
-    const [video, index] = this.getCurrentVideo()
+    const newIndex = currentIndex + (next ? 1 : -1)
 
-    const newIndex = index + (next ? 1 : -1)
-
-    if(!video || newIndex < 0 || newIndex > queue.length - 1) {
+    if(newIndex < 0 || newIndex > queue.length - 1) {
       return
     }
 
@@ -230,22 +233,32 @@ class Player extends Component {
 
   render({ player, dispatch }, { isPlaying, isBuffering, isMuted, volume, loaded, currentTime, duration }) {
     const { handleWheelVolume, setVideoTime, togglePlay, goToVideo, onYoutubeIframeReady, onYoutubeIframeStateChange } = this
+    const currentVideo = this.getCurrentVideo()
     const { showQueue, showScreen, newQueueItems } = player
-    const [ currentVideo ] = this.getCurrentVideo()
-    const documentTitle = ['Microtube', '|', currentVideo.title, '-', formatTime(currentTime), '/', formatTime(duration)].join(' ')
+    const documentTitle = [
+      'Microtube',
+      '|',
+      currentVideo.title,
+      '-',
+      formatTime(currentTime),
+      '/',
+      formatTime(duration)
+    ].join(' ')
 
     return (
       <div class='player__container'>
         <Helmet title={documentTitle} />
 
-        <Queue isPlaying={isPlaying} isBuffering={isBuffering} handleClickPlay={togglePlay} />
+        <Queue isPlaying={isPlaying} isBuffering={isBuffering} togglePlay={togglePlay} />
 
-        <Screen
-          video={currentVideo}
-          onReady={onYoutubeIframeReady}
-          onEnd={goToVideo}
-          onStateChange={onYoutubeIframeStateChange}
-        />
+        <div className={['screen shadow--2dp', player.showScreen ? 'screen--show': ''].join(' ')}>
+          <Screen
+            videoId={currentVideo.videoId}
+            onReady={onYoutubeIframeReady}
+            onEnd={goToVideo}
+            onStateChange={onYoutubeIframeStateChange}
+          />
+        </div>
 
         <div class='player shadow--2dp'>
           <div class='player__controls'>
@@ -264,7 +277,7 @@ class Player extends Component {
           <div class='player__info'>
             <InfoProgress percentElapsed={currentTime / duration} percentLoaded={loaded} />
 
-            <InfoTitle title={currentVideo ? currentVideo.title : 'No Video.'} currentTime={currentTime} duration={duration} />
+            <div className='player__info-title'>{currentVideo.title}</div>
 
             <InfoTime currentTime={currentTime} duration={duration} />
 

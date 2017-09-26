@@ -1,5 +1,4 @@
-import { h } from 'preact'
-import { connect } from 'preact-redux'
+import { h, Component } from 'preact'
 
 import YoutubePlayer from '../YoutubePlayer.jsx'
 
@@ -14,21 +13,15 @@ const playerOptions = {
   }
 }
 
-const Screen = ({ player, video, onReady, onEnd, onStateChange, dispatch }) => (
-  <div className={['screen shadow--2dp', player.showScreen ? 'screen--show': ''].join(' ')}>
-      {video ? (
-        <YoutubePlayer
-          className='screen__content'
-          videoId={video.videoId}
-          opts={playerOptions}
-          onReady={onReady}
-          onEnd={onEnd}
-          onStateChange={onStateChange}
-        />
-      ) : null}
-  </div>
+const Screen = ({ videoId, onReady, onEnd, onStateChange }) => (
+  <YoutubePlayer
+    className='screen__content'
+    videoId={videoId}
+    opts={playerOptions}
+    onReady={onReady}
+    onEnd={onEnd}
+    onStateChange={onStateChange}
+  />
 )
 
-const mapStateToProps = ({ player }) => ({ player })
-
-export default connect(mapStateToProps)(Screen)
+export default Screen

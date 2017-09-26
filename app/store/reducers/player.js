@@ -1,5 +1,6 @@
 const initialState = {
   queue: [],
+  currentIndex: -1,
   showQueue: false,
   showScreen: false,
   volume: 100,
@@ -61,7 +62,7 @@ export default function (state = initialState, { type, data }) {
       }
 
     case 'QUEUE_SET_ACTIVE_ITEM':
-      const { queue } = state
+      let { queue } = state
       let { video, index } = data
 
       if (video) {
@@ -71,7 +72,8 @@ export default function (state = initialState, { type, data }) {
 
       return {
         ...state,
-        queue: queue.map((v, i) => ({ ...v, active: i === index ? true : false }))
+        currentIndex: index,
+        queue
       }
 
     case 'SET_VOLUME':

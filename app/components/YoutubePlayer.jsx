@@ -135,14 +135,14 @@ class YouTube extends Component {
   }
 
   updateVideo = () => {
+    const { videoId, opts } = this.props
+    const newOpts = { videoId }
+    let autoplay = false
+
     if (typeof videoId === 'undefined' || videoId === null) {
       this.internalPlayer.stopVideo()
       return
     }
-
-    const { videoId, opts } = this.props
-    const newOpts = { videoId }
-    let autoplay = false
 
     if ('playerVars' in opts) {
       autoplay = opts.playerVars.autoplay === 1

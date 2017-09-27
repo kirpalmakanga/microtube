@@ -1,8 +1,7 @@
+import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 import persistState from 'redux-localstorage'
 import rootReducer from './reducers'
-
-const { applyMiddleware, compose, createStore } = Redux
 
 const enhancer = compose(
    applyMiddleware(thunk),

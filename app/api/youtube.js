@@ -96,7 +96,7 @@ class Api {
 
     const { title } = items[0].snippet
 
-    return { title }
+    return title
   }
 
   getPlaylistItems = async (accessToken, playlistId, pageToken = '') => {
@@ -180,6 +180,18 @@ class Api {
         nextPageToken,
         totalResults: pageInfo.totalResults
       }
+  }
+
+  getChannelTitle = async (accessToken, id) => {
+    const { items } = await this.list('channels', {
+      id,
+      access_token: accessToken,
+      part: 'snippet'
+    })
+
+    const { title } = items[0].snippet
+
+    return title
   }
 
   getChannelVideos = async (accessToken, channelId, pageToken) => {

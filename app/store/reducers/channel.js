@@ -6,7 +6,6 @@ const initialState = {
 }
 
 export default function (state = initialState, { type, data }) {
-  console.log(type, data)
   switch (type) {
     case 'GET_CHANNEL_VIDEOS':
       return { ...state, isLoading: 1 }

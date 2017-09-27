@@ -8,23 +8,24 @@ import PlaylistCard from '../cards/PlaylistCard.jsx'
 import { getPlaylists } from '../../actions/database'
 
 class Playlists extends Component {
+  componentDidMount() {
+    this.forceUpdate()
+  }
+
   loadMoreContent = () => {
     const { auth, playlists, dispatch } = this.props
     const nextPage = playlists.pages[playlists.pages.length - 1]
 
-    dispatch(getPlaylists(auth.token, nextPage))
-  }
-
-  renderWaypoint = () => {
-    const { auth, playlists } = this.props
-
     if (auth.token && playlists.isLoading !== 2) {
-      return (<Waypoint onEnter={this.loadMoreContent} topOffset={1} />)
+      dispatch(getPlaylists(auth.token, nextPage))
     }
   }
 
-  render({ auth, playlists }) {
+  renderWaypoint() {
+    return this.base ? (<Waypoint container={this.base} onEnter={this.loadMoreContent} />) : null
+  }
 
+  render({ auth, playlists }) {
     return (
       <div class='grid'>
         {playlists.items.map((data, i) => (

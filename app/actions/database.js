@@ -38,9 +38,9 @@ export function getPlaylists (accessToken, pageToken) {
 export function getPlaylistTitle (accessToken, playlistId) {
   return async (dispatch) => {
     try {
-      const data = await api.getPlaylistTitle(accessToken, [playlistId])
+      const title = await api.getPlaylistTitle(accessToken, [playlistId])
 
-      dispatch({ type: 'GET_PLAYLIST_TITLE', data })
+      dispatch({ type: 'SET_PLAYLIST_TITLE', data: { title } })
     } catch (err) {
       dispatch({ type: 'NOTIFY', data: 'Error fetching playlist title.' })
     }
@@ -166,6 +166,18 @@ export function getSubscriptions (accessToken, pageToken) {
 //     .catch(err => dispatch({ type: 'NOTIFY', data: err }))
 //   }
 // }
+
+export function getChannelTitle (accessToken, channelId) {
+  return async (dispatch) => {
+    try {
+      const title = await api.getChannelTitle(accessToken, [channelId])
+
+      dispatch({ type: 'SET_CHANNEL_TITLE', data: { title } })
+    } catch (err) {
+      dispatch({ type: 'NOTIFY', data: 'Error fetching channel title.' })
+    }
+  }
+}
 
 export function getChannelVideos (accessToken, channelId, pageToken) {
   return async (dispatch) => {

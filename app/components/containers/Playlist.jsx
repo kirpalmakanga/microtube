@@ -5,28 +5,24 @@ import Waypoint from 'preact-waypoint'
 
 import VideoCard from '../cards/VideoCard.jsx'
 
-import { getPlaylistTitle, getPlaylistItems } from '../../actions/database'
+import { getPlaylistItems } from '../../actions/database'
 
 class Playlist extends Component {
-  componentWillMount() {
-    const { dispatch, auth, id } = this.props
-    
-    dispatch(getPlaylistTitle(auth.token, id))
+  componentDidMount() {
+    this.forceUpdate()
   }
 
   loadMoreContent = () => {
     const { dispatch, auth, id, playlistItems } = this.props
     const nextPage = playlistItems.pages[playlistItems.pages.length - 1]
 
-    dispatch(getPlaylistItems(auth.token, id, nextPage))
+    if (auth.token && playlistItems.isLoading !== 2) {
+      dispatch(getPlaylistItems(auth.token, id, nextPage))
+    }
   }
 
-  renderWaypoint = () => {
-    const { auth, playlistItems } = this.props
-
-    if (auth.token && playlistItems.isLoading !== 2) {
-      return (<Waypoint onEnter={this.loadMoreContent} topOffset={1} />)
-    }
+  renderWaypoint() {
+    return this.base ? (<Waypoint container={this.base} onEnter={this.loadMoreContent} />) : null
   }
 
   render({ auth, playlistItems, dispatch }) {

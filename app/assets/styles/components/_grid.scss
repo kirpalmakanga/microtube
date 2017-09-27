@@ -3,7 +3,7 @@ $gutter: 16px;
 .grid {
   position: relative;
   height: calc(100vh - 56px - 100px);
-  overflow-y: auto;
+  overflow-y: scroll;
 
   @media screen and (min-width: 480px) {
     height: calc(100vh - 56px - 50px);

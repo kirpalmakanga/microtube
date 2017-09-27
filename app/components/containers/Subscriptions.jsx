@@ -6,19 +6,20 @@ import { getSubscriptions } from '../../actions/database'
 import SubscriptionCard from '../cards/SubscriptionCard.jsx'
 
 class Subscriptions extends Component {
+  componentDidMount() {
+    this.forceUpdate()
+  }
+
+  componentWillDestroy() {
+    this.props.dispatch({ type: 'CLEAR_SUBSCRIPTIONS' })
+  }
 
   loadMoreContent = () => {
     const { auth, subscriptions, dispatch } = this.props
     const nextPage = subscriptions.pages[subscriptions.pages.length - 1]
 
-    this.props.dispatch(getSubscriptions(auth.token))
-  }
-
-  renderWaypoint = () => {
-    const { auth, subscriptions } = this.props
-
     if (auth.token && subscriptions.isLoading !== 2) {
-      return (<Waypoint onEnter={this.loadMoreContent} topOffset={1} />)
+      this.props.dispatch(getSubscriptions(auth.token, nextPage))
     }
   }
 
@@ -32,7 +33,7 @@ class Subscriptions extends Component {
         ))}
 
         <div class={['grid__loading', auth.token && subscriptions.isLoading === 1 ? 'is-active': ''].join(' ')}>
-          {this.renderWaypoint()}
+          {this.base ? (<Waypoint container={this.base} onEnter={this.loadMoreContent} />) : null}
           <svg class='rotating'><use xlinkHref='#icon-loading'></use></svg>
         </div>
       </div>

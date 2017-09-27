@@ -7,19 +7,21 @@ import VideoCard from '../cards/VideoCard.jsx'
 import { getChannelVideos } from '../../actions/database'
 
 class Channel extends Component {
+  componentDidMount() {
+    this.forceUpdate()
+  }
+
   loadMoreContent = () => {
     const { auth, channel, id, dispatch } = this.props
     const nextPage = channel.pages[channel.pages.length - 1] || ''
 
-    dispatch(getChannelVideos(auth.token, id, nextPage))
+    if (auth.token && channel.isLoading !== 2) {
+      dispatch(getChannelVideos(auth.token, id, nextPage))
+    }
   }
 
-  renderWaypoint = () => {
-    const { auth, channel } = this.props
-
-    if (auth.token && channel.isLoading !== 2) {
-      return (<Waypoint onEnter={this.loadMoreContent} topOffset={1} />)
-    }
+  renderWaypoint() {
+      return this.base ? (<Waypoint container={this.base} onEnter={this.loadMoreContent} />) : null
   }
 
   render ({ auth, channel }) {

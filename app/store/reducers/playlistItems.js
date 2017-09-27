@@ -1,5 +1,4 @@
 const initialState = {
-  playlistTitle: '',
   items: [],
   pages: [],
   isLoading: 0,
@@ -11,10 +10,6 @@ export default function (state = initialState, { type, data }) {
     case 'PLAYLIST_OPEN':
       const { playlistTitle } = data
       return { ...state, playlistTitle }
-
-    case 'GET_PLAYLIST_TITLE':
-      const { title } = data
-      return { ...state, playlistTitle: title }
 
     case 'GET_PLAYLIST':
       return { ...state, isLoading: 1 }

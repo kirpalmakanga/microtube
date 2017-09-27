@@ -3,6 +3,7 @@ import { connect } from 'preact-redux'
 import { Link } from 'preact-router/match'
 import { logIn } from '../../actions/auth'
 import { getVideo } from '../../actions/database'
+import api from '../../api/youtube'
 
 
 import SearchHeader from './SearchHeader.jsx'
@@ -10,6 +11,35 @@ import QueueHeader from './QueueHeader.jsx'
 import SearchForm from '../SearchForm.jsx'
 
 class Header extends Component {
+  constructor(props) {
+      super(props)
+
+      this.state = {
+        title: 'MicroTube'
+      }
+  }
+
+  componentWillReceiveProps = async ({ path }) => {
+    const { auth } = this.props
+    let title
+
+    if (path.includes('/subscriptions')) {
+      title = 'Subscriptions'
+    }
+
+    if (path.includes('/channel')) {
+      title = await api.getChannelTitle(auth.token, path.slice(1).split('/')[1])
+
+      console.log('title', title)
+    }
+
+    if (path.includes('/playlist')) {
+      title = await api.getPlaylistTitle(auth.token, path.slice(1).split('/')[1])
+    }
+
+    this.setState({ title })
+  }
+
   openSearchForm = () => {
     const { dispatch } = this.props
 
@@ -33,7 +63,7 @@ class Header extends Component {
     dispatch(logIn())
   }
 
-  render ({ auth, playlistItems, player, search, path, dispatch }) {
+  render ({ auth, playlistItems, player, search, path, dispatch }, { title }) {
     return (
       <header class='layout__header shadow--2dp'>
         {player.showQueue ? (
@@ -50,7 +80,7 @@ class Header extends Component {
               </Link>
             ) : null}
 
-            <span class='layout-title'>{playlistItems.playlistTitle || 'MicroTube'}</span>
+            <span class='layout-title'>{title}</span>
 
             <nav class='navigation'>
               <button

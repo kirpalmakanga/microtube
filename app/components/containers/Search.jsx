@@ -20,12 +20,6 @@ class Search extends Component {
     dispatch(searchVideos(auth.token, search.query, this.getNextPage()))
   }
 
-  renderWaypoint = () => {
-    if (this.getNextPage() && this.props.search.isLoading !== 2) {
-      return (<Waypoint onEnter={this.loadMoreContent}/>)
-    }
-  }
-
   render({ auth, search }) {
     return (
       <div className={['search', search.isOpen ? 'search--show': '', 'shadow--2dp'].join(' ')}>
@@ -37,7 +31,7 @@ class Search extends Component {
           ))}
 
           <div className={['grid__loading', search.isLoading === 1 ? 'is-active': ''].join(' ')}>
-            {this.renderWaypoint()}
+            {this.container ? (<Waypoint container={this.container} onEnter={this.loadMoreContent} />) : null}
             <svg className='rotating'><use xlinkHref='#icon-loading'></use></svg>
           </div>
         </div>

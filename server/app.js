@@ -1,3 +1,4 @@
+const fs = require('fs')
 const express = require('express')
 const path = require('path')
 const compression = require('compression')
@@ -6,6 +7,7 @@ const bodyParser = require('body-parser')
 const logger = require('morgan')
 const dotenv = require('dotenv')
 const argv = require('yargs').argv
+const pug = require('pug')
 
 const webpack = require('webpack')
 const webpackConfig = require('../webpack.config')
@@ -45,7 +47,12 @@ const initialState = JSON.stringify({
   }
 })
 
+const offlinePageHTML = pug.renderFile(path.join(__dirname, 'views', 'layouts', 'main.pug'), { title: 'MicroTube', initialState })
+
 dotenv.load()
+
+console.log(path.join(__dirname, '../public', 'appcache'))
+fs.writeFileSync(path.join(__dirname, '../public', 'appcache', 'offline.html'), offlinePageHTML)
 
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
@@ -79,7 +86,7 @@ app.post('/auth/refresh', userController.authRefresh)
 app.get('/auth/callback', userController.authCallback)
 
 app.use((req, res) => {
-  res.render('layouts/main', { title: 'Microtube', initialState })
+  res.render('layouts/main', { title: 'MicroTube', initialState })
 })
 
 app.listen(app.get('port'), () => console.log('Express listening on port ' + app.get('port')))

@@ -52,7 +52,11 @@ const config = {
         filename: 'app.css',
         allChunks: true
     }),
-    new OfflinePlugin()
+    new OfflinePlugin({
+      AppCache: {
+        FALLBACK: { '/': '/offline.html' }
+      }
+    })
   ],
   module: {
     loaders: [

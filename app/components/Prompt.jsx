@@ -46,7 +46,7 @@ class Prompt extends Component {
               <div class='textfield' >
                 <label for='videoId'>Video URL or ID</label>
                 <input
-                  name='videoId'
+                  id='videoId'
                   class='textfield__input'
                   type='text'
                   autoFocus

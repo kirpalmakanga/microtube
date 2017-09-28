@@ -282,7 +282,7 @@ class Player extends Component {
 
             <InfoTime currentTime={currentTime} duration={duration} />
 
-            <label for='seek-time'>Seek time</label>
+            <label class='sr-only' for='seek-time'>Seek time</label>
             <input id='seek-time' class='player__info-progress-loaded' type='range' min='0' max={parseInt(duration)} onChange={setVideoTime} />
           </div>
 

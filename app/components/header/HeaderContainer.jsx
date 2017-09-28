@@ -10,18 +10,20 @@ import SearchHeader from './SearchHeader.jsx'
 import QueueHeader from './QueueHeader.jsx'
 import SearchForm from '../SearchForm.jsx'
 
+const initialState = {
+  title: 'MicroTube'
+}
+
 class Header extends Component {
   constructor(props) {
       super(props)
 
-      this.state = {
-        title: 'MicroTube'
-      }
+      this.state = initialState
   }
 
   componentWillReceiveProps = async ({ path }) => {
     const { auth } = this.props
-    let title
+    let { title } = initialState
 
     if (path.includes('/subscriptions')) {
       title = 'Subscriptions'

@@ -11,16 +11,11 @@ import Playlist from './components/containers/Playlist.jsx'
 import Subscriptions from './components/containers/Subscriptions.jsx'
 import Channel from './components/containers/Channel.jsx'
 
-const store = configureStore(window.INITIAL_STATE)
-
-OfflinePluginRuntime.install()
-
-/*
-  <Route  component={Playlist} onLeave={() => dispatch({type: 'CLEAR_PLAYLIST_ITEMS'})}/>
-  <Route component={Channel} onLeave={() => dispatch({type: 'CLEAR_CHANNEL_VIDEOS'})}/>
-*/
-
 (() => {
+  const store = configureStore(window.INITIAL_STATE)
+
+  OfflinePluginRuntime.install()
+
   render(
     <Provider store={store}>
       <App>

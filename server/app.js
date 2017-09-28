@@ -64,6 +64,13 @@ if (process.env.NODE_ENV !== 'production') {
     publicPath: webpackConfig.output.publicPath
   }))
   app.use(require('webpack-hot-middleware')(compiler))
+} else {
+  app.use(({ headers, url, get }, { redirect }, next) => {
+    if (headers['x-forwarded-proto'] !== 'https') {
+        return redirect(`https://${get('Host')}${url}`)
+    }
+    next()
+ })
 }
 
 //Routes

@@ -14,6 +14,7 @@ const VideoCard = ({ videoId, title, thumbnails, publishedAt, duration, channelT
     <div class='card shadow--2dp'>
       <div
         class='card__content'
+        aria-label=`Play video ${title}`
         onClick={() => dispatch({
           type: 'QUEUE_SET_ACTIVE_ITEM',
           data: { video }
@@ -32,6 +33,7 @@ const VideoCard = ({ videoId, title, thumbnails, publishedAt, duration, channelT
       <div class='card__buttons'>
         <button
           class='card__button icon-button'
+          aria-label=`Queue video ${title}`
           onClick={() => dispatch({ type: 'QUEUE_PUSH', data: [video] })}
         >
           <span class='icon'>

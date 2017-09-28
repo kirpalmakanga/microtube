@@ -10,7 +10,11 @@ import Img from '../Img.jsx'
 const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch }) => {
   return (
     <div class='card shadow--2dp'>
-      <Link class='card__content' href={'/playlist/' + id} onClick={() => dispatch({ type: 'PLAYLIST_OPEN', data: title })}>
+      <Link
+        class='card__content' href={'/playlist/' + id}
+        onClick={() => dispatch({ type: 'PLAYLIST_OPEN', data: title })}
+        aria-label={title}
+      >
         <Img src={getThumbnails(thumbnails)} background/>
 
         <div class='card__text'>
@@ -23,6 +27,7 @@ const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch
         <button
           class='card__button icon-button'
           type='button'
+          name='Queue playlist'
           onClick={() => dispatch(queuePlaylist({
             token: auth.token,
             playlistId: id
@@ -36,6 +41,7 @@ const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch
         <button
           class='card__button icon-button'
           type='button'
+          aria-label='Queue and play playlist'
           onClick={() => dispatch(queuePlaylist({
             token: auth.token,
             playlistId: id,

@@ -232,7 +232,7 @@ class Player extends Component {
   }
 
   render({ player, dispatch }, { isPlaying, isBuffering, isMuted, volume, loaded, currentTime, duration }) {
-    const { handleWheelVolume, setVideoTime, togglePlay, goToVideo, onYoutubeIframeReady, onYoutubeIframeStateChange } = this
+    const { handleWheelVolume, setVideoTime, toggleMute, togglePlay, goToVideo, onYoutubeIframeReady, onYoutubeIframeStateChange } = this
     const currentVideo = this.getCurrentVideo()
     const { showQueue, showScreen, newQueueItems } = player
     const documentTitle = [

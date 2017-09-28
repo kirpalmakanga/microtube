@@ -262,16 +262,17 @@ class Player extends Component {
 
         <div class='player shadow--2dp'>
           <div class='player__controls'>
-            <Button className='player__controls-button icon-button' onClick={() => goToVideo(false)} icon='icon-skip-previous' />
+            <Button className='player__controls-button icon-button' onClick={() => goToVideo(false)} icon='icon-skip-previous' ariaLabel='Go to previous video' />
 
             <Button
               className='player__controls-button icon-button'
               onClick={togglePlay}
               icon={isBuffering ? 'icon-loading' : isPlaying ? 'icon-pause' : 'icon-play' }
               iconTransitionClass={isBuffering ? 'rotating': ''}
+              ariaLabel={isPlaying ? 'Pause video' : 'Play video'}
             />
 
-            <Button className='player__controls-button icon-button' onClick={() => goToVideo(true)} icon='icon-skip-next' />
+            <Button className='player__controls-button icon-button' onClick={() => goToVideo(true)} icon='icon-skip-next' ariaLabel='Go to next video' />
           </div>
 
           <div class='player__info'>
@@ -294,17 +295,20 @@ class Player extends Component {
               onClick={() => dispatch({ type: showQueue ? 'QUEUE_CLOSE' : 'QUEUE_OPEN' })}
               badge={newQueueItems}
               icon='icon-list'
+              ariaLabel={showQueue ? 'Close queue' : 'Open queue'}
             />
 
             <Button
               className={['player__controls-button icon-button', showScreen ? 'is-active' : ''].join(' ')}
               onClick={() => dispatch({ type: showScreen ? 'SCREEN_CLOSE' : 'SCREEN_OPEN' })}
               icon='icon-film'
+              ariaLabel={showScreen ? 'Close screen' : 'open screen'}
             />
 
             <div class='player__controls-volume' onWheel={handleWheelVolume}>
               <Button
                 className='player__controls-button icon-button'
+                onClick={toggleMute}
                 icon={
                 isMuted ?
                   'icon-volume-mute'
@@ -315,6 +319,7 @@ class Player extends Component {
                 :
                   'icon-volume-off'
                 }
+                ariaLabel={isMuted ? 'Unmute' : 'Mute'}
               />
 
               <VolumeRange value={volume} onChange={({ target }) => setVolume(target.value)} />

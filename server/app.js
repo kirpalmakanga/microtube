@@ -65,9 +65,9 @@ if (process.env.NODE_ENV !== 'production') {
   }))
   app.use(require('webpack-hot-middleware')(compiler))
 } else {
-  app.use(({ headers, url, get }, { redirect }, next) => {
-    if (headers['x-forwarded-proto'] !== 'https') {
-        return redirect(`https://${get('Host')}${url}`)
+  app.use((req, res, next) => {
+    if (req.headers['x-forwarded-proto'] !== 'https') {
+        return res.redirect(`https://${req.get('Host')}${req.url}`)
     }
     next()
  })

@@ -75,7 +75,7 @@ class Header extends Component {
         ) : (
           <div class='layout__header-row'>
             {!path === '/' ? (
-              <Link class='layout__back-button icon-button' href='/'>
+              <Link class='layout__back-button icon-button' href='/' aria-label='Go to homepage'>
                 <span class='icon'>
                   <svg><use xlinkHref='#icon-back'></use></svg>
                 </span>
@@ -87,6 +87,7 @@ class Header extends Component {
             <nav class='navigation'>
               <button
                 class='navigation__link icon-button'
+                aria-label='Open search'
                 onClick={this.openSearchForm}
               >
                 <span class='icon'>
@@ -94,13 +95,13 @@ class Header extends Component {
                 </span>
               </button>
 
-              <Link class='navigation__link icon-button' href='/subscriptions'>
+              <Link class='navigation__link icon-button' href='/subscriptions' aria-label='Open subscriptions'>
                 <span class='icon'>
                   <svg><use xlinkHref='#icon-subscriptions'></use></svg>
                 </span>
               </Link>
 
-              <button class='navigation__link icon-button' onClick={this.handleConnection}>
+              <button class='navigation__link icon-button' onClick={this.handleConnection} aria-label={auth.token ? 'Log in' : 'Log out'}>
                 {auth.token ? (
                   <img src={auth.user.picture} />
                 ) : (

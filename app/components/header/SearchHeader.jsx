@@ -9,6 +9,7 @@ const SearchHeader = ({ dispatch }) => {
       <button
         class='layout__back-button icon-button'
         onClick={() => dispatch({ type: 'SEARCH_CLOSE' })}
+        aria-label='Close search'
       >
         <span class='icon'>
           <svg><use xlinkHref='#icon-back'></use></svg>

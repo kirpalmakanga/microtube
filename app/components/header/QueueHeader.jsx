@@ -6,6 +6,7 @@ const SearchHeader = ({ player, dispatch }) => {
     <div class='layout__header-row'>
       <button
         class='layout__back-button icon-button'
+        aria-label='Close queue'
         onClick={() => dispatch({ type: 'QUEUE_CLOSE' })}
       >
         <span class='icon'>
@@ -16,37 +17,45 @@ const SearchHeader = ({ player, dispatch }) => {
       <span class='layout-title'>{'Queue (' + player.queue.length + ' Items)'}</span>
 
       <nav class='navigation'>
-        <button class='navigation__link icon-button' onClick={() => {
-          dispatch({
-            type: 'PROMPT',
-            data: {
-              promptText: 'Ajouter une vidéo',
-              confirmText: 'Ajouter',
-              form: true,
-              callback: () => {
-                dispatch({ type: 'PROMPT_CLOSE' })
+        <button
+          class='navigation__link icon-button'
+          onClick={() => {
+            dispatch({
+              type: 'PROMPT',
+              data: {
+                promptText: 'Ajouter une vidéo',
+                confirmText: 'Ajouter',
+                form: true,
+                callback: () => {
+                  dispatch({ type: 'PROMPT_CLOSE' })
+                }
               }
-            }
-          })
-        }}>
+            })
+          }}
+          aria-label='Add video'
+        >
           <span class='icon'>
             <svg><use xlinkHref='#icon-add'></use></svg>
           </span>
         </button>
 
-        <button class='navigation__link icon-button' onClick={() => {
-          dispatch({
-            type: 'PROMPT',
-            data: {
-              promptText: 'Vider la file d\'attente ?',
-              confirmText: 'Vider',
-              callback: () => {
-                dispatch({ type: 'QUEUE_CLEAR' })
-                dispatch({ type: 'PROMPT_CLOSE' })
+        <button
+          class='navigation__link icon-button'
+          onClick={() => {
+            dispatch({
+              type: 'PROMPT',
+              data: {
+                promptText: 'Vider la file d\'attente ?',
+                confirmText: 'Vider',
+                callback: () => {
+                  dispatch({ type: 'QUEUE_CLEAR' })
+                  dispatch({ type: 'PROMPT_CLOSE' })
+                }
               }
-            }
-          })
-        }}>
+            })
+          }}
+          aria-label='Clear queue'
+        >
           <span class='icon'>
             <svg><use xlinkHref='#icon-clear'></use></svg>
           </span>

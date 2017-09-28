@@ -29,8 +29,10 @@ class SearchForm extends Component {
     return (
       <form class='search-form' onSubmit={handleSubmit}>
         <div class='textfield'>
+          <label class='sr-only' for='search'>Search</label>
           <input
             autoFocus
+            name='search'
             class='textfield__input'
             id='search'
             type='text'

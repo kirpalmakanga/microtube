@@ -18,7 +18,7 @@ class Prompt extends Component {
 
   handleSubmit = (e) => {
     const { auth, dispatch } = this.props
-    const videoId = e.target.querySelector('#videoId').value
+    const videoId = e.target.querySelector('input').value
 
     e.preventDefault()
 
@@ -44,12 +44,13 @@ class Prompt extends Component {
           {form ? (
             <form onSubmit={handleSubmit}>
               <div class='textfield' >
+                <label for='videoId'>Video URL or ID</label>
                 <input
+                  name='videoId'
                   class='textfield__input'
                   type='text'
                   autoFocus
                   placeholder='URL/ID...'
-                  id='videoId'
                 />
               </div>
               <div class='dialog__actions'>

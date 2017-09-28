@@ -1,7 +1,8 @@
 {
-  "name": "Microtube",
+  "name": "MicroTube",
+  "short_name": "MicroTube",
   "lang": "fr",
-  "start_url": "https://microtube.tk/",
+  "start_url": "https://microtube.herokuapp.com/",
   "display": "standalone",
   "orientation": "portrait",
   "theme_color": "#1C1B1B",

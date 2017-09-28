@@ -20,7 +20,7 @@ const VideoCard = ({ videoId, title, thumbnails, publishedAt, duration, channelT
           data: { video }
         })}
       >
-        <Img src={getThumbnails(thumbnails)} background />
+        <Img src={getThumbnails(thumbnails, 'high')} background />
 
         <div class='card__text'>
           <h2 class='card__text-title'>{title}</h2>

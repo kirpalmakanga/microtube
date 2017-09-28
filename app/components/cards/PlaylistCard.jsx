@@ -8,6 +8,7 @@ import getThumbnails from '../../lib/getThumbnails'
 import Img from '../Img.jsx'
 
 const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch }) => {
+  console.log(thumbnails)
   return (
     <div class='card shadow--2dp'>
       <Link
@@ -15,7 +16,7 @@ const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch
         onClick={() => dispatch({ type: 'PLAYLIST_OPEN', data: title })}
         aria-label={title}
       >
-        <Img src={getThumbnails(thumbnails)} background/>
+        <Img src={getThumbnails(thumbnails, 'high')} background/>
 
         <div class='card__text'>
           <h2 class='card__text-title'>{title}</h2>

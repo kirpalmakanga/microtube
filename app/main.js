@@ -20,7 +20,7 @@ OfflinePluginRuntime.install()
   <Route component={Channel} onLeave={() => dispatch({type: 'CLEAR_CHANNEL_VIDEOS'})}/>
 */
 
-document.addEventListener('DOMContentLoaded', () => {
+(() => {
   render(
     <Provider store={store}>
       <App>
@@ -35,4 +35,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.app')
   )
   document.querySelector('.app-loader').classList.remove('app-loader--active')
-})
+})()

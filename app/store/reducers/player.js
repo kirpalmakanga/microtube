@@ -8,6 +8,7 @@ const initialState = {
 }
 
 export default function (state = initialState, { type, data }) {
+  console.log(type, data)
   switch (type) {
     case 'SCREEN_OPEN':
       return {
@@ -72,8 +73,14 @@ export default function (state = initialState, { type, data }) {
 
       return {
         ...state,
-        currentIndex: index,
-        queue
+        queue: queue.map((v, i) => {
+          v.active = false
+
+          if(i === index) {
+            v.active = true
+          }
+          return v
+        })
       }
 
     case 'SET_VOLUME':

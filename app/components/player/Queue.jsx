@@ -62,11 +62,13 @@ class Queue extends Component {
     }
   }
 
-  dragEnd = () => {
+  dragEnd = (e) => {
     const { container } = this
     const { queue, dragged, over, placeholder } = this.state
-    const from = Number(dragged.dataset.id)
-    let to = Number(over.dataset.id)
+    const from = Number(dragged.dataset.index)
+    let to = Number(over.dataset.index)
+
+    e.preventDefault()
 
     dragged.classList.remove('queue__item--hidden')
     container.removeChild(placeholder)
@@ -85,6 +87,7 @@ class Queue extends Component {
   }
 
   makeOnClickItem = (index, currentIndex) => () => {
+    console.log('clicked')
     if(index !== currentIndex) {
       this.props.dispatch({ type: 'QUEUE_SET_ACTIVE_ITEM', data: { index } })
     } else {
@@ -103,12 +106,12 @@ class Queue extends Component {
 
     return (
         <div className={['queue shadow--2dp', showQueue ? 'queue--show' : ''].join(' ')} onDragOver={dragOver} ref={el => this.container = el} >
-            {queue.length ? queue.map(({ title }, index) => (
+            {queue.length ? queue.map(({ title, active }, index) => (
               <QueueItem
                 key={index}
-                id={index}
+                index={index}
                 title={title}
-                isActive={index === currentIndex}
+                isActive={active}
                 isBuffering={isBuffering}
                 isPlaying={isPlaying}
                 onDragStart={dragStart}

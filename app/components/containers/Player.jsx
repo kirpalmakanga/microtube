@@ -164,16 +164,18 @@ class Player extends Component {
   }
 
   getCurrentVideo() {
-    const { queue, currentIndex } = this.props.player
+    const { queue } = this.props.player
 
-    return queue[currentIndex] || {
+    return queue.find((v) => v.active) || {
       title: 'No video.',
       videoId: null
     }
   }
 
   goToVideo = (next = true) => {
-    const { queue, currentIndex } = this.props.player
+    const { queue } = this.props.player
+
+    const currentIndex = queue.findIndex((v) => v.active) || 0
 
     const newIndex = currentIndex + (next ? 1 : -1)
 

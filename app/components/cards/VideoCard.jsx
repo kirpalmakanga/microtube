@@ -9,14 +9,14 @@ import parseDuration from '../../lib/parseDuration'
 
 import Img from '../Img.jsx'
 
-const VideoCard = ({ videoId, title, thumbnails, publishedAt, duration, channelTitle, player, dispatch }) => (
+const VideoCard = ({ videoId, title, thumbnails, publishedAt, duration, channelTitle, dispatch }) => (
   <div class='card shadow--2dp'>
     <div
       class='card__content'
       aria-label={`Play video ${title}`}
       onClick={() => dispatch({
         type: 'QUEUE_SET_ACTIVE_ITEM',
-        data: { video }
+        data: { video: { videoId, title } }
       })}
     >
       <Img src={getThumbnails(thumbnails, 'high')} background />
@@ -43,6 +43,4 @@ const VideoCard = ({ videoId, title, thumbnails, publishedAt, duration, channelT
   </div>
 )
 
-const mapStateToProps = ({ player }) => ({ player })
-
-export default connect(mapStateToProps)(VideoCard)
+export default connect()(VideoCard)

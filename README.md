@@ -1,5 +1,7 @@
 ## Youtube Lite
 
+![Screenshot](./screenshot.png)
+
 ### Install
 
 npm install

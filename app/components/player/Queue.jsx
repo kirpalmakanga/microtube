@@ -10,11 +10,16 @@ class Queue extends Component {
     super(props)
 
     this.state = {
-      queue: props.player.queue
+      queue: props.player.queue,
+      over: null
     }
   }
 
   componentWillReceiveProps = ({ player }) => this.setState({ queue: player.queue })
+
+  shouldComponentUpdate = (nextProps, { over }) => {
+    return over === null
+  }
 
   getPlaceholder = () => {
     let placeholder = this.placeholder
@@ -84,6 +89,7 @@ class Queue extends Component {
     queue.splice(to, 0, queue.splice(from, 1)[0])
 
     this.props.dispatch({ type: 'QUEUE_SET', data: queue })
+    this.setState({ over: null })
   }
 
   makeOnClickItem = (index, currentIndex) => () => {

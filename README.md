@@ -2,14 +2,13 @@
 
 ![Screenshot](./screenshot.png)
 
-### Install
+### Installation
 
-npm install
-
--fill .env file
--register urls in Google Developer Console:
-  -localhost:3000
-  -localhost:3000/auth/callback
+1. run npm install
+2. fill .env file  
+3. register urls in Google Developer Console:  
+..localhost:3000  
+..localhost:3000/auth/callback  
 
 ### Start app
 

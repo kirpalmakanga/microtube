@@ -48,8 +48,6 @@ class Queue extends Component {
     const { target, pageY } = e
     const { dragged, placeholder } = this.state
 
-    console.log('dragOver')
-
     e.preventDefault()
 
     dragged.classList.add('queue__item--hidden')

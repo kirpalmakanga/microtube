@@ -1,6 +1,8 @@
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
 
+import { throttle } from 'lodash'
+
 import parseDuration from '../../lib/parseDuration'
 
 import QueueItem from './QueueItem.jsx'
@@ -11,7 +13,9 @@ class Queue extends Component {
 
     this.state = {
       queue: props.player.queue,
-      over: null
+      over: null,
+      dragged: null,
+      placeholder: null
     }
   }
 
@@ -40,9 +44,11 @@ class Queue extends Component {
     })
   }
 
-  dragOver = (e) => {
+  dragOver = throttle((e) => {
     const { target, pageY } = e
     const { dragged, placeholder } = this.state
+
+    console.log('dragOver')
 
     e.preventDefault()
 
@@ -65,7 +71,7 @@ class Queue extends Component {
       this.setState({ nodePlacement: 'before' })
       container.insertBefore(placeholder, target)
     }
-  }
+  }, 200)
 
   dragEnd = (e) => {
     const { container } = this
@@ -82,7 +88,7 @@ class Queue extends Component {
       to--
     }
 
-    if(this.state.nodePlacement == 'after') {
+    if(this.state.nodePlacement === 'after') {
       to++
     }
 
@@ -93,7 +99,6 @@ class Queue extends Component {
   }
 
   makeOnClickItem = (index, currentIndex) => () => {
-    console.log('clicked')
     if(index !== currentIndex) {
       this.props.dispatch({ type: 'QUEUE_SET_ACTIVE_ITEM', data: { index } })
     } else {

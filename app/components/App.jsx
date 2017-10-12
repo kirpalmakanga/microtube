@@ -3,6 +3,8 @@ require('../assets/styles/app.scss')
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
 
+import Match from 'preact-router/match'
+
 import Header from './header/HeaderContainer.jsx'
 import Search from './containers/Search.jsx'
 import Player from './containers/Player.jsx'
@@ -10,10 +12,6 @@ import Notifications from './Notifications.jsx'
 import Prompt from './Prompt.jsx'
 
 import { refreshAccessToken } from '../actions/auth'
-
-import createHistory from 'history/createBrowserHistory'
-
-const history = createHistory()
 
 class App extends Component {
   constructor(props) {
@@ -44,19 +42,14 @@ class App extends Component {
     requestToken()
   }
 
-  componentDidMount = () => {
-    history.listen(({ pathname, state }, action) => {
-      this.setState({ path: pathname || '/' })
-      console.log(action, pathname, state)
-    })
-
-    this.refreshAuthToken()
-  }
+  componentDidMount = () => this.refreshAuthToken()
 
   render({ children, auth, notifications }, { path }) {
     return (
       <div class='layout'>
-        <Header path={path} />
+        <Match>
+          {({ path }) => (<Header path={path} />)}
+        </Match>
 
         <main class='layout__content'>
           {auth.token ? children : null}

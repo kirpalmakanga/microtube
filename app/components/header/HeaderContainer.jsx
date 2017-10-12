@@ -21,7 +21,7 @@ class Header extends Component {
   }
 
   componentWillReceiveProps = async ({ auth, path }) => {
-    let { title } = initialState
+    let title = 'MicroTube'
 
     if (path.includes('/subscriptions')) {
       title = 'Subscriptions'
@@ -29,8 +29,6 @@ class Header extends Component {
 
     if (path.includes('/channel')) {
       title = await api.getChannelTitle(auth.token, path.slice(1).split('/')[1])
-
-      console.log('title', title)
     }
 
     if (path.includes('/playlist')) {

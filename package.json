@@ -34,7 +34,6 @@
     "extract-text-webpack-plugin": "^3.0.0",
     "fetch-mock": "3.0.2",
     "file-loader": "^0.9.0",
-    "history": "^4.7.2",
     "jscrambler-webpack-plugin": "^1.0.3",
     "lodash-webpack-plugin": "^0.11.0",
     "mocha": "^2.4.5",

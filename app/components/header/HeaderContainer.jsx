@@ -5,7 +5,6 @@ import { logIn } from '../../actions/auth'
 import { getVideo } from '../../actions/database'
 import api from '../../api/youtube'
 
-
 import SearchHeader from './SearchHeader.jsx'
 import QueueHeader from './QueueHeader.jsx'
 import SearchForm from '../SearchForm.jsx'
@@ -21,8 +20,7 @@ class Header extends Component {
       this.state = initialState
   }
 
-  componentWillReceiveProps = async ({ path }) => {
-    const { auth } = this.props
+  componentWillReceiveProps = async ({ auth, path }) => {
     let { title } = initialState
 
     if (path.includes('/subscriptions')) {
@@ -74,7 +72,7 @@ class Header extends Component {
           <SearchHeader />
         ) : (
           <div class='layout__header-row'>
-            {!path === '/' ? (
+            {path !== '/' ? (
               <Link class='layout__back-button icon-button' href='/' aria-label='Go to homepage'>
                 <span class='icon'>
                   <svg><use xlinkHref='#icon-back'></use></svg>

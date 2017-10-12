@@ -11,7 +11,18 @@ import Prompt from './Prompt.jsx'
 
 import { refreshAccessToken } from '../actions/auth'
 
+import createHistory from 'history/createBrowserHistory'
+
+const history = createHistory()
+
 class App extends Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      path: location.pathname
+    }
+  }
 
   refreshAuthToken() {
     const { auth, dispatch } = this.props
@@ -33,12 +44,19 @@ class App extends Component {
     requestToken()
   }
 
-  componentDidMount = () => this.refreshAuthToken()
+  componentDidMount = () => {
+    history.listen(({ pathname, state }, action) => {
+      this.setState({ path: pathname || '/' })
+      console.log(action, pathname, state)
+    })
 
-  render({ children, auth, notifications }) {
+    this.refreshAuthToken()
+  }
+
+  render({ children, auth, notifications }, { path }) {
     return (
       <div class='layout'>
-        <Header path={location.pathname}/>
+        <Header path={path} />
 
         <main class='layout__content'>
           {auth.token ? children : null}

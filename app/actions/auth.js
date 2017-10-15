@@ -149,11 +149,15 @@ export function logIn() {
   }
 
   return (dispatch) => {
-    oauth2(google)
-      .then(openPopup)
-      .then(pollPopup)
-      .then(exchangeCodeForToken)
-      .then(makeSignIn(dispatch))
-      .then(closePopup)
+    try {
+      oauth2(google)
+        .then(openPopup)
+        .then(pollPopup)
+        .then(exchangeCodeForToken)
+        .then(makeSignIn(dispatch))
+        .then(closePopup)
+    } catch (e) {
+      dispatch({ type: 'NOTIFY', data: 'Signing in failed, pleased try again.' })
+    }
   }
 }

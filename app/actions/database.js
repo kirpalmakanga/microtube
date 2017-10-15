@@ -1,4 +1,3 @@
-// import api from '../api/database'
 import api from '../api/youtube'
 
 export function getPlaylists (accessToken, pageToken) {
@@ -182,9 +181,9 @@ export function getChannelVideos (accessToken, channelId, pageToken) {
   return async (dispatch) => {
     dispatch({ type: 'GET_CHANNEL_VIDEOS' })
     try {
-        const data = await api.getChannelVideos(accessToken, channelId, pageToken)
+      const data = await api.getChannelVideos(accessToken, channelId, pageToken)
 
-        dispatch({ type: 'GET_CHANNEL_VIDEOS_SUCCESS', data })
+      dispatch({ type: 'GET_CHANNEL_VIDEOS_SUCCESS', data })
     } catch (err) {
       dispatch({ type: 'NOTIFY', data: 'Error fetching channel videos.' })
     }

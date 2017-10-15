@@ -51,8 +51,7 @@ const offlinePageHTML = pug.renderFile(path.join(__dirname, 'views', 'layouts', 
 
 dotenv.load()
 
-console.log(path.join(__dirname, '../public', 'appcache'))
-fs.writeFileSync(path.join(__dirname, '../public', 'appcache', 'offline.html'), offlinePageHTML)
+fs.writeFileSync(path.join(__dirname, '../public', 'offline.html'), offlinePageHTML)
 
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))

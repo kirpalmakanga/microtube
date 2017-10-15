@@ -1,10 +1,12 @@
 {
-  "presets": ["react", ["es2015",  { "modules": false }], "stage-2"],
-  "plugins": ["transform-object-rest-spread", "lodash", "transform-runtime", ["transform-react-jsx", { "pragma": "h" }]],
-
-  "env": {
-    "test": {
-       "plugins": ["rewire"]
-     }
-  }
+  "presets": [
+    "env"
+  ],
+  "plugins": [
+    "transform-class-properties",
+    "transform-object-rest-spread",
+    "lodash",
+    "transform-runtime",
+    ["transform-react-jsx", { "pragma": "h" }]
+  ]
 }

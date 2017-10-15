@@ -34,10 +34,6 @@ const config = {
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    // new webpack.optimize.CommonsChunkPlugin({
-    //     name: 'vendor',
-    //     minChunks: ({ context }) => (context && context.indexOf('node_modules') >= 0)
-    // }),
     new webpack.optimize.UglifyJsPlugin(),
     new webpack.DefinePlugin({
       'process.env': {

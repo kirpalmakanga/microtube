@@ -120,7 +120,6 @@ export function searchVideos (accessToken, query, pageToken) {
 
         dispatch({ type: 'SEARCH_VIDEOS_SUCCESS', data })
     } catch (err) {
-      console.error(err)
       dispatch({ type: 'NOTIFY', data: 'Error searching videos.' })
     }
   }

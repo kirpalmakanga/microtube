@@ -1,61 +1,51 @@
 import url from 'url'
 import qs from 'querystring'
 
-function oauth2(config, dispatch) {
-  return new Promise((resolve, reject) => {
-    const params = {
-      client_id: config.clientId,
-      redirect_uri: config.redirectUri,
-      scope: config.scope,
-      display: 'popup',
-      response_type: 'code',
-      access_type: 'offline',
-      prompt: 'consent'
-    }
-    const url = config.authorizationUrl + '?' + qs.stringify(params)
-    resolve({ url, config, dispatch })
-  })
+async function oauth2(config) {
+  const params = {
+    client_id: config.clientId,
+    redirect_uri: config.redirectUri,
+    scope: config.scope,
+    display: 'popup',
+    response_type: 'code',
+    access_type: 'offline',
+    prompt: 'consent'
+  }
+  const url = config.authorizationUrl + '?' + qs.stringify(params)
+  return { url, config }
 }
 
-function openPopup({ url, config, dispatch }) {
-  return new Promise((resolve, reject) => {
-    const width = config.width || 500
-    const height = config.height || 500
-    const options = {
-      width: width,
-      height: height,
-      top: window.screenY + ((window.outerHeight - height) / 2.5),
-      left: window.screenX + ((window.outerWidth - width) / 2)
-    }
-    const popup = window.open(url, '_blank', qs.stringify(options, ','))
+async function openPopup({ url, config }) {
+  const width = config.width || 500
+  const height = config.height || 500
+  const options = {
+    width: width,
+    height: height,
+    top: window.screenY + ((window.outerHeight - height) / 2.5),
+    left: window.screenX + ((window.outerWidth - width) / 2)
+  }
+  const popup = window.open(url, '_blank', qs.stringify(options, ','))
 
-    if (url === 'about:blank') {
-      popup.document.body.innerHTML = 'Loading...'
-    }
+  if (url === 'about:blank') {
+    popup.document.body.innerHTML = 'Loading...'
+  }
 
-    resolve({ popup, config, dispatch })
-  })
+  return { popup, config }
 }
 
-function getRequestToken({ popup, config, dispatch }) {
-  return new Promise((resolve, reject) => {
-    return fetch(config.url, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        redirectUri: config.redirectUri
-      })
-    }).then((response) => {
-      if (response.ok) {
-        return response.json().then((json) => {
-          resolve({ popup, config, requestToken: json, dispatch })
-        })
-      }
-    })
+async function getRequestToken({ popup, config }) {
+  const response = fetch(config.url, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ redirectUri: config.redirectUri })
   })
+
+  const json = await response.json()
+
+  return { popup, config, requestToken: json }
 }
 
-function pollPopup({ popup, config, requestToken, dispatch }) {
+function pollPopup({ popup, config, requestToken }) {
   return new Promise((resolve, reject) => {
     const redirectUri = url.parse(config.redirectUri)
     const redirectUriPath = redirectUri.host + redirectUri.pathname
@@ -74,15 +64,15 @@ function pollPopup({ popup, config, requestToken, dispatch }) {
           if (popup.location.search || popup.location.hash) {
             const query = qs.parse(popup.location.search.substring(1).replace(/\/$/, ''))
             const hash = qs.parse(popup.location.hash.substring(1).replace(/[\/$]/, ''))
-            const params = Object.assign({}, query, hash)
+            const params = {...query, ...hash }
 
             if (params.error) {
-              dispatch({ type: 'NOTIFY', data: params.error })
+              reject(new Error(params.error))
             } else {
-              resolve({ oauthData: params, config, popup, interval: polling, dispatch })
+              resolve({ oauthData: params, config, popup, interval: polling })
             }
           } else {
-            dispatch({ type: 'NOTIFY', data: 'OAuth redirect has occurred but no query or hash parameters were found.' })
+            reject(new Error('OAuth redirect has occurred but no query or hash parameters were found.'))
           }
         }
       } catch (error) {
@@ -93,49 +83,40 @@ function pollPopup({ popup, config, requestToken, dispatch }) {
   })
 }
 
-function exchangeCodeForToken({ oauthData, config, popup, interval, dispatch }) {
-  return new Promise((resolve, reject) => {
-    const data = Object.assign({}, oauthData, config)
-
-    return fetch(config.url, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'same-origin', // By default, fetch won't send any cookies to the server
-      body: JSON.stringify(data)
-    }).then((response) => {
-      if (response.ok) {
-        response.json()
-        .then(({ token, refresh, user }) => resolve({ token, refresh, user, popup, interval, dispatch }))
-      } else {
-        response.json().then((json) => {
-          dispatch({ type: 'NOTIFY', data: json.message })
-
-          closePopup({ popup, interval })
-        })
-      }
-    })
+async function exchangeCodeForToken({ oauthData, config, popup, interval }) {
+  const response = await fetch(config.url, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin', // By default, fetch won't send any cookies to the server
+    body: JSON.stringify({ ...oauthData, ...config })
   })
-}
 
-export async function refreshAccessToken(refreshToken) {
-  try {
-    const response = await fetch(window.location.origin + '/auth/refresh', {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'same-origin', // By default, fetch won't send any cookies to the server
-      body: JSON.stringify({ refresh_token: refreshToken })
-    })
+  const json = await response.json()
 
-    const { token } =  await response.json()
-
-    return token
-  } catch (e) {
-    console.error(e)
+  if (response.ok) {
+      const { token, refresh, user } = json
+      return { token, refresh, user, popup, interval }
+  } else {
+    closePopup({ popup, interval })
+    throw new Error(json.message)
   }
 }
 
-function signIn({ token, refresh, user, popup, interval, dispatch }) {
-  return new Promise((resolve, reject) => {
+export async function refreshAccessToken(refreshToken) {
+  const response = await fetch(window.location.origin + '/auth/refresh', {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin', // By default, fetch won't send any cookies to the server
+    body: JSON.stringify({ refresh_token: refreshToken })
+  })
+
+  const { token } =  await response.json()
+
+  return token
+}
+
+function makeSignIn(dispatch) {
+  return async ({ token, refresh, user, popup, interval }) => {
     const refreshWatcher = setInterval(async () => {
       const token = await refreshAccessToken(refresh)
 
@@ -146,16 +127,13 @@ function signIn({ token, refresh, user, popup, interval, dispatch }) {
 
     dispatch({ type: 'OAUTH_SUCCESS', data: { token, refresh, user, refreshWatcher } })
 
-    resolve({ popup, interval })
-  })
+    return { popup, interval }
+  }
 }
 
 function closePopup({ popup, interval }) {
-  return new Promise((resolve, reject) => {
-    clearInterval(interval)
-    popup.close()
-    resolve()
-  })
+  clearInterval(interval)
+  popup.close()
 }
 
 // Sign in with Google
@@ -170,12 +148,12 @@ export function logIn() {
     height: 540
   }
 
-  return dispatch => {
-    oauth2(google, dispatch)
+  return (dispatch) => {
+    oauth2(google)
       .then(openPopup)
       .then(pollPopup)
       .then(exchangeCodeForToken)
-      .then(signIn)
+      .then(makeSignIn(dispatch))
       .then(closePopup)
   }
 }

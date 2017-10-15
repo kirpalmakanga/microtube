@@ -2,6 +2,7 @@ import { h, render, Component } from 'preact'
 import { connect } from 'preact-redux'
 import { Link } from 'preact-router/match'
 import { logIn } from '../../actions/auth'
+import { signIn, signOut } from '../../api/auth'
 import { getVideo } from '../../actions/database'
 import api from '../../api/youtube'
 
@@ -50,15 +51,21 @@ class Header extends Component {
 
   handleConnection = () => {
     const { auth, dispatch } = this.props
+    //
+    // if (auth.is) {
+    //   clearInterval(auth.refreshWatcher)
+    //   dispatch({ type: 'UNLINK' })
+    //   dispatch({ type: 'NOTIFY', data: 'Déconnecté.' })
+    //   return
+    // }
+    //
+    // dispatch(logIn())
 
-    if (auth.token) {
-      clearInterval(auth.refreshWatcher)
-      dispatch({ type: 'UNLINK' })
-      dispatch({ type: 'NOTIFY', data: 'Déconnecté.' })
-      return
+    if(auth.isSignedIn) {
+      return signOut()
     }
 
-    dispatch(logIn())
+    signIn()
   }
 
   render ({ auth, playlistItems, player, search, path, dispatch }, { title }) {
@@ -97,8 +104,8 @@ class Header extends Component {
                 </span>
               </Link>
 
-              <button class='navigation__link icon-button' onClick={this.handleConnection} aria-label={auth.token ? 'Log in' : 'Log out'}>
-                {auth.token ? (
+              <button class='navigation__link icon-button' onClick={this.handleConnection} aria-label={auth.isSignedIn ? 'Log in' : 'Log out'}>
+                {auth.isSignedIn ? (
                   <img src={auth.user.picture} />
                 ) : (
                   <span class='icon'>

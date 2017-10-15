@@ -47,16 +47,12 @@ const initialState = JSON.stringify({
   }
 })
 
-const offlinePageHTML = pug.renderFile(path.join(__dirname, 'views', 'layouts', 'main.pug'), { title: 'MicroTube', initialState })
-
 dotenv.load()
-
-fs.writeFileSync(path.join(__dirname, '../public', 'offline.html'), offlinePageHTML)
 
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
 app.set('partials', path.join(__dirname, 'views', 'partials'))
-app.set('port', process.env.PORT)
+app.set('port', process.env.PORT || 3000)
 app.use(compression())
 app.use(logger('dev'))
 app.use(bodyParser.json())

@@ -42,7 +42,6 @@ class Channel extends Component {
   }
 }
 
-
 const mapStateToProps = ({ auth, channel }) => ({ auth, channel })
 
 export default connect(mapStateToProps)(Channel)

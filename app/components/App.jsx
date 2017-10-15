@@ -11,7 +11,8 @@ import Player from './containers/Player.jsx'
 import Notifications from './Notifications.jsx'
 import Prompt from './Prompt.jsx'
 
-import { refreshAccessToken } from '../actions/auth'
+import { waitForAPI, initClient, getAuthInstance, listenAuthStateChange } from '../api/auth'
+import { updateSigningStatus } from '../actions/auth'
 
 class App extends Component {
   constructor(props) {
@@ -22,27 +23,15 @@ class App extends Component {
     }
   }
 
-  refreshAuthToken() {
-    const { auth, dispatch } = this.props
+  componentDidMount = async () => {
+      await waitForAPI()
+      await initClient()
+      
+      const { dispatch } = this.props
+      const { isSignedIn } = getAuthInstance()
 
-    const requestToken = async (callback = () => null) => {
-      if (!auth.refresh) {
-        return callback()
-      }
-
-      const token = await refreshAccessToken(auth.refresh)
-
-      if (token) {
-        dispatch({ type: 'OAUTH_REFRESH', data: { token } })
-      }
-    }
-
-    const refreshWatcher = setInterval(() => requestToken(() => clearInterval(refreshWatcher)), 3540000)
-
-    requestToken()
+      listenAuthStateChange(dispatch(updateSigningStatus()))
   }
-
-  componentDidMount = () => this.refreshAuthToken()
 
   render({ children, auth, notifications }, { path }) {
     return (
@@ -52,7 +41,7 @@ class App extends Component {
         </Match>
 
         <main class='layout__content'>
-          {auth.token ? children : null}
+          {auth.isSignedIn ? children : null}
         </main>
 
         <Search />

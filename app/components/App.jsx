@@ -11,6 +11,8 @@ import Player from './containers/Player.jsx'
 import Notifications from './Notifications.jsx'
 import Prompt from './Prompt.jsx'
 
+import GoogleLogin from './auth/GoogleLogin.jsx'
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -20,6 +22,8 @@ class App extends Component {
     }
   }
 
+  handleSignIn = (data) => this.props.dispatch({ type: 'SIGN_IN', data })
+
   render({ children, auth, notifications }, { path }) {
     return (
       <div class='layout'>
@@ -28,7 +32,11 @@ class App extends Component {
         </Match>
 
         <main class='layout__content'>
-          {auth.isSignedIn ? children : null}
+          {auth.isSignedIn ? children : (
+            <div class='log_in'>
+              <GoogleLogin className='button' onSuccess={this.handleSignIn}>Log in</GoogleLogin>
+            </div>
+          )}
         </main>
 
         <Search />

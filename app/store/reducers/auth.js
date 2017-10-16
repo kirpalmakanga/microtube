@@ -1,21 +1,18 @@
 const initialState = {
-  token: null,
-  refresh: null,
   user: {},
-  refreshWatcher: null
+  token: null,
+  isSignedIn: false
 }
 
 export default function (state = initialState, { type, data }) {
   switch (type) {
-    case 'OAUTH_SUCCESS' :
-      return data
+    case 'SIGN_IN':
+      const { isSignedIn, token, user } = data
 
-    case 'OAUTH_REFRESH':
-      const { token } = data
-      return { ...state, token }
+      return { ... state, user, token, isSignedIn }
 
-    case 'UNLINK':
-     return initialState
+    case 'SIGN_OUT':
+      return initialState
   }
   return state
 }

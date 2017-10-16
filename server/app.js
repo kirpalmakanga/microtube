@@ -15,8 +15,6 @@ const compiler = webpack(webpackConfig)
 
 const app = express()
 
-const userController = require('./controllers/user')
-
 const initialState = JSON.stringify({
   auth: {
     token: null,
@@ -47,16 +45,12 @@ const initialState = JSON.stringify({
   }
 })
 
-const offlinePageHTML = pug.renderFile(path.join(__dirname, 'views', 'layouts', 'main.pug'), { title: 'MicroTube', initialState })
-
 dotenv.load()
-
-fs.writeFileSync(path.join(__dirname, '../public', 'offline.html'), offlinePageHTML)
 
 app.set('view engine', 'pug')
 app.set('views', path.join(__dirname, 'views'))
 app.set('partials', path.join(__dirname, 'views', 'partials'))
-app.set('port', process.env.PORT)
+app.set('port', process.env.PORT || 3000)
 app.use(compression())
 app.use(logger('dev'))
 app.use(bodyParser.json())
@@ -78,11 +72,6 @@ if (process.env.NODE_ENV !== 'production') {
     next()
  })
 }
-
-//Routes
-app.post('/auth', userController.auth)
-app.post('/auth/refresh', userController.authRefresh)
-app.get('/auth/callback', userController.authCallback)
 
 app.use((req, res) => {
   res.render('layouts/main', { title: 'MicroTube', initialState })

@@ -10,6 +10,9 @@ export default function (state = initialState, { type, data }) {
       const { isSignedIn, token, user } = data
 
       return { ... state, user, token, isSignedIn }
+
+    case 'SIGN_OUT':
+      return initialState
   }
   return state
 }

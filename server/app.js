@@ -15,8 +15,6 @@ const compiler = webpack(webpackConfig)
 
 const app = express()
 
-const userController = require('./controllers/user')
-
 const initialState = JSON.stringify({
   auth: {
     token: null,
@@ -74,11 +72,6 @@ if (process.env.NODE_ENV !== 'production') {
     next()
  })
 }
-
-//Routes
-app.post('/auth', userController.auth)
-app.post('/auth/refresh', userController.authRefresh)
-app.get('/auth/callback', userController.authCallback)
 
 app.use((req, res) => {
   res.render('layouts/main', { title: 'MicroTube', initialState })

@@ -33,7 +33,7 @@ export default function (state = initialState, { type, data }) {
       return { ...state, ...newData }
 
     case 'CLEAR_SUBSCRIPTIONS':
-    case 'UNLINK_SUCCESS':
+    case 'SIGN_OUT':
       return initialState
   }
   return state

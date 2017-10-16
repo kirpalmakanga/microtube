@@ -11,9 +11,6 @@ import Player from './containers/Player.jsx'
 import Notifications from './Notifications.jsx'
 import Prompt from './Prompt.jsx'
 
-import { waitForAPI, initClient, getAuthInstance, listenAuthStateChange } from '../api/auth'
-import { updateSigningStatus } from '../actions/auth'
-
 class App extends Component {
   constructor(props) {
     super(props)
@@ -21,16 +18,6 @@ class App extends Component {
     this.state = {
       path: location.pathname
     }
-  }
-
-  componentDidMount = async () => {
-      await waitForAPI()
-      await initClient()
-      
-      const { dispatch } = this.props
-      const { isSignedIn } = getAuthInstance()
-
-      listenAuthStateChange(dispatch(updateSigningStatus()))
   }
 
   render({ children, auth, notifications }, { path }) {

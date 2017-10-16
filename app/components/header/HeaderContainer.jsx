@@ -1,14 +1,15 @@
 import { h, render, Component } from 'preact'
 import { connect } from 'preact-redux'
 import { Link } from 'preact-router/match'
-import { logIn } from '../../actions/auth'
-import { signIn, signOut } from '../../api/auth'
-import { getVideo } from '../../actions/database'
+
 import api from '../../api/youtube'
 
 import SearchHeader from './SearchHeader.jsx'
 import QueueHeader from './QueueHeader.jsx'
 import SearchForm from '../SearchForm.jsx'
+
+import GoogleLogin from '../auth/GoogleLogin.jsx'
+import GoogleLogout from '../auth/GoogleLogout.jsx'
 
 const initialState = {
   title: 'MicroTube'
@@ -49,24 +50,9 @@ class Header extends Component {
     dispatch({ type: 'SEARCH_OPEN' })
   }
 
-  handleConnection = () => {
-    const { auth, dispatch } = this.props
-    //
-    // if (auth.is) {
-    //   clearInterval(auth.refreshWatcher)
-    //   dispatch({ type: 'UNLINK' })
-    //   dispatch({ type: 'NOTIFY', data: 'Déconnecté.' })
-    //   return
-    // }
-    //
-    // dispatch(logIn())
+  handleSignIn = (data) => this.props.dispatch({ type: 'SIGN_IN', data })
 
-    if(auth.isSignedIn) {
-      return signOut()
-    }
-
-    signIn()
-  }
+  handleSignOut = () => this.props.dispatch({ type: 'SIGN_OUT' })
 
   render ({ auth, playlistItems, player, search, path, dispatch }, { title }) {
     return (
@@ -104,15 +90,18 @@ class Header extends Component {
                 </span>
               </Link>
 
-              <button class='navigation__link icon-button' onClick={this.handleConnection} aria-label={auth.isSignedIn ? 'Log in' : 'Log out'}>
+
                 {auth.isSignedIn ? (
-                  <img src={auth.user.picture} />
+                  <GoogleLogout className='navigation__link icon-button' onSuccess={this.handleSignOut}>
+                    <img src={auth.user.picture} />
+                  </GoogleLogout>
                 ) : (
-                  <span class='icon'>
-                    <svg><use xlinkHref='#icon-user'></use></svg>
-                  </span>
+                  <GoogleLogin className='navigation__link icon-button' onSuccess={this.handleSignIn}>
+                    <span class='icon'>
+                      <svg><use xlinkHref='#icon-user'></use></svg>
+                    </span>
+                  </GoogleLogin>
                 )}
-              </button>
             </nav>
           </div>
         )}

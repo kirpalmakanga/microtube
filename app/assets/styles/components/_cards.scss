@@ -24,6 +24,7 @@
       padding: 16px;
       display: flex;
       flex: 1;
+      width: 100%;
       cursor: pointer;
 
       .image {
@@ -65,6 +66,7 @@
             overflow: hidden;
             letter-spacing: 0.1em;
             font-size: 16px;
+            width: 120px;
             @media screen and (min-width: 480px) {
               width: 400px;
             }

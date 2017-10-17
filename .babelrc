@@ -1,12 +1,10 @@
 {
   "presets": [
+    "preact",
     "env"
   ],
   "plugins": [
-    "transform-class-properties",
     "transform-object-rest-spread",
-    "lodash",
-    "transform-runtime",
-    ["transform-react-jsx", { "pragma": "h" }]
+    "transform-class-properties"
   ]
 }

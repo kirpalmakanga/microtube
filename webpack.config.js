@@ -4,7 +4,6 @@ const WriteFilePlugin = require('write-file-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const OfflinePlugin = require('offline-plugin')
-const JscramblerWebpack = require('jscrambler-webpack-plugin')
 
 let isDevelopmentMode = !(require('yargs').argv.p || false)
 

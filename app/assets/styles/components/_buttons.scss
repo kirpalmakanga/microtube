@@ -6,8 +6,12 @@
     color: $white;
     text-transform: uppercase;
     cursor: pointer;
-    font-size: 12px;
-    border-radius: 4px;
+    font-size: 18px;
+    font-weight: 700;
+
+    &:hover {
+      background-color: lighten($black, 5%);
+    }
 
     &:focus {
       outline: none;

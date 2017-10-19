@@ -7,7 +7,7 @@ import moment from 'moment'
 import getThumbnails from '../../lib/getThumbnails'
 import parseDuration from '../../lib/parseDuration'
 
-import Img from '../Img.jsx'
+import Img from '../Img'
 
 const VideoCard = ({ videoId, title, thumbnails, publishedAt, duration, channelTitle, dispatch }) => (
   <div class='card shadow--2dp'>

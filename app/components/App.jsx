@@ -5,13 +5,13 @@ import { connect } from 'preact-redux'
 
 import Match from 'preact-router/match'
 
-import Header from './header/HeaderContainer.jsx'
-import Search from './containers/Search.jsx'
-import Player from './containers/Player.jsx'
-import Notifications from './Notifications.jsx'
-import Prompt from './Prompt.jsx'
+import Header from './header/HeaderContainer'
+import Search from './containers/Search'
+import Player from './containers/Player'
+import Notifications from './Notifications'
+import Prompt from './Prompt'
 
-import GoogleLogin from './auth/GoogleLogin.jsx'
+import GoogleLogin from './auth/GoogleLogin'
 
 class App extends Component {
   constructor(props) {

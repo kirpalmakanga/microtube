@@ -5,13 +5,13 @@ import formatTime from '../../lib/formatTime'
 
 import Helmet from 'preact-helmet'
 
-import Queue from '../player/Queue.jsx'
-import Screen from '../player/Screen.jsx'
+import Queue from '../player/Queue'
+import Screen from '../player/Screen'
 
-import Button from '../player/controls/Button.jsx'
-import VolumeRange from '../player/controls/VolumeRange.jsx'
-import InfoTime from '../player/controls/InfoTime.jsx'
-import InfoProgress from '../player/controls/InfoProgress.jsx'
+import Button from '../player/controls/Button'
+import VolumeRange from '../player/controls/VolumeRange'
+import InfoTime from '../player/controls/InfoTime'
+import InfoProgress from '../player/controls/InfoProgress'
 
 class Player extends Component {
   constructor(props) {

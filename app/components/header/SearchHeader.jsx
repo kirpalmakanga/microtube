@@ -1,7 +1,7 @@
 import { h } from 'preact'
 import { connect } from 'preact-redux'
 
-import SearchForm from '../SearchForm.jsx'
+import SearchForm from '../SearchForm'
 
 const SearchHeader = ({ dispatch }) => {
   return (

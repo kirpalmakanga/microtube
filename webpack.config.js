@@ -70,6 +70,10 @@ const config = {
         loader: 'url-loader?limit=100000'
       }
     ]
+  },
+
+  resolve: {
+    extensions: ['.js', '.jsx']
   }
 }
 

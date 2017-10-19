@@ -4,12 +4,12 @@ import { Link } from 'preact-router/match'
 
 import api from '../../api/youtube'
 
-import SearchHeader from './SearchHeader.jsx'
-import QueueHeader from './QueueHeader.jsx'
-import SearchForm from '../SearchForm.jsx'
+import SearchHeader from './SearchHeader'
+import QueueHeader from './QueueHeader'
+import SearchForm from '../SearchForm'
 
-import GoogleLogin from '../auth/GoogleLogin.jsx'
-import GoogleLogout from '../auth/GoogleLogout.jsx'
+import GoogleLogin from '../auth/GoogleLogin'
+import GoogleLogout from '../auth/GoogleLogout'
 
 const initialState = {
   title: 'MicroTube'

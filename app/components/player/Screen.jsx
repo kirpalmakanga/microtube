@@ -1,6 +1,6 @@
 import { h, Component } from 'preact'
 
-import YoutubePlayer from '../YoutubePlayer.jsx'
+import YoutubePlayer from '../YoutubePlayer'
 
 const playerOptions = {
   playerVars: {

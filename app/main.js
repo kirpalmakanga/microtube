@@ -5,11 +5,11 @@ import Router from 'preact-router'
 
 import configureStore from './store/configureStore'
 
-import App from './components/App.jsx'
-import Playlists from './components/containers/Playlists.jsx'
-import Playlist from './components/containers/Playlist.jsx'
-import Subscriptions from './components/containers/Subscriptions.jsx'
-import Channel from './components/containers/Channel.jsx'
+import App from './components/App'
+import Playlists from './components/containers/Playlists'
+import Playlist from './components/containers/Playlist'
+import Subscriptions from './components/containers/Subscriptions'
+import Channel from './components/containers/Channel'
 
 (() => {
   const store = configureStore(window.INITIAL_STATE)

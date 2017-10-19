@@ -3,7 +3,7 @@ import { connect } from 'preact-redux'
 
 import Waypoint from 'preact-waypoint'
 
-import VideoCard from '../cards/VideoCard.jsx'
+import VideoCard from '../cards/VideoCard'
 
 import { getPlaylistItems } from '../../actions/database'
 

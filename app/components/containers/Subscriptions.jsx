@@ -3,7 +3,7 @@ import { connect } from 'preact-redux'
 import Waypoint from 'preact-waypoint'
 
 import { getSubscriptions } from '../../actions/database'
-import SubscriptionCard from '../cards/SubscriptionCard.jsx'
+import SubscriptionCard from '../cards/SubscriptionCard'
 
 class Subscriptions extends Component {
   componentDidMount() {

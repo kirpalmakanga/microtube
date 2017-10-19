@@ -5,7 +5,7 @@ import { throttle } from 'lodash'
 
 import parseDuration from '../../lib/parseDuration'
 
-import QueueItem from './QueueItem.jsx'
+import QueueItem from './QueueItem'
 
 class Queue extends Component {
   constructor(props) {

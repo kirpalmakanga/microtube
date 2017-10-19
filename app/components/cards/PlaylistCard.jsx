@@ -5,7 +5,7 @@ import { Link } from 'preact-router'
 import { queuePlaylist } from '../../actions/database'
 import getThumbnails from '../../lib/getThumbnails'
 
-import Img from '../Img.jsx'
+import Img from '../Img'
 
 const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch }) => (
   <div class='card shadow--2dp'>

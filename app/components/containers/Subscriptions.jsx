@@ -2,7 +2,7 @@ import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
 import Waypoint from 'preact-waypoint'
 
-import { getSubscriptions } from '../../actions/database'
+import { getSubscriptions } from '../../actions/youtube'
 import SubscriptionCard from '../cards/SubscriptionCard'
 
 class Subscriptions extends Component {

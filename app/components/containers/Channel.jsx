@@ -4,7 +4,7 @@ import { connect } from 'preact-redux'
 import Waypoint from 'preact-waypoint'
 import VideoCard from '../cards/VideoCard'
 
-import { getChannelVideos } from '../../actions/database'
+import { getChannelVideos } from '../../actions/youtube'
 
 class Channel extends Component {
   componentDidMount() {

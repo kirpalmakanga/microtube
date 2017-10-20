@@ -2,7 +2,7 @@ import { h } from 'preact'
 import { connect } from 'preact-redux'
 import { Link } from 'preact-router'
 
-import { queuePlaylist } from '../../actions/database'
+import { queuePlaylist } from '../../actions/youtube'
 import getThumbnails from '../../lib/getThumbnails'
 
 import Img from '../Img'

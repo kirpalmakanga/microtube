@@ -13,27 +13,6 @@ export function getPlaylists (accessToken, pageToken) {
   }
 }
 
-// export function getAllPlaylists (accessToken) {
-//   return (dispatch) => {
-//     const getItems = async (nextPage) => {
-//       try {
-//           const data = await api.getPlaylists(accessToken, nextPage)
-//           const { nextPageToken } = data
-//
-//           dispatch({ type: 'GET_PLAYLISTS_SUCCESS', data })
-//
-//           if (nextPageToken) {
-//             getItems(nextPageToken)
-//           }
-//       } catch (err) {
-//         dispatch({ type: 'NOTIFY', data: err })
-//       }
-//     }
-//     dispatch({ type: 'GET_PLAYLISTS' })
-//     getItems()
-//   }
-// }
-
 export function getPlaylistTitle (accessToken, playlistId) {
   return async (dispatch) => {
     try {
@@ -58,28 +37,6 @@ export function getPlaylistItems (accessToken, playlistId, pageToken) {
     }
   }
 }
-
-// export function getAllPlaylistItems (accessToken, playlistId) {
-//   return (dispatch) => {
-//     const getItems = async (pageToken) => {
-//       try {
-//         const data = await api.getPlaylistItems(accessToken, playlistId, pageToken)
-//         const { nextPageToken } = data
-//
-//         dispatch({ type: 'GET_PLAYLIST_ITEMS_SUCCESS', data })
-//
-//         if (nextPageToken) {
-//           getItems(nextPageToken)
-//         }
-//       } catch (err) {
-//         dispatch({ type: 'NOTIFY', data: err })
-//       }
-//     }
-//
-//     dispatch({ type: 'GET_PLAYLIST_ITEMS' })
-//     getItems()
-//   }
-// }
 
 export function queuePlaylist ({ accessToken, playlistId, queue, play }) {
   console.log('queue playlist ?')

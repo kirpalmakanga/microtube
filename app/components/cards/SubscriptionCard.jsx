@@ -2,7 +2,7 @@ import { h } from 'preact'
 import { Link } from 'preact-router'
 import { connect } from 'preact-redux'
 
-import { unsubscribe } from '../../actions/database'
+import { unsubscribe } from '../../actions/youtube'
 
 const SubscriptionCard = ({ id, channelId, title, itemCount, dispatch }) => {
   return (

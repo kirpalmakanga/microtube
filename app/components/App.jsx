@@ -14,17 +14,9 @@ import Prompt from './Prompt'
 import GoogleLogin from './auth/GoogleLogin'
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      path: location.pathname
-    }
-  }
-
   handleSignIn = (data) => this.props.dispatch({ type: 'SIGN_IN', data })
 
-  render({ children, auth, notifications }, { path }) {
+  render({ children, auth, notifications }) {
     return (
       <div class='layout'>
         <Match>

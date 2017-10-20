@@ -5,7 +5,7 @@ import Waypoint from 'preact-waypoint'
 
 import PlaylistCard from '../cards/PlaylistCard'
 
-import { getPlaylists } from '../../actions/database'
+import { getPlaylists } from '../../actions/youtube'
 
 class Playlists extends Component {
   componentDidMount() {

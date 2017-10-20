@@ -5,7 +5,7 @@ import Waypoint from 'preact-waypoint'
 
 import VideoCard from '../cards/VideoCard'
 
-import { searchVideos } from '../../actions/database'
+import { searchVideos } from '../../actions/youtube'
 
 
 class Search extends Component {

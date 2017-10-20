@@ -42,6 +42,48 @@ class Api {
 
   remove = (...args) => this.callApi('delete', ...args)
 
+  //Videos
+
+  searchVideos = async(accessToken, query, pageToken, channelId) => {
+      const { items, nextPageToken, pageInfo } = await this.list('search', {
+        access_token: accessToken,
+        part: 'snippet',
+        type: 'video',
+        q: query,
+        pageToken,
+        maxResults: ITEMS_PER_REQUEST,
+      })
+
+      const videoIds = items.map(({ id }) => id.videoId)
+
+      const videos = await this.getVideosFromIds(videoIds, accessToken)
+
+      return {
+        items: videos,
+        nextPageToken,
+        totalResults: pageInfo.totalResults
+      }
+  }
+
+  getVideo = async (accessToken, urlOrId) => {
+      const { items } = await this.list('videos', {
+        access_token: accessToken,
+        id: parseID(urlOrId),
+        part: 'contentDetails, snippet, status'
+      })
+
+      const { id, contentDetails, snippet, status } = items[0]
+
+      return {
+        videoId: id,
+        title: snippet.title,
+        duration: contentDetails.duration,
+        channelId: snippet.channelId,
+        channelTitle: snippet.channelTitle,
+        publishedAt: snippet.publishedAt,
+        privacyStatus: status.privacyStatus
+      }
+  }
 
   getVideosFromIds = async (ids, accessToken) => {
       const { items } = await this.list('videos', {
@@ -64,6 +106,8 @@ class Api {
 
       return videos
   }
+
+  //Playlists
 
   getPlaylists = async (accessToken, pageToken = '') => {
       const { items, nextPageToken, pageInfo } = await this.list('playlists', {
@@ -119,46 +163,7 @@ class Api {
       }
   }
 
-  searchVideos = async(accessToken, query, pageToken, channelId) => {
-      const { items, nextPageToken, pageInfo } = await this.list('search', {
-        access_token: accessToken,
-        part: 'snippet',
-        type: 'video',
-        q: query,
-        pageToken,
-        maxResults: ITEMS_PER_REQUEST,
-      })
-
-      const videoIds = items.map(({ id }) => id.videoId)
-
-      const videos = await this.getVideosFromIds(videoIds, accessToken)
-
-      return {
-        items: videos,
-        nextPageToken,
-        totalResults: pageInfo.totalResults
-      }
-  }
-
-  getVideo = async (accessToken, urlOrId) => {
-      const { items } = await this.list('videos', {
-        access_token: accessToken,
-        id: parseID(urlOrId),
-        part: 'contentDetails, snippet, status'
-      })
-
-      const { id, contentDetails, snippet, status } = items[0]
-
-      return {
-        videoId: id,
-        title: snippet.title,
-        duration: contentDetails.duration,
-        channelId: snippet.channelId,
-        channelTitle: snippet.channelTitle,
-        publishedAt: snippet.publishedAt,
-        privacyStatus: status.privacyStatus
-      }
-  }
+  //Subscriptions
 
   getSubscriptions = async (accessToken, pageToken = '') => {
       const { items, nextPageToken, pageInfo } = await this.list('subscriptions', {
@@ -181,6 +186,9 @@ class Api {
         totalResults: pageInfo.totalResults
       }
   }
+
+
+  //Channels
 
   getChannelTitle = async (accessToken, id) => {
     const { items } = await this.list('channels', {

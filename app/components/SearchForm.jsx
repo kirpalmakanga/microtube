@@ -1,7 +1,7 @@
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
 
-import { searchVideos } from '../actions/database'
+import { searchVideos } from '../actions/youtube'
 
 class SearchForm extends Component {
 

@@ -1,6 +1,6 @@
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
-import { getVideo } from '../actions/database'
+import { getVideo } from '../actions/youtube'
 
 
 class Prompt extends Component {

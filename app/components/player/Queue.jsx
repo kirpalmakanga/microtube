@@ -5,7 +5,6 @@ import { throttle } from 'lodash'
 
 import parseDuration from '../../lib/parseDuration'
 
-import QueueHeader from './QueueHeader'
 import QueueItem from './QueueItem'
 
 class Queue extends Component {
@@ -22,9 +21,7 @@ class Queue extends Component {
 
   componentWillReceiveProps = ({ player }) => this.setState({ queue: player.queue })
 
-  shouldComponentUpdate = (nextProps, { over }) => {
-    return over === null
-  }
+  shouldComponentUpdate = (nextProps, { over }) => (over === null)
 
   getPlaceholder = () => {
     let placeholder = this.placeholder
@@ -116,7 +113,6 @@ class Queue extends Component {
 
     return (
         <div className={['queue shadow--2dp', showQueue ? 'queue--show' : ''].join(' ')}>
-          <QueueHeader />
           <div className='queue__items' onDragOver={dragOver} ref={el => this.container = el}>
             {queue.length ? queue.map(({ title, active }, index) => (
               <QueueItem

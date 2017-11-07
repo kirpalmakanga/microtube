@@ -40,12 +40,35 @@ class Player extends Component {
     }
   }
 
-  componentWillReceiveProps(props) {
-    
+  componentWillReceiveProps({ player }) {
+    const activeQueueItem = player.queue.find((v) => v.active)
+
+    this.setCurrentVideo(activeQueueItem)
+  }
+
+  setCurrentVideo(video = { title: 'No video.', videoId: null }) {
+    const currentVideoId = this.state.currentVideo.videoId
+
+    const { title, videoId } = video
+
+    console.log(title, videoId)
+
+    if (videoId === null) {
+      this.setState({
+        currentTime: 0,
+        duration: 0,
+        loaded: 0
+      })
+    }
+
+    if (videoId !== currentVideoId) {
+        console.log('new video')
+        this.setState({ currentVideo: { title, videoId } })
+    }
   }
 
   isIframeReady = () => {
-    const { videoId } = this.getCurrentVideo()
+    const { videoId } = this.state.currentVideo
 
     return !!this.state.youtube && videoId
   }
@@ -171,15 +194,6 @@ class Player extends Component {
     clearInterval(loadingWatcher)
   }
 
-  getCurrentVideo() {
-    const { queue } = this.props.player
-
-    return queue.find((v) => v.active) || {
-      title: 'No video.',
-      videoId: null
-    }
-  }
-
   goToVideo = (next = true) => {
     const { queue } = this.props.player
 
@@ -241,9 +255,9 @@ class Player extends Component {
     }
   }
 
-  render({ player, dispatch }, { isPlaying, isBuffering, isMuted, volume, loaded, currentTime, duration }) {
+  render({ player, dispatch }, { isPlaying, isBuffering, isMuted, volume, loaded, currentTime, duration, currentVideo }) {
     const { handleWheelVolume, setVideoTime, toggleMute, togglePlay, goToVideo, onYoutubeIframeReady, onYoutubeIframeStateChange } = this
-    const currentVideo = this.getCurrentVideo()
+
     const { showQueue, showScreen, newQueueItems } = player
     const documentTitle = [
       'Microtube',
@@ -286,7 +300,7 @@ class Player extends Component {
           </div>
 
           <div class='player__info'>
-            <InfoProgress percentElapsed={currentTime / duration} percentLoaded={loaded} />
+            <InfoProgress percentElapsed={duration ? (currentTime / duration) : 0} percentLoaded={loaded} />
 
             <div className='player__info-title'>{currentVideo.title}</div>
 

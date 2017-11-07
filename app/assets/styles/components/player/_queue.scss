@@ -6,7 +6,7 @@
     background-color: lighten($brand-primary, 20%);
     @include transition();
     position: fixed;
-    top: 0;
+    top: 56px;
     left: 0;
     right: 0;
     transform: translateY(100%);
@@ -21,7 +21,7 @@
     }
 
     &__items {
-      height: calc(100% - 56px);
+      height: 100%;
     }
 
     &__item {

@@ -4,6 +4,7 @@ import { Link } from 'preact-router/match'
 
 import api from '../../api/youtube'
 
+import QueueHeader from './QueueHeader'
 import SearchHeader from './SearchHeader'
 import SearchForm from '../SearchForm'
 
@@ -56,7 +57,9 @@ class Header extends Component {
   render ({ auth, playlistItems, player, search, path, dispatch }, { title }) {
     return (
       <header class='layout__header shadow--2dp'>
-        {search.isOpen ? (
+        {player.showQueue ? (
+          <QueueHeader />
+        ) : search.isOpen ? (
           <SearchHeader />
         ) : (
           <div class='layout__header-row'>

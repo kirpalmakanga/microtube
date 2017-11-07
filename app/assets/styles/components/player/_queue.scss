@@ -3,6 +3,27 @@
     overflow-x: hidden;
     overflow-y: scroll;
 
+    background-color: lighten($brand-primary, 20%);
+    @include transition();
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    transform: translateY(100%);
+    bottom: 100px;
+
+    @media screen and (min-width: 480px) {
+      bottom: 50px;
+    }
+
+    &__header {
+      background-color: $brand-primary;
+    }
+
+    &__items {
+      height: calc(100% - 56px);
+    }
+
     &__item {
         @include transition();
         border-bottom: 2px solid rgba($brand-primary, 0.5);

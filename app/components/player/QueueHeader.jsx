@@ -3,7 +3,7 @@ import { connect } from 'preact-redux'
 
 const SearchHeader = ({ player, dispatch }) => {
   return (
-    <div class='layout__header-row'>
+    <div class='queue__header layout__header-row'>
       <button
         class='layout__back-button icon-button'
         aria-label='Close queue'

@@ -40,7 +40,15 @@ class Player extends Component {
     }
   }
 
-  isIframeReady = () => !!this.state.youtube
+  componentWillReceiveProps(props) {
+    
+  }
+
+  isIframeReady = () => {
+    const { videoId } = this.getCurrentVideo()
+
+    return !!this.state.youtube && videoId
+  }
 
   setVolume = (volume) => {
       const { youtube } = this.state

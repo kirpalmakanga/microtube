@@ -8,9 +8,9 @@ import VideoCard from '../cards/VideoCard'
 import { getPlaylistItems } from '../../actions/youtube'
 
 class Playlist extends Component {
-  componentDidMount() {
-    this.forceUpdate()
-  }
+  componentDidMount = this.forceUpdate
+
+  componentWillUnmount = () => this.props.dispatch({ type: 'CLEAR_PLAYLIST_ITEMS' })
 
   loadMoreContent = () => {
     const { dispatch, auth, id, playlistItems } = this.props

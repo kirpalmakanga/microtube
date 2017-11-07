@@ -6,13 +6,9 @@ import { getSubscriptions } from '../../actions/youtube'
 import SubscriptionCard from '../cards/SubscriptionCard'
 
 class Subscriptions extends Component {
-  componentDidMount() {
-    this.forceUpdate()
-  }
+  componentDidMount = this.forceUpdate
 
-  componentWillDestroy() {
-    this.props.dispatch({ type: 'CLEAR_SUBSCRIPTIONS' })
-  }
+  componentWillDestroy = () => this.props.dispatch({ type: 'CLEAR_SUBSCRIPTIONS' })
 
   loadMoreContent = () => {
     const { auth, subscriptions, dispatch } = this.props

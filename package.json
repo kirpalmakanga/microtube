@@ -33,6 +33,7 @@
     "node-sass": "^4.3.0",
     "offline-plugin": "^4.8.4",
     "preact": "^8.2.5",
+    "preact-async-route": "^2.0.1",
     "preact-helmet": "^4.0.0-alpha-3",
     "preact-redux": "^2.0.3",
     "preact-render-to-string": "^3.7.0",

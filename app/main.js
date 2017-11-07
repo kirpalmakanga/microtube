@@ -2,14 +2,19 @@ import * as OfflinePluginRuntime from 'offline-plugin/runtime'
 import { h, render } from 'preact'
 import { Provider } from 'preact-redux'
 import Router from 'preact-router'
+import AsyncRoute from 'preact-async-route'
 
 import configureStore from './store/configureStore'
 
 import App from './components/App'
 import Playlists from './components/containers/Playlists'
-import Playlist from './components/containers/Playlist'
-import Subscriptions from './components/containers/Subscriptions'
-import Channel from './components/containers/Channel'
+// import Playlist from './components/containers/Playlist'
+// import Subscriptions from './components/containers/Subscriptions'
+// import Channel from './components/containers/Channel'
+
+const makeGetComponent = (path) => (url, cb, props) => {
+  return System.import(path + '.jsx').then(module => module.default)
+}
 
 (() => {
   const store = configureStore(window.INITIAL_STATE)
@@ -21,9 +26,9 @@ import Channel from './components/containers/Channel'
       <App>
         <Router>
           <Playlists path='/' />
-          <Playlist path='/playlist/:id' />
-          <Subscriptions path='/subscriptions' />
-          <Channel path='/channel/:id' />
+          <AsyncRoute path='/playlist/:id' getComponent={makeGetComponent('./components/containers/Playlist')}/>
+          <AsyncRoute path='/subscriptions' getComponent={makeGetComponent('./components/containers/Subscriptions')}/>
+          <AsyncRoute path='/channel/:id' getComponent={makeGetComponent('./components/containers/Channel')}/>
         </Router>
       </App>
     </Provider>,

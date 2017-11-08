@@ -3,16 +3,20 @@ import { connect } from 'preact-redux'
 
 class GoogleLogout extends Component {
   componentDidMount() {
-    ((d, s, id, cb) => {
+    ((d, s, cb) => {
+      const clientUrl = '//apis.google.com/js/client.js'
       const element = d.getElementsByTagName(s)[0]
       const fjs = element
       let js = element
-      js = d.createElement(s)
-      js.id = id
-      js.src = '//apis.google.com/js/client:platform.js'
-      fjs.parentNode.insertBefore(js, fjs)
-      js.onload = cb
-    })(document, 'script', 'google-login', () => window.gapi.load('auth2'))
+
+      if(!d.querySelector(`script[src="${clientUrl}"]`)) {
+        js = d.createElement(s)
+        js.src = clientUrl
+        fjs.parentNode.insertBefore(js, fjs)
+        js.onload = cb
+      }
+
+    })(document, 'script', () => window.gapi.load('auth2'))
   }
 
   signOut = () => {

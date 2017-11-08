@@ -3,16 +3,22 @@ import { connect } from 'preact-redux'
 
 class GoogleLogin extends Component {
   componentDidMount() {
-    ((d, s, id, cb) => {
+    ((d, s, cb) => {
+      const clientUrl = '//apis.google.com/js/client.js'
       const element = d.getElementsByTagName(s)[0]
       const fjs = element
       let js = element
-      js = d.createElement(s)
-      js.id = id
-      js.src = '//apis.google.com/js/client:platform.js'
-      fjs.parentNode.insertBefore(js, fjs)
-      js.onload = cb
-    })(document, 'script', 'google-login', () => {
+
+      if(!d.querySelector(`script[src="${clientUrl}"]`)) {
+        js = d.createElement(s)
+        js.src = '//apis.google.com/js/client.js'
+        fjs.parentNode.insertBefore(js, fjs)
+        js.onload = cb
+      } else {
+        cb()
+      }
+
+    })(document, 'script', () => {
       const params = {
         clientId: '440745412600-snpeajuh0l9tqfrt356mec6j3mdn8eoo.apps.googleusercontent.com',
         scope: 'https://www.googleapis.com/auth/youtube'

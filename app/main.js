@@ -12,9 +12,9 @@ import Playlists from './components/containers/Playlists'
 // import Subscriptions from './components/containers/Subscriptions'
 // import Channel from './components/containers/Channel'
 
-const makeLoadAsync = (path) => (url, cb, props) =>
-  System.import(path + '.jsx')
-    .then(module => module.default)
+const makeGetComponent = (path) => (url, cb, props) => {
+  return System.import(path + '.jsx').then(module => module.default)
+}
 
 (() => {
   const store = configureStore(window.INITIAL_STATE)
@@ -26,9 +26,9 @@ const makeLoadAsync = (path) => (url, cb, props) =>
       <App>
         <Router>
           <Playlists path='/' />
-          <AsyncRoute path='/playlist/:id' getComponent={makeLoadAsync('./components/containers/Playlist')}/>
-          <AsyncRoute path='/subscriptions' getComponent={makeLoadAsync('./components/containers/Subscriptions')}/>
-          <AsyncRoute path='/channel/:id' getComponent={makeLoadAsync('./components/containers/Channel')}/>
+          <AsyncRoute path='/playlist/:id' getComponent={makeGetComponent('./components/containers/Playlist')}/>
+          <AsyncRoute path='/subscriptions' getComponent={makeGetComponent('./components/containers/Subscriptions')}/>
+          <AsyncRoute path='/channel/:id' getComponent={makeGetComponent('./components/containers/Channel')}/>
         </Router>
       </App>
     </Provider>,

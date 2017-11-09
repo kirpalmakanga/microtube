@@ -13,8 +13,6 @@ const webpack = require('webpack')
 const webpackConfig = require('../webpack.config')
 const compiler = webpack(webpackConfig)
 
-// const renderApp = require('./rendering')
-
 const app = express()
 
 const initialState = JSON.stringify({
@@ -74,16 +72,6 @@ if (process.env.NODE_ENV !== 'production') {
     next()
  })
 }
-
-// app.get('/:path/:id', ({ path }, res) => {
-//   console.log('path', path)
-//   const html = renderApp()
-//
-//   res.render('layouts/main', {
-//     title: 'MicroTube',
-//     initialState
-//   })
-// })
 
 app.use((req, res) => {
   res.render('layouts/main', {

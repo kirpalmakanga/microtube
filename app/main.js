@@ -8,9 +8,6 @@ import configureStore from './store/configureStore'
 
 import App from './components/App'
 import Playlists from './components/containers/Playlists'
-// import Playlist from './components/containers/Playlist'
-// import Subscriptions from './components/containers/Subscriptions'
-// import Channel from './components/containers/Channel'
 
 const makeGetComponent = (path) => (url, cb, props) => {
   return System.import(path + '.jsx').then(module => module.default)

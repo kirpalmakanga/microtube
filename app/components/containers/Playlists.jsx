@@ -27,24 +27,21 @@ class Playlists extends Component {
     return this.base ? (<Waypoint container={this.base} onEnter={this.loadMoreContent} />) : null
   }
 
-  // <div key={i} class='grid__item'>
-  // <PlaylistCard {...data} />
-  // </div>
-
   render({ auth, playlists }) {
     return (
       <div class='grid'>
         {playlists.items.map((data, i) => (
           <VisibilitySensor
             key={i}
-            className='grid__item'
             partialVisibility={true}
             scrollCheck={true}
-            scrollThrottle={200}
+            scrollThrottle={100}
             containment={this.base}
           >
             {({ isVisible, visibilityRect }) => (
-                isVisible ? (<PlaylistCard {...data} />) : null
+              <div key={i} class={['grid__item', isVisible ? '': 'hidden'].join(' ')}>
+                {isVisible ? (<PlaylistCard {...data} />) : null}
+              </div>
             )}
           </VisibilitySensor>
         ))}

@@ -39,7 +39,6 @@ export function getPlaylistItems (accessToken, playlistId, pageToken) {
 }
 
 export function queuePlaylist ({ accessToken, playlistId, queue, play }) {
-  console.log('queue playlist ?')
   return (dispatch) => {
     const getItems = async (pageToken) => {
       try {

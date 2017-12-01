@@ -10,6 +10,7 @@ $gutter: 16px;
   }
 
   &__item {
+      will-change: opacity;
       @include transition(opacity, 0.3s);
       display: flex;
       height: calc((100vh - 56px - 100px) / 5);

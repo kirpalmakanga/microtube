@@ -44,7 +44,7 @@ class Api {
 
   //Videos
 
-  searchVideos = async(accessToken, query, pageToken, channelId) => {
+  searchVideos = async({ accessToken, query, pageToken, channelId }) => {
       const { items, nextPageToken, pageInfo } = await this.list('search', {
         access_token: accessToken,
         part: 'snippet',
@@ -109,7 +109,7 @@ class Api {
 
   //Playlists
 
-  getPlaylists = async (accessToken, pageToken = '') => {
+  getPlaylists = async ({ accessToken, pageToken = '' }) => {
       const { items, nextPageToken, pageInfo } = await this.list('playlists', {
         access_token: accessToken,
         pageToken,
@@ -143,7 +143,7 @@ class Api {
     return title
   }
 
-  getPlaylistItems = async (accessToken, playlistId, pageToken = '') => {
+  getPlaylistItems = async ({ accessToken, pageToken = '', playlistId }) => {
       const { items, nextPageToken, pageInfo } = await this.list('playlistItems', {
         access_token: accessToken,
         playlistId,
@@ -165,7 +165,7 @@ class Api {
 
   //Subscriptions
 
-  getSubscriptions = async (accessToken, pageToken = '') => {
+  getSubscriptions = async ({ accessToken, pageToken = '' }) => {
       const { items, nextPageToken, pageInfo } = await this.list('subscriptions', {
         access_token: accessToken,
         pageToken,
@@ -202,7 +202,7 @@ class Api {
     return title
   }
 
-  getChannelVideos = async (accessToken, channelId, pageToken) => {
+  getChannelVideos = async ({ accessToken, channelId, pageToken }) => {
       const { items, nextPageToken, pageInfo } = await this.list('search', {
         access_token: accessToken,
         part: 'snippet',

@@ -61,11 +61,13 @@ class Grid extends Component {
             scrollThrottle={100}
             containment={this.base}
           >
+          
             {({ isVisible, visibilityRect }) => (
               <div key={i} class={['grid__item', isVisible ? '': 'hidden'].join(' ')}>
                 {isVisible ? (<GridItem {...data} />) : null}
               </div>
             )}
+
           </VisibilitySensor>
         ))}
 

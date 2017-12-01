@@ -2,11 +2,9 @@ import api from '../api/youtube'
 
 export function getPlaylists (accessToken, pageToken) {
   return async (dispatch) => {
-    dispatch({ type: 'GET_PLAYLISTS' })
-
     try {
       const data = await api.getPlaylists(accessToken, pageToken)
-      dispatch({ type: 'GET_PLAYLISTS_SUCCESS', data })
+      dispatch({ type: 'GET_PLAYLISTS', data })
     } catch (err) {
       dispatch({ type: 'NOTIFY', data: 'Error fetching playlists.' })
     }
@@ -27,11 +25,10 @@ export function getPlaylistTitle (accessToken, playlistId) {
 
 export function getPlaylistItems (accessToken, playlistId, pageToken) {
   return async (dispatch) => {
-    dispatch({ type: 'GET_PLAYLIST' })
     try {
       const data = await api.getPlaylistItems(accessToken, playlistId, pageToken)
 
-      dispatch({ type: 'GET_PLAYLIST_SUCCESS', data })
+      dispatch({ type: 'GET_PLAYLIST', data })
     } catch (err) {
       dispatch({ type: 'NOTIFY', data: 'Error fetching playlist items.' })
     }
@@ -67,11 +64,17 @@ export function queuePlaylist ({ accessToken, playlistId, queue, play }) {
 }
 
 export function searchVideos (accessToken, query, pageToken) {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const { search } = getState()
+
+    if(query === search.query) {
+        return
+    }
+
     dispatch({ type: 'SEARCH_VIDEOS', data: { query } })
 
     try {
-        const data = await api.searchVideos(accessToken, query, pageToken)
+        const data = await api.searchVideos({ accessToken, query, pageToken })
 
         dispatch({ type: 'SEARCH_VIDEOS_SUCCESS', data })
     } catch (err) {

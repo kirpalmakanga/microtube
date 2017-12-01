@@ -44,7 +44,7 @@ class Api {
 
   //Videos
 
-  searchVideos = async({ accessToken, query, pageToken, channelId }) => {
+  searchVideos = async({ accessToken, query, pageToken }) => {
       const { items, nextPageToken, pageInfo } = await this.list('search', {
         access_token: accessToken,
         part: 'snippet',

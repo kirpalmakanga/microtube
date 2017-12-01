@@ -1,9 +1,7 @@
 const initialState = {
   isOpen: false,
   items: [],
-  pages: [],
-  isLoading: 0,
-  totalResults: 0,
+  nextPageToken: '',
   query: ''
 }
 
@@ -19,27 +17,18 @@ export default function (state = initialState, { type, data }) {
       return {
         ...state,
         items: isNewQuery ? [] : state.items,
-        pages: isNewQuery ? [] : state.pages,
-        isLoading: 1,
+        nextPageToken: isNewQuery ? '' : state.nextPageToken,
         query
       }
 
     case 'SEARCH_VIDEOS_SUCCESS':
       const { items, nextPageToken, totalResults } = data
-      const isNewToken = typeof nextPageToken === 'string' && !state.pages.includes(nextPageToken)
-      const endOfContent = typeof nextPageToken === 'undefined'
 
-      let newData
-      // if (isNewToken) {
-      newData = {
+      let newData = {
         items: [...state.items, ...items],
-        pages: [...state.pages, nextPageToken],
-        isLoading: 0,
+        nextPageToken: nextPageToken || null,
         totalResults
       }
-      // } else if (endOfContent) {
-      //   return Object.assign({} , state, { isLoading: 2 })
-      // }
 
       return { ...state, ...newData }
 

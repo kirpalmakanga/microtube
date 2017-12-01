@@ -7,7 +7,7 @@ import Grid from '../Grid'
 
 import VideoCard from '../cards/VideoCard'
 
-const  Search = ({ auth, search }) => {
+const Search = ({ auth, search }) => {
   return (
     <div className={['search', search.isOpen ? 'search--show': '', 'shadow--2dp'].join(' ')}>
       {search.query ? (

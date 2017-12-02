@@ -1,13 +1,11 @@
 const { connect } = ReactRedux
 
-const Drawer = ({ children, location, auth }) => {
+const Drawer = ({ children, location }) => {
   return (
     <div className='layout__drawer'>
-        
+
     </div>
   )
 }
 
-const mapStateToProps = ({ auth }) => ({ auth })
-
-export default connect(mapStateToProps)(Drawer)
+export default connect()(Drawer)

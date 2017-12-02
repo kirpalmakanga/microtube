@@ -7,7 +7,7 @@ import getThumbnails from '../../lib/getThumbnails'
 
 import Img from '../Img'
 
-const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch }) => (
+const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, dispatch }) => (
   <div class='card shadow--2dp'>
     <Link
       class='card__content' href={'/playlist/' + id}
@@ -28,7 +28,6 @@ const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch
         type='button'
         name='Queue playlist'
         onClick={() => dispatch(queuePlaylist({
-          token: auth.token,
           playlistId: id
         }))}
       >
@@ -42,7 +41,6 @@ const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch
         type='button'
         aria-label='Queue and play playlist'
         onClick={() => dispatch(queuePlaylist({
-          token: auth.token,
           playlistId: id,
           play: true
         }))}
@@ -55,6 +53,4 @@ const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, player, dispatch
   </div>
 )
 
-const mapStateToProps = ({ auth, player }) => ({ auth, player })
-
-export default connect(mapStateToProps)(PlaylistCard)
+export default connect()(PlaylistCard)

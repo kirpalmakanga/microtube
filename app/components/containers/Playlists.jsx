@@ -1,17 +1,17 @@
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
 
-import api from '../../api/youtube'
+import { getPlaylists } from '../../api/youtube'
 
 import Grid from '../Grid'
 
 import PlaylistCard from '../cards/PlaylistCard'
 
-const Playlists = ({ auth }) => {
+const Playlists = () => {
   return (
     <Grid
-      loadContent={(pageToken) => api.getPlaylists({
-        accessToken: auth.token,
+      loadContent={(pageToken) => getPlaylists({
+        mine: true,
         pageToken
       })}
       GridItem={PlaylistCard}
@@ -19,6 +19,4 @@ const Playlists = ({ auth }) => {
   )
 }
 
-const mapStateToProps = ({ auth }) => ({ auth })
-
-export default connect(mapStateToProps)(Playlists)
+export default Playlists

@@ -1,7 +1,7 @@
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
 
-import { searchVideos } from '../actions/youtube'
+import { searchContent } from '../actions/youtube'
 
 class SearchForm extends Component {
 
@@ -16,11 +16,10 @@ class SearchForm extends Component {
   }
 
   handleSubmit = (e) => {
-    const { auth, dispatch } = this.props
     const query = e.target.querySelector('#search').value
     e.preventDefault()
 
-    dispatch(searchVideos(auth.token, query))
+    this.props.dispatch(searchContent(query))
   }
 
   render() {
@@ -45,6 +44,5 @@ class SearchForm extends Component {
     )
   }
 }
-const mapStateToProps = ({ auth }) => ({ auth })
 
-export default connect(mapStateToProps)(SearchForm)
+export default connect()(SearchForm)

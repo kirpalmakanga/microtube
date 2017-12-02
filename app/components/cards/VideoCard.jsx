@@ -33,7 +33,7 @@ const VideoCard = ({ videoId, title, thumbnails, publishedAt, duration, channelT
       <button
         class='card__button icon-button'
         aria-label={`Queue video ${title}`}
-        onClick={() => dispatch({ type: 'QUEUE_PUSH', data: [video] })}
+        onClick={() => dispatch({ type: 'QUEUE_PUSH', data: [{ videoId, title }] })}
       >
         <span class='icon'>
           <svg><use xlinkHref='#icon-playlist-add'></use></svg>

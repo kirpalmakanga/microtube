@@ -2,7 +2,7 @@ import { h, render, Component } from 'preact'
 import { connect } from 'preact-redux'
 import { Link } from 'preact-router/match'
 
-import api from '../../api/youtube'
+import { getPlaylistTitle, getChannelTitle } from '../../api/youtube'
 
 import QueueHeader from './QueueHeader'
 import SearchHeader from './SearchHeader'
@@ -30,11 +30,11 @@ class Header extends Component {
     }
 
     if (path.includes('/channel')) {
-      title = await api.getChannelTitle(auth.token, path.slice(1).split('/')[1])
+      title = await getChannelTitle(path.slice(1).split('/')[1])
     }
 
     if (path.includes('/playlist')) {
-      title = await api.getPlaylistTitle(auth.token, path.slice(1).split('/')[1])
+      title = await getPlaylistTitle(path.slice(1).split('/')[1])
     }
 
     this.setState({ title })

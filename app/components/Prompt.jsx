@@ -1,6 +1,6 @@
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
-import { getVideo } from '../actions/youtube'
+import { queueVideo } from '../actions/youtube'
 
 
 class Prompt extends Component {
@@ -17,12 +17,11 @@ class Prompt extends Component {
   }
 
   handleSubmit = (e) => {
-    const { auth, dispatch } = this.props
     const videoId = e.target.querySelector('input').value
 
     e.preventDefault()
 
-    dispatch(getVideo(auth.token, videoId))
+    this.props.dispatch(queueVideo(videoId))
     this.close()
   }
 
@@ -70,6 +69,6 @@ class Prompt extends Component {
   }
 }
 
-const mapStateToProps = ({ auth, prompt }) => ({ auth, prompt })
+const mapStateToProps = ({ prompt }) => ({ prompt })
 
 export default connect(mapStateToProps)(Prompt)

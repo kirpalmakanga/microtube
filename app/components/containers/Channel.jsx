@@ -1,17 +1,16 @@
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
 
-import api from '../../api/youtube'
+import { getChannelVideos } from '../../api/youtube'
 
 import Grid from '../Grid'
 
 import VideoCard from '../cards/VideoCard'
 
-const Channel = ({ auth, id }) => {
+const Channel = ({ id }) => {
   return (
     <Grid
-      loadContent={(pageToken) => api.getChannelVideos({
-        accessToken: auth.token,
+      loadContent={(pageToken) => getChannelVideos({
         channelId: id,
         pageToken
       })}
@@ -20,6 +19,4 @@ const Channel = ({ auth, id }) => {
   )
 }
 
-const mapStateToProps = ({ auth }) => ({ auth })
-
-export default connect(mapStateToProps)(Channel)
+export default Channel

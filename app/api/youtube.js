@@ -18,210 +18,248 @@ function parseID(url){
   return ID
 }
 
-class Api {
-  constructor() {
-    this.loadApi = () => new Promise((resolve, reject) => {
-      const waitForAPI = setInterval(() => {
-        if(gapi && gapi.client) {
-          clearInterval(waitForAPI)
-          gapi.client.load('youtube', 'v3', () => resolve(gapi.client.youtube))
-        }
-      }, 100)
-    })
+function getClient() {
+  return new Promise((resolve) => {
+    const watcher = setInterval(() => {
+      if(gapi && gapi.client) {
+        clearInterval(watcher)
+        resolve(gapi.client)
+      }
+    }, 100)
+  })
+}
+
+function createResource(properties) {
+  var resource = {}
+  var normalizedProps = properties
+
+  for (let p in properties) {
+    var value = properties[p]
+    if (p && p.substr(-2, 2) == '[]') {
+      const adjustedName = p.replace('[]', '')
+      if (value) {
+        normalizedProps[adjustedName] = value.split(',')
+      }
+      delete normalizedProps[p]
+    }
   }
 
-  callApi = (action, field, config) => new Promise(async (resolve, reject) => {
-      const youtube = await this.loadApi()
+  for (const p in normalizedProps) {
+    // Leave properties that don't have values out of inserted resource.
+    if (normalizedProps.hasOwnProperty(p) && normalizedProps[p]) {
+      const propArray = p.split('.')
+      let ref = resource
 
-      youtube[field]
-      .list({ ...config, key: API_KEY })
-      .execute(res => res.error ? reject(res.message) : resolve(res))
+      for (let pa = 0; pa < propArray.length; pa++) {
+        const key = propArray[pa]
+
+        if (pa === propArray.length - 1) {
+          ref[key] = normalizedProps[p]
+        } else {
+          ref = ref[key] = ref[key] || {}
+        }
+      }
+    }
+  }
+
+  return resource
+}
+
+function removeEmptyParams(params) {
+  for (const p in params) {
+    if (!params[p] || params[p] == 'undefined') {
+      delete params[p]
+    }
+  }
+  return params
+}
+
+function request(method, path, params, properties) {
+  const config = {
+      method,
+      path: `/youtube/v3/${path}`,
+      params: removeEmptyParams(params)
+  }
+
+  if (properties) {
+    config.body = createResource(properties)
+  }
+
+  return new Promise(async (resolve) => {
+    const client = await getClient()
+
+    client.request(config)
+    .execute(resolve)
+  })
+}
+
+/* Videos */
+
+export async function searchVideos ({ query, pageToken }) {
+    const { items, nextPageToken, pageInfo } = await request('GET', 'search', {
+      part: 'snippet',
+      type: 'video',
+      q: query,
+      pageToken,
+      maxResults: ITEMS_PER_REQUEST,
+    })
+
+    const videoIds = items.map(({ id }) => id.videoId)
+
+    const videos = await getVideosFromIds(videoIds)
+
+    return {
+      items: videos,
+      nextPageToken,
+      totalResults: pageInfo.totalResults
+    }
+}
+
+export async function getVideo (urlOrId) {
+    const { items } = await request('GET', 'videos', {
+      id: parseID(urlOrId),
+      part: 'contentDetails, snippet, status'
+    })
+
+    const { id, contentDetails, snippet, status } = items[0]
+
+    return {
+      videoId: id,
+      title: snippet.title,
+      duration: contentDetails.duration,
+      channelId: snippet.channelId,
+      channelTitle: snippet.channelTitle,
+      publishedAt: snippet.publishedAt,
+      privacyStatus: status.privacyStatus
+    }
+}
+
+export async function getVideosFromIds (ids) {
+    const { items } = await request('GET', 'videos', {
+      part: 'contentDetails, snippet, status',
+      id: ids.join(', '),
+      maxResults: ITEMS_PER_REQUEST
+    })
+
+    const videos = items.map(({ id, contentDetails, snippet, status }) => ({
+      videoId: id,
+      title: snippet.title,
+      thumbnails: snippet.thumbnails,
+      duration: contentDetails.duration,
+      publishedAt: snippet.publishedAt,
+      channelId: snippet.channelId,
+      channelTitle: snippet.channelTitle,
+      privacyStatus: status.privacyStatus
+    }))
+
+    return videos
+}
+
+/* Playlists */
+
+export async function getPlaylists ({ pageToken = '', mine = false }) {
+  const { items, nextPageToken, pageInfo } = await request('GET', 'playlists', {
+    pageToken,
+    mine,
+    part: 'snippet, contentDetails, status',
+    maxResults: ITEMS_PER_REQUEST
   })
 
-  list = (...args) => this.callApi('list', ...args)
-
-  remove = (...args) => this.callApi('delete', ...args)
-
-  //Videos
-
-  searchVideos = async({ accessToken, query, pageToken }) => {
-      const { items, nextPageToken, pageInfo } = await this.list('search', {
-        access_token: accessToken,
-        part: 'snippet',
-        type: 'video',
-        q: query,
-        pageToken,
-        maxResults: ITEMS_PER_REQUEST,
-      })
-
-      const videoIds = items.map(({ id }) => id.videoId)
-
-      const videos = await this.getVideosFromIds(videoIds, accessToken)
-
-      return {
-        items: videos,
-        nextPageToken,
-        totalResults: pageInfo.totalResults
-      }
-  }
-
-  getVideo = async (accessToken, urlOrId) => {
-      const { items } = await this.list('videos', {
-        access_token: accessToken,
-        id: parseID(urlOrId),
-        part: 'contentDetails, snippet, status'
-      })
-
-      const { id, contentDetails, snippet, status } = items[0]
-
-      return {
-        videoId: id,
-        title: snippet.title,
-        duration: contentDetails.duration,
-        channelId: snippet.channelId,
-        channelTitle: snippet.channelTitle,
-        publishedAt: snippet.publishedAt,
-        privacyStatus: status.privacyStatus
-      }
-  }
-
-  getVideosFromIds = async (ids, accessToken) => {
-      const { items } = await this.list('videos', {
-        access_token: accessToken,
-        part: 'contentDetails, snippet, status',
-        id: ids.join(', '),
-        maxResults: ITEMS_PER_REQUEST
-      })
-
-      const videos = items.map(({ id, contentDetails, snippet, status }) => ({
-        videoId: id,
-        title: snippet.title,
-        thumbnails: snippet.thumbnails,
-        duration: contentDetails.duration,
-        publishedAt: snippet.publishedAt,
-        channelId: snippet.channelId,
-        channelTitle: snippet.channelTitle,
-        privacyStatus: status.privacyStatus
-      }))
-
-      return videos
-  }
-
-  //Playlists
-
-  getPlaylists = async ({ accessToken, pageToken = '' }) => {
-      const { items, nextPageToken, pageInfo } = await this.list('playlists', {
-        access_token: accessToken,
-        pageToken,
-        part: 'snippet, contentDetails, status',
-        mine: true,
-        maxResults: ITEMS_PER_REQUEST
-      })
-
-      return {
-        items: items.map(({ id, contentDetails, snippet, status }) => ({
-          id,
-          title: snippet.title,
-          thumbnails: snippet.thumbnails,
-          itemCount: contentDetails.itemCount,
-          privacyStatus: status.privacyStatus
-        })),
-        nextPageToken,
-        totalResults: pageInfo.totalResults
-      }
-  }
-
-  getPlaylistTitle = async (accessToken, id) => {
-    const { items } = await this.list('playlists', {
+  return {
+    items: items.map(({ id, contentDetails, snippet, status }) => ({
       id,
-      access_token: accessToken,
-      part: 'snippet'
-    })
-
-    const { title } = items[0].snippet
-
-    return title
-  }
-
-  getPlaylistItems = async ({ accessToken, pageToken = '', playlistId }) => {
-      const { items, nextPageToken, pageInfo } = await this.list('playlistItems', {
-        access_token: accessToken,
-        playlistId,
-        pageToken,
-        part: 'snippet, status',
-        maxResults: ITEMS_PER_REQUEST
-      })
-
-      const videoIds = items.map(({ snippet }) => snippet.resourceId.videoId)
-
-      const videos = await this.getVideosFromIds(videoIds, accessToken)
-
-      return {
-        items: videos,
-        nextPageToken,
-        totalResults: pageInfo.totalResults
-      }
-  }
-
-  //Subscriptions
-
-  getSubscriptions = async ({ accessToken, pageToken = '' }) => {
-      const { items, nextPageToken, pageInfo } = await this.list('subscriptions', {
-        access_token: accessToken,
-        pageToken,
-        part: 'id, snippet, contentDetails',
-        mine: true,
-        maxResults: ITEMS_PER_REQUEST,
-        order: 'alphabetical'
-      })
-
-      return {
-        items: items.map(({ id, contentDetails, snippet }) => ({
-          id,
-          channelId: snippet.resourceId.channelId,
-          title: snippet.title,
-          itemCount: contentDetails.totalItemCount
-        })),
-        nextPageToken,
-        totalResults: pageInfo.totalResults
-      }
-  }
-
-
-  //Channels
-
-  getChannelTitle = async (accessToken, id) => {
-    const { items } = await this.list('channels', {
-      id,
-      access_token: accessToken,
-      part: 'snippet'
-    })
-
-    const { title } = items[0].snippet
-
-    return title
-  }
-
-  getChannelVideos = async ({ accessToken, channelId, pageToken }) => {
-      const { items, nextPageToken, pageInfo } = await this.list('search', {
-        access_token: accessToken,
-        part: 'snippet',
-        type: 'video',
-        channelId,
-        pageToken,
-        maxResults: ITEMS_PER_REQUEST,
-      })
-
-      const videoIds = items.map(({ id }) => id.videoId)
-
-      const videos = await this.getVideosFromIds(videoIds, accessToken)
-
-      return {
-        items: videos,
-        nextPageToken,
-        totalResults: pageInfo.totalResults
-      }
+      title: snippet.title,
+      thumbnails: snippet.thumbnails,
+      itemCount: contentDetails.itemCount,
+      privacyStatus: status.privacyStatus
+    })),
+    nextPageToken,
+    totalResults: pageInfo.totalResults
   }
 }
 
-export default new Api()
+export async function getPlaylistTitle (id) {
+  const { items } = await request('GET', 'playlists', {
+    id,
+    part: 'snippet'
+  })
+
+  const { title } = items[0].snippet
+
+  return title
+}
+
+export async function getPlaylistItems ({ pageToken = '', playlistId }) {
+  const { items, nextPageToken, pageInfo } = await request('GET', 'playlistItems', {
+    playlistId,
+    pageToken,
+    part: 'snippet, status',
+    maxResults: ITEMS_PER_REQUEST
+  })
+
+  const videoIds = items.map(({ snippet }) => snippet.resourceId.videoId)
+
+  const videos = await getVideosFromIds(videoIds)
+
+  return {
+    items: videos,
+    nextPageToken,
+    totalResults: pageInfo.totalResults
+  }
+}
+
+/* Subscriptions */
+
+export async function getSubscriptions ({ pageToken = '', mine = false }) {
+    const { items, nextPageToken, pageInfo } = await request('GET', 'subscriptions', {
+      pageToken,
+      mine,
+      part: 'id, snippet, contentDetails',
+      maxResults: ITEMS_PER_REQUEST,
+      order: 'alphabetical'
+    })
+
+    return {
+      items: items.map(({ id, contentDetails, snippet }) => ({
+        id,
+        channelId: snippet.resourceId.channelId,
+        title: snippet.title,
+        itemCount: contentDetails.totalItemCount
+      })),
+      nextPageToken,
+      totalResults: pageInfo.totalResults
+    }
+}
+
+/* Channels */
+
+export async function getChannelTitle (id) {
+  const { items } = await request('GET', 'channels', {
+    id,
+    part: 'snippet'
+  })
+
+  const { title } = items[0].snippet
+
+  return title
+}
+
+export async function getChannelVideos ({ channelId, pageToken }) {
+    const { items, nextPageToken, pageInfo } = await request('GET', 'search', {
+      part: 'snippet',
+      type: 'video',
+      channelId,
+      pageToken,
+      maxResults: ITEMS_PER_REQUEST,
+    })
+
+    const videoIds = items.map(({ id }) => id.videoId)
+
+    const videos = await getVideosFromIds(videoIds)
+
+    return {
+      items: videos,
+      nextPageToken,
+      totalResults: pageInfo.totalResults
+    }
+}

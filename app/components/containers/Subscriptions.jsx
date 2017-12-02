@@ -1,17 +1,17 @@
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
 
-import api from '../../api/youtube'
+import { getSubscriptions } from '../../api/youtube'
 
 import Grid from '../Grid'
 
 import SubscriptionCard from '../cards/SubscriptionCard'
 
-const Subscriptions = ({ auth, subscriptions }) => {
+const Subscriptions = () => {
   return (
     <Grid
-      loadContent={(pageToken) => api.getSubscriptions({
-        accessToken: auth.token,
+      loadContent={(pageToken) => getSubscriptions({
+        mine: true,
         pageToken
       })}
       GridItem={SubscriptionCard}
@@ -19,6 +19,4 @@ const Subscriptions = ({ auth, subscriptions }) => {
   )
 }
 
-const mapStateToProps = ({ auth }) => ({ auth })
-
-export default connect(mapStateToProps)(Subscriptions)
+export default Subscriptions

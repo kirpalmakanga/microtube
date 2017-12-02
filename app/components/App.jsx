@@ -6,7 +6,6 @@ import { connect } from 'preact-redux'
 import Match from 'preact-router/match'
 
 import Header from './header/HeaderContainer'
-import Search from './containers/Search'
 import Player from './containers/Player'
 import Notifications from './Notifications'
 import Prompt from './Prompt'
@@ -30,8 +29,6 @@ class App extends Component {
             </div>
           )}
         </main>
-
-        <Search />
 
         <Player />
 

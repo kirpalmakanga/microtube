@@ -8,7 +8,7 @@ const SearchHeader = ({ dispatch }) => {
     <div class='layout__header-row'>
       <button
         class='layout__back-button icon-button'
-        onClick={() => dispatch({ type: 'SEARCH_CLOSE' })}
+        onClick={() => window.history.back()}
         aria-label='Close search'
       >
         <span class='icon'>

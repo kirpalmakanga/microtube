@@ -59,7 +59,7 @@ class Header extends Component {
       <header class='layout__header shadow--2dp'>
         {player.showQueue ? (
           <QueueHeader />
-        ) : search.isOpen ? (
+        ) : path.includes('/search') ? (
           <SearchHeader />
         ) : (
           <div class='layout__header-row'>
@@ -74,15 +74,15 @@ class Header extends Component {
             <span class='layout-title'>{title}</span>
 
             <nav class='navigation'>
-              <button
+              <Link
                 class='navigation__link icon-button'
                 aria-label='Open search'
-                onClick={this.openSearchForm}
+                href='/search'
               >
                 <span class='icon'>
                   <svg><use xlinkHref='#icon-search'></use></svg>
                 </span>
-              </button>
+              </Link>
 
               <Link class='navigation__link icon-button' href='/subscriptions' aria-label='Open subscriptions'>
                 <span class='icon'>

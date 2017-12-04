@@ -13,10 +13,6 @@ class Grid extends Component {
       isLoading: false
     }
   }
-  //
-  // componentDidMount() {
-  //   this.forceUpdate()
-  // }
 
   loadItems = () => {
     const { loadContent } = this.props
@@ -41,7 +37,6 @@ class Grid extends Component {
   }
 
   renderWaypoint() {
-    // return (<Waypoint container={this.grid} onEnter={this.loadItems} />)
     return this.grid ? (<Waypoint container={this.grid} onEnter={this.loadItems} />) : null
   }
 

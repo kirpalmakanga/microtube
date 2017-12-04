@@ -80,8 +80,6 @@ export default class VisibilitySensor extends Component {
   }
 
   addEventListener(target, event, delay, throttle) {
-
-    console.log('adding event', target);
     if (!this.debounceCheck) {
       this.debounceCheck = {}
     }

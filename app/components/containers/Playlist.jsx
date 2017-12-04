@@ -1,22 +1,35 @@
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
 
-import { getPlaylistItems } from '../../api/youtube'
+import { getPlaylistItems } from '../../actions/youtube'
 
 import Grid from '../Grid'
 
 import VideoCard from '../cards/VideoCard'
 
-const Playlist = ({ id }) => {
-  return (
-    <Grid
-      loadContent={(pageToken) => getPlaylistItems({
-        playlistId: id,
-        pageToken
-      })}
-      GridItem={VideoCard}
-    />
-  )
+class Playlist extends Component {
+  componentWillUnmount() {
+    this.props.dispatch({ type: 'CLEAR_PLAYLIST_ITEMS' })
+  }
+
+  render({ id, playlistItems, dispatch }) {
+    const { items, nextPageToken } = playlistItems
+
+    return (
+      <Grid
+        items={items}
+        loadContent={() => nextPageToken !== null && dispatch(
+          getPlaylistItems({
+            playlistId: id,
+            pageToken: nextPageToken
+          })
+        )}
+        ItemComponent={VideoCard}
+      />
+    )
+  }
 }
 
-export default Playlist
+const mapStateToProps = ({ playlistItems }) => ({ playlistItems })
+
+export default connect(mapStateToProps)(Playlist)

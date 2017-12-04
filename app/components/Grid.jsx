@@ -10,18 +10,16 @@ class Grid extends Component {
     super(props)
 
     this.state = {
-      items: [],
-      pageToken: '',
       isLoading: false
     }
   }
-
-  componentDidMount() {
-    this.forceUpdate()
-  }
+  //
+  // componentDidMount() {
+  //   this.forceUpdate()
+  // }
 
   loadItems = () => {
-    const { loadContent, onLoadingError = () => {} } = this.props
+    const { loadContent } = this.props
     const { pageToken, isLoading } = this.state
 
 
@@ -29,30 +27,27 @@ class Grid extends Component {
       return
     }
 
+    console.log('loading content')
+
     this.setState({ isLoading: true }, async () => {
-      try {
-        const { items, nextPageToken } = await loadContent(pageToken)
+      await loadContent()
 
-        console.log('nextPageToken', nextPageToken)
-
-        this.setState((state) => ({
-          items: [...state.items, ...items],
-          pageToken: nextPageToken || null,
-          isLoading: false
-        }))
-      } catch (e) {
-        onLoadingError(e)
-      }
+      this.setState({ isLoading: false })
     })
   }
 
-  renderWaypoint() {
-    return this.base ? (<Waypoint container={this.base} onEnter={this.loadItems} />) : null
+  componentDidMount() {
+    this.forceUpdate()
   }
 
-  render({ GridItem }, { items, isLoading }) {
+  renderWaypoint() {
+    // return (<Waypoint container={this.grid} onEnter={this.loadItems} />)
+    return this.grid ? (<Waypoint container={this.grid} onEnter={this.loadItems} />) : null
+  }
+
+  render({ items, ItemComponent }, { isLoading }) {
     return (
-      <div class='grid'>
+      <div class='grid' ref={(el) => { this.grid = el }}>
         {items.map((data, i) => (
           <VisibilitySensor
             key={i}
@@ -60,13 +55,16 @@ class Grid extends Component {
             scrollCheck={true}
             scrollThrottle={100}
             containment={this.base}
+            intervalCheck={false}
           >
-          
-            {({ isVisible, visibilityRect }) => (
-              <div key={i} class={['grid__item', isVisible ? '': 'hidden'].join(' ')}>
-                {isVisible ? (<GridItem {...data} />) : null}
-              </div>
-            )}
+
+            {({ isVisible }) => {
+                return (
+                  <div key={i} class={['grid__item', isVisible ? '': 'hidden'].join(' ')}>
+                    {isVisible ? (<ItemComponent {...data} />) : null}
+                  </div>
+                )
+            }}
 
           </VisibilitySensor>
         ))}

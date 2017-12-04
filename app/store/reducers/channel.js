@@ -7,7 +7,7 @@ const initialState = {
 export default function (state = initialState, { type, data }) {
   switch (type) {
 
-    case 'GET_CHANNEL_VIDEOS_SUCCESS':
+    case 'GET_CHANNEL_VIDEOS':
       const { items, nextPageToken, totalResults } = data
 
       let newData = {
@@ -18,7 +18,7 @@ export default function (state = initialState, { type, data }) {
 
       return { ...state, ...newData }
 
-    case 'CLEAR_CHANNEL_VIDEOS':
+    case 'CLEAR_CHANNEL_ITEMS':
     case 'SIGN_OUT':
       return initialState
   }

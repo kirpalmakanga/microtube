@@ -1,26 +1,33 @@
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
 
-import { searchVideos } from '../../api/youtube'
+import { searchVideos } from '../../actions/youtube'
 
 import Grid from '../Grid'
 
 import VideoCard from '../cards/VideoCard'
 
-const Search = ({ search }) => {
-  return (
-    <div className={['search', search.isOpen ? 'search--show': '', 'shadow--2dp'].join(' ')}>
-      {search.query ? (
-        <Grid
-          loadContent={(pageToken) => searchVideos({
-            pageToken,
-            query: search.query
-          })}
-          GridItem={VideoCard}
-        />
-      ) : null}
-    </div>
-  )
+class Search extends Component {
+  componentWillUnmount() {
+    this.props.dispatch({ type: 'CLEAR_SEARCH' })
+  }
+
+  render({ search, dispatch }) {
+    const { query, items, nextPageToken } = search
+
+    return (
+      <Grid
+        items={items}
+        loadContent={() => query && dispatch(
+          searchVideos({
+            query,
+            pageToken: nextPageToken
+          })
+        )}
+        ItemComponent={VideoCard}
+      />
+    )
+  }
 }
 
 const mapStateToProps = ({ search }) => ({ search })

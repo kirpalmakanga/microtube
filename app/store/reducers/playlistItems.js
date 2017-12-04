@@ -10,9 +10,9 @@ export default function (state = initialState, { type, data }) {
       const { playlistTitle } = data
       return { ...state, playlistTitle }
 
-    case 'GET_PLAYLIST_SUCCESS':
+    case 'GET_PLAYLIST':
       const { items, nextPageToken, totalResults } = data
-      // let newItems = items.filter(item => item.status.privacyStatus !== 'private').filter(item => item.snippet.title !== 'Deleted video')
+      // let newItems = items.filter(({ status, snippet }) => status.privacyStatus !== 'private' && snippet.title !== 'Deleted video')
 
       let newData = {
         items: [...state.items, ...items],

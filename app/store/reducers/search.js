@@ -1,5 +1,4 @@
 const initialState = {
-  isOpen: false,
   items: [],
   nextPageToken: '',
   query: ''
@@ -7,19 +6,10 @@ const initialState = {
 
 export default function (state = initialState, { type, data }) {
   switch (type) {
-    case 'SEARCH_OPEN':
-      return { ... state, isOpen: true }
-
     case 'SEARCH_VIDEOS':
       const { query } = data
-      const isNewQuery = query !== state.query
 
-      return {
-        ...state,
-        items: isNewQuery ? [] : state.items,
-        nextPageToken: isNewQuery ? '' : state.nextPageToken,
-        query
-      }
+      return { ...state, query }
 
     case 'SEARCH_VIDEOS_SUCCESS':
       const { items, nextPageToken, totalResults } = data
@@ -32,7 +22,7 @@ export default function (state = initialState, { type, data }) {
 
       return { ...state, ...newData }
 
-    case 'SEARCH_CLOSE':
+    case 'CLEAR_SEARCH':
       return initialState
   }
   return state

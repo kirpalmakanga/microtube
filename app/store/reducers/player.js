@@ -74,11 +74,8 @@ export default function (state = initialState, { type, data }) {
       return {
         ...state,
         queue: queue.map((v, i) => {
-          v.active = false
+          v.active = (i === index) ? true : false
 
-          if(i === index) {
-            v.active = true
-          }
           return v
         })
       }

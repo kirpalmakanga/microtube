@@ -24,7 +24,7 @@ const makeGetComponent = (path) => (url, cb, props) => {
         <Router>
           <Playlists path='/' />
           <AsyncRoute path='/playlist/:id' getComponent={makeGetComponent('./components/containers/Playlist')}/>
-          <AsyncRoute path='/subscriptions' getComponent={makeGetComponent('./components/containers/Subscriptions')}/>
+          <AsyncRoute path='/subscriptions' getComponent={makeGetComponent('./components/containers/Channels')}/>
           <AsyncRoute path='/channel/:id' getComponent={makeGetComponent('./components/containers/Channel')}/>
           <AsyncRoute path='/search' getComponent={makeGetComponent('./components/containers/Search')}/>
         </Router>

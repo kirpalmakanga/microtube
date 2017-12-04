@@ -1,7 +1,7 @@
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
 
-import { searchContent } from '../actions/youtube'
+import { searchVideos } from '../actions/youtube'
 
 class SearchForm extends Component {
 
@@ -19,7 +19,7 @@ class SearchForm extends Component {
     const query = e.target.querySelector('#search').value
     e.preventDefault()
 
-    this.props.dispatch(searchContent(query))
+    this.props.dispatch(searchVideos({ query }))
   }
 
   render() {

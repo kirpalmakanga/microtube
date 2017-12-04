@@ -182,13 +182,9 @@ export default class VisibilitySensor extends Component {
     rect = el.getBoundingClientRect()
 
     if (this.props.containment) {
-      var containmentDOMRect = this.props.containment.getBoundingClientRect()
-      containmentRect = {
-        top: containmentDOMRect.top,
-        left: containmentDOMRect.left,
-        bottom: containmentDOMRect.bottom,
-        right: containmentDOMRect.right,
-      }
+      const { top, left, bottom, right } = this.props.containment.getBoundingClientRect()
+
+      containmentRect = { top, left, bottom, right }
     } else {
       containmentRect = {
         top: 0,

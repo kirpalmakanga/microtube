@@ -54,7 +54,7 @@ class Header extends Component {
 
   handleSignOut = () => this.props.dispatch({ type: 'SIGN_OUT' })
 
-  render ({ auth, playlistItems, player, search, path, dispatch }, { title }) {
+  render ({ auth, playlistItems, player, path, dispatch }, { title }) {
     return (
       <header class='layout__header shadow--2dp'>
         {player.showQueue ? (
@@ -110,6 +110,6 @@ class Header extends Component {
   }
 }
 
-const mapStateToProps = ({ auth, playlistItems, player, search }) => ({ auth, playlistItems, player, search })
+const mapStateToProps = ({ auth, playlistItems, player }) => ({ auth, playlistItems, player })
 
 export default connect(mapStateToProps)(Header)

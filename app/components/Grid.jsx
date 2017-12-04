@@ -48,17 +48,18 @@ class Grid extends Component {
   render({ items, ItemComponent }, { isLoading }) {
     return (
       <div class='grid' ref={(el) => { this.grid = el }}>
-        {items.map((data, i) => (
+        {this.grid && items.map((data, i) => (
           <VisibilitySensor
             key={i}
             partialVisibility={true}
             scrollCheck={true}
             scrollThrottle={100}
-            containment={this.base}
-            intervalCheck={false}
+            containment={this.grid}
+            intervalCheck={true}
           >
 
             {({ isVisible }) => {
+
                 return (
                   <div key={i} class={['grid__item', isVisible ? '': 'hidden'].join(' ')}>
                     {isVisible ? (<ItemComponent {...data} />) : null}

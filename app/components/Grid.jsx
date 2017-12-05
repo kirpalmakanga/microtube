@@ -23,8 +23,6 @@ class Grid extends Component {
       return
     }
 
-    console.log('loading content')
-
     this.setState({ isLoading: true }, async () => {
       await loadContent()
 
@@ -40,7 +38,7 @@ class Grid extends Component {
     return this.grid ? (<Waypoint container={this.grid} onEnter={this.loadItems} />) : null
   }
 
-  render({ items, ItemComponent }, { isLoading }) {
+  render({ items = [], ItemComponent }, { isLoading }) {
     return (
       <div class='grid' ref={(el) => { this.grid = el }}>
         {this.grid && items.map((data, i) => (

@@ -28,7 +28,6 @@ class Img extends Component {
   }
 
   render({ src, alt = 'image', background }, { isLoading }) {
-    console.log('image is loading', isLoading)
     return (
       <figure class={['image', isLoading ? 'loading' : ''].join(' ')}>
         {background ? (

@@ -224,6 +224,7 @@ export async function getSubscriptions ({ pageToken = '', mine = false }) {
         id,
         channelId: snippet.resourceId.channelId,
         title: snippet.title,
+        thumbnails: snippet.thumbnails,
         itemCount: contentDetails.totalItemCount
       })),
       nextPageToken,

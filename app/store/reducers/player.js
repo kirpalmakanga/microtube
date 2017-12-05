@@ -8,7 +8,6 @@ const initialState = {
 }
 
 export default function (state = initialState, { type, data }) {
-  console.log(type, data)
   switch (type) {
     case 'SCREEN_OPEN':
       return {

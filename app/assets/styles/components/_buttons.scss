@@ -41,22 +41,23 @@
 }
 
 .icon-button {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   .icon {
       @include transition();
       transform-origin: 50% 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+
       &.rotating {
         svg {
           width: 24px;
           height: 24px;
         }
       }
+  }
+
+  &, .icon {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   &:active {
       .icon {

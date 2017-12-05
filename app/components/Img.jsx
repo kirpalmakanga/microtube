@@ -5,7 +5,7 @@ class Img extends Component {
     super(props)
 
     this.state = {
-      isLoaded: false
+      isLoading: true
     }
   }
 
@@ -21,15 +21,16 @@ class Img extends Component {
   componentDidMount = async () => {
     try {
         await this.loadImage(this.props.src)
-        this.setState({ isLoaded: true })
+        this.setState({ isLoading: false })
     } catch (e) {
         console.error(e)
     }
   }
 
-  render({ src, alt = 'image', background }, { isLoaded }) {
+  render({ src, alt = 'image', background }, { isLoading }) {
+    console.log('image is loading', isLoading)
     return (
-      <figure class={['image', isLoaded ? 'loaded' : ''].join(' ')}>
+      <figure class={['image', isLoading ? 'loading' : ''].join(' ')}>
         {background ? (
           <div class='image-background' style={{ backgroundImage: `url(${src})`}}></div>
         ) : (

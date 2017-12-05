@@ -46,16 +46,8 @@ $gutter: 16px;
     }
 
     svg {
-        height: 30px;
-        width: 30px;
-    }
-  }
-}
-
-.grid.channels {
-  .grid__item {
-    @media screen and (min-width: 1024px) {
-      height: calc((100vh - 56px - 50px) / 10);
+        height: 24px;
+        width: 24px;
     }
   }
 }

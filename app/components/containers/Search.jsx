@@ -18,7 +18,7 @@ class Search extends Component {
     return (
       <Grid
         items={items}
-        loadContent={() => query && dispatch(
+        loadContent={() => query && nextPageToken !== null && dispatch(
           searchVideos({
             query,
             pageToken: nextPageToken

@@ -18,7 +18,7 @@ class Channel extends Component {
     return (
       <Grid
         items={items}
-        loadContent={(pageToken) => dispatch(
+        loadContent={() => nextPageToken !== null && dispatch(
           getChannelVideos({
             channelId: id,
             pageToken: nextPageToken

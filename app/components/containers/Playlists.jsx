@@ -18,7 +18,7 @@ class Playlists extends Component {
     return (
       <Grid
         items={items}
-        loadContent={() => dispatch(
+        loadContent={() => nextPageToken !== null && dispatch(
           getPlaylists({
             mine: true,
             pageToken: nextPageToken

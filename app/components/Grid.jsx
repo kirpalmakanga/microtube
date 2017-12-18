@@ -16,10 +16,9 @@ class Grid extends Component {
 
   loadItems = () => {
     const { loadContent } = this.props
-    const { pageToken, isLoading } = this.state
+    const { isLoading } = this.state
 
-
-    if (isLoading || pageToken === null) {
+    if (isLoading) {
       return
     }
 

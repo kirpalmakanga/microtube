@@ -5,7 +5,7 @@
   "scripts": {
     "postinstall": "npm run build",
     "start": "node server/app.js",
-    "start:dev": "nodemon server/app.js --watch server --dev",
+    "dev": "nodemon server/app.js --watch server --dev",
     "build": "webpack --progress -p --optimize-minimize",
     "clean": "rm public/*.hot-update.js",
     "watch": "webpack-dev-server --progress --colors --inline --hot --port 3000"

@@ -13,7 +13,7 @@ const Subscriptions = ({ subscriptions, dispatch }) => {
   return (
     <Grid
       items={items}
-      loadContent={() => dispatch(
+      loadContent={() => nextPageToken !== null && dispatch(
         getSubscriptions({
           mine: true,
           pageToken: nextPageToken

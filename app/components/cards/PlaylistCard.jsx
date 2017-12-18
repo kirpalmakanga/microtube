@@ -14,11 +14,14 @@ const PlaylistCard = ({ auth, id, title, thumbnails, itemCount, dispatch }) => (
       onClick={() => dispatch({ type: 'PLAYLIST_OPEN', data: title })}
       aria-label={title}
     >
-      <Img src={getThumbnails(thumbnails, 'high')} background/>
+      <div class='card__thumb'>
+        <Img src={getThumbnails(thumbnails, 'high')} background/>
+        <span class="card__thumb-badge">{`${itemCount} video${itemCount !== 1 ? 's' : ''}`}</span>
+      </div>
+
 
       <div class='card__text'>
         <h2 class='card__text-title'>{title}</h2>
-        <p class='card__text-subtitle nb-videos'>{itemCount + ' Video' + (itemCount !== 1 ? 's' : '')}</p>
       </div>
     </Link>
 

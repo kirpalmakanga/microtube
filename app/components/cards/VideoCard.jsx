@@ -19,14 +19,16 @@ const VideoCard = ({ videoId, title, thumbnails, publishedAt, duration, channelT
         data: { video: { videoId, title } }
       })}
     >
-      <Img src={getThumbnails(thumbnails, 'high')} background />
+      <div class='card__thumb'>
+        <Img src={getThumbnails(thumbnails, 'high')} background />
+        <span class="card__thumb-badge">{parseDuration(duration)}</span>
+      </div>
 
       <div class='card__text'>
         <h2 class='card__text-title'>{title}</h2>
         <p class='card__text-subtitle channel'>{channelTitle}</p>
         <p class='card__text-subtitle date'>{moment(publishedAt).format('MMMM Do YYYY')}</p>
       </div>
-      <div>{parseDuration(duration)}</div>
     </div>
 
     <div class='card__buttons'>

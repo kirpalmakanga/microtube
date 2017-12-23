@@ -9,8 +9,9 @@ import configureStore from './store/configureStore'
 import App from './components/App'
 import Playlists from './components/containers/Playlists'
 
-const makeGetComponent = (path) => (url, cb, props) => {
-  return System.import(path + '.jsx').then(module => module.default)
+const makeGetComponent = (path) => async () => {
+    const module = await System.import(path + '.jsx')
+    return module.default
 }
 
 (() => {
@@ -27,6 +28,7 @@ const makeGetComponent = (path) => (url, cb, props) => {
           <AsyncRoute path='/subscriptions' getComponent={makeGetComponent('./components/containers/Channels')}/>
           <AsyncRoute path='/channel/:id' getComponent={makeGetComponent('./components/containers/Channel')}/>
           <AsyncRoute path='/search' getComponent={makeGetComponent('./components/containers/Search')}/>
+          <AsyncRoute path='/login' getComponent={makeGetComponent('./components/containers/Login')}/>
         </Router>
       </App>
     </Provider>,

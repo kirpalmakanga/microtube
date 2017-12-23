@@ -2,7 +2,7 @@ require('../assets/styles/app.scss')
 
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
-
+import { route } from 'preact-router'
 import Match from 'preact-router/match'
 
 import Header from './header/HeaderContainer'
@@ -10,24 +10,25 @@ import Player from './containers/Player'
 import Notifications from './Notifications'
 import Prompt from './Prompt'
 
-import GoogleLogin from './auth/GoogleLogin'
 
 class App extends Component {
-  handleSignIn = (data) => this.props.dispatch({ type: 'SIGN_IN', data })
-
-  render({ children, auth, notifications }) {
+  render({ children, auth: { isSignedIn }, notifications }) {
     return (
       <div class='layout'>
         <Match>
-          {({ path }) => (<Header path={path} />)}
+          {({ path }) => {
+            if (!isSignedIn && path !== '/login') {
+              route('/login', true)
+            } else if (isSignedIn && path === '/login') {
+              route('/', true)
+            }
+
+            return (<Header path={path} />)
+          }}
         </Match>
 
         <main class='layout__content'>
-          {auth.isSignedIn ? children : (
-            <div class='log_in'>
-              <GoogleLogin className='button' onSuccess={this.handleSignIn}>Log in</GoogleLogin>
-            </div>
-          )}
+          {isSignedIn ? children : null}
         </main>
 
         <Player />

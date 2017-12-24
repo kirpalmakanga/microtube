@@ -5,6 +5,10 @@ import { searchVideos } from '../actions/youtube'
 
 class SearchForm extends Component {
 
+  componentDidMount() {
+    this.input.focus()
+  }
+
   handleFocus = (e) => {
     e.preventDefault()
     e.target.parentNode.classList.add('is-focused')
@@ -30,7 +34,7 @@ class SearchForm extends Component {
         <div class='textfield'>
           <label class='sr-only' for='search'>Search</label>
           <input
-            autoFocus
+            ref={(el) => this.input = el}
             name='search'
             class='textfield__input'
             id='search'

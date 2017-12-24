@@ -48,7 +48,7 @@ class Prompt extends Component {
                   id='videoId'
                   class='textfield__input'
                   type='text'
-                  autoFocus
+                  autofocus
                   placeholder='URL/ID...'
                 />
               </div>

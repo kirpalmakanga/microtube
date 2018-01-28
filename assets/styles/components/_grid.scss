@@ -1,0 +1,53 @@
+$gutter: 16px;
+
+.grid {
+  position: relative;
+  height: calc(100vh - 56px - 100px);
+  overflow-y: scroll;
+
+  @media screen and (min-width: 480px) {
+    height: calc(100vh - 56px - 50px);
+  }
+
+  &__item {
+      will-change: opacity;
+      @include transition(opacity, 0.3s);
+      display: flex;
+      height: calc((100vh - 56px - 100px) / 5);
+      &:not(:last-child) {
+        border-bottom: 2px solid lighten($brand-primary, 20%);
+      }
+
+      @media screen and (min-width: 480px) {
+        height: calc((100vh - 56px - 50px) / 6);
+      }
+
+      @media screen and (min-width: 1024px) {
+        height: calc((100vh - 56px - 50px) / 7);
+      }
+
+      &.hidden {
+        opacity: 0;
+      }
+  }
+
+  &__loading {
+    @include transition(opacity);
+    opacity: 0;
+    padding: 8px 0;
+    display: flex;
+    flex: 1;
+    fill: $brand-secondary;
+    align-items: center;
+    justify-content: center;
+
+    &.is-active {
+      opacity: 1;
+    }
+
+    svg {
+        height: 24px;
+        width: 24px;
+    }
+  }
+}

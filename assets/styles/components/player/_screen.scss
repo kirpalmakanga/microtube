@@ -1,0 +1,21 @@
+.screen {
+    z-index: 1;
+    &.screen--show {
+        transform: translate(0);
+    }
+
+    &__no-video {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__content,
+    &__no-video {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+}

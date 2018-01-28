@@ -1,0 +1,67 @@
+.button {
+    @include transition();
+    background-color: $black;
+    border: none;
+    padding: 10px 16px;
+    color: $white;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 700;
+
+    &:hover {
+      background-color: lighten($black, 5%);
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &--icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        fill: $brand-secondary;
+
+        svg {
+            @include transition();
+            width: 30px;
+            height: 30px;
+        }
+
+        &:active {
+            svg {
+                transform: scale(0.7);
+            }
+        }
+    }
+}
+.button--close {
+  background-color: lighten($black, 40%);
+}
+
+.icon-button {
+  .icon {
+      @include transition();
+      transform-origin: 50% 50%;
+
+      &.rotating {
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
+  }
+
+  &, .icon {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &:active {
+      .icon {
+          transform: scale(0.7);
+      }
+  }
+}

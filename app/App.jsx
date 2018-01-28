@@ -1,4 +1,4 @@
-require('../assets/styles/app.scss')
+require('assets/styles/app.scss')
 
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'

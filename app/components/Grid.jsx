@@ -50,9 +50,7 @@ class Grid extends Component {
             containment={this.grid}
             intervalCheck={true}
           >
-
             {({ isVisible }) => isVisible ? (<ItemComponent {...data} />) : null}
-
           </VisibilitySensor>
         ))}
 

@@ -20,12 +20,20 @@ function parseID(url){
 
 function getClient() {
   return new Promise((resolve) => {
-    const watcher = setInterval(() => {
-      if(gapi && gapi.client) {
-        clearInterval(watcher)
+    const resolveClient = () => {
+      if (gapi && gapi.client) {
         resolve(gapi.client)
+        return true
       }
-    }, 100)
+      
+      return false
+    }
+
+    if (resolveClient()) {
+      return
+    }
+
+    const watcher = setInterval(() => resolveClient() && clearInterval(watcher), 100)
   })
 }
 

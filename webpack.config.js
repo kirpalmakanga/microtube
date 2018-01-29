@@ -81,6 +81,7 @@ const config = {
     alias: {
       assets: path.resolve(__dirname, 'assets/'),
       actions: path.resolve(__dirname, 'app/actions/'),
+      api: path.resolve(__dirname, 'app/api/'),
       containers: path.resolve(__dirname, 'app/containers/'),
       components: path.resolve(__dirname, 'app/components/'),
       libs: path.resolve(__dirname, 'app/lib/')

@@ -38,9 +38,11 @@ class GoogleLogin extends Component {
     })
   }
 
-  handleSuccess = (res) => {
+  handleSuccess = async (res) => {
     let { Zi, w3 } = res
 
+    console.log(res)
+    
     this.props.onSuccess({
       isSignedIn: true,
       token: Zi.access_token,
@@ -68,6 +70,4 @@ class GoogleLogin extends Component {
   }
 }
 
-const mapStateToProps = ({ auth }) => ({ auth })
-
-export default connect(mapStateToProps)(GoogleLogin)
+export default GoogleLogin

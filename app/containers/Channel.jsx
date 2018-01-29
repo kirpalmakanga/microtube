@@ -12,16 +12,16 @@ class Channel extends Component {
     this.props.dispatch({ type: 'CLEAR_CHANNEL_ITEMS' })
   }
 
-  render({ id, channel, dispatch }) {
-    const { items, nextPageToken } = channel
+  render({ channelId, channel, dispatch }) {
+    const { items, nextPageToken: pageToken } = channel
 
     return (
       <Grid
         items={items}
-        loadContent={() => nextPageToken !== null && dispatch(
+        loadContent={() => pageToken !== null && dispatch(
           getChannelVideos({
-            channelId: id,
-            pageToken: nextPageToken
+            channelId,
+            pageToken
           })
         )}
         ItemComponent={VideoCard}

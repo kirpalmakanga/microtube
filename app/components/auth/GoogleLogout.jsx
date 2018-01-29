@@ -35,4 +35,4 @@ class GoogleLogout extends Component {
   }
 }
 
-export default connect()(GoogleLogout)
+export default GoogleLogout

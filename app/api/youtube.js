@@ -240,6 +240,16 @@ export async function getSubscriptions ({ pageToken = '', mine = false }) {
 }
 
 /* Channels */
+export async function getChannelId(forUsername) {
+  const { items } = await request('GET', 'channels', {
+    forUsername,
+    part: 'snippet' 
+  })
+
+  const { id } = items[0]
+
+  return id
+}
 
 export async function getChannelTitle (id) {
   const { items } = await request('GET', 'channels', {

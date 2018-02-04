@@ -1,5 +1,8 @@
 import { h, Component } from 'preact'
 import { connect } from 'preact-redux'
+import { throttle, debounce } from 'lodash'
+
+import { preventDefault } from 'libs/helpers'
 
 import formatTime from 'libs/formatTime'
 
@@ -105,7 +108,7 @@ class Player extends Component {
       }
   }
 
-  setVideoTime = ({ target }) => {
+  setVideoTime = throttle(({ target }) => {
     if(!this.isIframeReady()) {
       return
     }
@@ -117,7 +120,7 @@ class Player extends Component {
     this.state.youtube.seekTo(newTime)
 
     this.setState({ currentTime: newTime })
-  }
+  }, 200)
 
   watchTime() {
     const { youtube } = this.state
@@ -292,7 +295,7 @@ class Player extends Component {
               className='player__controls-button icon-button'
               onClick={togglePlay}
               icon={isBuffering ? 'icon-loading' : isPlaying ? 'icon-pause' : 'icon-play' }
-              iconTransitionClass={isBuffering ? 'rotating': ''}
+              iconTransitionClass={!isPlaying && isBuffering ? 'rotating': ''}
               ariaLabel={isPlaying ? 'Pause video' : 'Play video'}
             />
 
@@ -307,7 +310,7 @@ class Player extends Component {
             <InfoTime currentTime={currentTime} duration={duration} />
 
             <label class='sr-only' for='seek-time'>Seek time</label>
-            <input id='seek-time' class='player__info-progress-loaded' type='range' min='0' max={parseInt(duration)} onChange={setVideoTime} />
+            <input id='seek-time' class='player__info-progress-loaded' type='range' min='0' max={parseInt(duration)} onWheel={preventDefault} onChange={setVideoTime} />
           </div>
 
           <div class='player__controls'>

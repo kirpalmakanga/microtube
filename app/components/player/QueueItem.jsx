@@ -1,16 +1,12 @@
 import { h } from 'preact'
 
-const QueueItem = ({ index, isActive, isPlaying, isBuffering, title, onClick, onClickRemove, onDragEnd, onDragStart }) => (
+const QueueItem = ({ title, index, isActive, isPlaying, isBuffering, onClickRemove, ...props }) => (
   <div
     className={['queue__item', isActive ? 'queue__item--active' : ''].join(' ')}
-    onClick={onClick}
-    onDragStart={onDragStart}
-    onDragEnd={onDragEnd}
     data-index={index}
     data-title={title}
-    draggable
+    {...props}
   >
-
     <div className='queue__item-button icon-button'>
       <span className={['icon', isActive && isBuffering ? 'rotating': ''].join(' ')}>
         {isActive && isBuffering ? (

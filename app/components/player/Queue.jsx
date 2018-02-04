@@ -13,15 +13,13 @@ class Queue extends Component {
 
     this.state = {
       queue: props.player.queue,
-      over: null,
-      dragged: null,
-      placeholder: null
+      over: null
     }
   }
 
-  componentWillReceiveProps = ({ player }) => this.setState({ queue: player.queue })
+  componentWillReceiveProps = ({ player: { queue } }) => this.setState({ queue })
 
-  shouldComponentUpdate = (nextProps, { over }) => (over === null)
+  shouldComponentUpdate = (_, { over }) => (over === null)
 
   getPlaceholder = () => {
     let placeholder = this.placeholder
@@ -32,46 +30,48 @@ class Queue extends Component {
     return placeholder
   }
 
-  dragStart = ({ currentTarget, dataTransfer }) => {
-    dataTransfer.effectAllowed = 'move'
-    dataTransfer.setData('text/html', currentTarget)
+  insertPlaceholder = (pageY) => {
+    const {
+      container, placeholder,
+      state: { over }
+    } = this
+    const relY = pageY - over.offsetTop
+    const lastChildY = pageY - container.lastChild.offsetTop + over.offsetHeight / 2
 
-    this.setState({
-      dragged: currentTarget,
-      placeholder: this.getPlaceholder()
-    })
+    if(relY <= lastChildY) {
+      this.nodePlacement = 'after'
+      container.insertBefore(placeholder, over.nextElementSibling)
+    } else {
+      this.nodePlacement = 'before'
+      container.insertBefore(placeholder, over)
+    }
   }
 
-  dragOver = throttle((e) => {
-    const { target, pageY } = e
-    const { dragged, placeholder } = this.state
-
-    e.preventDefault()
+  dragStart = ({ currentTarget: dragged, dataTransfer }) => {
+    dataTransfer.effectAllowed = 'move'
+    dataTransfer.setData('text/html', dragged)
 
     dragged.classList.add('queue__item--hidden')
 
-    if(target.classList.contains('queue__item--placeholder') || !target.getAttribute('draggable')) {
+    this.dragged = dragged
+    this.placeholder = this.getPlaceholder()
+  }
+
+  dragOver = throttle((e) => {
+    const { target: over, pageY } = e
+
+    e.preventDefault()
+
+    if(over.classList.contains('queue__item--placeholder') || !over.getAttribute('draggable')) {
       return
     }
-
-    this.setState({ over: target })
-
-    const { container } = this
-    const relY = pageY - target.offsetTop
-    const lastChildY = pageY - container.lastChild.offsetTop + target.offsetHeight / 2
-
-    if(relY <= lastChildY) {
-      this.setState({ nodePlacement: 'after' })
-      container.insertBefore(placeholder, target.nextElementSibling)
-    } else {
-      this.setState({ nodePlacement: 'before' })
-      container.insertBefore(placeholder, target)
-    }
-  }, 200)
+    
+    this.setState({ over }, () => this.insertPlaceholder(pageY))
+  }, 100)
 
   dragEnd = (e) => {
-    const { container } = this
-    const { queue, dragged, over, placeholder } = this.state
+    const { container, dragged, placeholder, nodePlacement } = this
+    const { queue, over } = this.state
     const from = Number(dragged.dataset.index)
     let to = Number(over.dataset.index)
 
@@ -84,10 +84,12 @@ class Queue extends Component {
       to--
     }
 
-    if(this.state.nodePlacement === 'after') {
+    if(nodePlacement === 'after') {
       to++
     }
 
+    console.log(nodePlacement, over.dataset.title, to)
+    
     queue.splice(to, 0, queue.splice(from, 1)[0])
 
     this.props.dispatch({ type: 'QUEUE_SET', data: queue })
@@ -113,7 +115,7 @@ class Queue extends Component {
 
     return (
         <div className={['queue shadow--2dp', showQueue ? 'queue--show' : ''].join(' ')}>
-          <div className='queue__items' onDragOver={dragOver} ref={el => this.container = el}>
+          <div className='queue__items' onDragOver={dragOver} ref={(el) => this.container = el}>
             {queue.length ? queue.map(({ title, active }, index) => (
               <QueueItem
                 key={index}
@@ -126,6 +128,7 @@ class Queue extends Component {
                 onDragEnd={dragEnd}
                 onClick={makeOnClickItem(index, currentIndex)}
                 onClickRemove={makeRemoveItem(index)}
+                draggable
               />
             ), this) : null}
           </div>

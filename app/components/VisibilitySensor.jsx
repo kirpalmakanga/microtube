@@ -247,9 +247,9 @@ export default class VisibilitySensor extends Component {
     return state
   }
 
-  render({ className, children }, { isVisible, visibilityRect }) {
+  render({ className, children, ...props }, { isVisible, visibilityRect }) {
     return (
-      <div class={className(isVisible)}>
+      <div class={className(isVisible)} {...props}>
        {children[0] instanceof Function ? children[0]({ isVisible, visibilityRect }) : children}
       </div>
     )

@@ -10,7 +10,7 @@ const SearchHeader = ({ player, dispatch }) => {
         onClick={() => dispatch({ type: 'QUEUE_CLOSE' })}
       >
         <span class='icon'>
-          <svg><use xlinkHref='#icon-back'></use></svg>
+          <svg><use xlinkHref='#icon-chevron-down'></use></svg>
         </span>
       </button>
 

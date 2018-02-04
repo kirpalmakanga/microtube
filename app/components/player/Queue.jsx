@@ -58,7 +58,7 @@ class Queue extends Component {
   }
 
   dragOver = throttle((e) => {
-    const { target: over, pageY } = e
+    const { target: over, pageY } = e    
 
     e.preventDefault()
 
@@ -77,9 +77,6 @@ class Queue extends Component {
 
     e.preventDefault()
 
-    dragged.classList.remove('queue__item--hidden')
-    container.removeChild(placeholder)
-
     if(from < to) {
       to--
     }
@@ -88,8 +85,9 @@ class Queue extends Component {
       to++
     }
 
-    console.log(nodePlacement, over.dataset.title, to)
-    
+    dragged.classList.remove('queue__item--hidden')
+    container.removeChild(placeholder)
+
     queue.splice(to, 0, queue.splice(from, 1)[0])
 
     this.props.dispatch({ type: 'QUEUE_SET', data: queue })

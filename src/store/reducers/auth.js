@@ -1,22 +1,20 @@
 const initialState = {
-  user: {
-    userName: '',
-    picture: '',
-    channelId: ''
-  },
-  token: null,
-  isSignedIn: false
+    user: {
+        userName: '',
+        picture: '',
+        channelId: ''
+    },
+    token: null,
+    isSignedIn: false
 }
 
-export default function (state = initialState, { type, data }) {
-  console.log(type, data)
-  
-  switch (type) {
-    case 'SIGN_IN':
-      return { ...state, ...data }
+export default function(state = initialState, { type, data }) {
+    switch (type) {
+        case 'SIGN_IN':
+            return { ...state, ...data }
 
-    case 'SIGN_OUT':
-      return initialState
-  }
-  return state
+        case 'SIGN_OUT':
+            return initialState
+    }
+    return state
 }

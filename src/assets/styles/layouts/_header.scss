@@ -1,5 +1,5 @@
 .layout-title {
-  font-size: 20px;
+    font-size: 20px;
 }
 .layout__header {
     @include transition();
@@ -8,33 +8,36 @@
     display: flex;
     z-index: 1;
     &-row {
-      display: flex;
-      flex: 1;
-      align-items: center;
-      padding: 0 16px 0 16px;
-      height: 56px;
+        display: flex;
+        flex: 1;
+        align-items: center;
+        padding: 0 16px 0 16px;
+        height: 56px;
     }
 }
 
 .layout__back-button {
-  background-color: transparent;
-  border: none;
-  fill: $white;
-  height: 100%;
-  cursor: pointer;
-  margin-right: 15px;
-  text-overflow: ellipsis;
-  &:focus {
-    outline: none;
-  }
-  svg {
-    height: 22px;
-    width: 22px;
-    @media screen and (min-width: 480px) {
-      height: 24px;
-      width: 24px;
+    background-color: transparent;
+    border: none;
+    fill: $white;
+    height: 100%;
+    cursor: pointer;
+    margin-right: 15px;
+    text-overflow: ellipsis;
+    padding: 0 15px;
+    margin-left: -15px;
+
+    &:focus {
+        outline: none;
     }
-  }
+    svg {
+        height: 22px;
+        width: 22px;
+        @media screen and (min-width: 480px) {
+            height: 24px;
+            width: 24px;
+        }
+    }
 }
 
 .navigation {
@@ -44,21 +47,21 @@
     justify-content: flex-end;
 
     img {
-      border-radius: 100%;
-      height: 24px;
-      width: 24px;
-      @media screen and (min-width: 480px) {
-        height: 30px;
-        width: 30px;
-      }
+        border-radius: 100%;
+        height: 24px;
+        width: 24px;
+        @media screen and (min-width: 480px) {
+            height: 30px;
+            width: 30px;
+        }
     }
     svg {
         @include transition();
         height: 22px;
         width: 22px;
         @media screen and (min-width: 480px) {
-          height: 24px;
-          width: 24px;
+            height: 24px;
+            width: 24px;
         }
     }
 
@@ -80,7 +83,7 @@
         .layout__header-row & {
             padding: 0 12px;
             &:last-child {
-              padding-right: 0;
+                padding-right: 0;
             }
         }
 

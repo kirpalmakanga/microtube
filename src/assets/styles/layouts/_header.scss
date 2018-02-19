@@ -26,6 +26,7 @@
     text-overflow: ellipsis;
     padding: 0 15px;
     margin-left: -15px;
+    position: relative;
 
     &:focus {
         outline: none;
@@ -79,6 +80,7 @@
         background-color: transparent;
         border: none;
         cursor: pointer;
+        position: relative;
 
         .layout__header-row & {
             padding: 0 12px;

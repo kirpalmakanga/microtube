@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "target": "es5",
+    "module": "commonjs",
+    "jsx": "react",
+    "jsxFactory": "h",
+    "lib": ["es5", "dom", "es2015", "es2017"],
+    "paths": {
+      "styles/*": ["src/assets/styles/*"],
+      "actions/*": ["src/actions/*"],
+      "containers/*": ["src/containers/*"],
+      "components/*": ["src/components/*"],
+      "lib/*": ["src/lib/*"],
+      "store/*": ["src/store/*"]
+    }
+  }
+}

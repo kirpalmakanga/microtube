@@ -1,0 +1,10 @@
+{
+  "name": "MicroTube",
+  "short_name": "MicroTube",
+  "lang": "fr",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#212121",
+  "background_color": "#545454"
+}

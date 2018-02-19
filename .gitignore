@@ -25,14 +25,4 @@ node_modules
 .DS_Store
 Thumbs.db
 
-*.hot-update.js
-
-.htaccess
-
-public/appcache/
-public/*.js
-public/*.css
-public/*.ttf
-public/*.woff
-
-.env
+dist

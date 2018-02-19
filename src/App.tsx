@@ -12,48 +12,48 @@ import Notifications from 'components/Notifications'
 import Prompt from 'components/Prompt'
 
 interface Props {
-  children: any
-  isSignedIn: Boolean
-  message: String
+    children: any
+    isSignedIn: Boolean
+    message: String
 }
 
 interface StateFromProps {
-  isSignedIn: Boolean
-  message: String
+    isSignedIn: Boolean
+    message: String
 }
 
 const App = ({ children, isSignedIn, message }: Props) => (
-  <div class="layout">
-    <Sprite />
+    <div class="layout">
+        <Sprite />
 
-    <Match>
-      {({ path }) => {
-        if (!isSignedIn && path !== '/login') {
-          route('/login', true)
-        } else if (isSignedIn && path === '/login') {
-          route('/', true)
-        }
+        <Match>
+            {({ path }) => {
+                if (!isSignedIn && path !== '/login') {
+                    route('/login', true)
+                } else if (isSignedIn && path === '/login') {
+                    route('/', true)
+                }
 
-        return <Header path={path} />
-      }}
-    </Match>
+                return <Header path={path} />
+            }}
+        </Match>
 
-    <main class="layout__content">{isSignedIn ? children : null}</main>
+        <main class="layout__content">{isSignedIn ? children : null}</main>
 
-    <Player />
+        <Player />
 
-    <Prompt />
+        <Prompt />
 
-    {message ? <Notifications /> : null}
-  </div>
+        {message ? <Notifications /> : null}
+    </div>
 )
 
 const mapStateToProps = ({
-  auth: { isSignedIn },
-  notifications: { message }
+    auth: { isSignedIn },
+    notifications: { message }
 }) => ({
-  isSignedIn,
-  message
+    isSignedIn,
+    message
 })
 
 export default connect<StateFromProps, void, void>(mapStateToProps)(App)

@@ -1,6 +1,12 @@
 // https://apis.google.com/js/client.js
 
-const API_KEY = 'AIzaSyCLDBo0aNwTTOp6yQMaD9b4mQX4B_rT2NE'
+import {
+    API_KEY,
+    API_URL,
+    GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SCOPE
+} from '../config'
+
 const ITEMS_PER_REQUEST = 50
 
 function parseID(url) {
@@ -19,25 +25,101 @@ function parseID(url) {
     return ID
 }
 
-function getClient() {
+export const loadAPI = () => {
     return new Promise((resolve) => {
-        const resolveClient = () => {
-            if (gapi && gapi.client) {
-                resolve(gapi.client)
-                return true
+        ;((d, s, cb) => {
+            const url = API_URL
+            const element = d.getElementsByTagName(s)[0]
+            const fjs = element
+            let js = element
+
+            if (!d.querySelector(`script[src="${url}"]`)) {
+                js = d.createElement(s)
+                js.src = url
+                fjs.parentNode.insertBefore(js, fjs)
+                js.onload = () => cb(true)
+            } else {
+                cb()
+            }
+        })(document, 'script', async (initServices) => {
+            const { gapi } = window
+
+            if (initServices) {
+                await Promise.all([
+                    new Promise((callback) =>
+                        gapi.load('auth2', {
+                            callback
+                        })
+                    ),
+                    new Promise((callback) =>
+                        gapi.load('client', {
+                            callback
+                        })
+                    )
+                ])
             }
 
-            return false
+            resolve(gapi)
+        })
+    })
+}
+
+export const getAuthInstance = () => {
+    const { auth2 } = window.gapi
+
+    const params = {
+        clientId: GOOGLE_CLIENT_ID,
+        scope: GOOGLE_CLIENT_SCOPE
+    }
+
+    return auth2.init(params)
+}
+
+export const getClient = () => {
+    const { client } = window.gapi
+
+    // const params = {
+    //     clientId: GOOGLE_CLIENT_ID,
+    //     scope: GOOGLE_CLIENT_SCOPE
+    // }
+
+    // client.init(params)
+
+    return client
+}
+
+export const listenAuth = (callback) => {
+    const GoogleAuth = getAuthInstance()
+
+    GoogleAuth.then(() => {
+        const hasAuthenticatedUser = GoogleAuth.isSignedIn.get()
+
+        const getUser = () => {
+            const {
+                Zi,
+                w3: { Paa: picture = '', ig = '', ofa = '' }
+            } = GoogleAuth.currentUser.get()
+
+            const userName = ig || ofa
+
+            return {
+                picture,
+                userName
+            }
         }
 
-        if (resolveClient()) {
-            return
+        const sendData = (isSignedIn) =>
+            isSignedIn &&
+            callback({
+                user: getUser(),
+                isSignedIn
+            })
+
+        if (hasAuthenticatedUser) {
+            sendData(hasAuthenticatedUser)
         }
 
-        const watcher = setInterval(
-            () => resolveClient() && clearInterval(watcher),
-            100
-        )
+        GoogleAuth.isSignedIn.listen(sendData)
     })
 }
 
@@ -87,7 +169,7 @@ function removeEmptyParams(params) {
 }
 
 const request = async (method, path, params, properties) => {
-    const client = await getClient()
+    const client = getClient()
 
     const config = {
         method,

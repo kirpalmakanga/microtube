@@ -3,11 +3,10 @@ import { connect } from 'preact-redux'
 import { Link } from 'preact-router/match'
 
 import {
-  getPlaylistTitle,
-  getChannelTitle,
-  getChannelId
+    getPlaylistTitle,
+    getChannelTitle,
+    getChannelId
 } from '../../api/youtube'
-import { signIn } from '../../actions/auth'
 
 import QueueHeader from './QueueHeader'
 import SearchHeader from './SearchHeader'
@@ -17,126 +16,126 @@ import GoogleLogin from '../auth/GoogleLogin'
 import GoogleLogout from '../auth/GoogleLogout'
 
 const initialState = {
-  title: 'MicroTube'
+    title: 'MicroTube'
 }
 
 class Header extends Component {
-  constructor(props) {
-    super(props)
+    constructor(props) {
+        super(props)
 
-    this.state = initialState
-  }
-
-  componentWillReceiveProps = async ({ auth, path }) => {
-    let title = 'MicroTube'
-
-    if (path.includes('/subscriptions')) {
-      title = 'Subscriptions'
+        this.state = initialState
     }
 
-    if (path.includes('/channel')) {
-      title = await getChannelTitle(path.slice(1).split('/')[1])
+    componentWillReceiveProps = async ({ auth, path }) => {
+        let title = 'MicroTube'
+
+        if (path.includes('/subscriptions')) {
+            title = 'Subscriptions'
+        }
+
+        if (path.includes('/channel')) {
+            title = await getChannelTitle(path.slice(1).split('/')[1])
+        }
+
+        if (path.includes('/playlist')) {
+            title = await getPlaylistTitle(path.slice(1).split('/')[1])
+        }
+
+        this.setState({ title })
     }
 
-    if (path.includes('/playlist')) {
-      title = await getPlaylistTitle(path.slice(1).split('/')[1])
+    openSearchForm = () => {
+        const { dispatch } = this.props
+
+        dispatch({ type: 'SCREEN_CLOSE' })
+
+        dispatch({ type: 'QUEUE_CLOSE' })
+
+        dispatch({ type: 'SEARCH_OPEN' })
     }
 
-    this.setState({ title })
-  }
+    handleSignIn = (data) => this.props.dispatch({ type: 'SIGN_IN', data })
 
-  openSearchForm = () => {
-    const { dispatch } = this.props
+    handleSignOut = () => this.props.dispatch({ type: 'SIGN_OUT' })
 
-    dispatch({ type: 'SCREEN_CLOSE' })
+    render(
+        { auth: { isSignedIn, user: { picture } }, player, path, dispatch },
+        { title }
+    ) {
+        return (
+            <header class="layout__header shadow--2dp">
+                {player.showQueue ? (
+                    <QueueHeader />
+                ) : path.includes('/search') ? (
+                    <SearchHeader />
+                ) : (
+                    <div class="layout__header-row">
+                        {path !== '/' ? (
+                            <Link
+                                class="layout__back-button icon-button"
+                                href="/"
+                                aria-label="Go to homepage"
+                            >
+                                <span class="icon">
+                                    <svg>
+                                        <use xlinkHref="#icon-back" />
+                                    </svg>
+                                </span>
+                            </Link>
+                        ) : null}
 
-    dispatch({ type: 'QUEUE_CLOSE' })
+                        <span class="layout-title">{title}</span>
 
-    dispatch({ type: 'SEARCH_OPEN' })
-  }
+                        <nav class="navigation">
+                            <Link
+                                class="navigation__link icon-button"
+                                aria-label="Open search"
+                                href="/search"
+                            >
+                                <span class="icon">
+                                    <svg>
+                                        <use xlinkHref="#icon-search" />
+                                    </svg>
+                                </span>
+                            </Link>
 
-  handleSignIn = async (data) => await this.props.dispatch(signIn(data))
+                            <Link
+                                class="navigation__link icon-button"
+                                href="/subscriptions"
+                                aria-label="Open subscriptions"
+                            >
+                                <span class="icon">
+                                    <svg>
+                                        <use xlinkHref="#icon-subscriptions" />
+                                    </svg>
+                                </span>
+                            </Link>
 
-  handleSignOut = () => this.props.dispatch({ type: 'SIGN_OUT' })
-
-  render(
-    { auth: { isSignedIn, user: { picture } }, player, path, dispatch },
-    { title }
-  ) {
-    return (
-      <header class="layout__header shadow--2dp">
-        {player.showQueue ? (
-          <QueueHeader />
-        ) : path.includes('/search') ? (
-          <SearchHeader />
-        ) : (
-          <div class="layout__header-row">
-            {path !== '/' ? (
-              <Link
-                class="layout__back-button icon-button"
-                href="/"
-                aria-label="Go to homepage"
-              >
-                <span class="icon">
-                  <svg>
-                    <use xlinkHref="#icon-back" />
-                  </svg>
-                </span>
-              </Link>
-            ) : null}
-
-            <span class="layout-title">{title}</span>
-
-            <nav class="navigation">
-              <Link
-                class="navigation__link icon-button"
-                aria-label="Open search"
-                href="/search"
-              >
-                <span class="icon">
-                  <svg>
-                    <use xlinkHref="#icon-search" />
-                  </svg>
-                </span>
-              </Link>
-
-              <Link
-                class="navigation__link icon-button"
-                href="/subscriptions"
-                aria-label="Open subscriptions"
-              >
-                <span class="icon">
-                  <svg>
-                    <use xlinkHref="#icon-subscriptions" />
-                  </svg>
-                </span>
-              </Link>
-
-              {isSignedIn ? (
-                <GoogleLogout
-                  className="navigation__link icon-button"
-                  onSuccess={this.handleSignOut}
-                >
-                  <img src={picture} alt="avatar" />
-                </GoogleLogout>
-              ) : (
-                <GoogleLogin
-                  className="navigation__link icon-button"
-                  onSuccess={this.handleSignIn}
-                >
-                  <span class="icon">
-                    <svg>
-                      <use xlinkHref="#icon-account" />
-                    </svg>
-                  </span>
-                </GoogleLogin>
-              )}
-            </nav>
-          </div>
-        )}
-      </header>
-    )
-  }
+                            {isSignedIn ? (
+                                <GoogleLogout
+                                    class="navigation__link icon-button"
+                                    onSuccess={this.handleSignOut}
+                                >
+                                    <img src={picture} alt="avatar" />
+                                </GoogleLogout>
+                            ) : (
+                                <GoogleLogin
+                                    class="navigation__link icon-button"
+                                    onSuccess={this.handleSignIn}
+                                >
+                                    <span class="icon">
+                                        <svg>
+                                            <use xlinkHref="#icon-account" />
+                                        </svg>
+                                    </span>
+                                </GoogleLogin>
+                            )}
+                        </nav>
+                    </div>
+                )}
+            </header>
+        )
+    }
 }
 
 const mapStateToProps = ({ auth, player }) => ({ auth, player })

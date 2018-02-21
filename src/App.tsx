@@ -10,11 +10,16 @@ import Header from 'components/header/HeaderContainer'
 import Player from 'containers/Player'
 import Notifications from 'components/Notifications'
 import Prompt from 'components/Prompt'
+import GoogleLogin from 'components/auth/GoogleLogin'
+
+import { loadAPI, listenAuth } from 'api/youtube'
 
 interface Props {
     children: any
     isSignedIn: Boolean
     message: String
+    authenticateUser: Function
+    signIn: Function
 }
 
 interface StateFromProps {
@@ -22,31 +27,54 @@ interface StateFromProps {
     message: String
 }
 
-const App = ({ children, isSignedIn, message }: Props) => (
-    <div class="layout">
-        <Sprite />
+interface DispatchFromProps {
+    authenticateUser: Function
+    signIn: Function
+}
 
-        <Match>
-            {({ path }) => {
-                if (!isSignedIn && path !== '/login') {
-                    route('/login', true)
-                } else if (isSignedIn && path === '/login') {
-                    route('/', true)
-                }
+class App extends Component<Props, any> {
+    constructor(props: Props) {
+        super(props)
+    }
 
-                return <Header path={path} />
-            }}
-        </Match>
+    async componentDidMount() {
+        await loadAPI()
 
-        <main class="layout__content">{isSignedIn ? children : null}</main>
+        this.props.authenticateUser()
+    }
 
-        <Player />
+    render({ children, isSignedIn, message, signIn }: Props) {
+        return (
+            <div class="layout">
+                <Sprite />
 
-        <Prompt />
+                <Match>
+                    {({ path }) => {
+                        return <Header path={path} />
+                    }}
+                </Match>
 
-        {message ? <Notifications /> : null}
-    </div>
-)
+                <main class="layout__content">
+                    {isSignedIn === true ? (
+                        children
+                    ) : isSignedIn === false ? (
+                        <div class="log_in">
+                            <GoogleLogin class="button" onSuccess={signIn}>
+                                Log in
+                            </GoogleLogin>
+                        </div>
+                    ) : null}
+                </main>
+
+                <Player />
+
+                <Prompt />
+
+                {message ? <Notifications /> : null}
+            </div>
+        )
+    }
+}
 
 const mapStateToProps = ({
     auth: { isSignedIn },
@@ -56,4 +84,14 @@ const mapStateToProps = ({
     message
 })
 
-export default connect<StateFromProps, void, void>(mapStateToProps)(App)
+const mapDispatchToProps = (dispatch) => ({
+    authenticateUser: () =>
+        listenAuth((data) => dispatch({ type: 'SIGN_IN', data })),
+
+    signIn: (data) => dispatch({ type: 'SIGN_IN', data })
+})
+
+export default connect<StateFromProps, DispatchFromProps, void>(
+    mapStateToProps,
+    mapDispatchToProps
+)(App)

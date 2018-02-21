@@ -1,18 +1,22 @@
 {
-  "compilerOptions": {
-    "baseUrl": "./",
-    "target": "es5",
-    "module": "commonjs",
-    "jsx": "react",
-    "jsxFactory": "h",
-    "lib": ["es5", "dom", "es2015", "es2017"],
-    "paths": {
-      "styles/*": ["src/assets/styles/*"],
-      "actions/*": ["src/actions/*"],
-      "containers/*": ["src/containers/*"],
-      "components/*": ["src/components/*"],
-      "lib/*": ["src/lib/*"],
-      "store/*": ["src/store/*"]
+    "compilerOptions": {
+        "baseUrl": "./",
+        "target": "es5",
+        "module": "commonjs",
+        "jsx": "react",
+        "jsxFactory": "h",
+        "lib": ["es5", "dom", "es2015", "es2017"],
+        "paths": {
+            "npm/*": ["node_modules/*"],
+            "styles/*": ["src/assets/styles/*"],
+            "api/*": ["src/api/*"],
+            "actions/*": ["src/actions/*"],
+            "containers/*": ["src/containers/*"],
+            "components/*": ["src/components/*"],
+            "lib/*": ["src/lib/*"],
+            "store/*": ["src/store/*"]
+        },
+        "typeRoots": ["node_modules/@types"],
+        "types": ["systemjs", "gapi", "gapi.auth2"]
     }
-  }
 }

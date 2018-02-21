@@ -1,11 +1,9 @@
 const initialState = {
     user: {
         userName: '',
-        picture: '',
-        channelId: ''
+        picture: ''
     },
-    token: null,
-    isSignedIn: false
+    isSignedIn: null
 }
 
 export default function(state = initialState, { type, data }) {

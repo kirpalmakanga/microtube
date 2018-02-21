@@ -22,6 +22,10 @@ interface Props {
     signIn: Function
 }
 
+interface State {
+    apiIsReady: Boolean
+}
+
 interface StateFromProps {
     isSignedIn: Boolean
     message: String
@@ -32,30 +36,31 @@ interface DispatchFromProps {
     signIn: Function
 }
 
-class App extends Component<Props, any> {
+class App extends Component<Props, State> {
     constructor(props: Props) {
         super(props)
+
+        this.state = { apiIsReady: false }
     }
 
     async componentDidMount() {
         await loadAPI()
 
-        this.props.authenticateUser()
+        this.setState({ apiIsReady: true }, () => this.props.authenticateUser())
     }
 
-    render({ children, isSignedIn, message, signIn }: Props) {
+    render(
+        { children, isSignedIn, message, signIn }: Props,
+        { apiIsReady }: State
+    ) {
         return (
             <div class="layout">
                 <Sprite />
 
-                <Match>
-                    {({ path }) => {
-                        return <Header path={path} />
-                    }}
-                </Match>
+                <Match>{({ path }) => <Header path={path} />}</Match>
 
                 <main class="layout__content">
-                    {isSignedIn === true ? (
+                    {apiIsReady && isSignedIn === true ? (
                         children
                     ) : isSignedIn === false ? (
                         <div class="log_in">

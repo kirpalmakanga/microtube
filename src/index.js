@@ -9,7 +9,7 @@ import AppRouter from './router'
 
 import { STORAGE_KEY } from './config'
 
-const { auth = {}, player = {} } = localStorage.getItem(STORAGE_KEY) || {}
+const { auth = {}, player = {} } = JSON.parse(localStorage.getItem(STORAGE_KEY))
 
 const initialState = {
     auth: {
@@ -17,7 +17,7 @@ const initialState = {
             userName: '',
             picture: ''
         },
-        isSignedIn: null
+        ...auth
     },
     player: {
         queue: [],
@@ -25,7 +25,8 @@ const initialState = {
         showQueue: false,
         showScreen: false,
         volume: 100,
-        newQueueItems: 0
+        newQueueItems: 0,
+        ...player
     }
 }
 ;(() => {

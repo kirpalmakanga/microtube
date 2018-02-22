@@ -3,6 +3,7 @@
     display: flex;
     background-color: lighten($black, 40%);
     width: 100%;
+    position: relative;
 
     &:active,
     &:hover {
@@ -10,89 +11,69 @@
     }
 
     &__thumb {
-      display: flex;
-      position: relative;
-      margin-right: 16px;
+        display: flex;
+        position: relative;
+        margin-right: 16px;
 
-      &-badge {
-        position: absolute;
-        bottom: 5px;
-        right: 5px;
-        background-color: rgba($black, 0.8);
-        border-radius: 4px;
-        font-size: 14px;
-        font-weight: bold;
-        padding: 2px 4px;
-        color: $white;
-      }
-
-      img {
-        display: inline-block;
-        max-height: 100%;
-        max-width: 100%;
-        height: 100%;
-        width: auto;
-      }
-
-      .image {
-        width: 100px;
-        @media screen and (min-width: 480px) {
-          width: 200px;
+        &-badge {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background-color: rgba($black, 0.8);
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 2px 4px;
+            color: $white;
         }
-      }
+
+        img {
+            display: inline-block;
+            max-height: 100%;
+            max-width: 100%;
+            height: 100%;
+            width: auto;
+        }
+
+        .image {
+            width: 100px;
+            @media screen and (min-width: 480px) {
+                width: 200px;
+            }
+        }
     }
 
     &__content {
-      text-decoration: none;
-      padding: 16px;
-      display: flex;
-      flex: 1;
-      width: 100%;
-      cursor: pointer;
-    }
-
-    &__content &__text {
-      flex-direction: column;
+        display: flex;
+        text-decoration: none;
+        overflow: hidden;
+        padding: 16px;
+        width: 100%;
+        cursor: pointer;
+        margin-right: 50px;
     }
 
     &__text {
-        display: flex;
-        flex: 1;
         color: $white;
         overflow: hidden;
         div {
-          &:first-child {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-          }
-          &:last-child {
-            font-size: 14px;
-            @media screen and (min-width: 1024px) {
-                font-size: 20px;
+            &:last-child {
+                font-size: 14px;
+                @media screen and (min-width: 1024px) {
+                    font-size: 20px;
+                }
             }
-          }
         }
 
         &-title {
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
-          letter-spacing: 0.1em;
-          font-size: 16px;
-          width: 120px;
-          @media screen and (min-width: 480px) {
-            width: 400px;
-          }
-          @media screen and (min-width: 768px) {
-            width: 500px;
-          }
-          @media screen and (min-width: 1024px) {
-            width: 700px;
-          }
-          line-height: 0.9em;
-          margin-top: 0;
-          margin-bottom: 10px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            letter-spacing: 0.1em;
+            font-size: 16px;
+            line-height: 0.9em;
+            margin-top: 0;
+            margin-bottom: 10px;
         }
 
         &-subtitle {
@@ -100,25 +81,25 @@
             line-height: 0.9em;
             margin: 0;
             &:not(:last-child) {
-              margin-bottom: 10px;
+                margin-bottom: 10px;
             }
 
             &.channel {
-              font-size: 15px;
-              line-height: 14px;
-              opacity: 0.9;
+                font-size: 15px;
+                line-height: 14px;
+                opacity: 0.9;
             }
 
             &.nb-videos,
             &.date {
-              opacity: 0.7;
+                opacity: 0.7;
             }
         }
     }
 
     &__buttons {
-      display: flex;
-      flex-direction: column;
+        display: flex;
+        flex-direction: column;
     }
 
     &__button {
@@ -129,13 +110,17 @@
         border-top: none;
         border-bottom: none;
         border-right: none;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        top: 0;
         display: flex;
         align-items: center;
         cursor: pointer;
         border-left: 2px solid lighten($brand-primary, 20%);
 
         &:not(:last-child) {
-          border-bottom: 2px solid lighten($brand-primary, 20%);
+            border-bottom: 2px solid lighten($brand-primary, 20%);
         }
 
         &:hover {
@@ -153,8 +138,8 @@
             height: 22px;
             width: 22px;
             @media screen and (min-width: 480px) {
-              height: 24px;
-              width: 24px;
+                height: 24px;
+                width: 24px;
             }
         }
     }

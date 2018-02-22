@@ -96,33 +96,18 @@ class Queue extends Component {
         this.setState({ over: null })
     }
 
-    makeOnClickItem = (index, currentIndex) => () => {
-        if (index !== currentIndex) {
-            this.props.dispatch({
-                type: 'QUEUE_SET_ACTIVE_ITEM',
-                data: { index }
-            })
-        } else {
-            this.props.togglePlay()
-        }
-    }
-
-    makeRemoveItem = (index) => (e) => {
-        e.stopPropagation()
-        this.props.dispatch({ type: 'QUEUE_REMOVE', data: index })
-    }
-
-    render({ player, isPlaying, isBuffering }, { queue }) {
-        const {
-            dragEnd,
-            dragStart,
-            dragOver,
-            makeOnClickItem,
+    render(
+        {
+            player: { showQueue, currentIndex },
+            isPlaying,
+            isBuffering,
+            togglePlay,
+            makeSetActiveItem,
             makeRemoveItem
-        } = this
-        const { showQueue, currentIndex } = player
-
-        console.log(queue)
+        },
+        { queue }
+    ) {
+        const { dragEnd, dragStart, dragOver } = this
 
         return (
             <div
@@ -147,12 +132,20 @@ class Queue extends Component {
                                       isActive={active}
                                       isBuffering={isBuffering}
                                       isPlaying={isPlaying}
+                                      icon={
+                                          active && isBuffering
+                                              ? 'loading'
+                                              : active && isPlaying
+                                                ? 'pause'
+                                                : 'play'
+                                      }
                                       onDragStart={dragStart}
                                       onDragEnd={dragEnd}
-                                      onClick={makeOnClickItem(
-                                          index,
-                                          currentIndex
-                                      )}
+                                      onClick={
+                                          active
+                                              ? togglePlay
+                                              : makeSetActiveItem(index)
+                                      }
                                       onClickRemove={makeRemoveItem(index)}
                                       draggable
                                   />
@@ -168,4 +161,18 @@ class Queue extends Component {
 
 const mapStateToProps = ({ player }) => ({ player })
 
-export default connect(mapStateToProps)(Queue)
+const mapDispatchToProps = (dispatch) => ({
+    makeSetActiveItem: (index) => () => {
+        dispatch({
+            type: 'QUEUE_SET_ACTIVE_ITEM',
+            data: { index }
+        })
+    },
+
+    makeRemoveItem: (index) => (e) => {
+        e.stopPropagation()
+        dispatch({ type: 'QUEUE_REMOVE', data: index })
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Queue)

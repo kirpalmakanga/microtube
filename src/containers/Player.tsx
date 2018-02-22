@@ -20,6 +20,13 @@ class Player extends Component<any, any> {
     constructor(props: any) {
         super(props)
 
+        const currentVideo = props.player.queue.find(
+            ({ active }) => active
+        ) || {
+            title: 'No video.',
+            videoId: null
+        }
+
         this.state = {
             isPlaying: false,
             isBuffering: false,
@@ -36,15 +43,12 @@ class Player extends Component<any, any> {
             timeWatcher: null,
             loadingWatcher: null,
             currentIndex: null,
-            currentVideo: {
-                title: 'No video.',
-                videoId: null
-            }
+            currentVideo
         }
     }
 
-    componentWillReceiveProps({ player }) {
-        const activeQueueItem = player.queue.find(({ active }) => active)
+    componentWillReceiveProps({ player: { queue } }) {
+        const activeQueueItem = queue.find(({ active }) => active)
 
         this.setCurrentVideo(activeQueueItem)
     }

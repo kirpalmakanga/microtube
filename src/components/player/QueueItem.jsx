@@ -7,42 +7,25 @@ const QueueItem = ({
     duration,
     index,
     isActive,
-    isPlaying,
-    isBuffering,
     onClickRemove,
-    ...props
+    icon
 }) => (
     <div
         className={['queue__item', isActive ? 'queue__item--active' : ''].join(
             ' '
         )}
-        data-index={index}
-        data-title={title}
-        // data-duration={}
-        {...props}
     >
         <div className="queue__item-title">{title}</div>
         <div className="queue__item-duration">{parseDuration(duration)}</div>
         <div className="queue__item-button icon-button">
             <span
-                className={[
-                    'icon',
-                    isActive && isBuffering ? 'rotating' : ''
-                ].join(' ')}
-            >
-                {isActive && isBuffering ? (
-                    <svg>
-                        <use xlinkHref="#icon-loading" />
-                    </svg>
-                ) : isActive && isPlaying ? (
-                    <svg>
-                        <use xlinkHref="#icon-pause" />
-                    </svg>
-                ) : (
-                    <svg>
-                        <use xlinkHref="#icon-play" />
-                    </svg>
+                className={['icon', icon === 'loading' ? 'rotating' : ''].join(
+                    ' '
                 )}
+            >
+                <svg>
+                    <use xlinkHref={`#icon-${icon}`} />
+                </svg>
             </span>
         </div>
 

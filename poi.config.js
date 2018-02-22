@@ -27,6 +27,7 @@ module.exports = (options, req) => ({
         config.resolve.extensions.push('tsx')
 
         config.plugins.push(
+            new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
             new webpack.ProvidePlugin({
                 h: 'preact/h',
                 Component: 'preact/component',

@@ -13,15 +13,15 @@
     bottom: 100px;
 
     @media screen and (min-width: 480px) {
-      bottom: 50px;
+        bottom: 50px;
     }
 
     &__header {
-      background-color: $brand-primary;
+        background-color: $brand-primary;
     }
 
     &__items {
-      height: 100%;
+        height: 100%;
     }
 
     &__item {
@@ -36,21 +36,22 @@
         -webkit-tap-highlight-color: transparent;
 
         &:hover {
-          background-color: lighten($brand-primary, 30%);
-          &.queue__item--active {
-              background-color: lighten($brand-primary, 40%);
-          }
+            background-color: lighten($brand-primary, 30%);
+            &.queue__item--active {
+                background-color: lighten($brand-primary, 40%);
+            }
         }
 
-        &:before {
+        &-title,
+        &-duration {
             padding: 15px;
-            display: flex;
-            flex: 1;
-            -webkit-appearance: none;
-            content: attr(data-title);
+        }
+
+        &-title {
             text-overflow: ellipsis;
             overflow: hidden;
             white-space: nowrap;
+            flex: 1;
         }
 
         &-button {
@@ -69,8 +70,8 @@
                 height: 22px;
                 width: 22px;
                 @media screen and (min-width: 480px) {
-                  height: 24px;
-                  width: 24px;
+                    height: 24px;
+                    width: 24px;
                 }
             }
 
@@ -89,7 +90,7 @@
         background-color: lighten($brand-primary, 50%);
     }
     &__item--hidden {
-      display: none;
+        display: none;
     }
 }
 

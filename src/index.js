@@ -9,7 +9,9 @@ import AppRouter from './router'
 
 import { STORAGE_KEY } from './config'
 
-const { auth = {}, player = {} } = JSON.parse(localStorage.getItem(STORAGE_KEY))
+const { auth = {}, player = {} } = JSON.parse(
+    localStorage.getItem(STORAGE_KEY) || '{}'
+)
 
 const initialState = {
     auth: {

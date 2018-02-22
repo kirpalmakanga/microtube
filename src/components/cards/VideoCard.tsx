@@ -37,7 +37,7 @@ const VideoCard = ({
         <div
             class="card__content"
             aria-label={`Play video ${title}`}
-            onClick={() => setAsActiveItem({ videoId, title })}
+            onClick={() => setAsActiveItem({ videoId, title, duration })}
         >
             <div class="card__thumb">
                 <Img
@@ -61,7 +61,7 @@ const VideoCard = ({
             <button
                 class="card__button icon-button"
                 aria-label={`Queue video ${title}`}
-                onClick={() => pushToQueue([{ videoId, title }])}
+                onClick={() => pushToQueue([{ videoId, title, duration }])}
             >
                 <Icon name="playlist-add" />
             </button>

@@ -8,12 +8,14 @@ const QueueItem = ({
     index,
     isActive,
     onClickRemove,
-    icon
+    icon,
+    ...props
 }) => (
     <div
         className={['queue__item', isActive ? 'queue__item--active' : ''].join(
             ' '
         )}
+        {...props}
     >
         <div className="queue__item-title">{title}</div>
         <div className="queue__item-duration">{parseDuration(duration)}</div>

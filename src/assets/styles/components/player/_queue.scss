@@ -34,12 +34,23 @@
         align-items: center;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
+        position: relative;
 
         &:hover {
             background-color: lighten($brand-primary, 30%);
             &.queue__item--active {
                 background-color: lighten($brand-primary, 40%);
             }
+        }
+
+        &:before {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            right: 80px;
+            content: '';
+            display: block;
         }
 
         &-title,

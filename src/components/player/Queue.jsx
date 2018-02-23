@@ -61,8 +61,6 @@ class Queue extends Component {
 
         e.preventDefault()
 
-        console.log(over)
-
         if (
             over.classList.contains('queue__item--placeholder') ||
             !over.getAttribute('draggable')

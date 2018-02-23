@@ -92,7 +92,7 @@ class Queue extends Component {
 
         queue.splice(to, 0, queue.splice(from, 1)[0])
 
-        this.props.dispatch({ type: 'QUEUE_SET', data: queue })
+        this.props.setQueue(queue)
         this.setState({ over: null })
     }
 
@@ -162,6 +162,8 @@ class Queue extends Component {
 const mapStateToProps = ({ player }) => ({ player })
 
 const mapDispatchToProps = (dispatch) => ({
+    setQueue: (data) => dispatch({ type: 'QUEUE_SET', data }),
+
     makeSetActiveItem: (index) => () => {
         dispatch({
             type: 'QUEUE_SET_ACTIVE_ITEM',

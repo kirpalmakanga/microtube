@@ -10,7 +10,6 @@ import Header from 'components/header/HeaderContainer'
 import Player from 'containers/Player'
 import Notifications from 'components/Notifications'
 import Prompt from 'components/Prompt'
-import GoogleLogin from 'components/auth/GoogleLogin'
 
 import { loadAPI, listenAuth } from 'api/youtube'
 
@@ -60,15 +59,7 @@ class App extends Component<Props, State> {
                 <Match>{({ path }) => <Header path={path} />}</Match>
 
                 <main class="layout__content">
-                    {apiIsReady && isSignedIn === true ? (
-                        children
-                    ) : isSignedIn === false ? (
-                        <div class="log_in">
-                            <GoogleLogin class="button" onSuccess={signIn}>
-                                Log in
-                            </GoogleLogin>
-                        </div>
-                    ) : null}
+                    {apiIsReady && isSignedIn === true ? children : null}
                 </main>
 
                 <Player />

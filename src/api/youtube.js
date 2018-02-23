@@ -88,6 +88,28 @@ export const getClient = () => {
     return client
 }
 
+export const signIn = async () => {
+    const auth = getAuthInstance()
+
+    const {
+        Zi,
+        w3: { Paa: picture = '', ig = '', ofa = '' }
+    } = await auth.signIn()
+
+    const userName = ig || ofa
+
+    return {
+        user: { picture, userName },
+        isSignedIn: true
+    }
+}
+
+export const signOut = async () => {
+    const auth = getAuthInstance()
+
+    await auth.signOut()
+}
+
 export const listenAuth = (callback) => {
     const GoogleAuth = getAuthInstance()
 

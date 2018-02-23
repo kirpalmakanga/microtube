@@ -16,6 +16,7 @@ const QueueItem = ({
             ' '
         )}
         {...props}
+        data-index={index}
     >
         <div className="queue__item-title">{title}</div>
         <div className="queue__item-duration">{parseDuration(duration)}</div>

@@ -1,15 +1,14 @@
 import * as api from '../api/youtube'
 
-export function getPlaylists (config) {
-  return async (dispatch) => {
-    try {
-      const data = await api.getPlaylists(config)
-      dispatch({ type: 'GET_PLAYLISTS', data })
-    } catch (err) {
-      console.error(err)
-      dispatch({ type: 'NOTIFY', data: 'Error fetching playlists.' })
+export function getPlaylists(config) {
+    return async (dispatch) => {
+        try {
+            const data = await api.getPlaylists(config)
+            dispatch({ type: 'GET_PLAYLISTS', data })
+        } catch (err) {
+            dispatch({ type: 'NOTIFY', data: 'Error fetching playlists.' })
+        }
     }
-  }
 }
 
 // export function getPlaylistTitle (accessToken, playlistId) {
@@ -24,92 +23,96 @@ export function getPlaylists (config) {
 //   }
 // }
 
-export function getPlaylistItems (config) {
-  return async (dispatch) => {
-    try {
-      const { playlistId } = config
-      const data = await api.getPlaylistItems(config)
+export function getPlaylistItems(config) {
+    return async (dispatch) => {
+        try {
+            const { playlistId } = config
+            const data = await api.getPlaylistItems(config)
 
-      dispatch({ type: 'GET_PLAYLIST', data: { ...data, playlistId } })
-    } catch (err) {
-      dispatch({ type: 'NOTIFY', data: 'Error fetching playlist items.' })
+            dispatch({ type: 'GET_PLAYLIST', data: { ...data, playlistId } })
+        } catch (err) {
+            dispatch({ type: 'NOTIFY', data: 'Error fetching playlist items.' })
+        }
     }
-  }
 }
 
-export function queuePlaylist ({ playlistId, play }) {
-  return (dispatch) => {
-    const getItems = async (pageToken) => {
-      try {
-        const { items, nextPageToken } = await api.getPlaylistItems({ playlistId, pageToken })
+export function queuePlaylist({ playlistId, play }) {
+    return (dispatch) => {
+        const getItems = async (pageToken) => {
+            try {
+                const { items, nextPageToken } = await api.getPlaylistItems({
+                    playlistId,
+                    pageToken
+                })
 
-        if (play && !pageToken && items.length > 0) {
-          dispatch({
-            type: 'QUEUE_SET_ACTIVE_ITEM',
-            data: { video: items[0] }
-          })
-          items.shift()
+                if (play && !pageToken && items.length > 0) {
+                    dispatch({
+                        type: 'QUEUE_SET_ACTIVE_ITEM',
+                        data: { video: items[0] }
+                    })
+                    items.shift()
+                }
+
+                dispatch({ type: 'QUEUE_PUSH', data: items })
+
+                if (nextPageToken) {
+                    getItems(nextPageToken)
+                }
+            } catch (err) {
+                dispatch({
+                    type: 'NOTIFY',
+                    data: 'Error fetching playlist items.'
+                })
+            }
         }
 
-        dispatch({ type: 'QUEUE_PUSH', data: items })
+        getItems()
+    }
+}
 
-        if (nextPageToken) {
-          getItems(nextPageToken)
+export function searchVideos(config) {
+    return async (dispatch, getState) => {
+        try {
+            const { query } = config
+            const { search } = getState()
+
+            if (query !== search.query) {
+                dispatch({ type: 'CLEAR_SEARCH' })
+            }
+
+            dispatch({ type: 'SEARCH_VIDEOS', data: { query } })
+
+            const data = await api.searchVideos(config)
+
+            dispatch({ type: 'SEARCH_VIDEOS_SUCCESS', data })
+        } catch (err) {
+            dispatch({ type: 'NOTIFY', data: 'Error searching videos.' })
         }
-      } catch (err) {
-        console.error(err)
-        dispatch({ type: 'NOTIFY', data: 'Error fetching playlist items.' })
-      }
     }
-
-    getItems()
-  }
 }
 
-export function searchVideos (config) {
-  return async (dispatch, getState) => {
-    try {
-        const { query } = config
-        const { search } = getState()
+export function queueVideo(urlOrId) {
+    return async (dispatch) => {
+        try {
+            const data = await api.getVideo(urlOrId)
 
-        if(query !== search.query) {
-            dispatch({ type: 'CLEAR_SEARCH' })
+            dispatch({ type: 'QUEUE_PUSH', data: [data] })
+        } catch (err) {
+            dispatch({ type: 'NOTIFY', data: 'Error fetching video.' })
         }
-
-        dispatch({ type: 'SEARCH_VIDEOS', data: { query } })
-
-        const data = await api.searchVideos(config)
-
-        dispatch({ type: 'SEARCH_VIDEOS_SUCCESS', data })
-    } catch (err) {
-      console.error(err)
-      dispatch({ type: 'NOTIFY', data: 'Error searching videos.' })
     }
-  }
 }
 
-export function queueVideo (urlOrId) {
-  return async (dispatch) => {
-    try {
-      const data = await api.getVideo(urlOrId)
+export function getSubscriptions(config) {
+    return async (dispatch) => {
+        try {
+            const data = await api.getSubscriptions(config)
 
-      dispatch({ type: 'QUEUE_PUSH', data: [data] })
-    } catch (err) {
-      dispatch({ type: 'NOTIFY', data: 'Error fetching video.' })
+            dispatch({ type: 'GET_SUBSCRIPTIONS', data })
+        } catch (err) {
+            dispatch({ type: 'NOTIFY', data: 'Error fetching subscriptions.' })
+        }
     }
-  }
-}
-
-export function getSubscriptions (config) {
-  return async (dispatch) => {
-    try {
-      const data = await api.getSubscriptions(config)
-
-      dispatch({ type: 'GET_SUBSCRIPTIONS', data })
-    } catch (err) {
-      dispatch({ type: 'NOTIFY', data: 'Error fetching subscriptions.' })
-    }
-  }
 }
 
 // export function unsubscribe (id) {
@@ -128,26 +131,26 @@ export function getSubscriptions (config) {
 //   }
 // }
 
-export function getChannelTitle (channelId) {
-  return async (dispatch) => {
-    try {
-      const title = await api.getChannelTitle(channelId)
+export function getChannelTitle(channelId) {
+    return async (dispatch) => {
+        try {
+            const title = await api.getChannelTitle(channelId)
 
-      dispatch({ type: 'SET_CHANNEL_TITLE', data: { title } })
-    } catch (err) {
-      dispatch({ type: 'NOTIFY', data: 'Error fetching channel title.' })
+            dispatch({ type: 'SET_CHANNEL_TITLE', data: { title } })
+        } catch (err) {
+            dispatch({ type: 'NOTIFY', data: 'Error fetching channel title.' })
+        }
     }
-  }
 }
 
-export function getChannelVideos (config) {
-  return async (dispatch) => {
-    try {
-      const data = await api.getChannelVideos(config)
+export function getChannelVideos(config) {
+    return async (dispatch) => {
+        try {
+            const data = await api.getChannelVideos(config)
 
-      dispatch({ type: 'GET_CHANNEL_VIDEOS', data })
-    } catch (err) {
-      dispatch({ type: 'NOTIFY', data: 'Error fetching channel videos.' })
+            dispatch({ type: 'GET_CHANNEL_VIDEOS', data })
+        } catch (err) {
+            dispatch({ type: 'NOTIFY', data: 'Error fetching channel videos.' })
+        }
     }
-  }
 }

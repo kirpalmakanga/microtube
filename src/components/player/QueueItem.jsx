@@ -18,8 +18,6 @@ const QueueItem = ({
         {...props}
         data-index={index}
     >
-        <div className="queue__item-title">{title}</div>
-        <div className="queue__item-duration">{parseDuration(duration)}</div>
         <div className="queue__item-button icon-button">
             <span
                 className={['icon', icon === 'loading' ? 'rotating' : ''].join(
@@ -31,6 +29,10 @@ const QueueItem = ({
                 </svg>
             </span>
         </div>
+
+        <div className="queue__item-title">{title}</div>
+
+        <div className="queue__item-duration">{parseDuration(duration)}</div>
 
         <button
             className="queue__item-button icon-button"

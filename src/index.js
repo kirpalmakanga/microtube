@@ -1,3 +1,4 @@
+import { STORAGE_KEY } from './config'
 import * as OfflinePluginRuntime from 'offline-plugin/runtime'
 import { h, render } from 'preact'
 import { Provider } from 'preact-redux'
@@ -5,9 +6,14 @@ import { Provider } from 'preact-redux'
 import configureStore from './store/configureStore'
 
 import App from './App'
-import AppRouter from './router'
+import Router from 'preact-router'
+import AsyncRoute from 'preact-async-route'
+import Playlists from 'containers/Playlists'
 
-import { STORAGE_KEY } from './config'
+const makeGetComponent = (path) => async () => {
+    const module = await System.import(path + '.tsx')
+    return module.default
+}
 
 const { auth = {}, player = {} } = JSON.parse(
     localStorage.getItem(STORAGE_KEY) || '{}'
@@ -37,7 +43,29 @@ const initialState = {
     render(
         <Provider store={store}>
             <App>
-                <AppRouter />
+                <Router>
+                    <Playlists path="/" />
+                    <AsyncRoute
+                        path="/playlist/:playlistId"
+                        getComponent={makeGetComponent('./containers/Playlist')}
+                    />
+                    <AsyncRoute
+                        path="/subscriptions"
+                        getComponent={makeGetComponent('./containers/Channels')}
+                    />
+                    <AsyncRoute
+                        path="/channel/:channelId"
+                        getComponent={makeGetComponent('./containers/Channel')}
+                    />
+                    <AsyncRoute
+                        path="/search"
+                        getComponent={makeGetComponent('./containers/Search')}
+                    />
+                    <AsyncRoute
+                        path="/search/:query"
+                        getComponent={makeGetComponent('./containers/Search')}
+                    />
+                </Router>
             </App>
         </Provider>,
         document.querySelector('.app')

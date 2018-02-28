@@ -11,7 +11,6 @@ interface Props {
     query: String
     items: Array<Object>
     nextPageToken: String
-    initSearch: Function
     searchVideos: Function
     clearSearch: Function
 }
@@ -28,7 +27,6 @@ interface StateFromProps {
 }
 
 interface DispatchFromProps {
-    initSearch: Function
     searchVideos: Function
     clearSearch: Function
 }
@@ -80,7 +78,6 @@ const mapStateToProps = ({ search: { items, nextPageToken } }) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-    initSearch: (query) => dispatch({ type: 'SEARCH_VIDEOS', data: { query } }),
     searchVideos: (params) => dispatch(searchVideos(params)),
     clearSearch: () => dispatch({ type: 'CLEAR_SEARCH' })
 })

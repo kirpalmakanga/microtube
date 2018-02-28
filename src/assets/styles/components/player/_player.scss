@@ -4,7 +4,9 @@
 
 .player,
 .queue {
-    box-shadow: 0 -2px 2px 0 rgba($brand-primary, 0.14), 0 3px 1px -2px rgba($brand-primary, 0.2), 0 1px 5px 0 rgba($brand-primary, 0.12);
+    box-shadow: 0 -2px 2px 0 rgba($brand-primary, 0.14),
+        0 3px 1px -2px rgba($brand-primary, 0.2),
+        0 1px 5px 0 rgba($brand-primary, 0.12);
 }
 
 .player {
@@ -22,8 +24,8 @@
         order: 1;
 
         @media screen and (min-width: 480px) {
-          width: initial;
-          order: initial;
+            width: initial;
+            order: initial;
         }
 
         &-button {
@@ -35,8 +37,8 @@
             flex: 1;
             height: 50px;
             @media screen and (min-width: 480px) {
-              width: 50px;
-              flex: initial;
+                width: 50px;
+                flex: initial;
             }
             cursor: pointer;
             position: relative;
@@ -54,34 +56,34 @@
                 height: 22px;
                 width: 22px;
                 @media screen and (min-width: 480px) {
-                  height: 24px;
-                  width: 24px;
+                    height: 24px;
+                    width: 24px;
                 }
             }
 
             &.badge[data-badge] {
-              position: relative;
-              margin: 0;
-              &:after {
-                position: absolute;
-                display: block;
-                @include transition();
-                font-family: $font-primary;
-                border-radius: 6px;
-                font-size: 9px;
-                padding: 4px;
-                opacity: 0;
-                color: $white;
-                background-color: $red;
-                top: 10px;
-                right: 10px;
-                content: attr(data-badge);
-              }
-              &.badge--active {
+                position: relative;
+                margin: 0;
                 &:after {
-                  opacity: 1;
+                    position: absolute;
+                    display: block;
+                    @include transition();
+                    font-family: $font-primary;
+                    border-radius: 6px;
+                    font-size: 9px;
+                    padding: 4px;
+                    opacity: 0;
+                    color: $white;
+                    background-color: $red;
+                    top: 10px;
+                    right: 10px;
+                    content: attr(data-badge);
                 }
-              }
+                &.badge--active {
+                    &:after {
+                        opacity: 1;
+                    }
+                }
             }
         }
 
@@ -91,13 +93,13 @@
             z-index: 1;
 
             button {
-              @media screen and (max-width: 480px) {
-                width: 100%;
-              }
+                @media screen and (max-width: 480px) {
+                    width: 100%;
+                }
             }
 
             @media screen and (min-width: 480px) {
-              flex: initial;
+                flex: initial;
             }
 
             &:hover {
@@ -118,10 +120,10 @@
                 bottom: 100%;
                 width: 180px;
                 transform: translateX(100%);
-                input[type="range"] {
-                  cursor: pointer;
-                  margin: 0;
-                  padding: 10px;
+                input[type='range'] {
+                    cursor: pointer;
+                    margin: 0;
+                    padding: 10px;
                 }
 
                 &.is-active {
@@ -145,20 +147,21 @@
         width: 100%;
 
         @media screen and (min-width: 480px) {
-          width: initial;
-          order: initial;
-          flex: 1;
+            width: initial;
+            order: initial;
+            flex: 1;
         }
 
         &-time,
         &-title {
             position: relative;
-            display: flex;
             color: $white;
         }
 
         &-time {
-          font-size: 12px;
+            position: relative;
+            display: flex;
+            font-size: 12px;
         }
 
         &-title {
@@ -192,11 +195,11 @@
                 z-index: 1;
                 @include transition();
 
-                &:not([type="range"]) {
+                &:not([type='range']) {
                     transform: translateX(-100%);
                 }
 
-                &[type="range"] {
+                &[type='range'] {
                     cursor: pointer;
                     opacity: 0;
                     margin: 0;
@@ -256,6 +259,6 @@
     bottom: 100px;
 
     @media screen and (min-width: 480px) {
-      bottom: 50px;
+        bottom: 50px;
     }
 }

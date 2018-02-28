@@ -7,7 +7,9 @@ module.exports = (options, req) => ({
     entry: {
         client: './src/index.js'
     },
-    title: 'Microtube',
+    html: {
+        title: 'Microtube'
+    },
     devServer: {
         quiet: false
     },

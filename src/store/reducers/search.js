@@ -1,29 +1,31 @@
 const initialState = {
-  items: [],
-  nextPageToken: '',
-  query: ''
+    items: [],
+    nextPageToken: '',
+    query: ''
 }
 
-export default function (state = initialState, { type, data }) {
-  switch (type) {
-    case 'SEARCH_VIDEOS':
-      const { query } = data
+export default function(state = initialState, { type, data }) {
+    switch (type) {
+        case 'SEARCH_VIDEOS':
+            const { query } = data
 
-      return { ...state, query }
+            state = query !== state.query ? initialState : state
 
-    case 'SEARCH_VIDEOS_SUCCESS':
-      const { items, nextPageToken, totalResults } = data
+            return { ...state, query }
 
-      let newData = {
-        items: [...state.items, ...items],
-        nextPageToken: nextPageToken || null,
-        totalResults
-      }
+        case 'SEARCH_VIDEOS_SUCCESS':
+            const { items, nextPageToken, totalResults } = data
 
-      return { ...state, ...newData }
+            let newData = {
+                items: [...state.items, ...items],
+                nextPageToken: nextPageToken || null,
+                totalResults
+            }
 
-    case 'CLEAR_SEARCH':
-      return initialState
-  }
-  return state
+            return { ...state, ...newData }
+
+        case 'CLEAR_SEARCH':
+            return initialState
+    }
+    return state
 }

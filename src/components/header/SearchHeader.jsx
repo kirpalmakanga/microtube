@@ -21,6 +21,7 @@ const SearchHeader = ({ dispatch }) => {
             <SearchForm
                 onSubmit={(query) => {
                     const to = '/search/' + query
+                    // dispatch({ type: 'SEARCH_VIDEOS', data: { query } })
                     route(to, true)
                 }}
             />

@@ -71,16 +71,9 @@ export function queuePlaylist({ playlistId, play }) {
 }
 
 export function searchVideos(config) {
-    return async (dispatch, getState) => {
+    return async (dispatch) => {
         try {
-            const { query } = config
-            const { search } = getState()
-
-            if (query !== search.query) {
-                dispatch({ type: 'CLEAR_SEARCH' })
-            }
-
-            dispatch({ type: 'SEARCH_VIDEOS', data: { query } })
+            dispatch({ type: 'SEARCH_VIDEOS', data: { query: config.query } })
 
             const data = await api.searchVideos(config)
 

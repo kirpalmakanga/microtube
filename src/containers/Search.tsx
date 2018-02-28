@@ -9,7 +9,6 @@ import VideoCard from 'components/cards/VideoCard'
 
 interface Props {
     query: String
-    currentQuery: String
     items: Array<Object>
     nextPageToken: String
     initSearch: Function
@@ -24,7 +23,6 @@ interface State {
 }
 
 interface StateFromProps {
-    currentQuery: String
     items: Array<Object>
     nextPageToken: String
 }
@@ -44,42 +42,39 @@ class Search extends Component<Props, any> {
         this.props.clearSearch()
     }
 
-    componentWillReceiveProps({ query, currentQuery, initSearch }: Props) {
-        if (currentQuery !== query) {
-            this.loadContent()
+    componentWillReceiveProps({ query }: Props) {
+        if (query !== this.props.query) {
+            this.loadContent(query)
         }
     }
 
     componentWillMount() {
-        const { query, initSearch } = this.props
-        query && initSearch(query)
+        this.loadContent(this.props.query)
     }
 
-    loadContent = () => {
+    loadContent = (newQuery) => {
         const { query, nextPageToken, searchVideos } = this.props
 
-        nextPageToken !== null &&
+        if (query && nextPageToken !== null) {
             searchVideos({
-                query,
-                pageToken: nextPageToken
+                query: newQuery || query,
+                pageToken: newQuery ? '' : nextPageToken
             })
+        }
     }
 
-    render({ query, currentQuery, items, nextPageToken, searchVideos }: Props) {
-        return (
+    render({ items }: Props) {
+        return items.length ? (
             <Grid
                 items={items}
                 loadContent={this.loadContent}
                 ItemComponent={VideoCard}
             />
-        )
+        ) : null
     }
 }
 
-const mapStateToProps = ({
-    search: { query: currentQuery, items, nextPageToken }
-}) => ({
-    currentQuery,
+const mapStateToProps = ({ search: { items, nextPageToken } }) => ({
     items,
     nextPageToken
 })

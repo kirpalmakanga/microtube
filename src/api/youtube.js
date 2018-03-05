@@ -210,11 +210,12 @@ const request = async (method, path, params, properties) => {
 
 /* Videos */
 
-export async function searchVideos({ query, pageToken }) {
+export async function searchVideos({ query, forMine, pageToken }) {
     const { items, nextPageToken, pageInfo } = await request('GET', 'search', {
-        part: 'snippet',
+        part: 'id, snippet',
         type: 'video',
         q: query,
+        forMine: !!forMine,
         pageToken,
         maxResults: ITEMS_PER_REQUEST
     })

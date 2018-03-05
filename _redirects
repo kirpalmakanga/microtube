@@ -1,7 +1,0 @@
-/login /
-/search /
-/playlist /
-/playlist/:id /
-/subscriptions /
-/channel /
-/channel/:id /

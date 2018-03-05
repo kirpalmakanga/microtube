@@ -9,6 +9,8 @@ import VideoCard from 'components/cards/VideoCard'
 
 interface Props {
     query: String
+    forMine: Boolean
+    channelId: String
     items: Array<Object>
     nextPageToken: String
     searchVideos: Function
@@ -51,12 +53,15 @@ class Search extends Component<Props, any> {
     }
 
     loadContent = (newQuery) => {
-        const { query, nextPageToken, searchVideos } = this.props
+        const { query, nextPageToken, searchVideos, forMine } = this.props
+
+        console.log(forMine)
 
         if (query && nextPageToken !== null) {
             searchVideos({
                 query: newQuery || query,
-                pageToken: newQuery ? '' : nextPageToken
+                pageToken: newQuery ? '' : nextPageToken,
+                forMine
             })
         }
     }
@@ -72,9 +77,10 @@ class Search extends Component<Props, any> {
     }
 }
 
-const mapStateToProps = ({ search: { items, nextPageToken } }) => ({
+const mapStateToProps = ({ search: { items, nextPageToken, forMine } }) => ({
     items,
-    nextPageToken
+    nextPageToken,
+    forMine
 })
 
 const mapDispatchToProps = (dispatch) => ({

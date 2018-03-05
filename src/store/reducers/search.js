@@ -1,15 +1,26 @@
 const initialState = {
     items: [],
     nextPageToken: '',
+    forMine: 0,
     query: ''
 }
 
 export default function(state = initialState, { type, data }) {
+    console.log(type, data)
     switch (type) {
+        case 'SET_SEARCH_MODE':
+            const { forMine = 0 } = data
+
+            state.items = []
+
+            return { ...state, forMine }
         case 'SEARCH_VIDEOS':
             const { query } = data
 
-            state = query !== state.query ? initialState : state
+            if (query !== state.query) {
+                state.items = []
+                state.nextPageToken = ''
+            }
 
             return { ...state, query }
 
@@ -25,7 +36,8 @@ export default function(state = initialState, { type, data }) {
             return { ...state, ...newData }
 
         case 'CLEAR_SEARCH':
-            return initialState
+            ;(state.items = []), (state.nextPageToken = '')
+            return { ...state }
     }
     return state
 }

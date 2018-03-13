@@ -6,7 +6,6 @@ const initialState = {
 }
 
 export default function(state = initialState, { type, data }) {
-    console.log(type, data)
     switch (type) {
         case 'SET_SEARCH_MODE':
             const { forMine = 0 } = data

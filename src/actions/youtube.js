@@ -75,13 +75,10 @@ export function searchVideos(config) {
         try {
             dispatch({ type: 'SEARCH_VIDEOS', data: { query: config.query } })
 
-            console.log('config', config)
-
             const data = await api.searchVideos(config)
 
             dispatch({ type: 'SEARCH_VIDEOS_SUCCESS', data })
         } catch (err) {
-            console.error(JSON.parse(err.body))
             dispatch({ type: 'NOTIFY', data: 'Error searching videos.' })
         }
     }

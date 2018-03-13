@@ -55,8 +55,6 @@ class Search extends Component<Props, any> {
     loadContent = (newQuery) => {
         const { query, nextPageToken, searchVideos, forMine } = this.props
 
-        console.log(forMine)
-
         if (query && nextPageToken !== null) {
             searchVideos({
                 query: newQuery || query,

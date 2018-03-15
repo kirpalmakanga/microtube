@@ -65,6 +65,10 @@ const initialState = {
                         path="/search/:query"
                         getComponent={makeGetComponent('./containers/Search')}
                     />
+                    {/* <AsyncRoute
+                        path="/feed"
+                        getComponent={makeGetComponent('./containers/Feed')}
+                    /> */}
                 </Router>
             </App>
         </Provider>,

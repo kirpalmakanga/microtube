@@ -1,4 +1,7 @@
 import moment from 'moment'
+import RssParser from 'rss-parser'
+
+const parser = new RssParser()
 
 export const preventDefault = (e) => e.preventDefault()
 
@@ -71,3 +74,8 @@ export const parseDuration = (PT = '') => {
 
     return output.join(':')
 }
+
+export const flatten = (arr) =>
+    arr.reduce((flat, next) => flat.concat(next), [])
+
+export const parseFeed = (feedurl) => parser.parseURL(feedurl)

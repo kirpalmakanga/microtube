@@ -39,14 +39,18 @@ const VideoCard = ({
             aria-label={`Play video ${title}`}
             onClick={() => setAsActiveItem({ videoId, title, duration })}
         >
-            <div class="card__thumb">
-                <Img
-                    src={getThumbnails(thumbnails, 'high')}
-                    alt={title}
-                    background
-                />
-                <span class="card__thumb-badge">{parseDuration(duration)}</span>
-            </div>
+            {thumbnails ? (
+                <div class="card__thumb">
+                    <Img
+                        src={getThumbnails(thumbnails, 'high')}
+                        alt={title}
+                        background
+                    />
+                    <span class="card__thumb-badge">
+                        {parseDuration(duration)}
+                    </span>
+                </div>
+            ) : null}
 
             <div class="card__text">
                 <h2 class="card__text-title">{title}</h2>

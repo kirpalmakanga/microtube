@@ -1,4 +1,8 @@
 import * as api from '../api/youtube'
+import { flatten, parseFeed } from 'lib/helpers'
+import { resolve } from 'url'
+
+import { PROXY_URL, FEED_URL } from '../config'
 
 export function getPlaylists(config) {
     return async (dispatch) => {
@@ -104,6 +108,70 @@ export function getSubscriptions(config) {
             dispatch({ type: 'GET_SUBSCRIPTIONS', data })
         } catch (err) {
             dispatch({ type: 'NOTIFY', data: 'Error fetching subscriptions.' })
+        }
+    }
+}
+
+export function getFeed() {
+    return async (dispatch) => {
+        try {
+            const channelIds = []
+
+            const getItems = async (pageToken = '') => {
+                const {
+                    items: newItems,
+                    nextPageToken
+                } = await api.getSubscriptions({
+                    mine: true,
+                    pageToken
+                })
+
+                channelIds.push(...newItems.map(({ channelId }) => channelId))
+
+                if (nextPageToken) {
+                    getItems(nextPageToken)
+                }
+            }
+
+            await getItems()
+
+            const feeds = await Promise.all(
+                channelIds.map((channelId) =>
+                    parseFeed(
+                        `${PROXY_URL}/${FEED_URL}?channel_id=${channelId}`
+                    )
+                )
+            )
+
+            const data = feeds
+                .reduce((arr, { items }) => {
+                    arr.push(
+                        ...items.map(
+                            ({
+                                id,
+                                author: channelTitle,
+                                pubDate: publishedAt,
+                                title
+                            }) => ({
+                                videoId: id.split(':')[2],
+                                publishedAt,
+                                title,
+                                channelTitle
+                            })
+                        )
+                    )
+
+                    return arr
+                }, [])
+                .sort(
+                    ({ publishedAt: dateA }, { publishedAt: dateB }) =>
+                        new Date(dateB).getTime() - new Date(dateA).getTime()
+                )
+
+            dispatch({ type: 'GET_FEED_VIDEOS', data })
+        } catch (error) {
+            console.error(error)
+            dispatch({ type: 'NOTIFY', data: 'Error fetching feed.' })
         }
     }
 }

@@ -1,5 +1,5 @@
-const path = require('path')
-const OfflinePlugin = require('offline-plugin')
+const path = require('path');
+const OfflinePlugin = require('offline-plugin');
 
 module.exports = (options, req) => ({
     quiet: false,
@@ -13,8 +13,9 @@ module.exports = (options, req) => ({
     devServer: {
         quiet: false
     },
+    transformModules: ['rss-parser'],
     webpack(config) {
-        const webpack = req('webpack')
+        const webpack = req('webpack');
 
         config.resolve.alias = {
             styles: path.resolve(__dirname, 'src/assets/styles/'),
@@ -24,9 +25,9 @@ module.exports = (options, req) => ({
             components: path.resolve(__dirname, 'src/components/'),
             lib: path.resolve(__dirname, 'src/lib/'),
             store: path.resolve(__dirname, 'src/store/')
-        }
+        };
 
-        config.resolve.extensions.push('tsx')
+        config.resolve.extensions.push('tsx');
 
         config.plugins.push(
             new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
@@ -38,9 +39,9 @@ module.exports = (options, req) => ({
                 PreactRedux: 'preact-redux'
             })
             // new OfflinePlugin()
-        )
+        );
 
-        return config
+        return config;
     },
     presets: [
         require('poi-preset-offline')({
@@ -48,4 +49,4 @@ module.exports = (options, req) => ({
         }),
         require('poi-preset-typescript')()
     ]
-})
+});

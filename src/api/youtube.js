@@ -5,78 +5,72 @@ import {
     API_URL,
     GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SCOPE
-} from '../config'
+} from '../config';
 
-const ITEMS_PER_REQUEST = 50
+const ITEMS_PER_REQUEST = 50;
 
 function parseID(url) {
-    var ID = ''
+    var ID = '';
 
     url = url
         .replace(/(>|<)/gi, '')
-        .split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/)
+        .split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
 
     if (url[2] !== undefined) {
-        ID = url[2].split(/[^0-9a-z_\-]/i)
-        ID = ID[0]
+        ID = url[2].split(/[^0-9a-z_\-]/i);
+        ID = ID[0];
     } else {
-        ID = url.toString()
+        ID = url.toString();
     }
-    return ID
+    return ID;
 }
 
-export const loadAPI = () => {
-    return new Promise((resolve) => {
-        ;((d, s, cb) => {
-            const url = API_URL
-            const element = d.getElementsByTagName(s)[0]
-            const fjs = element
-            let js = element
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        try {
+            if (!document.querySelector(`script[src="${src}"]`)) {
+                const js = document.createElement('script');
 
-            if (!d.querySelector(`script[src="${url}"]`)) {
-                js = d.createElement(s)
-                js.src = url
-                fjs.parentNode.insertBefore(js, fjs)
-                js.onload = () => cb(true)
+                document.body.appendChild(js);
+
+                js.src = src;
+                js.onload = () => resolve(true);
             } else {
-                cb()
+                resolve(false);
             }
-        })(document, 'script', async (initServices) => {
-            const { gapi } = window
-
-            if (initServices) {
-                await Promise.all([
-                    new Promise((callback) =>
-                        gapi.load('auth2', {
-                            callback
-                        })
-                    ),
-                    new Promise((callback) =>
-                        gapi.load('client', {
-                            callback
-                        })
-                    )
-                ])
-            }
-
-            resolve(gapi)
-        })
-    })
+        } catch (err) {
+            reject(err);
+        }
+    });
 }
+
+export const loadAPI = async () => {
+    const initServices = await loadScript(API_URL);
+
+    const { gapi } = window;
+
+    if (initServices) {
+        await new Promise((callback) =>
+            gapi.load('client:auth2', { callback })
+        );
+    }
+
+    return gapi;
+};
 
 export const getAuthInstance = () => {
-    const { auth2 } = window.gapi
+    const { auth2 } = window.gapi;
 
     const params = {
         clientId: GOOGLE_CLIENT_ID,
         scope: GOOGLE_CLIENT_SCOPE
-    }
+    };
 
-    return auth2.init(params)
-}
+    return auth2.init(params);
+};
 
 export const getClient = () => {
-    const { client } = window.gapi
+    const { client } = window.gapi;
 
     // const params = {
     //     clientId: GOOGLE_CLIENT_ID,
@@ -85,128 +79,128 @@ export const getClient = () => {
 
     // client.init(params)
 
-    return client
-}
+    return client;
+};
 
 export const signIn = async () => {
-    const auth = getAuthInstance()
+    const auth = getAuthInstance();
 
     const {
         Zi,
         w3: { Paa: picture = '', ig = '', ofa = '' }
-    } = await auth.signIn()
+    } = await auth.signIn();
 
-    const userName = ig || ofa
+    const userName = ig || ofa;
 
     return {
         user: { picture, userName },
         isSignedIn: true
-    }
-}
+    };
+};
 
 export const signOut = async () => {
-    const auth = getAuthInstance()
+    const auth = getAuthInstance();
 
-    await auth.signOut()
-}
+    await auth.signOut();
+};
 
 export const listenAuth = (callback) => {
-    const GoogleAuth = getAuthInstance()
+    const GoogleAuth = getAuthInstance();
 
     GoogleAuth.then(() => {
-        const hasAuthenticatedUser = GoogleAuth.isSignedIn.get()
+        const hasAuthenticatedUser = GoogleAuth.isSignedIn.get();
 
         const getUser = () => {
             const {
                 Zi,
                 w3: { Paa: picture = '', ig = '', ofa = '' }
-            } = GoogleAuth.currentUser.get()
+            } = GoogleAuth.currentUser.get();
 
-            const userName = ig || ofa
+            const userName = ig || ofa;
 
             return {
                 picture,
                 userName
-            }
-        }
+            };
+        };
 
         const sendData = (isSignedIn) =>
             isSignedIn &&
             callback({
                 user: getUser(),
                 isSignedIn
-            })
+            });
 
         if (hasAuthenticatedUser) {
-            sendData(hasAuthenticatedUser)
+            sendData(hasAuthenticatedUser);
         }
 
-        GoogleAuth.isSignedIn.listen(sendData)
-    })
-}
+        GoogleAuth.isSignedIn.listen(sendData);
+    });
+};
 
 function createResource(properties) {
-    var resource = {}
-    var normalizedProps = properties
+    var resource = {};
+    var normalizedProps = properties;
 
     for (let p in properties) {
-        var value = properties[p]
+        var value = properties[p];
         if (p && p.substr(-2, 2) == '[]') {
-            const adjustedName = p.replace('[]', '')
+            const adjustedName = p.replace('[]', '');
             if (value) {
-                normalizedProps[adjustedName] = value.split(',')
+                normalizedProps[adjustedName] = value.split(',');
             }
-            delete normalizedProps[p]
+            delete normalizedProps[p];
         }
     }
 
     for (const p in normalizedProps) {
         // Leave properties that don't have values out of inserted resource.
         if (normalizedProps.hasOwnProperty(p) && normalizedProps[p]) {
-            const propArray = p.split('.')
-            let ref = resource
+            const propArray = p.split('.');
+            let ref = resource;
 
             for (let pa = 0; pa < propArray.length; pa++) {
-                const key = propArray[pa]
+                const key = propArray[pa];
 
                 if (pa === propArray.length - 1) {
-                    ref[key] = normalizedProps[p]
+                    ref[key] = normalizedProps[p];
                 } else {
-                    ref = ref[key] = ref[key] || {}
+                    ref = ref[key] = ref[key] || {};
                 }
             }
         }
     }
 
-    return resource
+    return resource;
 }
 
 function removeEmptyParams(params) {
     for (const p in params) {
         if (!params[p] || params[p] == 'undefined') {
-            delete params[p]
+            delete params[p];
         }
     }
-    return params
+    return params;
 }
 
 const request = async (method, path, params, properties) => {
-    const client = getClient()
+    const client = getClient();
 
     const config = {
         method,
         path: `/youtube/v3/${path}`,
         params: removeEmptyParams(params)
-    }
+    };
 
     if (properties) {
-        config.body = createResource(properties)
+        config.body = createResource(properties);
     }
 
-    const { result } = await client.request(config)
+    const { result } = await client.request(config);
 
-    return result
-}
+    return result;
+};
 
 /* Videos */
 
@@ -218,26 +212,26 @@ export async function searchVideos({ query, forMine, pageToken }) {
         forMine: !!forMine,
         pageToken,
         maxResults: ITEMS_PER_REQUEST
-    })
+    });
 
-    const videoIds = items.map(({ id }) => id.videoId)
+    const videoIds = items.map(({ id }) => id.videoId);
 
-    const videos = await getVideosFromIds(videoIds)
+    const videos = await getVideosFromIds(videoIds);
 
     return {
         items: videos,
         nextPageToken,
         totalResults: pageInfo.totalResults
-    }
+    };
 }
 
 export async function getVideo(urlOrId) {
     const { items } = await request('GET', 'videos', {
         id: parseID(urlOrId),
         part: 'contentDetails, snippet, status'
-    })
+    });
 
-    const { id, contentDetails, snippet, status } = items[0]
+    const { id, contentDetails, snippet, status } = items[0];
 
     return {
         videoId: id,
@@ -247,7 +241,7 @@ export async function getVideo(urlOrId) {
         channelTitle: snippet.channelTitle,
         publishedAt: snippet.publishedAt,
         privacyStatus: status.privacyStatus
-    }
+    };
 }
 
 export async function getVideosFromIds(ids) {
@@ -255,7 +249,7 @@ export async function getVideosFromIds(ids) {
         part: 'contentDetails, snippet, status',
         id: ids.join(', '),
         maxResults: ITEMS_PER_REQUEST
-    })
+    });
 
     const videos = items.map(({ id, contentDetails, snippet, status }) => ({
         videoId: id,
@@ -266,9 +260,9 @@ export async function getVideosFromIds(ids) {
         channelId: snippet.channelId,
         channelTitle: snippet.channelTitle,
         privacyStatus: status.privacyStatus
-    }))
+    }));
 
-    return videos
+    return videos;
 }
 
 /* Playlists */
@@ -283,7 +277,7 @@ export async function getPlaylists({ pageToken = '', mine = false }) {
             part: 'snippet, contentDetails, status',
             maxResults: ITEMS_PER_REQUEST
         }
-    )
+    );
 
     return {
         items: items.map(({ id, contentDetails, snippet, status }) => ({
@@ -295,18 +289,18 @@ export async function getPlaylists({ pageToken = '', mine = false }) {
         })),
         nextPageToken,
         totalResults: pageInfo.totalResults
-    }
+    };
 }
 
 export async function getPlaylistTitle(id) {
     const { items } = await request('GET', 'playlists', {
         id,
         part: 'snippet'
-    })
+    });
 
-    const { title } = items[0].snippet
+    const { title } = items[0].snippet;
 
-    return title
+    return title;
 }
 
 export async function getPlaylistItems({ pageToken = '', playlistId }) {
@@ -319,17 +313,17 @@ export async function getPlaylistItems({ pageToken = '', playlistId }) {
             part: 'snippet, status',
             maxResults: ITEMS_PER_REQUEST
         }
-    )
+    );
 
-    const videoIds = items.map(({ snippet }) => snippet.resourceId.videoId)
+    const videoIds = items.map(({ snippet }) => snippet.resourceId.videoId);
 
-    const videos = await getVideosFromIds(videoIds)
+    const videos = await getVideosFromIds(videoIds);
 
     return {
         items: videos,
         nextPageToken,
         totalResults: pageInfo.totalResults
-    }
+    };
 }
 
 /* Subscriptions */
@@ -345,7 +339,7 @@ export async function getSubscriptions({ pageToken = '', mine = false }) {
             maxResults: ITEMS_PER_REQUEST,
             order: 'alphabetical'
         }
-    )
+    );
 
     return {
         items: items.map(({ id, contentDetails, snippet }) => ({
@@ -357,7 +351,7 @@ export async function getSubscriptions({ pageToken = '', mine = false }) {
         })),
         nextPageToken,
         totalResults: pageInfo.totalResults
-    }
+    };
 }
 
 /* Channels */
@@ -365,22 +359,22 @@ export async function getChannelId(forUsername) {
     const { items } = await request('GET', 'channels', {
         forUsername,
         part: 'snippet'
-    })
+    });
 
-    const { id } = items[0]
+    const { id } = items[0];
 
-    return id
+    return id;
 }
 
 export async function getChannelTitle(id) {
     const { items } = await request('GET', 'channels', {
         id,
         part: 'snippet'
-    })
+    });
 
-    const { title } = items[0].snippet
+    const { title } = items[0].snippet;
 
-    return title
+    return title;
 }
 
 export async function getChannelVideos({ channelId, pageToken }) {
@@ -390,15 +384,15 @@ export async function getChannelVideos({ channelId, pageToken }) {
         channelId,
         pageToken,
         maxResults: ITEMS_PER_REQUEST
-    })
+    });
 
-    const videoIds = items.map(({ id }) => id.videoId)
+    const videoIds = items.map(({ id }) => id.videoId);
 
-    const videos = await getVideosFromIds(videoIds)
+    const videos = await getVideosFromIds(videoIds);
 
     return {
         items: videos,
         nextPageToken,
         totalResults: pageInfo.totalResults
-    }
+    };
 }

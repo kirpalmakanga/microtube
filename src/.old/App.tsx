@@ -1,51 +1,53 @@
-import 'styles/app.scss'
+import 'styles/app.scss';
 
-import { h, Component } from 'preact'
-import { connect } from 'preact-redux'
-import { route } from 'preact-router'
-import Match from 'preact-router/match'
+import { h, Component } from 'preact';
+import { connect } from 'preact-redux';
+import { route } from 'preact-router';
+import Match from 'preact-router/match';
 
-import Sprite from 'components/Sprite'
-import Header from 'components/header/HeaderContainer'
-import Player from 'containers/Player'
-import Notifications from 'components/Notifications'
-import Prompt from 'components/Prompt'
+import Sprite from 'components/Sprite';
+import Header from 'components/header/HeaderContainer';
+import Player from 'containers/Player';
+import Notifications from 'components/Notifications';
+import Prompt from 'components/Prompt';
 
-import { loadAPI, listenAuth } from 'api/youtube'
+import { loadAPI, listenAuth } from 'api/youtube';
 
 interface Props {
-    children: any
-    isSignedIn: Boolean
-    message: String
-    authenticateUser: Function
-    signIn: Function
+    children: any;
+    isSignedIn: Boolean;
+    message: String;
+    authenticateUser: Function;
+    signIn: Function;
 }
 
 interface State {
-    apiIsReady: Boolean
+    apiIsReady: Boolean;
 }
 
 interface StateFromProps {
-    isSignedIn: Boolean
-    message: String
+    isSignedIn: Boolean;
+    message: String;
 }
 
 interface DispatchFromProps {
-    authenticateUser: Function
-    signIn: Function
+    authenticateUser: Function;
+    signIn: Function;
 }
 
 class App extends Component<Props, State> {
     constructor(props: Props) {
-        super(props)
+        super(props);
 
-        this.state = { apiIsReady: false }
+        this.state = { apiIsReady: false };
     }
 
     async componentDidMount() {
-        await loadAPI()
+        await loadAPI();
 
-        this.setState({ apiIsReady: true }, () => this.props.authenticateUser())
+        this.setState({ apiIsReady: true }, () =>
+            this.props.authenticateUser()
+        );
     }
 
     render(
@@ -68,7 +70,7 @@ class App extends Component<Props, State> {
 
                 {message ? <Notifications /> : null}
             </div>
-        )
+        );
     }
 }
 
@@ -78,16 +80,16 @@ const mapStateToProps = ({
 }) => ({
     isSignedIn,
     message
-})
+});
 
 const mapDispatchToProps = (dispatch) => ({
     authenticateUser: () =>
         listenAuth((data) => dispatch({ type: 'SIGN_IN', data })),
 
     signIn: (data) => dispatch({ type: 'SIGN_IN', data })
-})
+});
 
 export default connect<StateFromProps, DispatchFromProps, void>(
     mapStateToProps,
     mapDispatchToProps
-)(App)
+)(App);

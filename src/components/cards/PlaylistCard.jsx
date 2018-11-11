@@ -1,26 +1,12 @@
-import { h } from 'preact'
-import { connect } from 'preact-redux'
-import { Link } from 'preact-router'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
-import { queuePlaylist } from 'actions/youtube'
-import { getThumbnails } from 'lib/helpers'
+import { queuePlaylist } from '../../actions/youtube';
+import { getThumbnails } from '../../lib/helpers';
 
-import Img from 'components/Img'
-import Icon from 'components/Icon'
-
-interface Props {
-    id: String
-    title: String
-    thumbnails: Object
-    itemCount: Number
-    queuePlaylist: Function
-    openPlaylist: Function
-}
-
-interface DispatchFromProps {
-    queuePlaylist: Function
-    openPlaylist: Function
-}
+import Img from '../Img';
+import Icon from '../Icon';
 
 const PlaylistCard = ({
     id,
@@ -82,11 +68,16 @@ const PlaylistCard = ({
             </button>
         </div>
     </div>
-)
+);
+
+/* TODO: Déplacer les méthodes dans le container */
 
 const mapDispatchToProps = (dispatch) => ({
     queuePlaylist: (params) => dispatch(queuePlaylist(params)),
     openPlaylist: (data) => dispatch({ type: 'PLAYLIST_OPEN', data })
-})
+});
 
-export default connect(() => ({}), mapDispatchToProps)(PlaylistCard)
+export default connect(
+    () => ({}),
+    mapDispatchToProps
+)(PlaylistCard);

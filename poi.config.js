@@ -1,52 +1,19 @@
-const path = require('path');
-const OfflinePlugin = require('offline-plugin');
+const { IgnorePlugin, HotModuleReplacementPlugin } = require('webpack');
 
-module.exports = (options, req) => ({
-    quiet: false,
+module.exports = {
+    entry: './src/index.js',
     port: 8080,
-    entry: {
-        client: './src/index.js'
-    },
     html: {
         title: 'Microtube'
     },
-    devServer: {
-        quiet: false
-    },
     transformModules: ['rss-parser'],
-    webpack(config) {
-        const webpack = req('webpack');
+    chainWebpack(config) {
+        config.resolve.extensions.add('.tsx');
 
-        config.resolve.alias = {
-            styles: path.resolve(__dirname, 'src/assets/styles/'),
-            api: path.resolve(__dirname, 'src/api/'),
-            actions: path.resolve(__dirname, 'src/actions/'),
-            containers: path.resolve(__dirname, 'src/containers/'),
-            components: path.resolve(__dirname, 'src/components/'),
-            lib: path.resolve(__dirname, 'src/lib/'),
-            store: path.resolve(__dirname, 'src/store/')
-        };
+        config
+            .plugin('ignore-moment-locales')
+            .use(IgnorePlugin, [/^\.\/locale$/, /moment$/]);
 
-        config.resolve.extensions.push('tsx');
-
-        config.plugins.push(
-            new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-            new webpack.ProvidePlugin({
-                h: 'preact/h',
-                Component: 'preact/component',
-                Preact: 'preact',
-                PreactRouter: 'preact-router',
-                PreactRedux: 'preact-redux'
-            })
-            // new OfflinePlugin()
-        );
-
-        return config;
-    },
-    presets: [
-        require('poi-preset-offline')({
-            externals: ['//apis.google.com/js/api.js']
-        }),
-        require('poi-preset-typescript')()
-    ]
-});
+        // config.plugin('hot').use(HotModuleReplacementPlugin);
+    }
+};

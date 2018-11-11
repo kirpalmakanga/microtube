@@ -1,46 +1,40 @@
 {
-  "name": "microtube",
-  "version": "1.0.0",
-  "description": "light youtube player",
-  "scripts": {
-    "postinstall": "npm run build",
-    "dev": "poi",
-    "build": "rm -rf dist/ && poi build"
-  },
-  "dependencies": {
-    "@types/es6-promise": "^3.3.0",
-    "@types/gapi": "0.0.35",
-    "@types/gapi.auth2": "0.0.47",
-    "@types/systemjs": "^0.20.6",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-preact": "^1.1.0",
-    "moment": "^2.21.0",
-    "node-sass": "^4.8.2",
-    "offline-plugin": "^4.9.0",
-    "poi": "^9.6.13",
-    "poi-preset-offline": "^9.0.3",
-    "poi-preset-typescript": "^9.0.2",
-    "preact": "^8.2.7",
-    "preact-async-route": "^2.1.1",
-    "preact-dom": "^1.0.1",
-    "preact-helmet": "^4.0.0-alpha-3",
-    "preact-redux": "^2.0.3",
-    "preact-render-to-string": "^3.7.0",
-    "preact-router": "^2.6.0",
-    "preact-waypoint": "^1.0.7",
-    "redux": "^3.7.2",
-    "redux-localstorage": "^0.4.1",
-    "redux-thunk": "^2.0.1",
-    "rss-parser": "^3.1.2",
-    "sass-loader": "^6.0.7",
-    "typescript": "^2.7.2",
-    "youtube-player": "^5.5.0"
-  },
-  "engines": {
-    "node": "9.5.0",
-    "npm": "5.6.0"
-  }
+    "name": "microtube",
+    "version": "1.0.0",
+    "description": "light youtube player",
+    "scripts": {
+        "postinstall": "npm run build",
+        "dev": "poi",
+        "build": "rm -rf dist/ && poi build"
+    },
+    "dependencies": {
+        "moment": "^2.22.2",
+        "react": "^16.6.1",
+        "react-dom": "^16.6.1",
+        "react-redux": "^5.1.1",
+        "react-router-dom": "^4.3.1",
+        "react-visibility-sensor": "^5.0.2",
+        "react-waypoint": "^8.0.3",
+        "redux": "^3.7.2",
+        "redux-localstorage": "^0.4.1",
+        "redux-thunk": "^2.3.0",
+        "rss-parser": "^3.5.3",
+        "youtube-player": "^5.5.1"
+    },
+    "devDependencies": {
+        "@babel/plugin-transform-runtime": "^7.1.0",
+        "@babel/preset-env": "^7.1.5",
+        "@babel/preset-react": "^7.0.0",
+        "@types/es6-promise": "^3.3.0",
+        "@types/gapi": "0.0.35",
+        "@types/gapi.auth2": "0.0.47",
+        "@types/systemjs": "^0.20.6",
+        "babel-plugin-transform-class-properties": "^6.24.1",
+        "babel-plugin-transform-object-rest-spread": "^6.26.0",
+        "node-sass": "^4.10.0",
+        "offline-plugin": "^4.9.1",
+        "poi": "^10.2.10",
+        "sass-loader": "^6.0.7",
+        "typescript": "^2.9.2"
+    }
 }

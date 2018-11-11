@@ -1,11 +1,6 @@
 // https://apis.google.com/js/client.js
 
-import {
-    API_KEY,
-    API_URL,
-    GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SCOPE
-} from '../config';
+import { API_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SCOPE } from '../config/api';
 
 const ITEMS_PER_REQUEST = 50;
 
@@ -112,7 +107,6 @@ export const listenAuth = (callback) => {
 
         const getUser = () => {
             const {
-                Zi,
                 w3: { Paa: picture = '', ig = '', ofa = '' }
             } = GoogleAuth.currentUser.get();
 
@@ -205,7 +199,11 @@ const request = async (method, path, params, properties) => {
 /* Videos */
 
 export async function searchVideos({ query, forMine, pageToken }) {
-    const { items, nextPageToken, pageInfo } = await request('GET', 'search', {
+    const {
+        items,
+        nextPageToken,
+        pageInfo: { totalResults }
+    } = await request('GET', 'search', {
         part: 'id, snippet',
         type: 'video',
         q: query,
@@ -221,9 +219,40 @@ export async function searchVideos({ query, forMine, pageToken }) {
     return {
         items: videos,
         nextPageToken,
-        totalResults: pageInfo.totalResults
+        totalResults
     };
 }
+
+const parseVideoData = ({
+    id,
+    contentDetails: { duration },
+    snippet: { title, thumbnails, channelId, channelTitle, publishedAt },
+    status: { privacyStatus }
+}) => ({
+    id,
+    title,
+    thumbnails,
+    duration,
+    publishedAt,
+    channelId,
+    channelTitle,
+    privacyStatus
+});
+
+const parsePlaylistData = ({
+    id,
+    contentDetails: { itemCount },
+    snippet: { title, thumbnails },
+    status: { privacyStatus }
+}) => ({
+    id,
+    title,
+    thumbnails,
+    itemCount,
+    privacyStatus
+});
+
+/* TODO: Tester et déplacer les parseurs */
 
 export async function getVideo(urlOrId) {
     const { items } = await request('GET', 'videos', {
@@ -231,16 +260,22 @@ export async function getVideo(urlOrId) {
         part: 'contentDetails, snippet, status'
     });
 
-    const { id, contentDetails, snippet, status } = items[0];
+    const {
+        id: videoId,
+        contentDetails: { duration },
+        snippet: { title, thumbnails, channelId, channelTitle, publishedAt },
+        status: { privacyStatus }
+    } = items[0];
 
     return {
-        videoId: id,
-        title: snippet.title,
-        duration: contentDetails.duration,
-        channelId: snippet.channelId,
-        channelTitle: snippet.channelTitle,
-        publishedAt: snippet.publishedAt,
-        privacyStatus: status.privacyStatus
+        videoId,
+        title,
+        thumbnails,
+        duration,
+        publishedAt,
+        channelId,
+        channelTitle,
+        privacyStatus
     };
 }
 
@@ -268,16 +303,16 @@ export async function getVideosFromIds(ids) {
 /* Playlists */
 
 export async function getPlaylists({ pageToken = '', mine = false }) {
-    const { items, nextPageToken, pageInfo } = await request(
-        'GET',
-        'playlists',
-        {
-            pageToken,
-            mine,
-            part: 'snippet, contentDetails, status',
-            maxResults: ITEMS_PER_REQUEST
-        }
-    );
+    const {
+        items,
+        nextPageToken,
+        pageInfo: { totalResults }
+    } = await request('GET', 'playlists', {
+        pageToken,
+        mine,
+        part: 'snippet, contentDetails, status',
+        maxResults: ITEMS_PER_REQUEST
+    });
 
     return {
         items: items.map(({ id, contentDetails, snippet, status }) => ({
@@ -288,7 +323,7 @@ export async function getPlaylists({ pageToken = '', mine = false }) {
             privacyStatus: status.privacyStatus
         })),
         nextPageToken,
-        totalResults: pageInfo.totalResults
+        totalResults
     };
 }
 
@@ -328,29 +363,39 @@ export async function getPlaylistItems({ pageToken = '', playlistId }) {
 
 /* Subscriptions */
 
+const parseSubscriptionData = ({
+    id,
+    contentDetails: { totalItemCount: itemCount },
+    snippet: {
+        title,
+        thumbnails,
+        resourceId: { channelId }
+    }
+}) => ({
+    id,
+    channelId,
+    title,
+    thumbnails,
+    itemCount
+});
+
 export async function getSubscriptions({ pageToken = '', mine = false }) {
-    const { items, nextPageToken, pageInfo } = await request(
-        'GET',
-        'subscriptions',
-        {
-            pageToken,
-            mine,
-            part: 'id, snippet, contentDetails',
-            maxResults: ITEMS_PER_REQUEST,
-            order: 'alphabetical'
-        }
-    );
+    const {
+        items,
+        nextPageToken,
+        pageInfo: { totalResults }
+    } = await request('GET', 'subscriptions', {
+        pageToken,
+        mine,
+        part: 'id, snippet, contentDetails',
+        maxResults: ITEMS_PER_REQUEST,
+        order: 'alphabetical'
+    });
 
     return {
-        items: items.map(({ id, contentDetails, snippet }) => ({
-            id,
-            channelId: snippet.resourceId.channelId,
-            title: snippet.title,
-            thumbnails: snippet.thumbnails,
-            itemCount: contentDetails.totalItemCount
-        })),
+        items: items.map(parseSubscriptionData),
         nextPageToken,
-        totalResults: pageInfo.totalResults
+        totalResults
     };
 }
 
@@ -386,7 +431,7 @@ export async function getChannelVideos({ channelId, pageToken }) {
         maxResults: ITEMS_PER_REQUEST
     });
 
-    const videoIds = items.map(({ id }) => id.videoId);
+    const videoIds = items.map(({ id: { videoId } }) => videoId);
 
     const videos = await getVideosFromIds(videoIds);
 

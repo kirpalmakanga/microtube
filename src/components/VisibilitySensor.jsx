@@ -1,31 +1,31 @@
-import { h, Component } from 'preact'
-import { span } from 'preact-dom'
+import React, { Component } from 'preact';
+import { span } from 'preact-dom';
 
 function throttle(callback, limit) {
-    var wait = false
+    var wait = false;
     return () => {
         if (!wait) {
-            wait = true
+            wait = true;
             setTimeout(() => {
-                callback()
-                wait = false
-            }, limit)
+                callback();
+                wait = false;
+            }, limit);
         }
-    }
+    };
 }
 
 function debounce(func, wait) {
-    let timeout
+    let timeout;
     return () => {
-        const context = this
-        const args = arguments
+        const context = this;
+        const args = arguments;
         const later = () => {
-            timeout = null
-            func.apply(context, args)
-        }
-        clearTimeout(timeout)
-        timeout = setTimeout(later, wait)
-    }
+            timeout = null;
+            func.apply(context, args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
 
 export default class VisibilitySensor extends Component {
@@ -46,82 +46,82 @@ export default class VisibilitySensor extends Component {
         offset: {},
         containment: null,
         children: span
-    }
+    };
 
     getInitialState() {
         return {
             isVisible: null,
             visibilityRect: {}
-        }
+        };
     }
 
     componentDidMount() {
-        this.node = this.base
+        this.node = this.base;
         if (this.props.active) {
-            this.startWatching()
+            this.startWatching();
         }
     }
 
     componentWillUnmount() {
-        this.stopWatching()
+        this.stopWatching();
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.active && !this.props.active) {
-            this.setState(this.getInitialState())
-            this.startWatching()
+            this.setState(this.getInitialState());
+            this.startWatching();
         } else if (!nextProps.active) {
-            this.stopWatching()
+            this.stopWatching();
         }
     }
 
     getContainer() {
-        return this.props.containment || window
+        return this.props.containment || window;
     }
 
     addEventListener(target, event, delay, throttle) {
         if (!this.debounceCheck) {
-            this.debounceCheck = {}
+            this.debounceCheck = {};
         }
 
-        let timeout
-        let func
+        let timeout;
+        let func;
 
         const later = () => {
-            timeout = null
-            this.check()
-        }
+            timeout = null;
+            this.check();
+        };
 
         if (throttle > -1) {
             func = () => {
                 if (!timeout) {
-                    timeout = setTimeout(later, throttle || 0)
+                    timeout = setTimeout(later, throttle || 0);
                 }
-            }
+            };
         } else {
             func = () => {
-                clearTimeout(timeout)
-                timeout = setTimeout(later, delay || 0)
-            }
+                clearTimeout(timeout);
+                timeout = setTimeout(later, delay || 0);
+            };
         }
 
         const info = {
             target,
             func,
             getLastTimeout: () => timeout
-        }
+        };
 
-        target.addEventListener(event, info.func)
-        this.debounceCheck[event] = info
+        target.addEventListener(event, info.func);
+        this.debounceCheck[event] = info;
     }
 
     startWatching() {
         if (this.debounceCheck || this.interval) {
-            return
+            return;
         }
 
         if (this.props.intervalCheck) {
-            this.interval = setInterval(this.check, this.props.intervalDelay)
+            this.interval = setInterval(this.check, this.props.intervalDelay);
         }
 
         if (this.props.scrollCheck) {
@@ -130,7 +130,7 @@ export default class VisibilitySensor extends Component {
                 'scroll',
                 this.props.scrollDelay,
                 this.props.scrollThrottle
-            )
+            );
         }
 
         if (this.props.resizeCheck) {
@@ -139,11 +139,11 @@ export default class VisibilitySensor extends Component {
                 'resize',
                 this.props.resizeDelay,
                 this.props.resizeThrottle
-            )
+            );
         }
 
         // if dont need delayed call, check on load ( before the first interval fires )
-        !this.props.delayedCall && this.check()
+        !this.props.delayedCall && this.check();
     }
 
     stopWatching() {
@@ -151,22 +151,22 @@ export default class VisibilitySensor extends Component {
             // clean up event listeners and their debounce callers
             for (var debounceEvent in this.debounceCheck) {
                 if (this.debounceCheck.hasOwnProperty(debounceEvent)) {
-                    var debounceInfo = this.debounceCheck[debounceEvent]
+                    var debounceInfo = this.debounceCheck[debounceEvent];
 
-                    clearTimeout(debounceInfo.getLastTimeout())
+                    clearTimeout(debounceInfo.getLastTimeout());
                     debounceInfo.target.removeEventListener(
                         debounceEvent,
                         debounceInfo.func
-                    )
+                    );
 
-                    this.debounceCheck[debounceEvent] = null
+                    this.debounceCheck[debounceEvent] = null;
                 }
             }
         }
-        this.debounceCheck = null
+        this.debounceCheck = null;
 
         if (this.interval) {
-            this.interval = clearInterval(this.interval)
+            this.interval = clearInterval(this.interval);
         }
     }
 
@@ -174,15 +174,15 @@ export default class VisibilitySensor extends Component {
      * Check if the element is within the visible viewport
      */
     check() {
-        const el = this.node
-        let rect
-        let containmentRect
+        const el = this.node;
+        let rect;
+        let containmentRect;
         // if the component has rendered to null, dont update visibility
         if (!el) {
-            return this.state
+            return this.state;
         }
 
-        rect = el.getBoundingClientRect()
+        rect = el.getBoundingClientRect();
 
         if (this.props.containment) {
             const {
@@ -190,9 +190,9 @@ export default class VisibilitySensor extends Component {
                 left,
                 bottom,
                 right
-            } = this.props.containment.getBoundingClientRect()
+            } = this.props.containment.getBoundingClientRect();
 
-            containmentRect = { top, left, bottom, right }
+            containmentRect = { top, left, bottom, right };
         } else {
             containmentRect = {
                 top: 0,
@@ -200,17 +200,17 @@ export default class VisibilitySensor extends Component {
                 bottom:
                     window.innerHeight || document.documentElement.clientHeight,
                 right: window.innerWidth || document.documentElement.clientWidth
-            }
+            };
         }
 
         // Check if visibility is wanted via offset?
-        const offset = this.props.offset || {}
-        const hasValidOffset = typeof offset === 'object'
+        const offset = this.props.offset || {};
+        const hasValidOffset = typeof offset === 'object';
         if (hasValidOffset) {
-            containmentRect.top += offset.top || 0
-            containmentRect.left += offset.left || 0
-            containmentRect.bottom -= offset.bottom || 0
-            containmentRect.right -= offset.right || 0
+            containmentRect.top += offset.top || 0;
+            containmentRect.left += offset.left || 0;
+            containmentRect.bottom -= offset.bottom || 0;
+            containmentRect.right -= offset.right || 0;
         }
 
         const visibilityRect = {
@@ -218,13 +218,13 @@ export default class VisibilitySensor extends Component {
             left: rect.left >= containmentRect.left,
             bottom: rect.bottom <= containmentRect.bottom,
             right: rect.right <= containmentRect.right
-        }
+        };
 
         let isVisible =
             visibilityRect.top &&
             visibilityRect.left &&
             visibilityRect.bottom &&
-            visibilityRect.right
+            visibilityRect.right;
 
         // check for partial visibility
         if (this.props.partialVisibility) {
@@ -232,11 +232,11 @@ export default class VisibilitySensor extends Component {
                 rect.top <= containmentRect.bottom &&
                 rect.bottom >= containmentRect.top &&
                 rect.left <= containmentRect.right &&
-                rect.right >= containmentRect.left
+                rect.right >= containmentRect.left;
 
             // account for partial visibility on a single edge
             if (typeof this.props.partialVisibility === 'string') {
-                partialVisible = visibilityRect[this.props.partialVisibility]
+                partialVisible = visibilityRect[this.props.partialVisibility];
             }
 
             // if we have minimum top visibility set by props, lets check, if it meets the passed value
@@ -244,19 +244,19 @@ export default class VisibilitySensor extends Component {
             isVisible = this.props.minTopValue
                 ? partialVisible &&
                   rect.top <= containmentRect.bottom - this.props.minTopValue
-                : partialVisible
+                : partialVisible;
         }
 
-        var state = this.state
+        var state = this.state;
         // notify the parent when the value changes
         if (this.state.isVisible !== isVisible) {
-            state = { isVisible, visibilityRect }
-            this.setState(state)
+            state = { isVisible, visibilityRect };
+            this.setState(state);
             if (this.props.onChange)
-                this.props.onChange(isVisible, visibilityRect)
+                this.props.onChange(isVisible, visibilityRect);
         }
 
-        return state
+        return state;
     }
 
     render({ className, children }, { isVisible, visibilityRect }) {
@@ -266,6 +266,6 @@ export default class VisibilitySensor extends Component {
                     ? children[0]({ isVisible, visibilityRect })
                     : children}
             </div>
-        )
+        );
     }
 }

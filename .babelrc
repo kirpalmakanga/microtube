@@ -1,8 +1,8 @@
 {
-    "presets": ["preact", "env"],
+    "presets": ["@babel/react", "@babel/env"],
     "plugins": [
         "transform-object-rest-spread",
         "transform-class-properties",
-        "transform-runtime"
+        "@babel/transform-runtime"
     ]
 }

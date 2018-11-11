@@ -1,56 +1,46 @@
-import { h, Component } from 'preact'
-import { connect } from 'preact-redux'
+import React, { Component } from 'react';
+import VisibilitySensor from 'react-visibility-sensor';
+import Waypoint from 'react-waypoint';
 
-import Waypoint from 'components/Waypoint'
-
-import VisibilitySensor from 'components/VisibilitySensor'
-
-interface Props {
-    items: Array<Object>
-    loadContent: Function
-    ItemComponent: any
-}
-
-interface State {
-    isLoading: Boolean
-}
-
-class Grid extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props)
+class Grid extends Component {
+    constructor(props) {
+        super(props);
 
         this.state = {
             isLoading: false
-        }
+        };
     }
-
-    private grid: Element
 
     loadItems = () => {
-        const { loadContent } = this.props
-        const { isLoading } = this.state
+        const { loadContent } = this.props;
+        const { isLoading } = this.state;
 
         if (isLoading) {
-            return
+            return;
         }
 
-        this.setState({ isLoading: true }, async (): Promise<any> => {
-            await loadContent()
+        this.setState({ isLoading: true }, async () => {
+            await loadContent();
 
-            this.setState({ isLoading: false })
-        })
-    }
+            this.setState({ isLoading: false });
+        });
+    };
 
     componentDidMount() {
-        this.forceUpdate()
+        this.forceUpdate();
     }
 
-    render({ items = [], ItemComponent }: Props, { isLoading }: State) {
+    render() {
+        const {
+            props: { items = [], ItemComponent },
+            state: { isLoading }
+        } = this;
+
         return (
             <div
                 class="grid"
                 ref={(el) => {
-                    this.grid = el
+                    this.grid = el;
                 }}
             >
                 {this.grid &&
@@ -81,7 +71,7 @@ class Grid extends Component<Props, State> {
                 >
                     {this.grid ? (
                         <Waypoint
-                            container={this.grid}
+                            scrollableAncestor={this.grid}
                             onEnter={this.loadItems}
                         />
                     ) : null}
@@ -90,8 +80,8 @@ class Grid extends Component<Props, State> {
                     </svg>
                 </div>
             </div>
-        )
+        );
     }
 }
 
-export default Grid
+export default Grid;

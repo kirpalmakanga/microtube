@@ -15,7 +15,7 @@ import { searchVideos } from '../actions/youtube';
 import Icon from '../components/Icon';
 import Button from '../components/Button';
 
-import QueueHeader from '../components/header/QueueHeader';
+import QueueHeader from '../components/player/QueueHeader';
 import SearchHeader from '../components/header/SearchHeader';
 
 const initialState = {
@@ -90,9 +90,7 @@ class Header extends Component {
     return [
       <Helmet key='headers' title={title} />,
       <header key='header' className='layout__header shadow--2dp'>
-        {player.showQueue ? (
-          <QueueHeader />
-        ) : pathname.includes('/search') ? (
+        {pathname.includes('/search') ? (
           <SearchHeader />
         ) : (
           <div className='layout__header-row'>

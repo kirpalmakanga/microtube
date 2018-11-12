@@ -5,6 +5,7 @@ import { throttle } from 'lodash';
 
 import parseDuration from '../../lib/parseDuration';
 
+import QueueHeader from './QueueHeader';
 import QueueItem from './QueueItem';
 
 class Queue extends Component {
@@ -122,6 +123,7 @@ class Queue extends Component {
           ' '
         )}
       >
+        <QueueHeader />
         <div
           className='queue__items'
           onDragOver={dragOver}

@@ -1,28 +1,36 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { Link, withRouter } from 'react-router-dom';
 
 import SearchForm from '../SearchForm';
 import Icon from '../Icon';
 import Button from '../Button';
 
 class SearchHeader extends PureComponent {
+  onFormSubmit = (query) => this.props.history.push(`/search/${query}`);
+
   render() {
-    const { setSearchMode, forMine, onFormSubmit } = this.props;
+    const {
+      props: { setSearchMode, forMine },
+      onFormSubmit
+    } = this;
 
     return (
-      <div class='layout__header-row'>
-        <Button
-          class='layout__back-button icon-button'
-          onClick={() => window.history.back()}
+      <div className='layout__header-row'>
+        <Link
+          className='layout__back-button icon-button'
+          to='/'
           aria-label='Close search'
+          icon='back'
         >
-          <Icon className='icon' />
-        </Button>
+          <Icon name='back' />
+        </Link>
 
         <SearchForm onSubmit={onFormSubmit} />
-        {/* <nav class="navigation">
+
+        {/* <nav className="navigation">
                 <div
-                    class="navigation__button icon-button"
+                    className="navigation__button icon-button"
                     aria-label="Set search mode"
                 >
                     <select
@@ -52,10 +60,6 @@ class SearchHeader extends PureComponent {
     );
   }
 }
-//     query) => {
-//     const to = '/search/' + query
-//     route(to, true)
-// }
 
 const mapStateToProps = ({ search: { forMine } }) => ({ forMine });
 
@@ -69,7 +73,9 @@ const mapDispatchToProps = (dispatch) => ({
     })
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SearchHeader);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(SearchHeader)
+);

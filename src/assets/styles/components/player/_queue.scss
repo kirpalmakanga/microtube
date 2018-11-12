@@ -6,7 +6,7 @@
   background-color: lighten($brand-primary, 20%);
   @include transition();
   position: fixed;
-  top: 56px;
+  top: 0;
   left: 0;
   right: 0;
   transform: translateY(100%);

@@ -8,7 +8,10 @@ class Form extends Component {
     this.input.focus();
   }
 
-  handleInput = (input) => this.setState({ input: input.trim() });
+  getInputRef = (el) => (this.input = el);
+
+  handleInput = ({ target: { value } }) =>
+    this.setState({ input: value.trim() });
 
   handleFocus = (e) => {
     e.preventDefault();
@@ -31,6 +34,7 @@ class Form extends Component {
   render() {
     const {
       state: { input },
+      getInputRef,
       handleInput,
       handleFocus,
       handleBlur,
@@ -38,15 +42,16 @@ class Form extends Component {
     } = this;
 
     return (
-      <form class='search-form' onSubmit={handleSubmit}>
-        <div class='textfield'>
-          <label class='sr-only' for='search'>
+      <form className='search-form' onSubmit={handleSubmit}>
+        <div className='textfield'>
+          <label className='sr-only' labelfor='search'>
             Search
           </label>
           <input
+            ref={getInputRef}
             value={input}
             name='search'
-            class='textfield__input'
+            className='textfield__input'
             id='search'
             type='text'
             placeholder='Search...'

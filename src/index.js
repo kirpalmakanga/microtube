@@ -7,6 +7,7 @@ import Root from './Root';
 
 import Playlists from './containers/Playlists';
 import Playlist from './containers/Playlist';
+import Search from './containers/Search';
 
 import { STORAGE_KEY } from './config/app';
 
@@ -48,6 +49,8 @@ const initialState = {
           <Switch>
             <Route exact path='/' component={Playlists} />
             <Route path='/playlist/:playlistId' component={Playlist} />
+            <Route exact path='/search' component={Search} />
+            <Route path='/search/:query' component={Search} />
           </Switch>
         </BrowserRouter>
       </Root>

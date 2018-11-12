@@ -39,19 +39,23 @@ class Playlists extends Component {
             })
           }
           ItemComponent={PlaylistCard}
-          renderItem={({ id: playlistId, ...data }) => (
-            <PlaylistCard
-              {...data}
-              onClick={openPlaylist}
-              queuePlaylist={queuePlaylist({
-                playlistId
-              })}
-              launchPlaylist={queuePlaylist({
-                playlistId,
-                play: true
-              })}
-            />
-          )}
+          renderItem={(data) => {
+            const { id: playlistId, title } = data;
+
+            return (
+              <PlaylistCard
+                {...data}
+                onClick={openPlaylist(title)}
+                queuePlaylist={queuePlaylist({
+                  playlistId
+                })}
+                launchPlaylist={queuePlaylist({
+                  playlistId,
+                  play: true
+                })}
+              />
+            );
+          }}
         />
       </Screen>
     );

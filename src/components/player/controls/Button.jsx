@@ -1,16 +1,28 @@
-import { h } from 'preact'
+import React, { PureComponent } from 'react';
+import Icon from '../../Icon';
 
-const Button = ({ className, icon, iconTransitionClass = '', badge, onClick, ariaLabel }) => (
-  <button
-    class={className}
-    onClick={onClick}
-    aria-label={ariaLabel}
-    data-badge={badge}
-  >
-    <span class={['icon', iconTransitionClass].join(' ')}>
-      <svg><use xlinkHref={['#',icon].join('')}></use></svg>
-    </span>
-  </button>
-)
+class Button extends PureComponent {
+  render() {
+    const {
+      className,
+      icon,
+      iconTransitionClass = '',
+      badge,
+      onClick,
+      ariaLabel
+    } = this.props;
 
-export default Button
+    return (
+      <button
+        className={className}
+        onClick={onClick}
+        aria-label={ariaLabel}
+        data-badge={badge}
+      >
+        <Icon className={['icon', iconTransitionClass].join(' ')} name={icon} />
+      </button>
+    );
+  }
+}
+
+export default Button;

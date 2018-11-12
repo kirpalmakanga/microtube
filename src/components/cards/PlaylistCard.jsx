@@ -1,83 +1,58 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-
-import { queuePlaylist } from '../../actions/youtube';
 import { getThumbnails } from '../../lib/helpers';
 
 import Img from '../Img';
-import Icon from '../Icon';
+import Button from '../Button';
 
 const PlaylistCard = ({
-    id,
-    title,
-    thumbnails,
-    itemCount,
-    queuePlaylist,
-    openPlaylist
+  id,
+  title,
+  thumbnails,
+  itemCount,
+  onClick,
+  queuePlaylist
 }) => (
-    <div class="card">
-        <Link
-            class="card__content"
-            href={`/playlist/${id}`}
-            onClick={() => openPlaylist(title)}
-            aria-label={title}
-        >
-            <div class="card__thumb">
-                <Img
-                    src={getThumbnails(thumbnails, 'high')}
-                    alt={title}
-                    background
-                />
-                <span class="card__thumb-badge">{`${itemCount} video${
-                    itemCount !== 1 ? 's' : ''
-                }`}</span>
-            </div>
+  <div className='card'>
+    <Link
+      className='card__content'
+      to={`/playlist/${id}`}
+      onClick={onClick}
+      aria-label={title}
+    >
+      <div className='card__thumb'>
+        <Img src={getThumbnails(thumbnails, 'high')} alt={title} background />
+        <span className='card__thumb-badge'>{`${itemCount} video${
+          itemCount !== 1 ? 's' : ''
+        }`}</span>
+      </div>
 
-            <div class="card__text">
-                <h2 class="card__text-title">{title}</h2>
-            </div>
-        </Link>
+      <div className='card__text'>
+        <h2 className='card__text-title'>{title}</h2>
+      </div>
+    </Link>
 
-        <div class="card__buttons">
-            <button
-                class="card__button icon-button"
-                type="button"
-                aria-label="Queue playlist"
-                onClick={() =>
-                    queuePlaylist({
-                        playlistId: id
-                    })
-                }
-            >
-                <Icon name="playlist-add" />
-            </button>
+    <div className='card__buttons'>
+      <Button
+        className='card__button icon-button'
+        title='Queue playlist'
+        icon='playlist-add'
+        onClick={queuePlaylist}
+      />
 
-            <button
-                class="card__button icon-button"
-                type="button"
-                aria-label="Queue and play playlist"
-                onClick={() =>
-                    queuePlaylist({
-                        playlistId: id,
-                        play: true
-                    })
-                }
-            >
-                <Icon name="playlist-play" />
-            </button>
-        </div>
+      <Button
+        className='card__button icon-button'
+        title='Queue and play playlist'
+        icon='playlist-play'
+        onClick={() =>
+          queuePlaylist({
+            playlistId: id,
+            play: true
+          })
+        }
+      />
     </div>
+  </div>
 );
 
-/* TODO: Déplacer les méthodes dans le container */
-
-const mapDispatchToProps = (dispatch) => ({
-    queuePlaylist: (params) => dispatch(queuePlaylist(params)),
-    openPlaylist: (data) => dispatch({ type: 'PLAYLIST_OPEN', data })
-});
-
-export default connect(
-    () => ({}),
-    mapDispatchToProps
-)(PlaylistCard);
+export default PlaylistCard;

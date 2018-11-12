@@ -1,110 +1,110 @@
 .queue {
-    z-index: 3;
-    overflow-x: hidden;
-    overflow-y: scroll;
+  z-index: 3;
+  overflow-x: hidden;
+  overflow-y: scroll;
 
-    background-color: lighten($brand-primary, 20%);
-    @include transition();
-    position: fixed;
-    top: 56px;
-    left: 0;
-    right: 0;
-    transform: translateY(100%);
-    bottom: 100px;
+  background-color: lighten($brand-primary, 20%);
+  @include transition();
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  transform: translateY(100%);
+  bottom: 100px;
 
-    @media screen and (min-width: 480px) {
-        bottom: 50px;
-    }
+  @media screen and (min-width: 480px) {
+    bottom: 50px;
+  }
 
-    &__header {
-        background-color: $brand-primary;
-    }
+  &__header {
+    background-color: $brand-primary;
+  }
 
-    &__items {
-        height: 100%;
-    }
+  &__items {
+    height: 100%;
+  }
 
-    &__item {
-        @include transition();
-        border-bottom: 2px solid rgba($brand-primary, 0.5);
-        text-transform: uppercase;
-        font-size: 16px;
-        font-family: $font-primary;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-        position: relative;
+  &__item {
+    // @include transition();
+    border-bottom: 2px solid rgba($brand-primary, 0.5);
+    text-transform: uppercase;
+    font-size: 16px;
+    font-family: $font-primary;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
 
-        &:hover {
-            background-color: lighten($brand-primary, 30%);
-            &.queue__item--active {
-                background-color: lighten($brand-primary, 40%);
-            }
-        }
-
-        &:before {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            right: 80px;
-            content: '';
-            display: block;
-        }
-
-        &-title,
-        &-duration {
-            padding: 15px 15px 15px 0px;
-        }
-
-        &-title {
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-            flex: 1;
-        }
-
-        &-button {
-            padding: 0;
-            background-color: transparent;
-            fill: $brand-secondary;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            height: 40px;
-            width: 40px;
-            cursor: pointer;
-
-            svg {
-                height: 22px;
-                width: 22px;
-                @media screen and (min-width: 480px) {
-                    height: 24px;
-                    width: 24px;
-                }
-            }
-
-            &:focus {
-                outline: none;
-            }
-        }
-    }
-
-    &__item--active {
+    &:hover {
+      background-color: lighten($brand-primary, 30%);
+      &.queue__item--active {
         background-color: lighten($brand-primary, 40%);
+      }
     }
 
-    &__item--placeholder {
-        height: 52px;
-        background-color: lighten($brand-primary, 50%);
+    &:before {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      right: 80px;
+      content: '';
+      display: block;
     }
-    &__item--hidden {
-        display: none;
+
+    &-title,
+    &-duration {
+      padding: 15px 15px 15px 0px;
     }
+
+    &-title {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    &-button {
+      padding: 0;
+      background-color: transparent;
+      fill: $brand-secondary;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      height: 40px;
+      width: 40px;
+      cursor: pointer;
+
+      svg {
+        height: 22px;
+        width: 22px;
+        @media screen and (min-width: 480px) {
+          height: 24px;
+          width: 24px;
+        }
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  &__item--active {
+    background-color: lighten($brand-primary, 40%);
+  }
+
+  &__item--placeholder {
+    height: 52px;
+    background-color: lighten($brand-primary, 50%);
+  }
+  &__item--hidden {
+    display: none;
+  }
 }
 
 .queue--show {
-    transform: translate(0);
+  transform: translate(0);
 }

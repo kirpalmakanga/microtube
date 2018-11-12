@@ -5,45 +5,47 @@ import { connect } from 'react-redux';
 
 import { loadAPI, listenAuth } from './api/youtube';
 
+import Sprite from './components/Sprite';
+
 class Root extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = { apiLoaded: false };
-    }
+    this.state = { apiLoaded: false };
+  }
 
-    async componentDidMount() {
-        await loadAPI();
+  async componentDidMount() {
+    await loadAPI();
 
-        this.setState({ apiLoaded: true }, this.props.authenticateUser);
-    }
+    this.setState({ apiLoaded: true }, this.props.authenticateUser);
+  }
 
-    render() {
-        const {
-            state: { apiLoaded },
-            props: { children, isSignedIn }
-        } = this;
+  render() {
+    const {
+      state: { apiLoaded },
+      props: { children, isSignedIn }
+    } = this;
 
-        return apiLoaded && isSignedIn === true ? children : null;
-    }
+    return [<Sprite key='icons' />, apiLoaded === true ? children : null];
+  }
 }
 
 const mapStateToProps = ({
-    auth: { isSignedIn },
-    notifications: { message }
+  auth: { isSignedIn },
+  notifications: { message }
 }) => ({
-    isSignedIn,
-    message
+  isSignedIn,
+  message
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    authenticateUser: () =>
-        listenAuth((data) => dispatch({ type: 'SIGN_IN', data })),
+  authenticateUser: () =>
+    listenAuth((data) => dispatch({ type: 'SIGN_IN', data })),
 
-    signIn: (data) => dispatch({ type: 'SIGN_IN', data })
+  signIn: (data) => dispatch({ type: 'SIGN_IN', data })
 });
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Root);

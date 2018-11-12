@@ -1,31 +1,26 @@
-import { h } from 'preact'
-import { connect } from 'preact-redux'
-import { route } from 'preact-router'
-import { Link } from 'preact-router/match'
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
-import SearchForm from '../SearchForm'
+import SearchForm from '../SearchForm';
+import Icon from '../Icon';
+import Button from '../Button';
 
-const SearchHeader = ({ setSearchMode, forMine }) => {
+class SearchHeader extends PureComponent {
+  render() {
+    const { setSearchMode, forMine, onFormSubmit } = this.props;
+
     return (
-        <div class="layout__header-row">
-            <button
-                class="layout__back-button icon-button"
-                onClick={() => window.history.back()}
-                aria-label="Close search"
-            >
-                <span class="icon">
-                    <svg>
-                        <use xlinkHref="#icon-back" />
-                    </svg>
-                </span>
-            </button>
-            <SearchForm
-                onSubmit={(query) => {
-                    const to = '/search/' + query
-                    route(to, true)
-                }}
-            />
-            {/* <nav class="navigation">
+      <div class='layout__header-row'>
+        <Button
+          class='layout__back-button icon-button'
+          onClick={() => window.history.back()}
+          aria-label='Close search'
+        >
+          <Icon className='icon' />
+        </Button>
+
+        <SearchForm onSubmit={onFormSubmit} />
+        {/* <nav class="navigation">
                 <div
                     class="navigation__button icon-button"
                     aria-label="Set search mode"
@@ -50,27 +45,31 @@ const SearchHeader = ({ setSearchMode, forMine }) => {
                         </option>
                     </select>
 
-                    <span class="icon">
-                        <svg>
-                            <use xlinkHref="#icon-chevron-down" />
-                        </svg>
-                    </span>
+                    <Icon className="icon" name='back' />
                 </div>
             </nav> */}
-        </div>
-    )
+      </div>
+    );
+  }
 }
+//     query) => {
+//     const to = '/search/' + query
+//     route(to, true)
+// }
 
-const mapStateToProps = ({ search: { forMine } }) => ({ forMine })
+const mapStateToProps = ({ search: { forMine } }) => ({ forMine });
 
 const mapDispatchToProps = (dispatch) => ({
-    setSearchMode: (forMine) =>
-        dispatch({
-            type: 'SET_SEARCH_MODE',
-            data: {
-                forMine
-            }
-        })
-})
+  setSearchMode: (forMine) =>
+    dispatch({
+      type: 'SET_SEARCH_MODE',
+      data: {
+        forMine
+      }
+    })
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchHeader)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SearchHeader);

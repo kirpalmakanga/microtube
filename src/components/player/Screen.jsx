@@ -1,6 +1,6 @@
-import { h, Component } from 'preact'
+import React, { Component } from 'react';
 
-import YoutubePlayer from '../YoutubePlayer'
+import YoutubePlayer from '../YoutubePlayer';
 
 const playerOptions = {
   playerVars: {
@@ -10,17 +10,17 @@ const playerOptions = {
     controls: 0,
     showinfo: 0
   }
-}
+};
 
 const Screen = ({ videoId, onReady, onEnd, onStateChange }) => (
   <YoutubePlayer
-    className="screen__content"
+    className='screen__content'
     videoId={videoId}
     opts={playerOptions}
     onReady={onReady}
     onEnd={onEnd}
     onStateChange={onStateChange}
   />
-)
+);
 
-export default Screen
+export default Screen;

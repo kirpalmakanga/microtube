@@ -3,85 +3,81 @@ import VisibilitySensor from 'react-visibility-sensor';
 import Waypoint from 'react-waypoint';
 
 class Grid extends Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            isLoading: false
-        };
-    }
-
-    loadItems = () => {
-        const { loadContent } = this.props;
-        const { isLoading } = this.state;
-
-        if (isLoading) {
-            return;
-        }
-
-        this.setState({ isLoading: true }, async () => {
-            await loadContent();
-
-            this.setState({ isLoading: false });
-        });
+    this.state = {
+      isLoading: false
     };
+  }
 
-    componentDidMount() {
-        this.forceUpdate();
+  getContainer = (el) => (this.grid = el);
+
+  loadItems = () => {
+    const { loadContent } = this.props;
+    const { isLoading } = this.state;
+
+    if (isLoading) {
+      return;
     }
 
-    render() {
-        const {
-            props: { items = [], ItemComponent },
-            state: { isLoading }
-        } = this;
+    this.setState({ isLoading: true }, async () => {
+      await loadContent();
 
-        return (
-            <div
-                class="grid"
-                ref={(el) => {
-                    this.grid = el;
-                }}
+      this.setState({ isLoading: false });
+    });
+  };
+
+  componentDidMount() {
+    this.forceUpdate();
+  }
+
+  render() {
+    const {
+      props: { items = [], renderItem },
+      state: { isLoading },
+      getContainer
+    } = this;
+
+    return (
+      <div className='grid' ref={getContainer}>
+        {this.grid &&
+          items.map((props, i) => (
+            <VisibilitySensor
+              key={i}
+              resizeCheck={true}
+              partialVisibility={true}
+              scrollCheck={true}
+              scrollThrottle={100}
+              containment={this.grid}
             >
-                {this.grid &&
-                    items.map((data, i) => (
-                        <VisibilitySensor
-                            key={i}
-                            className={(isVisible) =>
-                                ['grid__item', isVisible ? '' : 'hidden'].join(
-                                    ' '
-                                )
-                            }
-                            partialVisibility={true}
-                            scrollCheck={true}
-                            scrollThrottle={100}
-                            containment={this.grid}
-                            intervalCheck={true}
-                        >
-                            {({ isVisible }) =>
-                                isVisible ? <ItemComponent {...data} /> : null
-                            }
-                        </VisibilitySensor>
-                    ))}
-
+              {({ isVisible }) => (
                 <div
-                    class={['grid__loading', isLoading ? 'is-active' : ''].join(
-                        ' '
-                    )}
+                  className={['grid__item', isVisible ? '' : 'hidden'].join(
+                    ' '
+                  )}
                 >
-                    {this.grid ? (
-                        <Waypoint
-                            scrollableAncestor={this.grid}
-                            onEnter={this.loadItems}
-                        />
-                    ) : null}
-                    <svg class="rotating">
-                        <use xlinkHref="#icon-loading" />
-                    </svg>
+                  {isVisible && typeof renderItem === 'function'
+                    ? renderItem(props)
+                    : null}
                 </div>
-            </div>
-        );
-    }
+              )}
+            </VisibilitySensor>
+          ))}
+
+        <div
+          className={['grid__loading', isLoading ? 'is-active' : ''].join(' ')}
+        >
+          {this.grid ? (
+            <Waypoint scrollableAncestor={this.grid} onEnter={this.loadItems} />
+          ) : null}
+          <svg className='rotating'>
+            <use xlinkHref='#icon-loading' />
+          </svg>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default Grid;

@@ -1,9 +1,21 @@
-import { h } from 'preact'
+import React, { PureComponent } from 'react';
 
-const VolumeRange = ({ value, onChange }) => (
-  <div className='player__controls-volume-range'>
-    <input type='range' min='0' max='100' value={value} onChange={onChange} />
-  </div>
-)
+class VolumeRange extends PureComponent {
+  render() {
+    const { value, onChange } = this.props;
 
-export default VolumeRange
+    return (
+      <div className='player__controls-volume-range'>
+        <input
+          type='range'
+          min='0'
+          max='100'
+          value={value}
+          onChange={onChange}
+        />
+      </div>
+    );
+  }
+}
+
+export default VolumeRange;

@@ -1,70 +1,76 @@
-import { h } from 'preact'
-import { connect } from 'preact-redux'
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
-const SearchHeader = ({ player, dispatch }) => {
-  return (
-    <div class='queue__header layout__header-row'>
-      <button
-        class='layout__back-button icon-button'
-        aria-label='Close queue'
-        onClick={() => dispatch({ type: 'QUEUE_CLOSE' })}
-      >
-        <span class='icon'>
-          <svg><use xlinkHref='#icon-chevron-down'></use></svg>
+import Button from '../Button';
+
+class QueueHeader extends PureComponent {
+  render() {
+    const { player, closeQueue, promptAddVideo, promptClearQueue } = this.props;
+
+    return (
+      <div className='queue__header layout__header-row'>
+        <Button
+          className='layout__back-button icon-button'
+          title='Close queue'
+          onClick={closeQueue}
+          icon='chevron-down'
+        />
+
+        <span className='layout-title'>
+          {'Queue (' + player.queue.length + ' Items)'}
         </span>
-      </button>
 
-      <span class='layout-title'>{'Queue (' + player.queue.length + ' Items)'}</span>
+        <nav className='navigation'>
+          <Button
+            className='navigation__link icon-button'
+            onClick={promptAddVideo}
+            title='Add video'
+            icon='add'
+          />
 
-      <nav class='navigation'>
-        <button
-          class='navigation__link icon-button'
-          onClick={() => {
-            dispatch({
-              type: 'PROMPT',
-              data: {
-                promptText: 'Ajouter une vidéo',
-                confirmText: 'Ajouter',
-                form: true,
-                callback: () => {
-                  dispatch({ type: 'PROMPT_CLOSE' })
-                }
-              }
-            })
-          }}
-          aria-label='Add video'
-        >
-          <span class='icon'>
-            <svg><use xlinkHref='#icon-add'></use></svg>
-          </span>
-        </button>
-
-        <button
-          class='navigation__link icon-button'
-          onClick={() => {
-            dispatch({
-              type: 'PROMPT',
-              data: {
-                promptText: 'Vider la file d\'attente ?',
-                confirmText: 'Vider',
-                callback: () => {
-                  dispatch({ type: 'QUEUE_CLEAR' })
-                  dispatch({ type: 'PROMPT_CLOSE' })
-                }
-              }
-            })
-          }}
-          aria-label='Clear queue'
-        >
-          <span class='icon'>
-            <svg><use xlinkHref='#icon-clear'></use></svg>
-          </span>
-        </button>
-      </nav>
-    </div>
-  )
+          <Button
+            className='navigation__link icon-button'
+            onClick={promptClearQueue}
+            title='Clear queue'
+            icon='clear'
+          />
+        </nav>
+      </div>
+    );
+  }
 }
 
-const mapStateToProps = ({ player }) => ({ player })
+const mapStateToProps = ({ player }) => ({ player });
 
-export default connect(mapStateToProps)(SearchHeader)
+const mapDispatchToProps = (dispatch) => ({
+  closeQueue: () => dispatch({ type: 'QUEUE_CLOSE' }),
+  promptAddVideo: () =>
+    dispatch({
+      type: 'PROMPT',
+      data: {
+        promptText: 'Ajouter une vidéo',
+        confirmText: 'Ajouter',
+        form: true,
+        callback: () => {
+          dispatch({ type: 'PROMPT_CLOSE' });
+        }
+      }
+    }),
+  promptClearQueue: () =>
+    dispatch({
+      type: 'PROMPT',
+      data: {
+        promptText: "Vider la file d'attente ?",
+        confirmText: 'Vider',
+        callback: () => {
+          dispatch({ type: 'QUEUE_CLEAR' });
+          dispatch({ type: 'PROMPT_CLOSE' });
+        }
+      }
+    })
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(QueueHeader);

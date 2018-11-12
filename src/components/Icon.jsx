@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 
-const Icon = ({ class: className = '', name = '' }) => (
-    <span class={['icon', className].join(' ')}>
-        <svg>
-            <use xlinkHref={`#icon-${name}`} />
-        </svg>
+const Icon = ({ className = '', name = '' }) =>
+  name ? (
+    <span className={['icon', className].join(' ')}>
+      <svg>
+        <use xlinkHref={`#icon-${name}`} />
+      </svg>
     </span>
-);
+  ) : null;
 
 export default Icon;

@@ -1,53 +1,63 @@
-import { h, Component } from 'preact'
-import { connect } from 'preact-redux'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-import { searchVideos } from '../actions/youtube'
+class Form extends Component {
+  state = { input: '' };
 
-class SearchForm extends Component {
-    componentDidMount() {
-        this.input.focus()
-    }
+  componentDidMount() {
+    this.input.focus();
+  }
 
-    handleFocus = (e) => {
-        e.preventDefault()
-        e.target.parentNode.classList.add('is-focused')
-    }
+  handleInput = (input) => this.setState({ input: input.trim() });
 
-    handleBlur = (e) => {
-        e.preventDefault()
-        e.target.parentNode.classList.remove('is-focused')
-    }
+  handleFocus = (e) => {
+    e.preventDefault();
+    e.target.parentNode.classList.add('is-focused');
+  };
 
-    handleSubmit = (e) => {
-        const { value } = e.target.elements.search
-        e.preventDefault()
+  handleBlur = (e) => {
+    e.preventDefault();
+    e.target.parentNode.classList.remove('is-focused');
+  };
 
-        this.props.onSubmit(value)
-    }
+  handleSubmit = (e) => {
+    const { input } = this.state;
 
-    render() {
-        const { handleFocus, handleBlur, handleSubmit } = this
+    e.preventDefault();
 
-        return (
-            <form class="search-form" onSubmit={handleSubmit}>
-                <div class="textfield">
-                    <label class="sr-only" for="search">
-                        Search
-                    </label>
-                    <input
-                        ref={(el) => (this.input = el)}
-                        name="search"
-                        class="textfield__input"
-                        id="search"
-                        type="text"
-                        placeholder="Search..."
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                    />
-                </div>
-            </form>
-        )
-    }
+    input && this.props.onSubmit(input);
+  };
+
+  render() {
+    const {
+      state: { input },
+      handleInput,
+      handleFocus,
+      handleBlur,
+      handleSubmit
+    } = this;
+
+    return (
+      <form class='search-form' onSubmit={handleSubmit}>
+        <div class='textfield'>
+          <label class='sr-only' for='search'>
+            Search
+          </label>
+          <input
+            value={input}
+            name='search'
+            class='textfield__input'
+            id='search'
+            type='text'
+            placeholder='Search...'
+            onChange={handleInput}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
+        </div>
+      </form>
+    );
+  }
 }
 
-export default connect()(SearchForm)
+export default connect()(Form);

@@ -1,53 +1,62 @@
 export default function parseDuration(PT) {
-  const matches = PT.match(/P(?:(\d*)Y)?(?:(\d*)M)?(?:(\d*)W)?(?:(\d*)D)?T?(?:(\d*)H)?(?:(\d*)M)?(?:(\d*)S)?/i)
+  const matches = PT.match(
+    /P(?:(\d*)Y)?(?:(\d*)M)?(?:(\d*)W)?(?:(\d*)D)?T?(?:(\d*)H)?(?:(\d*)M)?(?:(\d*)S)?/i
+  );
   const parts = [
-    { // years
+    {
+      // years
       pos: 1,
       multiplier: 86400 * 365
     },
-    { // months
+    {
+      // months
       pos: 2,
       multiplier: 86400 * 30
     },
-    { // weeks
+    {
+      // weeks
       pos: 3,
       multiplier: 604800
     },
-    { // days
+    {
+      // days
       pos: 4,
       multiplier: 86400
     },
-    { // hours
+    {
+      // hours
       pos: 5,
       multiplier: 3600
     },
-    { // minutes
+    {
+      // minutes
       pos: 6,
       multiplier: 60
     },
-    { // seconds
+    {
+      // seconds
       pos: 7,
       multiplier: 1
     }
-  ]
-  let output = []
-  let durationInSec = 0
+  ];
+  let output = [];
+  let durationInSec = 0;
 
   for (let i = 0; i < parts.length; i++) {
     if (typeof matches[parts[i].pos] != 'undefined') {
-      durationInSec += parseInt(matches[parts[i].pos]) * parts[i].multiplier
+      durationInSec += parseInt(matches[parts[i].pos]) * parts[i].multiplier;
     }
   }
 
   // Hours extraction
   if (durationInSec > 3599) {
-    output.push(parseInt(durationInSec / 3600))
-    durationInSec %= 3600
+    output.push(parseInt(durationInSec / 3600));
+    durationInSec %= 3600;
   }
   // Minutes extraction with leading zero
-  output.push(('0' + parseInt(durationInSec / 60)).slice(-2))
+  output.push(('0' + parseInt(durationInSec / 60)).slice(-2));
   // Seconds extraction with leading zero
-  output.push(('0' + durationInSec % 60).slice(-2))
+  output.push(('0' + (durationInSec % 60)).slice(-2));
 
-  return output.join(':')
+  return output.join(':');
 }

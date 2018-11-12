@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { BrowserRouter, IndexRoute, Route } from 'react-router-dom';
+import { BrowserRouter, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import Root from './Root';
@@ -44,7 +44,7 @@ const initialState = {
         <Provider store={store}>
             <Root>
                 <BrowserRouter>
-                    <IndexRoute component={Playlists} />
+                    <Route exact path='/' component={Playlists} />
                 </BrowserRouter>
             </Root>
         </Provider>,

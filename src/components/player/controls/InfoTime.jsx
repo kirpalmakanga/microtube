@@ -1,15 +1,19 @@
-import { h } from 'preact'
+import React, { PureComponent } from 'react';
 
-import formatTime from '../../../lib/formatTime'
+import formatTime from '../../../lib/formatTime';
 
-const InfoTime = ({ currentTime, duration }) => {
-  return (
-    <div className='player__info-time'>
-      <span>{formatTime(currentTime)}</span>
-      <span className="separator">/</span>
-      <span>{formatTime(duration)}</span>
-    </div>
-  )
+class Time extends PureComponent {
+  render() {
+    const { currentTime, duration } = this.props;
+
+    return (
+      <div className='player__info-time'>
+        <span>{formatTime(currentTime)}</span>
+        <span className='separator'>/</span>
+        <span>{formatTime(duration)}</span>
+      </div>
+    );
+  }
 }
 
-export default InfoTime
+export default Time;

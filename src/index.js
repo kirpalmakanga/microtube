@@ -5,9 +5,12 @@ import { Provider } from 'react-redux';
 
 import Root from './Root';
 
+import asyncComponent from './components/asyncComponent';
+
 import Playlists from './containers/Playlists';
-import Playlist from './containers/Playlist';
-import Search from './containers/Search';
+
+const Playlist = asyncComponent(() => import('./containers/Playlist'));
+const Search = asyncComponent(() => import('./containers/Search'));
 
 import { STORAGE_KEY } from './config/app';
 

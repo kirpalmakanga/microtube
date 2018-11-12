@@ -8,6 +8,7 @@
         "build": "rm -rf dist/ && poi build"
     },
     "dependencies": {
+        "@babel/plugin-syntax-dynamic-import": "^7.0.0",
         "moment": "^2.22.2",
         "react": "^16.6.1",
         "react-dom": "^16.6.1",

@@ -1,8 +1,9 @@
 {
-    "presets": ["@babel/react", "@babel/env"],
-    "plugins": [
-        "transform-object-rest-spread",
-        "transform-class-properties",
-        "@babel/transform-runtime"
-    ]
+  "presets": ["@babel/react", "@babel/env"],
+  "plugins": [
+    "transform-object-rest-spread",
+    "transform-class-properties",
+    "@babel/transform-runtime",
+    "@babel/plugin-syntax-dynamic-import"
+  ]
 }

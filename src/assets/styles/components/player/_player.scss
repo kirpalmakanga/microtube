@@ -261,4 +261,12 @@
     @media screen and (min-width: 480px) {
         bottom: 50px;
     }
+
+    .is-fullscreen & {
+        top: 0;
+
+        @media screen and (min-width: 480px) {
+            bottom: 0;
+        }
+    }
 }

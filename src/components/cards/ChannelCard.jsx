@@ -1,27 +1,24 @@
-import { h } from 'preact'
-import { Link } from 'preact-router'
-import { connect } from 'preact-redux'
+import React, { PureComponent } from 'react';
+import { Link } from 'react-router-dom';
+import { getThumbnails } from '../../lib/helpers';
 
-// import { unsubscribe } from '../../actions/youtube'
-import { getThumbnails } from 'lib/helpers'
-
-import Img from 'components/Img'
+import Img from '../Img';
 
 const SubscriptionCard = ({ channelId, title, thumbnails, itemCount }) => {
     return (
         <div className="card">
             <Link
                 className="card__content"
-                href={'/channel/' + channelId}
+                to={`/channel/${channelId}`}
                 aria-label={`Open channel ${title}`}
             >
-                <div class="card__thumb">
+                <div className="card__thumb">
                     <Img
                         src={getThumbnails(thumbnails, 'high')}
                         alt={title}
                         background
                     />
-                    <span class="card__thumb-badge">{`${itemCount} video${
+                    <span className="card__thumb-badge">{`${itemCount} video${
                         itemCount !== 1 ? 's' : ''
                     }`}</span>
                 </div>
@@ -31,7 +28,7 @@ const SubscriptionCard = ({ channelId, title, thumbnails, itemCount }) => {
                 </div>
             </Link>
         </div>
-    )
-}
+    );
+};
 
-export default SubscriptionCard
+export default SubscriptionCard;

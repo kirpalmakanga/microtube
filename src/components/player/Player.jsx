@@ -1,4 +1,4 @@
-import React, { Component, PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { throttle } from 'lodash';
 
@@ -22,7 +22,7 @@ import VolumeRange from './controls/VolumeRange';
 import InfoTime from './controls/InfoTime';
 import InfoProgress from './controls/InfoProgress';
 
-class PlayerInfo extends Component {
+class PlayerInfo extends PureComponent {
     render() {
         const { title, currentTime, duration, loaded, seekTime } = this.props;
 

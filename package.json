@@ -4,8 +4,8 @@
     "description": "light youtube player",
     "scripts": {
         "postinstall": "npm run build",
-        "dev": "poi",
-        "build": "rm -rf dist/ && poi build"
+        "dev": "./node_modules/poi/bin/cli.js",
+        "build": "rm -rf dist/ && ./node_modules/poi/bin/cli.js build"
     },
     "dependencies": {
         "@babel/plugin-syntax-dynamic-import": "^7.0.0",

@@ -7,16 +7,9 @@ import Screen from '../layout/Screen';
 
 import Grid from '../components/Grid';
 
-import PlaylistCard from '../components/cards/PlaylistCard';
-
 /* TODO: Créer un composant "Screen" */
 
 class Playlists extends Component {
-    /* TODO: Test si ça marche sans */
-    // componentDidMount() {
-    //     this.forceUpdate();
-    // }
-
     render() {
         const {
             items,

@@ -5,7 +5,12 @@ import rootReducer from './reducers';
 
 import { STORAGE_KEY } from '../config/app';
 
-const enhancer = compose(
+const composeEnhancers =
+    typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+        ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+        : compose;
+
+const enhancer = composeEnhancers(
     applyMiddleware(thunk),
     persistState(['auth', 'player'], {
         key: STORAGE_KEY,

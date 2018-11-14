@@ -2,6 +2,8 @@ import React, { Component, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { throttle } from 'lodash';
 
+import { Helmet } from 'react-helmet';
+
 import {
     preventDefault,
     enableFullScreen,
@@ -10,6 +12,7 @@ import {
 } from '../../lib/helpers';
 
 import formatTime from '../../lib/formatTime';
+import { parseDuration } from '../../lib/helpers';
 
 import Queue from './Queue';
 import Screen from './Screen';
@@ -19,7 +22,7 @@ import VolumeRange from './controls/VolumeRange';
 import InfoTime from './controls/InfoTime';
 import InfoProgress from './controls/InfoProgress';
 
-class PlayerInfo extends PureComponent {
+class PlayerInfo extends Component {
     render() {
         const { title, currentTime, duration, loaded, seekTime } = this.props;
 
@@ -87,6 +90,8 @@ class Player extends Component {
     componentWillReceiveProps({ player: { queue } }) {
         const activeQueueItem = queue.find(({ active }) => active);
 
+        console.log('setCurrentVideo');
+
         this.setCurrentVideo(activeQueueItem);
     }
 
@@ -115,10 +120,13 @@ class Player extends Component {
         return !!youtube && videoId;
     };
 
-    updateTime = (currentTime) =>
+    updateTime = (t) => {
+        const currentTime = t || this.state.youtube.getCurrentTime();
+
         this.setState({
-            currentTime: currentTime || this.state.youtube.getCurrentTime()
+            currentTime
         });
+    };
 
     setVolume = (volume) => {
         if (!this.isPlayerReady()) {
@@ -131,11 +139,11 @@ class Player extends Component {
             youtube.unMute();
         }
 
+        const { saveVolume } = this.props;
+
         youtube.setVolume(volume);
 
-        this.setState({ volume }, () => {
-            this.props.dispatch({ type: 'SET_VOLUME', data: volume });
-        });
+        this.setState({ volume }, () => saveVolume(volume));
     };
 
     handleWheelVolume = ({ deltaY }) => {
@@ -170,23 +178,25 @@ class Player extends Component {
         this.updateTime(t);
     }, 200);
 
+    setDuration = () =>
+        this.setState({ duration: this.state.youtube.getDuration() });
+
     watchTime() {
         const { youtube } = this.state;
 
-        const duration = youtube.getDuration();
-
-        this.setState({
-            duration,
-            timeWatcher: setInterval(() => {
-                this.updateTime();
-
-                if (youtube.getCurrentTime() === duration) {
-                    clearInterval(timeWatcher);
-                }
-            }, 250)
-        });
+        this.setDuration();
 
         this.updateTime();
+
+        const timeWatcher = setInterval(() => {
+            this.updateTime();
+
+            if (youtube.getCurrentTime() === youtube.getDuration()) {
+                clearInterval(timeWatcher);
+            }
+        }, 250);
+
+        this.timeWatcher = timeWatcher;
     }
 
     watchLoading() {
@@ -204,7 +214,7 @@ class Player extends Component {
 
         this.setState({ loaded: youtube.getVideoLoadedFraction() });
 
-        this.setState({ loadingWatcher });
+        this.loadingWatcher = loadingWatcher;
     }
 
     toggleMute = () => {
@@ -238,13 +248,16 @@ class Player extends Component {
     };
 
     clearWatchers() {
-        const { timeWatcher, loadingWatcher } = this.state;
+        const { timeWatcher, loadingWatcher } = this;
         clearInterval(timeWatcher);
         clearInterval(loadingWatcher);
     }
 
     goToVideo = (next = true) => {
-        const { queue } = this.props.player;
+        const {
+            player: { queue },
+            setActiveQueueItem
+        } = this.props;
 
         const currentIndex = queue.findIndex((v) => v.active) || 0;
 
@@ -261,18 +274,23 @@ class Player extends Component {
             loaded: 0
         });
 
-        this.props.dispatch({
-            type: 'QUEUE_SET_ACTIVE_ITEM',
-            data: { index: newIndex }
-        });
+        setActiveQueueItem(newIndex);
     };
 
     onYoutubeIframeReady = ({ target: youtube }) => {
-        const { volume } = this.props.player;
+        const { volume, currentTime } = this.props.player;
 
         youtube.pauseVideo();
 
-        this.setState({ youtube }, () => this.setVolume(volume));
+        this.setState({ youtube }, () => {
+            // if (currentTime) {
+            //     this.seekTime({ target: { value: currentTime } });
+            // }
+
+            this.setDuration();
+
+            this.setVolume(volume);
+        });
     };
 
     onYoutubeIframeStateChange = ({ data }) => {
@@ -324,7 +342,7 @@ class Player extends Component {
 
     render() {
         const {
-            props: { player, dispatch },
+            props: { player, toggleQueue, toggleScreen },
             state: {
                 isPlaying,
                 isBuffering,
@@ -350,11 +368,6 @@ class Player extends Component {
 
         const { showQueue, showScreen, newQueueItems } = player;
 
-        /* TODO: Déplacer dans le header */
-        const documentTitle = `Microtube | ${title} - ${formatTime(
-            currentTime
-        )} / ${formatTime(duration)}`;
-
         return (
             <div
                 className={[
@@ -363,6 +376,18 @@ class Player extends Component {
                 ].join(' ')}
                 ref={getPlayerContainer}
             >
+                {title ? (
+                    <Helmet
+                        title={
+                            title
+                                ? `Microtube | ${title} - ${formatTime(
+                                      currentTime
+                                  )} / ${formatTime(duration)}`
+                                : ''
+                        }
+                    />
+                ) : null}
+
                 <Queue
                     isPlaying={isPlaying}
                     isBuffering={isBuffering}
@@ -405,7 +430,7 @@ class Player extends Component {
                                         : 'play'
                                 }
                                 iconTransitionClass={
-                                    !isPlaying && isBuffering ? 'rotating' : ''
+                                    isBuffering ? 'rotating' : ''
                                 }
                                 ariaLabel={
                                     isPlaying ? 'Pause video' : 'Play video'
@@ -462,13 +487,7 @@ class Player extends Component {
                                     showQueue ? 'is-active' : '',
                                     newQueueItems ? 'badge--active' : ''
                                 ].join(' ')}
-                                onClick={() =>
-                                    dispatch({
-                                        type: showQueue
-                                            ? 'QUEUE_CLOSE'
-                                            : 'QUEUE_OPEN'
-                                    })
-                                }
+                                onClick={() => toggleQueue(showQueue)}
                                 badge={newQueueItems}
                                 icon="list"
                                 ariaLabel={
@@ -482,13 +501,7 @@ class Player extends Component {
                                         'player__controls-button icon-button',
                                         showScreen ? 'is-active' : ''
                                     ].join(' ')}
-                                    onClick={() =>
-                                        dispatch({
-                                            type: showScreen
-                                                ? 'SCREEN_CLOSE'
-                                                : 'SCREEN_OPEN'
-                                        })
-                                    }
+                                    onClick={() => toggleScreen(showScreen)}
                                     icon="film"
                                     ariaLabel={
                                         showScreen
@@ -520,6 +533,33 @@ class Player extends Component {
     }
 }
 
+/* TODO: Réparer le changement de route (arrête le player) */
+
 const mapStateToProps = ({ player }) => ({ player });
 
-export default connect(mapStateToProps)(Player);
+const mapDispatchToProps = (dispatch) => ({
+    setActiveQueueItem: (index) =>
+        dispatch({
+            type: 'QUEUE_SET_ACTIVE_ITEM',
+            data: { index }
+        }),
+
+    saveVolume: (volume) => dispatch({ type: 'SET_VOLUME', data: volume }),
+
+    saveCurrentTime: (t) => dispatch({ type: 'SET_CURRENT_TIME', data: t }),
+
+    toggleQueue: (showQueue) =>
+        dispatch({
+            type: showQueue ? 'QUEUE_CLOSE' : 'QUEUE_OPEN'
+        }),
+
+    toggleScreen: (showScreen) =>
+        dispatch({
+            type: showScreen ? 'SCREEN_CLOSE' : 'SCREEN_OPEN'
+        })
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Player);

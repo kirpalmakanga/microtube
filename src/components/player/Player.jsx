@@ -340,6 +340,10 @@ class Player extends Component {
         listenFullScreenChange(this._container, this.handleFullScreenChange);
     }
 
+    componentWillUnmount() {
+        console.log('unMountPlayer');
+    }
+
     render() {
         const {
             props: { player, toggleQueue, toggleScreen },

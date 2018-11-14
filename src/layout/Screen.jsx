@@ -2,27 +2,27 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import Header from './Header';
-import Player from '../components/player/Player';
+
 import Prompt from '../components/Prompt';
 
 class Screen extends Component {
-  render() {
-    const { children, isSignedIn } = this.props;
+    render() {
+        const { children, isSignedIn } = this.props;
 
-    return (
-      <div className='layout'>
-        <Header />
+        return (
+            <div className="layout">
+                <Header />
 
-        <main className='layout__content'>{isSignedIn ? children : null}</main>
+                <main className="layout__content">
+                    {isSignedIn ? children : null}
+                </main>
 
-        <Player />
+                <Prompt />
 
-        <Prompt />
-
-        {/* {message ? <Notifications /> : null} */}
-      </div>
-    );
-  }
+                {/* {message ? <Notifications /> : null} */}
+            </div>
+        );
+    }
 }
 
 const mapStateToProps = ({ auth: { isSignedIn } }) => ({ isSignedIn });

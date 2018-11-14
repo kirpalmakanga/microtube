@@ -99,3 +99,25 @@ export const exitFullScreen = () => {
         ? document.webkitExitFullscreen()
         : document.msExitFullscreen && document.msExitFullscreen();
 };
+
+export const listenFullScreenChange = (element, callback) => {
+    const events = {
+        fullscreenchange: 'fullscreenElement',
+        webkitfullscreenchange: 'webkitFullscreenElement',
+        mozfullscreenchange: 'mozFullScreenElement',
+        msfullscreenchange: 'msFullscreenElement'
+    };
+
+    Object.entries(events).forEach(([key, elementKey]) => {
+        document.addEventListener(
+            key,
+            (e) => {
+                const fullScreenElement = e.target[elementKey];
+                const isFullScreen = fullScreenElement === element;
+
+                callback(isFullScreen);
+            },
+            true
+        );
+    });
+};

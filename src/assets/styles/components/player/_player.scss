@@ -1,8 +1,21 @@
 .player__container {
-    @include transition();
+    // @include transition();
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    &.is-fullscreen {
+        background-color: $black;
+        position: fixed;
+        z-index: 2;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        top: 0;
+    }
 }
 
-.player,
+.pl .player,
 .queue {
     box-shadow: 0 -2px 2px 0 rgba($brand-primary, 0.14),
         0 3px 1px -2px rgba($brand-primary, 0.2),
@@ -10,13 +23,22 @@
 }
 
 .player {
-    display: flex;
-    flex-wrap: wrap;
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    left: 0;
+    position: relative;
     z-index: 4;
+
+    &__inner {
+        @include transition();
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .is-fullscreen &__inner {
+        transform: translateY(100%);
+    }
+    .is-fullscreen &:hover &__inner {
+        transform: translateY(0);
+    }
 
     &__controls {
         display: flex;

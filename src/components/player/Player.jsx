@@ -5,7 +5,8 @@ import { throttle } from 'lodash';
 import {
     preventDefault,
     enableFullScreen,
-    exitFullScreen
+    exitFullScreen,
+    listenFullScreenChange
 } from '../../lib/helpers';
 
 import formatTime from '../../lib/formatTime';
@@ -266,11 +267,12 @@ class Player extends Component {
         });
     };
 
-    onYoutubeIframeReady = ({ target }) => {
+    onYoutubeIframeReady = ({ target: youtube }) => {
         const { volume } = this.props.player;
 
-        target.pauseVideo();
-        this.setState({ youtube: target }, () => this.setVolume(volume));
+        youtube.pauseVideo();
+
+        this.setState({ youtube }, () => this.setVolume(volume));
     };
 
     onYoutubeIframeStateChange = ({ data }) => {
@@ -303,18 +305,22 @@ class Player extends Component {
         }
     };
 
+    handleFullScreenChange = (isFullScreen) => this.setState({ isFullScreen });
+
     toggleFullScreen = () => {
         const {
             state: { isFullScreen },
             _container
         } = this;
 
-        console.log('isFullScreen', isFullScreen);
-
-        isFullScreen ? exitFullScreen() : enableFullScreen(_container);
-
-        this.setState({ isFullScreen: !isFullScreen });
+        this.setState({ isFullScreen: !isFullScreen }, async () =>
+            !isFullScreen ? enableFullScreen(_container) : exitFullScreen()
+        );
     };
+
+    componentDidMount() {
+        listenFullScreenChange(this._container, this.handleFullScreenChange);
+    }
 
     render() {
         const {
@@ -378,125 +384,135 @@ class Player extends Component {
                 </div>
 
                 <div className="player shadow--2dp">
-                    <div className="player__controls">
-                        <Button
-                            className="player__controls-button icon-button"
-                            onClick={() => goToVideo(false)}
-                            icon="skip-previous"
-                            ariaLabel="Go to previous video"
-                        />
-
-                        <Button
-                            className="player__controls-button icon-button"
-                            onClick={togglePlay}
-                            icon={
-                                isBuffering
-                                    ? 'loading'
-                                    : isPlaying
-                                    ? 'pause'
-                                    : 'play'
-                            }
-                            iconTransitionClass={
-                                !isPlaying && isBuffering ? 'rotating' : ''
-                            }
-                            ariaLabel={isPlaying ? 'Pause video' : 'Play video'}
-                        />
-
-                        <Button
-                            className="player__controls-button icon-button"
-                            onClick={() => goToVideo(true)}
-                            icon="skip-next"
-                            ariaLabel="Go to next video"
-                        />
-
-                        <div
-                            className="player__controls-volume"
-                            onWheel={handleWheelVolume}
-                        >
+                    <div className="player__inner">
+                        {' '}
+                        <div className="player__controls">
                             <Button
                                 className="player__controls-button icon-button"
-                                onClick={toggleMute}
+                                onClick={() => goToVideo(false)}
+                                icon="skip-previous"
+                                ariaLabel="Go to previous video"
+                            />
+
+                            <Button
+                                className="player__controls-button icon-button"
+                                onClick={togglePlay}
                                 icon={
-                                    isMuted
-                                        ? 'volume-mute'
-                                        : volume >= 50
-                                        ? 'volume-up'
-                                        : volume > 0 && volume <= 50
-                                        ? 'volume-down'
-                                        : 'volume-off'
+                                    isBuffering
+                                        ? 'loading'
+                                        : isPlaying
+                                        ? 'pause'
+                                        : 'play'
                                 }
-                                title={isMuted ? 'Unmute' : 'Mute'}
+                                iconTransitionClass={
+                                    !isPlaying && isBuffering ? 'rotating' : ''
+                                }
+                                ariaLabel={
+                                    isPlaying ? 'Pause video' : 'Play video'
+                                }
                             />
 
-                            <VolumeRange
-                                value={volume}
-                                onChange={({ target }) =>
-                                    setVolume(target.value)
-                                }
+                            <Button
+                                className="player__controls-button icon-button"
+                                onClick={() => goToVideo(true)}
+                                icon="skip-next"
+                                ariaLabel="Go to next video"
                             />
+
+                            <div
+                                className="player__controls-volume"
+                                onWheel={handleWheelVolume}
+                            >
+                                <Button
+                                    className="player__controls-button icon-button"
+                                    onClick={toggleMute}
+                                    icon={
+                                        isMuted
+                                            ? 'volume-mute'
+                                            : volume >= 50
+                                            ? 'volume-up'
+                                            : volume > 0 && volume <= 50
+                                            ? 'volume-down'
+                                            : 'volume-off'
+                                    }
+                                    ariaLabel={isMuted ? 'Unmute' : 'Mute'}
+                                />
+
+                                <VolumeRange
+                                    value={volume}
+                                    onChange={({ target }) =>
+                                        setVolume(target.value)
+                                    }
+                                />
+                            </div>
                         </div>
-                    </div>
-
-                    <PlayerInfo
-                        {...{
-                            title,
-                            currentTime,
-                            duration,
-                            loaded,
-                            seekTime
-                        }}
-                    />
-
-                    <div className="player__controls">
-                        <Button
-                            className={[
-                                'player__controls-button badge icon-button',
-                                showQueue ? 'is-active' : '',
-                                newQueueItems ? 'badge--active' : ''
-                            ].join(' ')}
-                            onClick={() =>
-                                dispatch({
-                                    type: showQueue
-                                        ? 'QUEUE_CLOSE'
-                                        : 'QUEUE_OPEN'
-                                })
-                            }
-                            badge={newQueueItems}
-                            icon="list"
-                            ariaLabel={showQueue ? 'Close queue' : 'Open queue'}
+                        <PlayerInfo
+                            {...{
+                                title,
+                                currentTime,
+                                duration,
+                                loaded,
+                                seekTime
+                            }}
                         />
-
-                        {!isFullScreen ? (
+                        <div className="player__controls">
                             <Button
                                 className={[
-                                    'player__controls-button icon-button',
-                                    showScreen ? 'is-active' : ''
+                                    'player__controls-button badge icon-button',
+                                    showQueue ? 'is-active' : '',
+                                    newQueueItems ? 'badge--active' : ''
                                 ].join(' ')}
                                 onClick={() =>
                                     dispatch({
-                                        type: showScreen
-                                            ? 'SCREEN_CLOSE'
-                                            : 'SCREEN_OPEN'
+                                        type: showQueue
+                                            ? 'QUEUE_CLOSE'
+                                            : 'QUEUE_OPEN'
                                     })
                                 }
-                                icon="film"
-                                title={
-                                    showScreen ? 'Close screen' : 'open screen'
+                                badge={newQueueItems}
+                                icon="list"
+                                ariaLabel={
+                                    showQueue ? 'Close queue' : 'Open queue'
                                 }
                             />
-                        ) : null}
 
-                        <Button
-                            className={[
-                                'player__controls-button icon-button',
-                                isFullScreen ? 'is-active' : ''
-                            ].join(' ')}
-                            onClick={toggleFullScreen}
-                            icon={
-                                isFullScreen ? 'fullscreen-exit' : 'fullscreen'
-                            }
-                            title={showScreen ? 'Close screen' : 'open screen'}
-                        />
+                            {!isFullScreen ? (
+                                <Button
+                                    className={[
+                                        'player__controls-button icon-button',
+                                        showScreen ? 'is-active' : ''
+                                    ].join(' ')}
+                                    onClick={() =>
+                                        dispatch({
+                                            type: showScreen
+                                                ? 'SCREEN_CLOSE'
+                                                : 'SCREEN_OPEN'
+                                        })
+                                    }
+                                    icon="film"
+                                    ariaLabel={
+                                        showScreen
+                                            ? 'Close screen'
+                                            : 'open screen'
+                                    }
+                                />
+                            ) : null}
+
+                            <Button
+                                className="player__controls-button icon-button"
+                                onClick={toggleFullScreen}
+                                icon={
+                                    isFullScreen
+                                        ? 'fullscreen-exit'
+                                        : 'fullscreen'
+                                }
+                                ariaLabel={
+                                    showScreen
+                                        ? 'Enable Fullscreen'
+                                        : 'Exit Fullscreen'
+                                }
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

@@ -8,6 +8,7 @@
         "build": "rm -rf dist/ && ./node_modules/poi/bin/cli.js build"
     },
     "dependencies": {
+        "@babel/plugin-proposal-class-properties": "^7.1.0",
         "@babel/plugin-syntax-dynamic-import": "^7.0.0",
         "moment": "^2.22.2",
         "react": "^16.6.1",
@@ -24,6 +25,7 @@
         "youtube-player": "^5.5.1"
     },
     "devDependencies": {
+        "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
         "@babel/plugin-transform-runtime": "^7.1.0",
         "@babel/preset-env": "^7.1.5",
         "@babel/preset-react": "^7.0.0",
@@ -31,8 +33,6 @@
         "@types/gapi": "0.0.35",
         "@types/gapi.auth2": "0.0.47",
         "@types/systemjs": "^0.20.6",
-        "babel-plugin-transform-class-properties": "^6.24.1",
-        "babel-plugin-transform-object-rest-spread": "^6.26.0",
         "node-sass": "^4.10.0",
         "offline-plugin": "^4.9.1",
         "poi": "^10.2.10",

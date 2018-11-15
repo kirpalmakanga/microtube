@@ -5,96 +5,102 @@ import { queueVideo } from '../actions/youtube';
 import Button from './Button';
 
 class Prompt extends Component {
-  close = (e) => {
-    const { dispatch } = this.props;
+    close = (e) => {
+        const { dispatch } = this.props;
 
-    if (e) {
-      e.stopPropagation();
-    }
+        if (e) {
+            e.stopPropagation();
+        }
 
-    dispatch({ type: 'PROMPT_CLOSE' });
-    setTimeout(() => dispatch({ type: 'PROMPT_RESET' }), 250);
-  };
+        dispatch({ type: 'PROMPT_CLOSE' });
+        setTimeout(() => dispatch({ type: 'PROMPT_RESET' }), 250);
+    };
 
-  handleSubmit = (e) => {
-    const videoId = e.target.querySelector('input').value;
+    handleSubmit = (e) => {
+        const videoId = e.target.querySelector('input').value;
 
-    e.preventDefault();
+        e.preventDefault();
 
-    this.props.dispatch(queueVideo(videoId));
-    this.close();
-  };
+        this.props.dispatch(queueVideo(videoId));
+        this.close();
+    };
 
-  render() {
-    const {
-      props: { prompt },
-      close,
-      handleSubmit
-    } = this;
-    const {
-      form,
-      isVisible,
-      promptText,
-      confirmText,
-      cancelText,
-      callback
-    } = prompt;
-    return (
-      <div
-        className={[
-          'dialog__overlay',
-          isVisible ? 'dialog__overlay--show' : ''
-        ].join(' ')}
-        onClick={close}
-      >
-        <div
-          className='dialog shadow--2dp'
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className='dialog__content'>
-            <p>{promptText}</p>
-          </div>
-          {form ? (
-            <form onSubmit={handleSubmit}>
-              <div className='textfield'>
-                <label for='videoId'>Video URL or ID</label>
-                <input
-                  id='videoId'
-                  className='textfield__input'
-                  type='text'
-                  autofocus
-                  placeholder='URL/ID...'
-                />
-              </div>
-              <div className='dialog__actions'>
-                <Button
-                  className='button button--close'
-                  onClick={close}
-                  title={cancelText}
-                />
-
-                <Button type='submit' className='button' title={confirmText} />
-              </div>
-            </form>
-          ) : (
-            <div className='dialog__actions'>
-              <Button
-                className='button button--close'
+    render() {
+        const {
+            props: { prompt },
+            close,
+            handleSubmit
+        } = this;
+        const {
+            form,
+            isVisible,
+            promptText,
+            confirmText,
+            cancelText,
+            callback
+        } = prompt;
+        return (
+            <div
+                className={[
+                    'dialog__overlay',
+                    isVisible ? 'dialog__overlay--show' : ''
+                ].join(' ')}
                 onClick={close}
-                title={cancelText}
-              />
+            >
+                <div
+                    className="dialog shadow--2dp"
+                    onClick={(e) => e.stopPropagation()}
+                >
+                    <div className="dialog__content">
+                        <p>{promptText}</p>
+                    </div>
+                    {form ? (
+                        <form onSubmit={handleSubmit}>
+                            <div className="textfield">
+                                <label labelfor="videoId">
+                                    Video URL or ID
+                                </label>
+                                <input
+                                    id="videoId"
+                                    className="textfield__input"
+                                    type="text"
+                                    autoFocus
+                                    placeholder="URL/ID..."
+                                />
+                            </div>
+                            <div className="dialog__actions">
+                                <Button
+                                    className="button button--close"
+                                    onClick={close}
+                                    title={cancelText}
+                                />
 
-              <Button
-                className='button'
-                onClick={callback}
-                title={confirmText}
-              />
+                                <Button
+                                    type="submit"
+                                    className="button"
+                                    title={confirmText}
+                                />
+                            </div>
+                        </form>
+                    ) : (
+                        <div className="dialog__actions">
+                            <Button
+                                className="button button--close"
+                                onClick={close}
+                                title={cancelText}
+                            />
+
+                            <Button
+                                className="button"
+                                onClick={callback}
+                                title={confirmText}
+                            />
+                        </div>
+                    )}
+                </div>
             </div>
-          )}
-        </div>
-      </div>
-    );
-  }
+        );
+    }
 }
 
 const mapStateToProps = ({ prompt }) => ({ prompt });

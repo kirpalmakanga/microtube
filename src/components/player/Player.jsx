@@ -87,28 +87,34 @@ class Player extends Component {
         };
     }
 
-    componentWillReceiveProps({ player: { queue } }) {
-        const activeQueueItem = queue.find(({ active }) => active);
-
-        console.log('setCurrentVideo');
-
-        this.setCurrentVideo(activeQueueItem);
+    componentDidUpdate() {
+        this.setCurrentVideo();
     }
 
     getPlayerContainer = (el) => (this._container = el);
 
-    setCurrentVideo({ title = 'No video.', videoId = null } = {}) {
-        const { videoId: currentVideoId } = this.state.currentVideo;
+    setCurrentVideo() {
+        const {
+            currentVideo: { videoId: currentVideoId }
+        } = this.state;
+        const {
+            player: { queue }
+        } = this.props;
 
-        if (videoId === null) {
-            return this.setState({
-                currentTime: 0,
-                duration: 0,
-                loaded: 0
+        const { title = 'No video.', videoId = null } =
+            queue.find(({ active }) => active) || {};
+
+        videoId !== currentVideoId &&
+            this.setState({
+                currentVideo: { title, videoId },
+                ...(videoId === null
+                    ? {
+                          currentTime: 0,
+                          duration: 0,
+                          loaded: 0
+                      }
+                    : {})
             });
-        }
-
-        this.setState({ currentVideo: { title, videoId } });
     }
 
     isPlayerReady = () => {
@@ -338,10 +344,6 @@ class Player extends Component {
 
     componentDidMount() {
         listenFullScreenChange(this._container, this.handleFullScreenChange);
-    }
-
-    componentWillUnmount() {
-        console.log('unMountPlayer');
     }
 
     render() {

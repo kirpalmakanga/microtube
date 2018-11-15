@@ -18,6 +18,7 @@ class Search extends Component {
         const { nextPageToken, searchVideos, forMine } = this.props;
 
         if (query && nextPageToken !== null) {
+            console.log('loading', newQuery, query);
             searchVideos({
                 query: newQuery || query,
                 pageToken: newQuery ? '' : nextPageToken,
@@ -26,23 +27,25 @@ class Search extends Component {
         }
     };
 
-    componentWillReceiveProps({
-        match: {
-            params: { query }
-        }
-    }) {
-        if (query !== this.getQuery()) {
-            console.log('search');
-            this.loadContent(query);
-        }
-    }
-
     componentWillMount() {
         this.loadContent(this.getQuery());
     }
 
     componentWillUnmount() {
         this.props.clearSearch();
+    }
+
+    componentDidUpdate({
+        match: {
+            params: { query }
+        }
+    }) {
+        const newQuery = this.getQuery();
+
+        if (newQuery !== query) {
+            console.log('search');
+            this.loadContent(newQuery);
+        }
     }
 
     render() {

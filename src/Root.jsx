@@ -3,7 +3,7 @@ import './assets/styles/app.scss';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { loadAPI, listenAuth } from './api/youtube';
+import { loadAPI, loadAuth, listenAuth, getSignedInUser } from './api/youtube';
 
 import Sprite from './components/Sprite';
 import Player from './components/player/Player';
@@ -15,36 +15,56 @@ class Root extends Component {
         this.state = { apiLoaded: false };
     }
 
+    signInUser = () => {
+        const auth = getSignedInUser();
+
+        auth.isSignedIn && this.props.signIn(auth);
+    };
+
     async componentDidMount() {
         await loadAPI();
 
-        this.setState({ apiLoaded: true }, this.props.authenticateUser);
+        await loadAuth();
+
+        this.signInUser();
+
+        this.setState({ apiLoaded: true }, this.props.listenAuthChange);
     }
 
     render() {
         const {
             state: { apiLoaded },
-            props: { children, isSignedIn }
+            props: { children }
         } = this;
 
         return [
             <Sprite key="icons" />,
-            apiLoaded === true ? children : null,
-            <Player key="player" />
+            <div
+                className="layout"
+                key="layout"
+                style={{ display: 'flex', flexDirection: 'column', flex: 1 }}
+            >
+                {apiLoaded === true ? children : null}
+
+                <Player />
+
+                <div
+                    className={[
+                        'loader',
+                        apiLoaded === true ? '' : 'is-active'
+                    ].join(' ')}
+                />
+            </div>
         ];
     }
 }
 
-const mapStateToProps = ({
-    auth: { isSignedIn },
-    notifications: { message }
-}) => ({
-    isSignedIn,
+const mapStateToProps = ({ notifications: { message } }) => ({
     message
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    authenticateUser: () =>
+    listenAuthChange: () =>
         listenAuth((data) => dispatch({ type: 'SIGN_IN', data })),
 
     signIn: (data) => dispatch({ type: 'SIGN_IN', data })

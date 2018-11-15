@@ -128,7 +128,7 @@ export function getFeed() {
                     pageToken
                 });
 
-                channelIds.push(...newItems.map(({ channelId }) => channelId));
+                channelIds.push(...newItems);
 
                 if (nextPageToken) {
                     getItems(nextPageToken);
@@ -138,36 +138,35 @@ export function getFeed() {
             await getItems();
 
             const feeds = await Promise.all(
-                channelIds.map((channelId) =>
+                channelIds.map(({ channelId }) =>
                     parseFeed(
                         `${PROXY_URL}/${FEED_URL}?channel_id=${channelId}`
                     )
                 )
             );
 
-            const data = feeds
-                .reduce((arr, { items }) => {
-                    arr.push(
-                        ...items.map(
-                            ({
-                                id,
-                                author: channelTitle,
-                                pubDate: publishedAt,
-                                title
-                            }) => ({
-                                videoId: id.split(':')[2],
-                                publishedAt,
-                                title,
-                                channelTitle
-                            })
-                        )
-                    );
+            const parseVideo = ({
+                id,
+                author: channelTitle,
+                pubDate: publishedAt,
+                title
+            }) => ({
+                videoId: id.split(':')[2],
+                publishedAt,
+                title,
+                channelTitle
+            });
 
-                    return arr;
-                }, [])
+            const sortDesc = (key, convert) => (a, b) =>
+                convert(b[key]) - convert(a[key]);
+
+            const data = feeds
+                .reduce(
+                    (arr, { items }) => arr.concat(items.map(parseVideo)),
+                    []
+                )
                 .sort(
-                    ({ publishedAt: dateA }, { publishedAt: dateB }) =>
-                        new Date(dateB).getTime() - new Date(dateA).getTime()
+                    sortDesc('publishedAt', (date) => new Date(date).getTime())
                 );
 
             dispatch({ type: 'GET_FEED_VIDEOS', data });

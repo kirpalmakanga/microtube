@@ -1,30 +1,20 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { PureComponent } from 'react';
 
-import Header from './Header';
+import Header from '../layout/Header';
 
 import Prompt from '../components/Prompt';
 
-class Screen extends Component {
+class Screen extends PureComponent {
     render() {
-        const { children, isSignedIn } = this.props;
+        const { children } = this.props;
 
-        return (
-            <div className="layout">
-                <Header />
-
-                <main className="layout__content">
-                    {isSignedIn ? children : null}
-                </main>
-
-                <Prompt />
-
-                {/* {message ? <Notifications /> : null} */}
-            </div>
-        );
+        return [
+            <Header key="header" />,
+            <main className="layout__content" key="layout-content">
+                {children}
+            </main>,
+            <Prompt key="prompt" />
+        ];
     }
 }
-
-const mapStateToProps = ({ auth: { isSignedIn } }) => ({ isSignedIn });
-
-export default connect(mapStateToProps)(Screen);
+export default Screen;

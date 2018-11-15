@@ -19,8 +19,18 @@ class Queue extends Component {
 
     over = null;
 
-    componentWillReceiveProps = ({ player: { queue } }) =>
-        this.setState({ queue });
+    componentDidUpdate = () => {
+        this.updateQueue();
+    };
+
+    updateQueue = () => {
+        const { queue: currentQueue } = this.state;
+        const {
+            player: { queue }
+        } = this.props;
+
+        currentQueue.length !== queue.length && this.setState({ queue });
+    };
 
     getPlaceholder = () => {
         let placeholder = this.placeholder;

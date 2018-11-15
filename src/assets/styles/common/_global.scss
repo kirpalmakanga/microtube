@@ -9,152 +9,156 @@
 @include font-face('Montserrat', '../fonts/Montserrat-ExtraBold', 800, normal);
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body,
 html {
-  min-height: 100vh;
+    min-height: 100vh;
 }
 body {
-  position: relative;
-  background-color: lighten($brand-primary, 20%);
-  color: $brand-secondary;
-  font-family: $font-secondary;
-  overflow: hidden;
-  font-size: 14px;
+    position: relative;
+    background-color: lighten($brand-primary, 20%);
+    color: $brand-secondary;
+    font-family: $font-secondary;
+    overflow: hidden;
+    font-size: 14px;
 }
 
 h1,
 h2 {
-  font-family: $font-primary;
-  font-weight: normal;
+    font-family: $font-primary;
+    font-weight: normal;
 }
 
 h1 {
-  @extend .add-top;
-  text-transform: uppercase;
+    @extend .add-top;
+    text-transform: uppercase;
 }
 
 img {
-  display: block;
-  max-width: 100%;
-  height: auto;
+    display: block;
+    max-width: 100%;
+    height: auto;
 }
 
 svg {
-  position: relative;
-  pointer-events: none;
-  vertical-align: middle;
-  path {
-    fill: inherit;
-  }
+    position: relative;
+    pointer-events: none;
+    vertical-align: middle;
+    path {
+        fill: inherit;
+    }
 }
 button,
 a,
 input {
-  -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
 }
 .icons {
-  display: none;
+    display: none;
 }
 
 .rotating {
-  -webkit-animation: rotating 2s linear infinite;
-  -moz-animation: rotating 2s linear infinite;
-  animation: rotating 2s linear infinite;
+    -webkit-animation: rotating 2s linear infinite;
+    -moz-animation: rotating 2s linear infinite;
+    animation: rotating 2s linear infinite;
 }
 
-.app-loader {
-  @include transition();
-  position: fixed;
-  z-index: 7;
-  top: 0;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  background-color: $brand-primary;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  opacity: 0;
-  visibility: hidden;
-
-  fill: $white;
-
-  svg {
-    fill: $brand-secondary;
-    height: 50px;
-    width: 50px;
-  }
+.app {
+    height: 100vh;
 }
 
-.app-loader--active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.image {
-  position: relative;
-  margin: 0;
-
-  &-background {
-    top: 0;
-    left: 0;
-    position: absolute;
-    width: 100%;
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 100%;
-  }
-
-  &-background,
-  img {
+.loader {
     @include transition();
-    opacity: 1;
-  }
-
-  &-loader {
-    @include transition();
-    opacity: 0;
     position: absolute;
+    z-index: 7;
     top: 0;
-    bottom: 0;
     right: 0;
     left: 0;
+    bottom: 0;
+    background-color: $brand-primary;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
+    opacity: 0;
+    visibility: hidden;
+
     fill: $white;
-    background-color: inherit;
+
     svg {
-      width: 24px;
-      height: 24px;
+        fill: $brand-secondary;
+        height: 50px;
+        width: 50px;
     }
-  }
 
-  &.loading {
-    .image-background,
+    &.is-active {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+.image {
+    position: relative;
+    margin: 0;
+
+    &-background {
+        top: 0;
+        left: 0;
+        position: absolute;
+        width: 100%;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 100%;
+    }
+
+    &-background,
     img {
-      opacity: 0;
+        @include transition();
+        opacity: 1;
     }
 
-    .image-loader {
-      opacity: 1;
+    &-loader {
+        @include transition();
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        fill: $white;
+        background-color: inherit;
+        svg {
+            width: 24px;
+            height: 24px;
+        }
     }
-  }
+
+    &.loading {
+        .image-background,
+        img {
+            opacity: 0;
+        }
+
+        .image-loader {
+            opacity: 1;
+        }
+    }
 }
 
 .log_in {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
 }
 
 [data-emergence] {
-  display: block;
+    display: block;
 }

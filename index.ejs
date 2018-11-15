@@ -1,35 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="application-name" content="MicroTube" />
+        <meta name="apple-mobile-web-app-title" content="MicroTube" />
+        <meta name="theme-color" content="#1C1B1B" />
+        <meta name="msapplication-navbutton-color" content="#1C1B1B" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <meta
+            name="msapplication-starturl"
+            content="https://microtube.netlify.com/"
+        />
 
-<head>
-    <meta name='mobile-web-app-capable' content='yes'>
-    <meta name='apple-mobile-web-app-capable' content='yes'>
-    <meta name='application-name' content='MicroTube'>
-    <meta name='apple-mobile-web-app-title' content='MicroTube'>
-    <meta name='theme-color' content='#1C1B1B'>
-    <meta name='msapplication-navbutton-color' content='#1C1B1B'>
-    <meta name='apple-mobile-web-app-status-bar-style' content='black-translucent'>
-    <meta name='msapplication-starturl' content='https://microtube.netlify.com/'>
-
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>
-        <%= htmlWebpackPlugin.options.title %>
-    </title>
-    <% if (htmlWebpackPlugin.options.description) { %>
-        <meta name="description" content="<%= htmlWebpackPlugin.options.description %>" />
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title><%= htmlWebpackPlugin.options.title %></title>
+        <% if (htmlWebpackPlugin.options.description) { %>
+        <meta
+            name="description"
+            content="<%= htmlWebpackPlugin.options.description %>"
+        />
         <% } %>
-            <link rel='manifest' href='/manifest.json' />
-</head>
+        <link rel="manifest" href="/manifest.json" />
+    </head>
 
-<body>
-    <noscript>
-        You need to enable JavaScript to run this app.
-    </noscript>
-    <div id="app" class="app layout__container"></div>
-
-    <div class='app-loader app-loader--active'></div>
-</body>
-
+    <body>
+        <noscript> You need to enable JavaScript to run this app. </noscript>
+        <div id="app" class="app">
+            <div class="layout__container"></div>
+            <div class="loader is-active"></div>
+        </div>
+    </body>
 </html>

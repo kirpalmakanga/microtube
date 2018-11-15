@@ -26,7 +26,11 @@ class Header extends Component {
         this.state = initialState;
     }
 
-    componentWillReceiveProps = async ({ location: { pathname } }) => {
+    componentDidUpdate = async () => {
+        const {
+            location: { pathname }
+        } = this.props;
+
         let title = 'MicroTube';
 
         if (pathname.includes('/subscriptions')) {
@@ -41,7 +45,7 @@ class Header extends Component {
             title = await getPlaylistTitle(pathname.slice(1).split('/')[1]);
         }
 
-        this.setState({ title });
+        title !== this.state.title && this.setState({ title });
     };
 
     openSearchForm = () => {

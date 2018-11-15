@@ -16,7 +16,7 @@ class Screen extends PureComponent {
     render() {
         const { videoId, onReady, onEnd, onStateChange } = this.props;
 
-        return (
+        return videoId ? (
             <YoutubePlayer
                 className="screen__content"
                 videoId={videoId}
@@ -25,7 +25,7 @@ class Screen extends PureComponent {
                 onEnd={onEnd}
                 onStateChange={onStateChange}
             />
-        );
+        ) : null;
     }
 }
 

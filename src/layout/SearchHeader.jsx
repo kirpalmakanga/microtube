@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 
-import SearchForm from '../SearchForm';
-import Icon from '../Icon';
-import Button from '../Button';
+import SearchForm from '../components/SearchForm';
+import Icon from '../components/Icon';
+import Button from '../components/Button';
 
 class SearchHeader extends PureComponent {
   onFormSubmit = (query) => this.props.history.push(`/search/${query}`);
@@ -16,19 +16,20 @@ class SearchHeader extends PureComponent {
     } = this;
 
     return (
-      <div className='layout__header-row'>
-        <Link
-          className='layout__back-button icon-button'
-          to='/'
-          aria-label='Close search'
-          icon='back'
-        >
-          <Icon name='back' />
-        </Link>
+      <header key='header' className='layout__header shadow--2dp'>
+        <div className='layout__header-row'>
+          <Link
+            className='layout__back-button icon-button'
+            to='/'
+            aria-label='Close search'
+            icon='back'
+          >
+            <Icon name='back' />
+          </Link>
 
-        <SearchForm onSubmit={onFormSubmit} />
+          <SearchForm onSubmit={onFormSubmit} />
 
-        {/* <nav className="navigation">
+          {/* <nav className="navigation">
                 <div
                     className="navigation__button icon-button"
                     aria-label="Set search mode"
@@ -56,7 +57,8 @@ class SearchHeader extends PureComponent {
                     <Icon className="icon" name='back' />
                 </div>
             </nav> */}
-      </div>
+        </div>
+      </header>
     );
   }
 }

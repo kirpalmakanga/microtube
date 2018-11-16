@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { searchVideos } from '../actions/youtube';
 
 import Screen from '../layout/Screen';
+import Header from '../layout/SearchHeader';
 
 import Grid from '../components/Grid';
 
@@ -46,7 +47,7 @@ class Search extends Component {
     const { items, setAsActiveItem, pushToQueue } = this.props;
 
     return (
-      <Screen>
+      <Screen header={Header}>
         {items.length ? (
           <Grid
             items={items}

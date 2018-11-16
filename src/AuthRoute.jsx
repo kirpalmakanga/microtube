@@ -4,18 +4,23 @@ import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 
 class AuthRoute extends Component {
-    render() {
-        const { isSignedIn, component: Component, ...props } = this.props;
+  render() {
+    const { isSignedIn, component: Component, ...props } = this.props;
+    const { path } = props;
 
-        return (
-            <Route
-                {...props}
-                render={() =>
-                    isSignedIn ? <Component /> : <Redirect to="/login" />
-                }
-            />
-        );
-    }
+    return (
+      <Route
+        {...props}
+        render={(componentProps) =>
+          isSignedIn ? (
+            <Component {...componentProps} />
+          ) : (
+            <Redirect to={`/login?redirect=${path}`} />
+          )
+        }
+      />
+    );
+  }
 }
 
 const mapStateToProps = ({ auth: { isSignedIn } }) => ({ isSignedIn });

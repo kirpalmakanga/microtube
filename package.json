@@ -1,42 +1,42 @@
 {
-    "name": "microtube",
-    "version": "1.0.0",
-    "description": "light youtube player",
-    "scripts": {
-        "postinstall": "npm run build",
-        "dev": "./node_modules/poi/bin/cli.js",
-        "build": "rm -rf dist/ && ./node_modules/poi/bin/cli.js build"
-    },
-    "dependencies": {
-        "@babel/plugin-proposal-class-properties": "^7.1.0",
-        "@babel/plugin-syntax-dynamic-import": "^7.0.0",
-        "moment": "^2.22.2",
-        "react": "^16.6.1",
-        "react-dom": "^16.6.1",
-        "react-helmet": "^5.2.0",
-        "react-redux": "^5.1.1",
-        "react-router-dom": "^4.3.1",
-        "react-visibility-sensor": "^5.0.2",
-        "react-waypoint": "^8.0.3",
-        "redux": "^3.7.2",
-        "redux-localstorage": "^0.4.1",
-        "redux-thunk": "^2.3.0",
-        "rss-parser": "^3.5.3",
-        "youtube-player": "^5.5.1"
-    },
-    "devDependencies": {
-        "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
-        "@babel/plugin-transform-runtime": "^7.1.0",
-        "@babel/preset-env": "^7.1.5",
-        "@babel/preset-react": "^7.0.0",
-        "@types/es6-promise": "^3.3.0",
-        "@types/gapi": "0.0.35",
-        "@types/gapi.auth2": "0.0.47",
-        "@types/systemjs": "^0.20.6",
-        "node-sass": "^4.10.0",
-        "offline-plugin": "^4.9.1",
-        "poi": "^10.2.10",
-        "sass-loader": "^6.0.7",
-        "typescript": "^2.9.2"
-    }
+  "name": "microtube",
+  "version": "1.0.0",
+  "description": "light youtube player",
+  "scripts": {
+    "postinstall": "npm run build",
+    "dev": "node ./node_modules/poi/bin/cli.js",
+    "build": "rm -rf dist/ && node ./node_modules/poi/bin/cli.js build"
+  },
+  "dependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "moment": "^2.22.2",
+    "react": "^16.6.1",
+    "react-dom": "^16.6.1",
+    "react-helmet": "^5.2.0",
+    "react-redux": "^5.1.1",
+    "react-router-dom": "^4.3.1",
+    "react-visibility-sensor": "^5.0.2",
+    "react-waypoint": "^8.0.3",
+    "redux": "^3.7.2",
+    "redux-localstorage": "^0.4.1",
+    "redux-thunk": "^2.3.0",
+    "rss-parser": "^3.5.3",
+    "youtube-player": "^5.5.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.1.0",
+    "@babel/preset-env": "^7.1.5",
+    "@babel/preset-react": "^7.0.0",
+    "@types/es6-promise": "^3.3.0",
+    "@types/gapi": "0.0.35",
+    "@types/gapi.auth2": "0.0.47",
+    "@types/systemjs": "^0.20.6",
+    "node-sass": "^4.10.0",
+    "offline-plugin": "^4.9.1",
+    "poi": "^10.2.10",
+    "sass-loader": "^6.0.7",
+    "typescript": "^2.9.2"
+  }
 }

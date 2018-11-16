@@ -10,88 +10,90 @@ import Grid from '../components/Grid';
 import VideoCard from '../components/cards/VideoCard';
 
 class Search extends Component {
-    getQuery = () => this.props.match.params.query;
+  getQuery = () => this.props.match.params.query;
 
-    loadContent = (newQuery) => {
-        const query = this.getQuery();
+  loadContent = (newQuery) => {
+    const query = this.getQuery();
 
-        const { nextPageToken, searchVideos, forMine } = this.props;
+    const { nextPageToken, searchVideos, forMine } = this.props;
 
-        if (query && nextPageToken !== null) {
-            console.log('loading', newQuery, query);
-            searchVideos({
-                query: newQuery || query,
-                pageToken: newQuery ? '' : nextPageToken,
-                forMine
-            });
-        }
-    };
-
-    componentWillMount() {
-        this.loadContent(this.getQuery());
+    if (query && nextPageToken !== null) {
+      searchVideos({
+        query: newQuery || query,
+        pageToken: newQuery ? '' : nextPageToken,
+        forMine
+      });
     }
+  };
 
-    componentWillUnmount() {
-        this.props.clearSearch();
+  componentWillMount() {
+    this.loadContent(this.getQuery());
+  }
+
+  componentWillUnmount() {
+    this.props.clearSearch();
+  }
+
+  componentDidUpdate({ query }) {
+    const newQuery = this.getQuery();
+
+    if (newQuery !== query) {
+      this.loadContent(newQuery);
     }
+  }
 
-    componentDidUpdate({
-        match: {
-            params: { query }
-        }
-    }) {
-        const newQuery = this.getQuery();
+  render() {
+    const { items, setAsActiveItem, pushToQueue } = this.props;
 
-        if (newQuery !== query) {
-            console.log('search');
-            this.loadContent(newQuery);
-        }
-    }
-
-    render() {
-        const { items, setAsActiveItem, pushToQueue } = this.props;
-
-        return (
-            <Screen>
-                {items.length ? (
-                    <Grid
-                        items={items}
-                        loadContent={this.loadContent}
-                        renderItem={(data) => {
-                            return (
-                                <VideoCard
-                                    {...data}
-                                    onClick={() => setAsActiveItem(data)}
-                                    pushToQueue={() => pushToQueue(data)}
-                                />
-                            );
-                        }}
-                    />
-                ) : null}
-            </Screen>
-        );
-    }
+    return (
+      <Screen>
+        {items.length ? (
+          <Grid
+            items={items}
+            loadContent={this.loadContent}
+            renderItem={(data) => {
+              return (
+                <VideoCard
+                  {...data}
+                  onClick={() => setAsActiveItem(data)}
+                  pushToQueue={() => pushToQueue(data)}
+                />
+              );
+            }}
+          />
+        ) : null}
+      </Screen>
+    );
+  }
 }
 
-const mapStateToProps = ({ search: { items, nextPageToken, forMine } }) => ({
-    items,
-    nextPageToken,
-    forMine
+const mapStateToProps = (
+  { search: { items, nextPageToken, forMine } },
+  {
+    match: {
+      params: { query }
+    }
+  }
+) => ({
+  query,
+  items,
+  nextPageToken,
+  forMine
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    searchVideos: (params) => dispatch(searchVideos(params)),
-    clearSearch: () => dispatch({ type: 'CLEAR_SEARCH' }),
-    setAsActiveItem: (video) =>
-        dispatch({
-            type: 'QUEUE_SET_ACTIVE_ITEM',
-            data: { video }
-        }),
+  searchVideos: (params) => dispatch(searchVideos(params)),
+  clearSearch: () => dispatch({ type: 'CLEAR_SEARCH' }),
+  setAsActiveItem: (video) =>
+    dispatch({
+      type: 'QUEUE_SET_ACTIVE_ITEM',
+      data: { video }
+    }),
 
-    pushToQueue: (data) => dispatch({ type: 'QUEUE_PUSH', data })
+  pushToQueue: (data) => dispatch({ type: 'QUEUE_PUSH', data })
 });
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(Search);

@@ -23,71 +23,64 @@ import { STORAGE_KEY } from './config/app';
 import configureStore from './store/configureStore';
 
 const { auth = {}, player = {} } = JSON.parse(
-    localStorage.getItem(STORAGE_KEY) || '{}'
+  localStorage.getItem(STORAGE_KEY) || '{}'
 );
 
 const initialState = {
-    auth: {
-        user: {
-            userName: '',
-            picture: ''
-        },
-        ...auth
+  auth: {
+    user: {
+      userName: '',
+      picture: ''
     },
-    player: {
-        queue: [],
-        currentIndex: -1,
-        showQueue: false,
-        showScreen: false,
-        volume: 100,
-        newQueueItems: 0,
-        ...player
-    }
+    ...auth
+  },
+  player: {
+    queue: [],
+    currentIndex: -1,
+    showQueue: false,
+    showScreen: false,
+    volume: 100,
+    newQueueItems: 0,
+    ...player
+  }
 };
 
+if (process.env.NODE_ENV === 'production') {
+  require('../pwa');
+}
+
 (() => {
-    const appContainer = document.querySelector('#app .layout__container');
-    const appLoader = document.querySelector('.loader');
+  const appContainer = document.querySelector('#app .layout__container');
+  const appLoader = document.querySelector('.loader');
 
-    const store = configureStore(initialState);
+  const store = configureStore(initialState);
 
-    render(
-        <Provider store={store}>
-            <Root>
-                <BrowserRouter>
-                    <Switch>
-                        <AuthRoute exact path="/" component={Playlists} />
+  render(
+    <Provider store={store}>
+      <Root>
+        <BrowserRouter>
+          <Switch>
+            <AuthRoute exact path='/' component={Playlists} />
 
-                        <AuthRoute
-                            path="/playlist/:playlistId"
-                            component={Playlist}
-                        />
+            <AuthRoute path='/playlist/:playlistId' component={Playlist} />
 
-                        <Route exact path="/search" component={Search} />
+            <Route exact path='/search' component={Search} />
 
-                        <Route path="/search/:query" component={Search} />
+            <Route path='/search/:query' component={Search} />
 
-                        <AuthRoute
-                            exact
-                            path="/subscriptions"
-                            component={Channels}
-                        />
+            <AuthRoute exact path='/subscriptions' component={Channels} />
 
-                        <Route
-                            exact
-                            path="/channel/:channelId"
-                            component={Channel}
-                        />
+            <Route exact path='/channel/:channelId' component={Channel} />
 
-                        <AuthRoute path="/feed" component={Feed} />
+            <AuthRoute path='/feed' component={Feed} />
 
-                        <Route path="/login" component={Login} />
-                    </Switch>
-                </BrowserRouter>
-            </Root>
-        </Provider>,
-        appContainer
-    );
+            <Route path='/login' component={Login} />
+          </Switch>
+        </BrowserRouter>
+      </Root>
+    </Provider>,
+    appContainer
+  );
 
-    appLoader.classList.remove('is-active');
+  appLoader.classList.remove('is-active');
 })();

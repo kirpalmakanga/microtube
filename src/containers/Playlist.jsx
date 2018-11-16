@@ -16,9 +16,7 @@ class Playlist extends Component {
 
   render() {
     const {
-      match: {
-        params: { playlistId }
-      },
+      playlistId,
       items,
       nextPageToken,
       getPlaylistItems,
@@ -52,7 +50,15 @@ class Playlist extends Component {
   }
 }
 
-const mapStateToProps = ({ playlistItems: { items, nextPageToken } }) => ({
+const mapStateToProps = (
+  { playlistItems: { items, nextPageToken } },
+  {
+    match: {
+      params: { playlistId }
+    }
+  }
+) => ({
+  playlistId,
   items,
   nextPageToken
 });

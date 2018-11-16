@@ -17,6 +17,7 @@ const QueueItem = ({
     className={['queue__item', isActive ? 'queue__item--active' : ''].join(' ')}
     {...props}
     data-index={index}
+    data-dragged='true'
   >
     <div className='queue__item-button icon-button'>
       <Icon

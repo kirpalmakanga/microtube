@@ -58,8 +58,6 @@ class DraggableList extends PureComponent {
         : target.parentNode
       : null;
 
-    console.log('over', over);
-
     if (
       !over ||
       over.classList.contains('queue__item--placeholder') ||

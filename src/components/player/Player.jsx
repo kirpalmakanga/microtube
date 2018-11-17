@@ -414,7 +414,6 @@ class Player extends Component {
           className={['player', !isFullScreen ? 'shadow--2dp' : ''].join(' ')}
         >
           <div className='player__inner'>
-            {' '}
             <div className='player__controls'>
               <Button
                 className='player__controls-button icon-button'

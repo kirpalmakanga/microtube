@@ -1,35 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { throttle } from 'lodash';
 import QueueHeader from './QueueHeader';
 import QueueItem from './QueueItem';
 
 import DraggableList from '../DraggableList';
 
 class Queue extends Component {
-  moveQueueItem = (fromIndex, toIndex) => {
-    const {
-      props: { queue, setQueue }
-    } = this;
-
-    queue.splice(toIndex, 0, queue.splice(fromIndex, 1)[0]);
-
-    setQueue(queue);
-  };
-
   render() {
     const {
       props: {
-        queue,
+        items,
         showQueue,
+        setQueue,
         isPlaying,
         isBuffering,
         togglePlay,
         makeSetActiveItem,
         makeRemoveItem
-      },
-      moveQueueItem
+      }
     } = this;
 
     return (
@@ -39,43 +28,12 @@ class Queue extends Component {
         )}
       >
         <QueueHeader />
-        {/* <div
-          className='queue__items'
-          onDragOver={dragOver}
-          ref={(el) => (this.container = el)}
-        >
-          {queue.length
-            ? queue.map(
-                ({ title, duration, active }, index) => (
-                  <QueueItem
-                    key={index}
-                    index={index}
-                    title={title}
-                    duration={duration}
-                    isActive={active}
-                    icon={
-                      active && isBuffering
-                        ? 'loading'
-                        : active && isPlaying
-                        ? 'pause'
-                        : 'play'
-                    }
-                    onDragStart={dragStart}
-                    onDragEnd={dragEnd}
-                    onClick={active ? togglePlay : makeSetActiveItem(index)}
-                    onClickRemove={makeRemoveItem(index)}
-                    draggable
-                  />
-                ),
-                this
-              )
-            : null}
-        </div> */}
 
-        {queue.length ? (
+        {items.length ? (
           <DraggableList
-            items={queue}
-            onItemMove={moveQueueItem}
+            className='queue__items'
+            items={items}
+            onItemMove={setQueue}
             renderItem={({ data: { title, duration, active } }, index) => (
               <QueueItem
                 key={index}
@@ -101,8 +59,8 @@ class Queue extends Component {
   }
 }
 
-const mapStateToProps = ({ player: { queue, showQueue } }) => ({
-  queue,
+const mapStateToProps = ({ player: { queue: items, showQueue } }) => ({
+  items,
   showQueue
 });
 

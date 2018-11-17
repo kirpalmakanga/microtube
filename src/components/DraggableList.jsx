@@ -1,16 +1,14 @@
 import React, { PureComponent } from 'react';
 import { throttle } from 'lodash';
 
-class DraggableListItem extends PureComponent {
-  render() {}
-}
-
 class DraggableList extends PureComponent {
   constructor(props) {
     super(props);
 
     this.state = { items: props.items };
   }
+
+  componentDidUpdate = () => this.setState({ items: this.props.items });
 
   getContainer = (el) => (this.container = el);
 
@@ -22,6 +20,7 @@ class DraggableList extends PureComponent {
     if (!placeholder) {
       placeholder = document.createElement('div');
       placeholder.classList.add('queue__item', 'queue__item--placeholder');
+      placeholder.setAttribute('data-placeholder', '');
     }
     return placeholder;
   };
@@ -41,24 +40,25 @@ class DraggableList extends PureComponent {
     }
   };
 
-  dragStart = ({ target, currentTarget: dragged, dataTransfer }) => {
+  dragStart = ({ currentTarget: dragged, dataTransfer }) => {
     dataTransfer.effectAllowed = 'move';
 
     dataTransfer.setData('text/html', dragged);
 
     document.body.style.cursor = 'grabbing';
 
-    console.log('dragged', dragged);
-
     this.dragged = dragged;
     this.placeholder = this.getPlaceholder();
   };
 
   dragOver = throttle((e) => {
-    //     e.preventDefault();
-    const { target, relatedTarget, pageY } = e;
+    const { target, pageY } = e;
 
-    const over = target ? target.parentNode : null;
+    const over = target
+      ? target.hasAttribute('data-placeholder')
+        ? target
+        : target.parentNode
+      : null;
 
     console.log('over', over);
 
@@ -75,9 +75,9 @@ class DraggableList extends PureComponent {
     this.insertPlaceholder(pageY);
   }, 50);
 
-  dragEnd = (e) => {
+  dragEnd = () => {
     const {
-      state: { items },
+      props,
       container,
       placeholder,
       nodePlacement,
@@ -85,10 +85,10 @@ class DraggableList extends PureComponent {
       over
     } = this;
 
+    const items = [...props.items];
+
     const from = Number(dragged.dataset.index);
     let to = Number(over.dataset.index);
-
-    e.preventDefault();
 
     if (from < to) {
       to--;
@@ -104,16 +104,14 @@ class DraggableList extends PureComponent {
 
     items.splice(to, 0, items.splice(from, 1)[0]);
 
-    this.setState({ items });
-
-    this.props.onItemMove(from, to);
+    this.props.onItemMove(items);
     this.over = null;
+    this.dragged = null;
   };
 
   render() {
     const {
-      props: { containerClassName, itemClassName, renderItem },
-      state: { items },
+      props: { items, renderItem },
       getContainer,
       dragOver,
       dragStart,

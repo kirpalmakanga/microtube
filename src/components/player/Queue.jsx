@@ -122,7 +122,6 @@ class Queue extends Component {
   };
 
   render() {
-    console.log('render');
     const {
       props: {
         player: { showQueue },

@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { throttle } from 'lodash';
 
 class DraggableListItem extends PureComponent {
   render() {}
@@ -10,6 +11,8 @@ class DraggableList extends PureComponent {
 
     this.state = { items: props.items };
   }
+
+  getContainer = (el) => (this.container = el);
 
   getPlaceholder = () => {
     let placeholder = this.placeholder;
@@ -47,10 +50,6 @@ class DraggableList extends PureComponent {
     this.placeholder = this.getPlaceholder();
   };
 
-  dragOver = () => {};
-
-  dragEnd = () => {};
-
   dragOver = throttle((e) => {
     //     e.preventDefault();
     const { target: over, pageY } = e;
@@ -70,7 +69,7 @@ class DraggableList extends PureComponent {
 
   dragEnd = (e) => {
     const {
-      state: { queue },
+      state: { items },
       container,
       placeholder,
       nodePlacement,
@@ -95,22 +94,35 @@ class DraggableList extends PureComponent {
 
     container.removeChild(placeholder);
 
-    queue.splice(to, 0, queue.splice(from, 1)[0]);
+    items.splice(to, 0, items.splice(from, 1)[0]);
 
-    this.props.setQueue(queue);
+    this.props.onItemMove(from, to);
+
+    this.props.setQueue(items);
     this.over = null;
   };
 
   render() {
     const {
       props: { containerClassName, itemClassName, renderItem },
-      state: { items }
+      state: { items },
+      getContainer,
+      dragOver,
+      dragStart,
+      dragEnd
     } = this;
 
     return (
-      <div className='draggable-list'>
-        {items.map((data) => (
-          <div className='draggable-list__item'>{renderItem(data)}</div>
+      <div className='draggable-list' onDragOver={dragOver} ref={getContainer}>
+        {items.map((data, index) => (
+          <div
+            key={index}
+            className='draggable-list__item'
+            data-index={index}
+            draggable
+          >
+            {renderItem({ data, dragStart, dragEnd, draggable: true })}
+          </div>
         ))}
       </div>
     );

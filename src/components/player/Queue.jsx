@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { throttle } from 'lodash';
-
-import parseDuration from '../../lib/parseDuration';
-
 import QueueHeader from './QueueHeader';
 import QueueItem from './QueueItem';
+
+import DraggableList from '../DraggableList';
 
 class Queue extends Component {
   constructor(props) {
@@ -66,10 +65,6 @@ class Queue extends Component {
     this.dragged = dragged;
     this.placeholder = this.getPlaceholder();
   };
-
-  dragOver = () => {};
-
-  dragEnd = () => {};
 
   dragOver = throttle((e) => {
     //     e.preventDefault();
@@ -176,6 +171,35 @@ class Queue extends Component {
               )
             : null}
         </div>
+
+        {/* {queue.length ? (
+          <DraggableList
+            items={queue}
+            onItemMove={(from, to) => {
+              queue.splice(to, 0, queue.splice(from, 1)[0]);
+
+              this.props.setQueue(queue);
+            }}
+            renderItem={({ data: { title, duration, active } }, index) => (
+              <QueueItem
+                key={index}
+                index={index}
+                title={title}
+                duration={duration}
+                isActive={active}
+                icon={
+                  active && isBuffering
+                    ? 'loading'
+                    : active && isPlaying
+                    ? 'pause'
+                    : 'play'
+                }
+                onClick={active ? togglePlay : makeSetActiveItem(index)}
+                onClickRemove={makeRemoveItem(index)}
+              />
+            )}
+          />
+        ) : null} */}
       </div>
     );
   }

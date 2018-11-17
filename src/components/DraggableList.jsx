@@ -17,6 +17,8 @@ class DraggableList extends PureComponent {
   getPlaceholder = () => {
     let placeholder = this.placeholder;
 
+    /* TODO: passer la classe du placeholder en props eet modifier le style de la queue */
+
     if (!placeholder) {
       placeholder = document.createElement('div');
       placeholder.classList.add('queue__item', 'queue__item--placeholder');
@@ -46,13 +48,19 @@ class DraggableList extends PureComponent {
 
     document.body.style.cursor = 'grabbing';
 
+    console.log('dragged', dragged);
+
     this.dragged = dragged;
     this.placeholder = this.getPlaceholder();
   };
 
   dragOver = throttle((e) => {
     //     e.preventDefault();
-    const { target: over, pageY } = e;
+    const { target, relatedTarget, pageY } = e;
+
+    const over = target ? target.parentNode : null;
+
+    console.log('over', over);
 
     if (
       !over ||
@@ -96,9 +104,9 @@ class DraggableList extends PureComponent {
 
     items.splice(to, 0, items.splice(from, 1)[0]);
 
-    this.props.onItemMove(from, to);
+    this.setState({ items });
 
-    this.props.setQueue(items);
+    this.props.onItemMove(from, to);
     this.over = null;
   };
 
@@ -119,9 +127,11 @@ class DraggableList extends PureComponent {
             key={index}
             className='draggable-list__item'
             data-index={index}
+            onDragStart={dragStart}
+            onDragEnd={dragEnd}
             draggable
           >
-            {renderItem({ data, dragStart, dragEnd, draggable: true })}
+            {renderItem({ data })}
           </div>
         ))}
       </div>

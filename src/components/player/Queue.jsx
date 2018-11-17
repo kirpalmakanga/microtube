@@ -8,128 +8,28 @@ import QueueItem from './QueueItem';
 import DraggableList from '../DraggableList';
 
 class Queue extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      queue: props.player.queue
-    };
-  }
-
-  over = null;
-
-  componentDidUpdate = () => {
-    this.updateQueue();
-  };
-
-  updateQueue = () => {
-    const { queue: currentQueue } = this.state;
+  moveQueueItem = (fromIndex, toIndex) => {
     const {
-      player: { queue }
-    } = this.props;
-
-    currentQueue.length !== queue.length && this.setState({ queue });
-  };
-
-  getPlaceholder = () => {
-    let placeholder = this.placeholder;
-    if (!placeholder) {
-      placeholder = document.createElement('div');
-      placeholder.classList.add('queue__item', 'queue__item--placeholder');
-    }
-    return placeholder;
-  };
-
-  insertPlaceholder = (pageY) => {
-    const { container, placeholder, over } = this;
-    const relY = pageY - over.offsetTop;
-    const lastChildY =
-      pageY - container.lastChild.offsetTop + over.offsetHeight / 2;
-
-    if (relY <= lastChildY) {
-      this.nodePlacement = 'after';
-      container.insertBefore(placeholder, over.nextElementSibling);
-    } else {
-      this.nodePlacement = 'before';
-      container.insertBefore(placeholder, over);
-    }
-  };
-
-  dragStart = ({ target, currentTarget: dragged, dataTransfer }) => {
-    dataTransfer.effectAllowed = 'move';
-
-    dataTransfer.setData('text/html', dragged);
-
-    document.body.style.cursor = 'grabbing';
-
-    this.dragged = dragged;
-    this.placeholder = this.getPlaceholder();
-  };
-
-  dragOver = throttle((e) => {
-    //     e.preventDefault();
-    const { target: over, pageY } = e;
-
-    if (
-      !over ||
-      over.classList.contains('queue__item--placeholder') ||
-      !over.getAttribute('draggable')
-    ) {
-      return;
-    }
-
-    this.over = over;
-
-    this.insertPlaceholder(pageY);
-  }, 50);
-
-  dragEnd = (e) => {
-    const {
-      state: { queue },
-      container,
-      placeholder,
-      nodePlacement,
-      dragged,
-      over
+      props: { queue, setQueue }
     } = this;
 
-    const from = Number(dragged.dataset.index);
-    let to = Number(over.dataset.index);
+    queue.splice(toIndex, 0, queue.splice(fromIndex, 1)[0]);
 
-    e.preventDefault();
-
-    if (from < to) {
-      to--;
-    }
-
-    if (nodePlacement === 'after') {
-      to++;
-    }
-
-    document.body.style.cursor = 'default';
-
-    container.removeChild(placeholder);
-
-    queue.splice(to, 0, queue.splice(from, 1)[0]);
-
-    this.props.setQueue(queue);
-    this.over = null;
+    setQueue(queue);
   };
 
   render() {
     const {
       props: {
-        player: { showQueue },
+        queue,
+        showQueue,
         isPlaying,
         isBuffering,
         togglePlay,
         makeSetActiveItem,
         makeRemoveItem
       },
-      state: { queue },
-      dragEnd,
-      dragStart,
-      dragOver
+      moveQueueItem
     } = this;
 
     return (
@@ -139,7 +39,7 @@ class Queue extends Component {
         )}
       >
         <QueueHeader />
-        <div
+        {/* <div
           className='queue__items'
           onDragOver={dragOver}
           ref={(el) => (this.container = el)}
@@ -170,16 +70,12 @@ class Queue extends Component {
                 this
               )
             : null}
-        </div>
+        </div> */}
 
-        {/* {queue.length ? (
+        {queue.length ? (
           <DraggableList
             items={queue}
-            onItemMove={(from, to) => {
-              queue.splice(to, 0, queue.splice(from, 1)[0]);
-
-              this.props.setQueue(queue);
-            }}
+            onItemMove={moveQueueItem}
             renderItem={({ data: { title, duration, active } }, index) => (
               <QueueItem
                 key={index}
@@ -199,13 +95,16 @@ class Queue extends Component {
               />
             )}
           />
-        ) : null} */}
+        ) : null}
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ player }) => ({ player });
+const mapStateToProps = ({ player: { queue, showQueue } }) => ({
+  queue,
+  showQueue
+});
 
 const mapDispatchToProps = (dispatch) => ({
   setQueue: (data) => dispatch({ type: 'QUEUE_SET', data }),

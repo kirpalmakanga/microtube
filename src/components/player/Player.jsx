@@ -399,21 +399,20 @@ class Player extends Component {
           togglePlay={togglePlay}
         />
 
-        <div
+        <Screen
           className={[
             'screen shadow--2dp',
             player.showScreen || isFullScreen ? 'screen--show' : ''
           ].join(' ')}
-        >
-          <Screen
-            videoId={videoId}
-            onReady={onYoutubeIframeReady}
-            onEnd={goToVideo}
-            onStateChange={onYoutubeIframeStateChange}
-          />
-        </div>
+          videoId={videoId}
+          onReady={onYoutubeIframeReady}
+          onEnd={goToVideo}
+          onStateChange={onYoutubeIframeStateChange}
+        />
 
-        <div className='player shadow--2dp'>
+        <div
+          className={['player', !isFullScreen ? 'shadow--2dp' : ''].join(' ')}
+        >
           <div className='player__inner'>
             {' '}
             <div className='player__controls'>
@@ -511,8 +510,6 @@ class Player extends Component {
     );
   }
 }
-
-/* TODO: Réparer le changement de route (arrête le player) */
 
 const mapStateToProps = ({ player }) => ({ player });
 

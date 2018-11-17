@@ -68,6 +68,8 @@ class YouTube extends Component {
     this.internalPlayer = null;
   }
 
+  getContainer = (el) => (this.container = el);
+
   componentDidMount = () => this.createPlayer();
 
   componentDidUpdate(prevProps) {
@@ -91,40 +93,57 @@ class YouTube extends Component {
       return;
     }
 
-    this.internalPlayer = youTubePlayer(this.container, {
-      ...this.props.opts,
-      videoId: this.props.videoId
+    const {
+      props: {
+        opts,
+        videoId,
+        onReady,
+        onError,
+        onStateChange,
+        onEnd,
+        onPlay,
+        onPause,
+        onPlaybackRateChange,
+        onPlaybackQualityChange
+      },
+      container
+    } = this;
+
+    const events = {
+      ready: onReady,
+      error: onError,
+      stateChange: (e) => {
+        onStateChange(e);
+
+        switch (e.data) {
+          case YouTube.PlayerState.ENDED:
+            onEnd(e);
+            break;
+
+          case YouTube.PlayerState.PLAYING:
+            onPlay(e);
+            break;
+
+          case YouTube.PlayerState.PAUSED:
+            onPause(e);
+            break;
+
+          default:
+            return;
+        }
+      },
+      playbackRateChange: onPlaybackRateChange,
+      playbackQualityChange: onPlaybackQualityChange
+    };
+
+    this.internalPlayer = youTubePlayer(container, {
+      ...opts,
+      videoId
     });
 
-    this.internalPlayer.on('ready', this.props.onReady);
-    this.internalPlayer.on('error', this.props.onError);
-    this.internalPlayer.on('stateChange', (e) => {
-      this.props.onStateChange(e);
-      switch (e.data) {
-        case YouTube.PlayerState.ENDED:
-          this.props.onEnd(e);
-          break;
-
-        case YouTube.PlayerState.PLAYING:
-          this.props.onPlay(e);
-          break;
-
-        case YouTube.PlayerState.PAUSED:
-          this.props.onPause(e);
-          break;
-
-        default:
-          return;
-      }
-    });
-    this.internalPlayer.on(
-      'playbackRateChange',
-      this.props.onPlaybackRateChange
-    );
-    this.internalPlayer.on(
-      'playbackQualityChange',
-      this.props.onPlaybackQualityChange
-    );
+    for (let eventKey in events) {
+      this.internalPlayer.on(eventKey, events[eventKey]);
+    }
   };
 
   resetPlayer = () => this.internalPlayer.destroy().then(this.createPlayer);
@@ -132,7 +151,6 @@ class YouTube extends Component {
   updatePlayer = () => {
     this.internalPlayer.getIframe().then((iframe) => {
       iframe.setAttribute('id', this.props.id);
-      iframe.setAttribute('class', this.props.className);
     });
   };
 
@@ -164,15 +182,18 @@ class YouTube extends Component {
     this.internalPlayer.cueVideoById(newOpts);
   };
 
-  render = () => (
-    <span>
-      <div
-        id={this.props.id}
-        className={this.props.className}
-        ref={(el) => (this.container = el)}
-      />
-    </span>
-  );
+  render() {
+    const {
+      props: { className, iFrameClassName },
+      getContainer
+    } = this;
+
+    return (
+      <div className={className}>
+        <div ref={getContainer} />
+      </div>
+    );
+  }
 }
 
 export default YouTube;

@@ -34,10 +34,8 @@ class Queue extends Component {
             className='queue__items'
             items={items}
             onItemMove={setQueue}
-            renderItem={({ data: { title, duration, active } }, index) => (
+            renderItem={({ title, duration, active }, index) => (
               <QueueItem
-                key={index}
-                index={index}
                 title={title}
                 duration={duration}
                 isActive={active}

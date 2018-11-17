@@ -15,8 +15,6 @@ class DraggableList extends PureComponent {
   getPlaceholder = () => {
     let placeholder = this.placeholder;
 
-    /* TODO: passer la classe du placeholder en props eet modifier le style de la queue */
-
     if (!placeholder) {
       placeholder = document.createElement('div');
       placeholder.classList.add('queue__item', 'queue__item--placeholder');
@@ -129,7 +127,7 @@ class DraggableList extends PureComponent {
             onDragEnd={dragEnd}
             draggable
           >
-            {renderItem({ data })}
+            {renderItem(data, index)}
           </div>
         ))}
       </div>

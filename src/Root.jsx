@@ -19,7 +19,7 @@ const Channel = asyncComponent(() => import('./containers/Channel'));
 const Feed = asyncComponent(() => import('./containers/Feed'));
 
 import asyncComponent from './components/asyncComponent';
-import Sprite from './components/Sprite';
+import Loader from './components/Loader';
 import Player from './components/player/Player';
 
 class Root extends Component {
@@ -50,12 +50,11 @@ class Root extends Component {
       state: { apiLoaded }
     } = this;
 
-    return [
-      <Sprite key='icons' />,
+    return (
       <div className='layout' key='layout'>
         <Header />
 
-        {apiLoaded === true ? (
+        {apiLoaded ? (
           <Switch>
             <AuthRoute exact path='/' component={Playlists} />
 
@@ -77,13 +76,9 @@ class Root extends Component {
 
         <Player />
 
-        <div
-          className={['loader', apiLoaded === true ? '' : 'is-active'].join(
-            ' '
-          )}
-        />
+        <Loader isActive={!apiLoaded} />
       </div>
-    ];
+    );
   }
 }
 

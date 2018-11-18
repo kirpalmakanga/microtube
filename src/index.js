@@ -37,9 +37,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 (() => {
-  const appContainer = document.querySelector('#app .layout__container');
-  const appLoader = document.querySelector('.loader');
-
+  const appContainer = document.querySelector('#app');
   const store = configureStore(initialState);
 
   render(
@@ -50,6 +48,4 @@ if (process.env.NODE_ENV === 'production') {
     </Provider>,
     appContainer
   );
-
-  appLoader.classList.remove('is-active');
 })();

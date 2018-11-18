@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter, Switch, Route } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';
@@ -10,7 +10,7 @@ class Header extends Component {
   onSearchFormSubmit = (query) => this.props.history.push(`/search/${query}`);
 
   componentWillMount() {
-    const { location = { pathname: '' }, match, history } = this.props;
+    const { location = { pathname: '' }, history } = this.props;
 
     this.setState({ location });
 
@@ -42,4 +42,3 @@ class Header extends Component {
 }
 
 export default withRouter(Header);
-// export default Header;

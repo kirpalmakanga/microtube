@@ -2,7 +2,17 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 class Form extends Component {
-  state = { input: '' };
+  constructor(props) {
+    super(props);
+
+    this.state = { input: props.query };
+  }
+
+  componentDidUpdate({ query: prevQuery }) {
+    const { query } = this.props;
+
+    prevQuery !== query && this.setState({ input: query });
+  }
 
   componentDidMount() {
     this.input.focus();

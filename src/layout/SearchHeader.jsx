@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
 
@@ -6,30 +6,28 @@ import SearchForm from '../components/SearchForm';
 import Icon from '../components/Icon';
 import Button from '../components/Button';
 
-class SearchHeader extends PureComponent {
-  onFormSubmit = (query) => this.props.history.push(`/search/${query}`);
-
+class SearchHeader extends Component {
   render() {
     const {
-      props: { setSearchMode, forMine },
-      onFormSubmit
+      props: { onSearchFormSubmit, query, setSearchMode, forMine }
     } = this;
 
+    console.log('query', query);
+
     return (
-      <header key='header' className='layout__header shadow--2dp'>
-        <div className='layout__header-row'>
-          <Link
-            className='layout__back-button icon-button'
-            to='/'
-            aria-label='Close search'
-            icon='back'
-          >
-            <Icon name='back' />
-          </Link>
+      <div className='layout__header-row'>
+        <Link
+          className='layout__back-button icon-button'
+          to='/'
+          aria-label='Close search'
+          icon='back'
+        >
+          <Icon name='back' />
+        </Link>
 
-          <SearchForm onSubmit={onFormSubmit} />
+        <SearchForm query={query} onSubmit={onSearchFormSubmit} />
 
-          {/* <nav className="navigation">
+        {/* <nav className="navigation">
                 <div
                     className="navigation__button icon-button"
                     aria-label="Set search mode"
@@ -57,13 +55,15 @@ class SearchHeader extends PureComponent {
                     <Icon className="icon" name='back' />
                 </div>
             </nav> */}
-        </div>
-      </header>
+      </div>
     );
   }
 }
 
-const mapStateToProps = ({ search: { forMine } }) => ({ forMine });
+const mapStateToProps = ({ search: { query, forMine } }) => ({
+  query,
+  forMine
+});
 
 const mapDispatchToProps = (dispatch) => ({
   setSearchMode: (forMine) =>
@@ -75,9 +75,7 @@ const mapDispatchToProps = (dispatch) => ({
     })
 });
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    mapDispatchToProps
-  )(SearchHeader)
-);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SearchHeader);

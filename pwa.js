@@ -1,13 +1,15 @@
-import runtime from 'offline-plugin/runtime'
+import runtime from 'offline-plugin/runtime';
+
+console.log('setting up service worker');
 
 runtime.install({
-  onUpdateReady() {
-    console.log('App update ready')
-    runtime.applyUpdate()
-  },
+    onUpdateReady() {
+        console.log('App update ready');
+        runtime.applyUpdate();
+    },
 
-  onUpdated() {
-    console.log('App updated')
-    location.reload()
-  }
-})
+    onUpdated() {
+        console.log('App updated');
+        location.reload();
+    }
+});

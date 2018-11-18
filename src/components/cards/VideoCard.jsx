@@ -1,65 +1,38 @@
 import React, { PureComponent } from 'react';
 
-import { formatDate, getThumbnails, parseDuration } from '../../lib/helpers';
+import { formatDate, parseDuration } from '../../lib/helpers';
 
-import Img from '../Img';
-import Icon from '../Icon';
+import Card from './Card';
 
 class VideoCard extends PureComponent {
-    render() {
-        const {
-            title,
-            thumbnails,
-            publishedAt,
-            duration,
-            channelTitle,
-            onClick,
-            pushToQueue
-        } = this.props;
+  render() {
+    const {
+      publishedAt,
+      duration,
+      channelTitle,
+      pushToQueue,
+      ...props
+    } = this.props;
 
-        return (
-            <div className="card">
-                <div
-                    className="card__content"
-                    aria-label={`Play video ${title}`}
-                    onClick={onClick}
-                >
-                    {thumbnails ? (
-                        <div className="card__thumb">
-                            <Img
-                                src={getThumbnails(thumbnails, 'high')}
-                                alt={title}
-                                background
-                            />
-                            <span className="card__thumb-badge">
-                                {parseDuration(duration)}
-                            </span>
-                        </div>
-                    ) : null}
+    const subTitles = [channelTitle, formatDate(publishedAt, 'MMMM Do YYYY')];
 
-                    <div className="card__text">
-                        <h2 className="card__text-title">{title}</h2>
-                        <p className="card__text-subtitle channel">
-                            {channelTitle}
-                        </p>
-                        <p className="card__text-subtitle date">
-                            {formatDate(publishedAt, 'MMMM Do YYYY')}
-                        </p>
-                    </div>
-                </div>
+    const buttons = [
+      {
+        title: `Queue video ${props.title}`,
+        onClick: pushToQueue,
+        icon: 'playlist-add'
+      }
+    ];
 
-                <div className="card__buttons">
-                    <button
-                        className="card__button icon-button"
-                        aria-label={`Queue video ${title}`}
-                        onClick={pushToQueue}
-                    >
-                        <Icon name="playlist-add" />
-                    </button>
-                </div>
-            </div>
-        );
-    }
+    return (
+      <Card
+        {...props}
+        subTitles={subTitles}
+        badge={parseDuration(duration)}
+        buttons={buttons}
+      />
+    );
+  }
 }
 
 export default VideoCard;

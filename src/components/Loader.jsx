@@ -3,15 +3,11 @@ import Fade from './animations/Fade';
 import Icon from './Icon';
 
 class Loader extends PureComponent {
-  state = { show: false };
-
-  onReveal = () => {};
-
   render() {
     const { isActive } = this.props;
 
     return (
-      <Fade in={isActive}>
+      <Fade in={isActive} unmountOnExit>
         <div className='loader'>
           <Icon className='rotating' name='loading' />
         </div>

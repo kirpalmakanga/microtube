@@ -1,64 +1,72 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
-import { getThumbnails } from '../lib/helpers';
+import { getThumbnails } from '../../lib/helpers';
 
 import Img from '../Img';
 import Button from '../Button';
 
 class Card extends PureComponent {
-    render() {
-        const { href, onClick, id, title, thumbnails, itemCount } = this.props;
+  render() {
+    const {
+      href,
+      onClick = () => {},
+      title,
+      thumbnails,
+      badge = '',
+      subTitles = [],
+      buttons = []
+    } = this.props;
 
-        return (
-            <div className="card">
-                <Link
-                    className="card__content"
-                    href={href}
-                    onClick={onClick}
-                    aria-label={title}
-                >
-                    <div className="card__thumb">
-                        <Img
-                            src={getThumbnails(thumbnails, 'high')}
-                            alt={title}
-                            background
-                        />
-                        <span className="card__thumb-badge">{`${itemCount} video${
-                            itemCount !== 1 ? 's' : ''
-                        }`}</span>
-                    </div>
+    const Clickable = href
+      ? Link
+      : ({ children, ...props }) => <div {...props}>{children}</div>;
 
-                    <div className="card__text">
-                        <h2 className="card__text-title">{title}</h2>
-                    </div>
-                </Link>
+    return (
+      <div className='card'>
+        <Clickable
+          className='card__content'
+          to={href}
+          onClick={onClick}
+          aria-label={title}
+        >
+          <div className='card__thumb'>
+            {thumbnails ? (
+              <Img
+                src={getThumbnails(thumbnails, 'high')}
+                alt={title}
+                background
+              />
+            ) : null}
 
-                <div className="card__buttons">
-                    <Button
-                        className="card__button icon-button"
-                        title="Queue playlist"
-                        icon="playlist-add"
-                        onClick={() =>
-                            queuePlaylist({
-                                playlistId: id
-                            })
-                        }
-                    />
-                    <Button
-                        className="card__button icon-button"
-                        title="Queue and play playlist"
-                        icon="playlist-play"
-                        onClick={() =>
-                            queuePlaylist({
-                                playlistId: id,
-                                play: true
-                            })
-                        }
-                    />
-                </div>
-            </div>
-        );
-    }
+            {badge ? <span className='card__thumb-badge'>{badge}</span> : null}
+          </div>
+
+          <div className='card__text'>
+            <h2 className='card__text-title'>{title}</h2>
+            {subTitles.length
+              ? subTitles.map((text, index) => (
+                  <div key={index} className='card__text-subtitle'>
+                    {text}
+                  </div>
+                ))
+              : null}
+          </div>
+        </Clickable>
+
+        {buttons.length ? (
+          <div className='card__buttons'>
+            {buttons.map((props, index) => (
+              <Button
+                key={index}
+                className='card__button icon-button'
+                {...props}
+              />
+            ))}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
 }
 
 export default Card;

@@ -3,10 +3,15 @@ import { CSSTransition } from 'react-transition-group';
 
 class Fade extends PureComponent {
   render() {
-    const { children, in: inProp } = this.props;
+    const { children, unmountOnExit, in: inProp } = this.props;
 
     return (
-      <CSSTransition in={inProp} timeout={500} classNames='fade' unmountOnExit>
+      <CSSTransition
+        in={inProp}
+        timeout={300}
+        classNames='fade'
+        unmountOnExit={unmountOnExit}
+      >
         {children}
       </CSSTransition>
     );

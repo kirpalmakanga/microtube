@@ -12,8 +12,6 @@ class SearchHeader extends Component {
       props: { onSearchFormSubmit, query, setSearchMode, forMine }
     } = this;
 
-    console.log('query', query);
-
     return (
       <div className='layout__header-row'>
         <Link

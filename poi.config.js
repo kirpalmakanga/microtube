@@ -18,7 +18,14 @@ module.exports = {
         if (process.env.NODE_ENV === 'production') {
             config.plugin('offline').use(OfflinePlugin, [
                 {
-                    autoUpdate: true
+                    autoUpdate: true,
+                    cacheMaps: [
+                        {
+                            match: /.+?\:\/\/.+?(\/.+?)(?:#|\?|$)/,
+                            to: '/',
+                            requestTypes: ['navigate', 'same-origin']
+                        }
+                    ]
                 }
             ]);
         }

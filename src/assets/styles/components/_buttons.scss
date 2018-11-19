@@ -2,7 +2,7 @@
     @include transition();
     background-color: $black;
     border: none;
-    padding: 10px 16px;
+    padding: 10px 25px;
     color: $white;
     text-transform: uppercase;
     cursor: pointer;
@@ -10,11 +10,11 @@
     font-weight: 700;
 
     &:hover {
-      background-color: lighten($black, 5%);
+        background-color: lighten($black, 5%);
     }
 
     &:focus {
-      outline: none;
+        outline: none;
     }
 
     &--icon {
@@ -37,31 +37,32 @@
     }
 }
 .button--close {
-  background-color: lighten($black, 40%);
+    background-color: lighten($black, 40%);
 }
 
 .icon-button {
-  .icon {
-      @include transition();
-      transform-origin: 50% 50%;
+    .icon {
+        @include transition();
+        transform-origin: 50% 50%;
 
-      &.rotating {
-        svg {
-          width: 24px;
-          height: 24px;
+        &.rotating {
+            svg {
+                width: 24px;
+                height: 24px;
+            }
         }
-      }
-  }
+    }
 
-  &, .icon {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  &:active {
-      .icon {
-          transform: scale(0.7);
-      }
-  }
+    &,
+    .icon {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    &:active {
+        .icon {
+            transform: scale(0.7);
+        }
+    }
 }

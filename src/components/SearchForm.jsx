@@ -20,8 +20,8 @@ class Form extends Component {
 
   getInputRef = (el) => (this.input = el);
 
-  handleInput = ({ target: { value } }) =>
-    this.setState({ input: value.trim() });
+  handleInput = ({ target: { input } }) =>
+    this.setState({ input });
 
   handleFocus = (e) => {
     e.preventDefault();
@@ -35,10 +35,11 @@ class Form extends Component {
 
   handleSubmit = (e) => {
     const { input } = this.state;
+    const query = input.trim();
 
     e.preventDefault();
 
-    input && this.props.onSubmit(input);
+    query && this.props.onSubmit(query);
   };
 
   render() {

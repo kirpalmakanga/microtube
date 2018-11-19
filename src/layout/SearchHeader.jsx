@@ -7,25 +7,25 @@ import Icon from '../components/Icon';
 import Button from '../components/Button';
 
 class SearchHeader extends Component {
-  render() {
-    const {
-      props: { onSearchFormSubmit, query, setSearchMode, forMine }
-    } = this;
+    render() {
+        const {
+            props: { onSearchFormSubmit, query, setSearchMode, forMine }
+        } = this;
 
-    return (
-      <div className='layout__header-row'>
-        <Link
-          className='layout__back-button icon-button'
-          to='/'
-          aria-label='Close search'
-          icon='back'
-        >
-          <Icon name='back' />
-        </Link>
+        return (
+            <div className="layout__header-row">
+                <Link
+                    className="layout__back-button icon-button"
+                    to="/"
+                    aria-label="Close search"
+                    icon="back"
+                >
+                    <Icon name="back" />
+                </Link>
 
-        <SearchForm query={query} onSubmit={onSearchFormSubmit} />
+                <SearchForm query={query} onSubmit={onSearchFormSubmit} />
 
-        {/* <nav className="navigation">
+                {/* <nav className="navigation">
                 <div
                     className="navigation__button icon-button"
                     aria-label="Set search mode"
@@ -53,27 +53,27 @@ class SearchHeader extends Component {
                     <Icon className="icon" name='back' />
                 </div>
             </nav> */}
-      </div>
-    );
-  }
+            </div>
+        );
+    }
 }
 
 const mapStateToProps = ({ search: { query, forMine } }) => ({
-  query,
-  forMine
+    query,
+    forMine
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setSearchMode: (forMine) =>
-    dispatch({
-      type: 'SET_SEARCH_MODE',
-      data: {
-        forMine
-      }
-    })
+    setSearchMode: (forMine) =>
+        dispatch({
+            type: 'SET_SEARCH_MODE',
+            data: {
+                forMine
+            }
+        })
 });
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(SearchHeader);

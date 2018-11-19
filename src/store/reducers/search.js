@@ -3,40 +3,37 @@ const initialState = {
     nextPageToken: '',
     forMine: 0,
     query: ''
-}
+};
 
 export default function(state = initialState, { type, data }) {
     switch (type) {
         case 'SET_SEARCH_MODE':
-            const { forMine = 0 } = data
+            const { forMine = 0 } = data;
 
-            state.items = []
+            state.items = [];
 
-            return { ...state, forMine }
+            return { ...state, forMine };
+
+        case 'SET_QUERY':
+            return { ...state, query: data.query };
+
         case 'SEARCH_VIDEOS':
-            const { query } = data
+            const { query } = data;
 
-            if (query !== state.query) {
-                state.items = []
-                state.nextPageToken = ''
-            }
-
-            return { ...state, query }
+            return { ...state, query };
 
         case 'SEARCH_VIDEOS_SUCCESS':
-            const { items, nextPageToken, totalResults } = data
+            const { items, nextPageToken, totalResults } = data;
 
-            let newData = {
+            return {
+                ...state,
                 items: [...state.items, ...items],
                 nextPageToken: nextPageToken || null,
                 totalResults
-            }
+            };
 
-            return { ...state, ...newData }
-
-        case 'CLEAR_SEARCH':
-            ;(state.items = []), (state.nextPageToken = '')
-            return { ...state }
+        case 'RESET_SEARCH':
+            return { ...state, items: [], nextPageToken: '' };
     }
-    return state
+    return state;
 }

@@ -4,97 +4,106 @@ import { connect } from 'react-redux';
 import { searchVideos } from '../actions/youtube';
 
 import Screen from '../layout/Screen';
-import Header from '../layout/SearchHeader';
 
 import Grid from '../components/Grid';
 
 import VideoCard from '../components/cards/VideoCard';
 
 class Search extends Component {
-  getQuery = () => this.props.match.params.query;
+    state = {
+        mountGrid: true
+    };
 
-  loadContent = (newQuery) => {
-    const query = this.getQuery();
+    getQuery = () => this.props.query;
 
-    const { nextPageToken, searchVideos, forMine } = this.props;
+    loadContent = () => {
+        const query = this.getQuery();
 
-    if (query && nextPageToken !== null) {
-      searchVideos({
-        query: newQuery || query,
-        pageToken: newQuery ? '' : nextPageToken,
-        forMine
-      });
+        const { nextPageToken: pageToken, searchVideos, forMine } = this.props;
+
+        if (query && pageToken !== null) {
+            searchVideos({
+                query,
+                pageToken,
+                forMine
+            });
+        }
+    };
+
+    componentWillMount() {
+        this.props.setQuery(this.getQuery());
     }
-  };
 
-  componentWillMount() {
-    this.loadContent(this.getQuery());
-  }
-
-  componentWillUnmount() {
-    this.props.clearSearch();
-  }
-
-  componentDidUpdate({ query }) {
-    const newQuery = this.getQuery();
-
-    if (newQuery !== query) {
-      this.loadContent(newQuery);
+    componentWillUnmount() {
+        this.props.clearSearch();
     }
-  }
 
-  render() {
-    const { items, setAsActiveItem, pushToQueue } = this.props;
+    componentDidUpdate({ query }) {
+        const newQuery = this.getQuery();
 
-    return (
-      <Screen header={Header}>
-        {items.length ? (
-          <Grid
-            items={items}
-            loadContent={this.loadContent}
-            renderItem={(data) => {
-              return (
-                <VideoCard
-                  {...data}
-                  onClick={() => setAsActiveItem(data)}
-                  pushToQueue={() => pushToQueue(data)}
-                />
-              );
-            }}
-          />
-        ) : null}
-      </Screen>
-    );
-  }
+        if (newQuery !== query) {
+            this.setState({ mountGrid: false }, () => {
+                this.props.clearSearch();
+                this.setState({ mountGrid: true });
+            });
+        }
+    }
+
+    render() {
+        const {
+            state: { mountGrid },
+            props: { items, setAsActiveItem, pushToQueue },
+            loadContent
+        } = this;
+
+        return (
+            <Screen>
+                {mountGrid ? (
+                    <Grid
+                        items={items}
+                        loadContent={loadContent}
+                        renderItem={(data) => (
+                            <VideoCard
+                                {...data}
+                                onClick={() => setAsActiveItem(data)}
+                                pushToQueue={() => pushToQueue(data)}
+                            />
+                        )}
+                    />
+                ) : null}
+            </Screen>
+        );
+    }
 }
 
 const mapStateToProps = (
-  { search: { items, nextPageToken, forMine } },
-  {
-    match: {
-      params: { query }
+    { search: { items, nextPageToken, forMine } },
+    {
+        match: {
+            params: { query = '' }
+        }
     }
-  }
 ) => ({
-  query,
-  items,
-  nextPageToken,
-  forMine
+    query,
+    items,
+    nextPageToken,
+    forMine
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  searchVideos: (params) => dispatch(searchVideos(params)),
-  clearSearch: () => dispatch({ type: 'CLEAR_SEARCH' }),
-  setAsActiveItem: (video) =>
-    dispatch({
-      type: 'QUEUE_SET_ACTIVE_ITEM',
-      data: { video }
-    }),
+    setQuery: (query) => dispatch({ type: 'SET_QUERY', data: { query } }),
+    searchVideos: (params) => dispatch(searchVideos(params)),
+    clearSearch: () => dispatch({ type: 'RESET_SEARCH' }),
+    setAsActiveItem: (video) =>
+        dispatch({
+            type: 'QUEUE_SET_ACTIVE_ITEM',
+            data: { video }
+        }),
 
-  pushToQueue: (data) => dispatch({ type: 'QUEUE_PUSH', data })
+    pushToQueue: (data) => dispatch({ type: 'QUEUE_PUSH', data })
 });
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(Search);

@@ -257,7 +257,6 @@ class Player extends Component {
 
         this.setState({ youtube }, () => {
             if (currentTime) {
-                console.log('setting time', currentTime);
                 youtube.seekTo(currentTime);
 
                 this.updateTime();

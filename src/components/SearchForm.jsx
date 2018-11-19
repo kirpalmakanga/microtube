@@ -2,78 +2,81 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 class Form extends Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = { input: props.query || '' };
-  }
+        this.state = { input: props.query };
+    }
 
-  componentDidUpdate({ query: prevQuery }) {
-    const { query = '' } = this.props;
+    componentDidUpdate({ query: prevQuery }) {
+        const { query } = this.props;
 
-    prevQuery !== query && this.setState({ input: query });
-  }
+        prevQuery !== query && this.setState({ input: query });
+    }
 
-  componentDidMount() {
-    this.input.focus();
-  }
+    componentDidMount() {
+        this.input.focus();
+    }
 
-  getInputRef = (el) => (this.input = el);
+    getInputRef = (el) => (this.input = el);
 
-  handleInput = ({ target: { input } }) =>
-    this.setState({ input });
+    handleInput = ({ target: { value: input } }) => this.setState({ input });
 
-  handleFocus = (e) => {
-    e.preventDefault();
-    e.target.parentNode.classList.add('is-focused');
-  };
+    handleFocus = (e) => {
+        e.preventDefault();
+        e.target.parentNode.classList.add('is-focused');
+    };
 
-  handleBlur = (e) => {
-    e.preventDefault();
-    e.target.parentNode.classList.remove('is-focused');
-  };
+    handleBlur = (e) => {
+        e.preventDefault();
+        e.target.parentNode.classList.remove('is-focused');
+    };
 
-  handleSubmit = (e) => {
-    const { input } = this.state;
-    const query = input.trim();
+    handleSubmit = (e) => {
+        e.preventDefault();
 
-    e.preventDefault();
+        const {
+            state: { input },
+            props: { query }
+        } = this;
 
-    query && this.props.onSubmit(query);
-  };
+        const newQuery = input.trim();
 
-  render() {
-    const {
-      state: { input },
-      getInputRef,
-      handleInput,
-      handleFocus,
-      handleBlur,
-      handleSubmit
-    } = this;
+        newQuery && newQuery !== query && this.props.onSubmit(newQuery);
+    };
 
-    return (
-      <form className='search-form' onSubmit={handleSubmit}>
-        <div className='textfield'>
-          <label className='sr-only' labelfor='search'>
-            Search
-          </label>
-          <input
-            ref={getInputRef}
-            value={input}
-            name='search'
-            className='textfield__input'
-            id='search'
-            type='text'
-            placeholder='Search...'
-            onChange={handleInput}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-          />
-        </div>
-      </form>
-    );
-  }
+    render() {
+        const {
+            state: { input },
+            getInputRef,
+            handleInput,
+            handleFocus,
+            handleBlur,
+            handleSubmit
+        } = this;
+
+        return (
+            <form className="search-form" onSubmit={handleSubmit}>
+                <div className="textfield">
+                    <label className="sr-only" labelfor="search">
+                        Search
+                    </label>
+                    <input
+                        ref={getInputRef}
+                        value={input}
+                        name="search"
+                        className="textfield__input"
+                        id="search"
+                        type="text"
+                        placeholder="Search..."
+                        onChange={handleInput}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                    />
+                </div>
+            </form>
+        );
+    }
 }
 
-export default connect()(Form);
+export default Form;

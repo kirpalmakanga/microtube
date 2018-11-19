@@ -35,7 +35,7 @@ class Login extends Component {
             <Screen>
                 <div className="log-in">
                     <Button
-                        className="button"
+                        className="button shadow--2dp"
                         title="Log in"
                         onClick={signIn}
                     />

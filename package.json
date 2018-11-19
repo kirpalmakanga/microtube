@@ -35,7 +35,7 @@
     "@types/gapi.auth2": "0.0.47",
     "@types/systemjs": "^0.20.6",
     "node-sass": "^4.10.0",
-    "offline-plugin": "^4.9.1",
+    "offline-plugin": "^5.0.6",
     "poi": "^10.2.10",
     "sass-loader": "^6.0.7",
     "typescript": "^2.9.2"

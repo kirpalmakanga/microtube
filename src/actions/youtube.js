@@ -79,6 +79,8 @@ export function queuePlaylist({ playlistId, play }) {
 export function searchVideos(config) {
     return async (dispatch) => {
         try {
+            dispatch({ type: 'SET_QUERY', data: { query: config.query } });
+
             const data = await api.searchVideos(config);
 
             dispatch({ type: 'SEARCH_VIDEOS_SUCCESS', data });

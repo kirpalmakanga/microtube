@@ -55,8 +55,6 @@ class Grid extends Component {
             getContainer
         } = this;
 
-        console.log('isLoading', isLoading);
-
         return (
             <div className="grid" ref={getContainer}>
                 {this.grid &&

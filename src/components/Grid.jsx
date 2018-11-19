@@ -38,8 +38,6 @@ class Grid extends Component {
         }
 
         this.setState({ isLoading: true }, async () => {
-            console.log('load content');
-
             await loadContent();
 
             this.setState({ isLoading: false });
@@ -56,6 +54,8 @@ class Grid extends Component {
             state: { isLoading },
             getContainer
         } = this;
+
+        console.log('isLoading', isLoading);
 
         return (
             <div className="grid" ref={getContainer}>

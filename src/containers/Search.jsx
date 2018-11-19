@@ -16,19 +16,25 @@ class Search extends Component {
 
     getQuery = () => this.props.query;
 
-    loadContent = () => {
+    loadContent = async () => {
         const query = this.getQuery();
 
         const { nextPageToken: pageToken, searchVideos, forMine } = this.props;
 
         if (query && pageToken !== null) {
-            searchVideos({
+            return searchVideos({
                 query,
                 pageToken,
                 forMine
             });
         }
     };
+
+    reloadGrid = () =>
+        this.setState({ mountGrid: false }, () => {
+            this.props.clearSearch();
+            this.setState({ mountGrid: true });
+        });
 
     componentWillMount() {
         this.props.setQuery(this.getQuery());
@@ -42,23 +48,20 @@ class Search extends Component {
         const newQuery = this.getQuery();
 
         if (newQuery !== query) {
-            this.setState({ mountGrid: false }, () => {
-                this.props.clearSearch();
-                this.setState({ mountGrid: true });
-            });
+            this.reloadGrid();
         }
     }
 
     render() {
         const {
             state: { mountGrid },
-            props: { items, setAsActiveItem, pushToQueue },
+            props: { query, items, setAsActiveItem, pushToQueue },
             loadContent
         } = this;
 
         return (
             <Screen>
-                {mountGrid ? (
+                {query && mountGrid ? (
                     <Grid
                         items={items}
                         loadContent={loadContent}

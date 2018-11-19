@@ -5,11 +5,11 @@ class Form extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { input: props.query };
+    this.state = { input: props.query || '' };
   }
 
   componentDidUpdate({ query: prevQuery }) {
-    const { query } = this.props;
+    const { query = '' } = this.props;
 
     prevQuery !== query && this.setState({ input: query });
   }

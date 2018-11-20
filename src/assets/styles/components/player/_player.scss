@@ -216,6 +216,7 @@
       &-played {
         z-index: 1;
         @include transition();
+        backface-visibility: hidden;
 
         &:not([type='range']) {
           transform: translateX(-100%);

@@ -4,9 +4,8 @@
 
 ### Installation
 
-1. run npm install
-2. fill .env file
+npm install
 
 ### Start app
 
-npm run build && npm run start
+npm run build && npm run dev

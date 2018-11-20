@@ -1,29 +1,37 @@
 import { applyMiddleware, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import persistState from 'redux-localstorage';
+
 import rootReducer from './reducers';
 
-import { STORAGE_KEY } from '../config/app';
+import { throttle } from 'lodash';
+
+import { saveState, loadState } from '../lib/localStorage';
 
 const composeEnhancers =
     typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
         ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
         : compose;
 
-const enhancer = composeEnhancers(
-    applyMiddleware(thunk),
-    persistState(['auth', 'player'], {
-        key: STORAGE_KEY,
-        slicer: () => ({ auth: { isSignedIn, ...auth }, player }) => ({
-            auth,
-            player
-        }),
-        merge: (initialState, storage = {}) => ({ ...initialState, ...storage })
-    })
-);
+const enhancer = composeEnhancers(applyMiddleware(thunk));
 
-export default function configureStore(initialState) {
-    const store = createStore(rootReducer, initialState, enhancer);
+export default function configureStore(initialState = {}) {
+    const persistedState = loadState();
+    const store = createStore(
+        rootReducer,
+        { ...initialState, ...persistedState },
+        enhancer
+    );
+
+    store.subscribe(
+        throttle(() => {
+            const { auth, player } = store.getState();
+
+            saveState({
+                auth,
+                player
+            });
+        }, 500)
+    );
 
     return store;
 }

@@ -1,51 +1,26 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
 import Root from './Root';
 
-import { STORAGE_KEY } from './config/app';
-
 import configureStore from './store/configureStore';
 
-const { auth = {}, player = {} } = JSON.parse(
-  localStorage.getItem(STORAGE_KEY) || '{}'
-);
-
-const initialState = {
-  auth: {
-    user: {
-      userName: '',
-      picture: ''
-    },
-    ...auth
-  },
-  player: {
-    queue: [],
-    currentIndex: -1,
-    showQueue: false,
-    showScreen: false,
-    volume: 100,
-    newQueueItems: 0,
-    ...player
-  }
-};
-
 if (process.env.NODE_ENV === 'production') {
-  require('../pwa');
+    require('../pwa');
 }
 
 (() => {
-  const appContainer = document.querySelector('#app');
-  const store = configureStore(initialState);
+    const appContainer = document.querySelector('#app');
+    const store = configureStore();
 
-  render(
-    <Provider store={store}>
-      <BrowserRouter>
-        <Root />
-      </BrowserRouter>
-    </Provider>,
-    appContainer
-  );
+    render(
+        <Provider store={store}>
+            <BrowserRouter>
+                <Root />
+            </BrowserRouter>
+        </Provider>,
+        appContainer
+    );
 })();

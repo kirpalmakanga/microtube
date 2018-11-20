@@ -14,13 +14,9 @@ const composeEnhancers =
 
 const enhancer = composeEnhancers(applyMiddleware(thunk));
 
-export default function configureStore(initialState = {}) {
+export default function configureStore() {
     const persistedState = loadState();
-    const store = createStore(
-        rootReducer,
-        { ...initialState, ...persistedState },
-        enhancer
-    );
+    const store = createStore(rootReducer, persistedState, enhancer);
 
     store.subscribe(
         throttle(() => {

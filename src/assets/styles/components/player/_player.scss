@@ -1,272 +1,274 @@
 .player__container {
-  // @include transition();
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+    // @include transition();
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 
-  &.is-fullscreen {
-    background-color: $black;
-    position: fixed;
-    z-index: 2;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    top: 0;
-  }
+    &.is-fullscreen {
+        background-color: $black;
+        position: fixed;
+        z-index: 2;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        top: 0;
+    }
 }
 
 .pl .player,
 .queue {
-  box-shadow: 0 -2px 2px 0 rgba($brand-primary, 0.14),
-    0 3px 1px -2px rgba($brand-primary, 0.2),
-    0 1px 5px 0 rgba($brand-primary, 0.12);
+    box-shadow: 0 -2px 2px 0 rgba($brand-primary, 0.14),
+        0 3px 1px -2px rgba($brand-primary, 0.2),
+        0 1px 5px 0 rgba($brand-primary, 0.12);
 }
 
 .player {
-  position: relative;
-  z-index: 4;
-
-  &__inner {
-    @include transition();
     position: relative;
-    display: flex;
-    flex-wrap: wrap;
-  }
+    z-index: 4;
 
-  .is-fullscreen &__inner {
-    transform: translateY(100%);
-  }
-  .is-fullscreen &:hover &__inner {
-    transform: translateY(0);
-  }
-
-  &__controls {
-    display: flex;
-    width: 50%;
-    order: 1;
-
-    @media screen and (min-width: 480px) {
-      width: initial;
-      order: initial;
-    }
-
-    &-button {
-      @include transition();
-      padding: 0;
-      background-color: $brand-primary;
-      border: none;
-      fill: $brand-secondary;
-      flex: 1;
-      height: 50px;
-      @media screen and (min-width: 480px) {
-        width: 50px;
-        flex: initial;
-      }
-      cursor: pointer;
-      position: relative;
-
-      &.is-active,
-      &:hover {
-        background-color: lighten($brand-primary, 20%);
-      }
-
-      &:focus {
-        outline: none;
-      }
-
-      svg {
-        height: 22px;
-        width: 22px;
-        @media screen and (min-width: 480px) {
-          height: 24px;
-          width: 24px;
-        }
-      }
-
-      &.badge[data-badge] {
-        position: relative;
-        margin: 0;
-        &:after {
-          position: absolute;
-          display: block;
-          @include transition();
-          font-family: $font-primary;
-          border-radius: 6px;
-          font-size: 9px;
-          padding: 4px;
-          opacity: 0;
-          color: $white;
-          background-color: $red;
-          top: 10px;
-          right: 10px;
-          content: attr(data-badge);
-        }
-        &.badge--active {
-          &:after {
-            opacity: 1;
-          }
-        }
-      }
-    }
-
-    &-volume {
-      position: relative;
-      flex: 1;
-      z-index: 1;
-
-      button {
-        @media screen and (max-width: 480px) {
-          width: 100%;
-        }
-      }
-
-      @media screen and (min-width: 480px) {
-        flex: initial;
-      }
-
-      &:hover {
-        .player__controls-volume-range {
-          opacity: 1;
-          transform: translateX(0);
-          visibility: visible;
-        }
-      }
-
-      &-range {
+    &__inner {
         @include transition();
-        background-color: $brand-primary;
-        position: absolute;
-        visibility: hidden;
-        opacity: 0;
-        right: 0;
-        bottom: 100%;
-        width: 180px;
-        transform: translateX(100%);
-        input[type='range'] {
-          cursor: pointer;
-          margin: 0;
-          padding: 10px;
-        }
-
-        &.is-active {
-          transform: translateX(0);
-        }
-      }
-    }
-  }
-
-  &__info {
-    background-color: $black;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    padding: 5px 15px;
-    position: relative;
-    overflow: hidden;
-
-    height: 50px;
-    order: 0;
-    width: 100%;
-
-    @media screen and (min-width: 480px) {
-      width: initial;
-      order: initial;
-      flex: 1;
-    }
-
-    &-time,
-    &-title {
-      position: relative;
-      color: $white;
-    }
-
-    &-time {
-      position: relative;
-      display: flex;
-      font-size: 12px;
-    }
-
-    &-title {
-      font-family: $font-primary;
-      text-transform: uppercase;
-      width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    &-progress {
-      opacity: 0.5;
-      display: flex;
-      flex: 1;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-
-      &-gutter {
+        position: relative;
         display: flex;
-        flex: 1;
+        flex-wrap: wrap;
+    }
+
+    .is-fullscreen &__inner {
+        transform: translateY(100%);
+    }
+    .is-fullscreen &:hover &__inner {
+        transform: translateY(0);
+    }
+
+    &__controls {
+        display: flex;
+        width: 50%;
+        order: 1;
+
+        @media screen and (min-width: 480px) {
+            width: initial;
+            order: initial;
+        }
+
+        &-button {
+            @include transition();
+            padding: 0;
+            background-color: $brand-primary;
+            border: none;
+            fill: $brand-secondary;
+            flex: 1;
+            height: 50px;
+            @media screen and (min-width: 480px) {
+                width: 50px;
+                flex: initial;
+            }
+            cursor: pointer;
+            position: relative;
+
+            &.is-active,
+            &:hover {
+                background-color: lighten($brand-primary, 20%);
+            }
+
+            &:focus {
+                outline: none;
+            }
+
+            svg {
+                height: 22px;
+                width: 22px;
+                @media screen and (min-width: 480px) {
+                    height: 24px;
+                    width: 24px;
+                }
+            }
+
+            &.badge[data-badge] {
+                position: relative;
+                margin: 0;
+                &:after {
+                    position: absolute;
+                    display: block;
+                    @include transition();
+                    font-family: $font-primary;
+                    border-radius: 6px;
+                    font-size: 9px;
+                    padding: 4px;
+                    opacity: 0;
+                    color: $white;
+                    background-color: $red;
+                    top: 10px;
+                    right: 10px;
+                    content: attr(data-badge);
+                }
+                &.badge--active {
+                    &:after {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+
+        &-volume {
+            position: relative;
+            flex: 1;
+            z-index: 1;
+
+            button {
+                @media screen and (max-width: 480px) {
+                    width: 100%;
+                }
+            }
+
+            @media screen and (min-width: 480px) {
+                flex: initial;
+            }
+
+            &:hover {
+                .player__controls-volume-range {
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }
+
+            &-range {
+                @include transition();
+                background-color: $brand-primary;
+                position: absolute;
+                visibility: hidden;
+                opacity: 0;
+                right: 0;
+                bottom: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                width: 200px;
+                input[type='range'] {
+                    height: 100%;
+                    cursor: pointer;
+                    margin: 0;
+                    padding: 10px;
+                }
+
+                &.is-active {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    &__info {
+        background-color: $black;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 5px 15px;
         position: relative;
         overflow: hidden;
-      }
 
-      &-loaded,
-      &-played {
-        z-index: 1;
-        @include transition();
-        backface-visibility: hidden;
-
-        &:not([type='range']) {
-          transform: translateX(-100%);
-        }
-
-        &[type='range'] {
-          cursor: pointer;
-          opacity: 0;
-          margin: 0;
-          background: transparent;
-
-          &::-webkit-slider-runnable-track {
-            background: transparent;
-          }
-
-          &::-moz-range-track {
-            background: transparent;
-          }
-
-          &::-ms-track {
-            background: transparent;
-          }
-
-          &:focus::-webkit-slider-runnable-track {
-            background: transparent;
-          }
-        }
-        position: absolute;
-        left: 0;
-        top: 0;
+        height: 50px;
+        order: 0;
         width: 100%;
-        height: 100%;
-      }
 
-      &-loaded {
-        background-color: lighten($black, 20%);
-        z-index: 1;
-      }
+        @media screen and (min-width: 480px) {
+            width: initial;
+            order: initial;
+            flex: 1;
+        }
 
-      &-played {
-        background-color: lighten($black, 40%);
-      }
+        &-time,
+        &-title {
+            position: relative;
+            color: $white;
+        }
+
+        &-time {
+            position: relative;
+            display: flex;
+            font-size: 12px;
+        }
+
+        &-title {
+            font-family: $font-primary;
+            text-transform: uppercase;
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        &-progress {
+            opacity: 0.5;
+            display: flex;
+            flex: 1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            &-gutter {
+                display: flex;
+                flex: 1;
+                position: relative;
+                overflow: hidden;
+            }
+
+            &-loaded,
+            &-played {
+                z-index: 1;
+                @include transition();
+                backface-visibility: hidden;
+
+                &:not([type='range']) {
+                    transform: translateX(-100%);
+                }
+
+                &[type='range'] {
+                    cursor: pointer;
+                    opacity: 0;
+                    margin: 0;
+                    background: transparent;
+
+                    &::-webkit-slider-runnable-track {
+                        background: transparent;
+                    }
+
+                    &::-moz-range-track {
+                        background: transparent;
+                    }
+
+                    &::-ms-track {
+                        background: transparent;
+                    }
+
+                    &:focus::-webkit-slider-runnable-track {
+                        background: transparent;
+                    }
+                }
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+            }
+
+            &-loaded {
+                background-color: lighten($black, 20%);
+                z-index: 1;
+            }
+
+            &-played {
+                background-color: lighten($black, 40%);
+            }
+        }
+
+        &-time {
+            font-family: $font-primary;
+
+            .separator {
+                margin: 0 5px;
+            }
+        }
     }
-
-    &-time {
-      font-family: $font-primary;
-
-      .separator {
-        margin: 0 5px;
-      }
-    }
-  }
 }

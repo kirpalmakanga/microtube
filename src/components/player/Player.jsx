@@ -4,6 +4,8 @@ import { throttle } from 'lodash';
 
 import { Helmet } from 'react-helmet';
 
+import { isMobile } from '../../lib/helpers';
+
 import {
     enableFullScreen,
     exitFullScreen,
@@ -421,32 +423,33 @@ class Player extends Component {
                                 ariaLabel="Go to next video"
                             />
 
-                            <div
-                                className="player__controls-volume"
-                                onWheel={handleWheelVolume}
-                            >
-                                <Button
-                                    className="player__controls-button icon-button"
-                                    onClick={toggleMute}
-                                    icon={
-                                        isMuted
-                                            ? 'volume-mute'
-                                            : volume >= 50
-                                            ? 'volume-up'
-                                            : volume > 0 && volume <= 50
-                                            ? 'volume-down'
-                                            : 'volume-off'
-                                    }
-                                    ariaLabel={isMuted ? 'Unmute' : 'Mute'}
-                                />
-
-                                <VolumeRange
-                                    value={volume}
-                                    onChange={({ target }) =>
-                                        setVolume(target.value)
-                                    }
-                                />
-                            </div>
+                            {!isMobile ? (
+                                <div
+                                    className="player__controls-volume"
+                                    onWheel={handleWheelVolume}
+                                >
+                                    <Button
+                                        className="player__controls-button icon-button"
+                                        onClick={toggleMute}
+                                        icon={
+                                            isMuted
+                                                ? 'volume-mute'
+                                                : volume >= 50
+                                                ? 'volume-up'
+                                                : volume > 0 && volume <= 50
+                                                ? 'volume-down'
+                                                : 'volume-off'
+                                        }
+                                        ariaLabel={isMuted ? 'Unmute' : 'Mute'}
+                                    />
+                                    <VolumeRange
+                                        value={volume}
+                                        onChange={({ target }) =>
+                                            setVolume(target.value)
+                                        }
+                                    />
+                                </div>
+                            ) : null}
                         </div>
                         <Info
                             {...{

@@ -70,14 +70,14 @@ class Prompt extends Component {
                             </div>
                             <div className="dialog__actions">
                                 <Button
-                                    className="button button--close"
+                                    className="button button--close shadow--2dp"
                                     onClick={close}
                                     title={cancelText}
                                 />
 
                                 <Button
                                     type="submit"
-                                    className="button"
+                                    className="button shadow--2dp"
                                     title={confirmText}
                                 />
                             </div>
@@ -85,13 +85,13 @@ class Prompt extends Component {
                     ) : (
                         <div className="dialog__actions">
                             <Button
-                                className="button button--close"
+                                className="button button--close shadow--2dp"
                                 onClick={close}
                                 title={cancelText}
                             />
 
                             <Button
-                                className="button"
+                                className="button shadow--2dp"
                                 onClick={callback}
                                 title={confirmText}
                             />

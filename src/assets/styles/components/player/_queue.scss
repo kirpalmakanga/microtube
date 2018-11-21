@@ -28,7 +28,7 @@
     }
 
     &__items {
-        height: 100%;
+        height: calc(100% - 56px);
         overflow-x: hidden;
         overflow-y: scroll;
     }

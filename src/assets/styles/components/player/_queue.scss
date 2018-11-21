@@ -9,6 +9,8 @@
     right: 0;
     transform: translateY(100%);
     bottom: 100px;
+    display: flex;
+    flex-direction: column;
 
     @media screen and (min-width: 480px) {
         bottom: 50px;
@@ -28,9 +30,9 @@
     }
 
     &__items {
-        height: calc(100% - 56px);
         overflow-x: hidden;
         overflow-y: scroll;
+        flex: 1;
     }
 
     &__item {

@@ -8,33 +8,35 @@ class QueueHeader extends PureComponent {
     const { player, closeQueue, promptAddVideo, promptClearQueue } = this.props;
 
     return (
-      <div className='queue__header layout__header-row'>
-        <Button
-          className='layout__back-button icon-button'
-          title='Close queue'
-          onClick={closeQueue}
-          icon='chevron-down'
-        />
-
-        <span className='layout-title'>
-          {'Queue (' + player.queue.length + ' Items)'}
-        </span>
-
-        <nav className='navigation'>
+      <div className='queue__header'>
+        <div class='layout__header-row'>
           <Button
-            className='navigation__link icon-button'
-            onClick={promptAddVideo}
-            title='Add video'
-            icon='add'
+            className='layout__back-button icon-button'
+            title='Close queue'
+            onClick={closeQueue}
+            icon='chevron-down'
           />
 
-          <Button
-            className='navigation__link icon-button'
-            onClick={promptClearQueue}
-            title='Clear queue'
-            icon='clear'
-          />
-        </nav>
+          <span className='layout-title'>
+            {'Queue (' + player.queue.length + ' Items)'}
+          </span>
+
+          <nav className='navigation'>
+            <Button
+              className='navigation__link icon-button'
+              onClick={promptAddVideo}
+              title='Add video'
+              icon='add'
+            />
+
+            <Button
+              className='navigation__link icon-button'
+              onClick={promptClearQueue}
+              title='Clear queue'
+              icon='clear'
+            />
+          </nav>
+        </div>
       </div>
     );
   }

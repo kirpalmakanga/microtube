@@ -12,7 +12,7 @@ import {
     listenFullScreenChange
 } from '../../lib/fullscreen';
 
-import formatTime from '../../lib/formatTime';
+import { formatTime } from '../../lib/helpers';
 
 import Queue from './Queue';
 import Screen from './Screen';
@@ -30,7 +30,8 @@ class Player extends Component {
             ({ active }) => active
         ) || {
             title: 'No video.',
-            videoId: null
+            videoId: null,
+            duration: 0
         };
 
         this.state = {
@@ -44,7 +45,6 @@ class Player extends Component {
             volume: 100,
             loaded: 0,
             currentTime: 0,
-            duration: 0,
             youtube: null,
             autoplay: 0,
             timeWatcher: null,
@@ -68,16 +68,15 @@ class Player extends Component {
             player: { queue }
         } = this.props;
 
-        const { title = 'No video.', videoId = null } =
+        const { title = 'No video.', id: videoId = null, duration = 0 } =
             queue.find(({ active }) => active) || {};
 
         videoId !== currentVideoId &&
             this.setState({
-                currentVideo: { title, videoId },
+                currentVideo: { title, videoId, duration },
                 ...(videoId === null
                     ? {
                           currentTime: 0,
-                          duration: 0,
                           loaded: 0
                       }
                     : {})
@@ -142,7 +141,10 @@ class Player extends Component {
             return;
         }
 
-        let { duration, youtube } = this.state;
+        let {
+            currentVideo: { duration },
+            youtube
+        } = this.state;
 
         let t = duration * (value / duration);
 
@@ -153,13 +155,8 @@ class Player extends Component {
         this.updateTime(t);
     }, 200);
 
-    setDuration = () =>
-        this.setState({ duration: this.state.youtube.getDuration() });
-
     watchTime() {
         const { youtube } = this.state;
-
-        this.setDuration();
 
         this.updateTime();
 
@@ -264,8 +261,6 @@ class Player extends Component {
                 this.updateTime();
             }
 
-            this.setDuration();
-
             this.setVolume(volume);
         });
     };
@@ -327,10 +322,9 @@ class Player extends Component {
                 isMuted,
                 isFullScreen,
                 volume,
-                currentVideo: { videoId, title },
+                currentVideo: { videoId, title, duration },
                 loaded,
-                currentTime,
-                duration
+                currentTime
             },
             getPlayerContainer,
             handleWheelVolume,

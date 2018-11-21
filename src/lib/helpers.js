@@ -52,7 +52,7 @@ export const parseDuration = (PT = '') => {
             multiplier: 1
         }
     ];
-    let output = [];
+
     let durationInSec = 0;
 
     for (let i = 0; i < parts.length; i++) {
@@ -62,17 +62,31 @@ export const parseDuration = (PT = '') => {
         }
     }
 
-    // Hours extraction
-    if (durationInSec > 3599) {
-        output.push(parseInt(durationInSec / 3600));
-        durationInSec %= 3600;
-    }
-    // Minutes extraction with leading zero
-    output.push(('0' + parseInt(durationInSec / 60)).slice(-2));
-    // Seconds extraction with leading zero
-    output.push(('0' + (durationInSec % 60)).slice(-2));
+    return durationInSec;
+};
 
-    return output.join(':');
+export const formatTime = (t) => {
+    let hours,
+        minutes,
+        seconds = 0;
+
+    hours = Math.floor(t / 3600) % 24;
+
+    t = t - hours * 3600;
+
+    minutes = Math.floor(t / 60) % 60;
+
+    t = t - minutes * 60;
+
+    seconds = Math.floor(t);
+
+    const units = [minutes, seconds];
+
+    if (!hours) {
+        units.unshift(hours);
+    }
+
+    return units.map((t) => ('0' + t).slice(-2)).join(':');
 };
 
 export const flatten = (arr) =>

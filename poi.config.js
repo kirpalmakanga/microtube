@@ -8,6 +8,7 @@ module.exports = {
         title: 'Microtube'
     },
     transformModules: ['rss-parser'],
+    devServer: { open: 'Firefox' },
     chainWebpack(config) {
         config.resolve.extensions.add('.tsx');
 

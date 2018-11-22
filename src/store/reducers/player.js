@@ -64,25 +64,22 @@ export default function(state = initialState, { type, data }) {
         case 'QUEUE_SET':
             return {
                 ...state,
-                queue: data
+                queue: [...data]
             };
 
         case 'QUEUE_SET_ACTIVE_ITEM':
             let { queue } = state;
-            let { video, index } = data;
-
-            if (video) {
-                index = queue.length;
-                queue.push(video);
-            }
+            let { index } = data;
 
             return {
                 ...state,
-                queue: queue.map((v, i) => {
-                    v.active = i === index ? true : false;
+                queue: [
+                    ...queue.map((v, i) => {
+                        v.active = i === index ? true : false;
 
-                    return v;
-                }),
+                        return v;
+                    })
+                ],
                 currentIndex: index
             };
 

@@ -43,7 +43,15 @@ export function getPlaylistItems(config) {
 }
 
 export function queuePlaylist({ playlistId, play }) {
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        const {
+            player: { queue }
+        } = getState();
+
+        const newIndex = queue.length;
+
+        console.log('playlistId', playlistId, 'play', play);
+
         const getItems = async (pageToken) => {
             try {
                 const { items, nextPageToken } = await api.getPlaylistItems({
@@ -51,15 +59,14 @@ export function queuePlaylist({ playlistId, play }) {
                     pageToken
                 });
 
-                if (play && !pageToken && items.length > 0) {
+                dispatch({ type: 'QUEUE_PUSH', data: items });
+
+                if (play && !pageToken && items.length) {
                     dispatch({
                         type: 'QUEUE_SET_ACTIVE_ITEM',
-                        data: { video: items[0] }
+                        data: { index: newIndex }
                     });
-                    items.shift();
                 }
-
-                dispatch({ type: 'QUEUE_PUSH', data: items });
 
                 if (nextPageToken) {
                     getItems(nextPageToken);

@@ -82,7 +82,7 @@ export const formatTime = (t) => {
 
     const units = [minutes, seconds];
 
-    if (!hours) {
+    if (hours) {
         units.unshift(hours);
     }
 

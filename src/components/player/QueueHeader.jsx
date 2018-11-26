@@ -16,7 +16,7 @@ class QueueHeader extends PureComponent {
             <header className="layout__header queue__header">
                 <div className="layout__header-row">
                     <Button
-                        className="layout__back-button icon-button"
+                        className="navigation__link layout__back-button icon-button"
                         title="Close queue"
                         onClick={closeQueue}
                         icon="chevron-down"
@@ -55,8 +55,8 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({
             type: 'PROMPT',
             data: {
-                promptText: 'Ajouter une vidéo',
-                confirmText: 'Ajouter',
+                promptText: 'Import videos',
+                confirmText: 'Import',
                 form: true,
                 callback: () => {
                     dispatch({ type: 'PROMPT_CLOSE' });
@@ -67,8 +67,8 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({
             type: 'PROMPT',
             data: {
-                promptText: "Vider la file d'attente ?",
-                confirmText: 'Vider',
+                promptText: 'Clear the queue ?',
+                confirmText: 'Clear',
                 callback: () => {
                     dispatch({ type: 'QUEUE_CLEAR' });
                     dispatch({ type: 'PROMPT_CLOSE' });

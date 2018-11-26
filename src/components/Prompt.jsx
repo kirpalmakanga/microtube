@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { queueVideo } from '../actions/youtube';
+import { importVideos } from '../actions/youtube';
 
 import Button from './Button';
 
+import { parseID } from '../lib/helpers';
+
 class Prompt extends Component {
+    state = {
+        data: {}
+    };
+
     close = (e) => {
         const { dispatch } = this.props;
 
@@ -16,12 +22,18 @@ class Prompt extends Component {
         setTimeout(() => dispatch({ type: 'PROMPT_RESET' }), 250);
     };
 
-    handleSubmit = (e) => {
-        const videoId = e.target.querySelector('input').value;
+    handleChange = ({ target: { name, value } }) =>
+        this.setState(({ data }) => ({ data: { ...data, name, value } }));
 
+    handleSubmit = (e) => {
+        const urls = e.target
+            .querySelector('textarea')
+            .value.match(/[^\r\n]+/g);
+
+        const ids = urls.map(parseID);
         e.preventDefault();
 
-        this.props.dispatch(queueVideo(videoId));
+        this.props.dispatch(importVideos(ids));
         this.close();
     };
 
@@ -29,6 +41,7 @@ class Prompt extends Component {
         const {
             props: { prompt },
             close,
+            handleChange,
             handleSubmit
         } = this;
         const {
@@ -58,14 +71,16 @@ class Prompt extends Component {
                         <form onSubmit={handleSubmit}>
                             <div className="textfield">
                                 <label labelfor="videoId">
-                                    Video URL or ID
+                                    Video URLs or IDs
                                 </label>
-                                <input
+                                <textarea
                                     id="videoId"
                                     className="textfield__input"
                                     type="text"
+                                    name="ids"
+                                    onChange={handleChange}
                                     autoFocus
-                                    placeholder="URL/ID..."
+                                    placeholder="URLs/IDs..."
                                 />
                             </div>
                             <div className="dialog__actions">

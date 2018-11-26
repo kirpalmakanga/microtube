@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { withRouter, matchPath } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';

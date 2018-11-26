@@ -95,7 +95,7 @@ export function searchVideos(config) {
   };
 }
 
-export function importVideos(ids = []) {
+export function queueVideos(ids = []) {
   return async (dispatch) => {
     try {
       const data = await api.getVideosFromIds(ids);

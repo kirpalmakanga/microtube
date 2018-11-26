@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import { loadAPI, loadAuth, listenAuth, getSignedInUser } from './api/youtube';
 
-import { importVideos, queuePlaylist } from './actions/youtube';
+import { queueVideos, queuePlaylist } from './actions/youtube';
 
 import AuthRoute from './AuthRoute';
 
@@ -46,10 +46,10 @@ class Root extends Component {
 
     this.setState({ apiLoaded: true }, this.props.listenAuthChange);
 
-    const { importVideos, queuePlaylist } = this.props;
+    const { queueVideos, queuePlaylist } = this.props;
 
-    if (!window.importVideos) {
-      window.importVideos = importVideos;
+    if (!window.queueVideos) {
+      window.queueVideos = queueVideos;
     }
 
     if (!window.queuePlaylist) {
@@ -105,7 +105,7 @@ const mapDispatchToProps = (dispatch) => ({
 
   signIn: (data) => dispatch({ type: 'SIGN_IN', data }),
 
-  importVideos: (ids) => dispatch(importVideos(ids)),
+  queueVideos: (ids) => dispatch(queueVideos(ids)),
 
   queuePlaylist: (data) => dispatch(queuePlaylist(data))
 });

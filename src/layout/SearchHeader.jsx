@@ -25,34 +25,31 @@ class SearchHeader extends Component {
 
                 <SearchForm query={query} onSubmit={onSearchFormSubmit} />
 
-                {/* <nav className="navigation">
-                <div
-                    className="navigation__button icon-button"
-                    aria-label="Set search mode"
-                >
-                    <select
-                        name="forMine"
-                        value={forMine}
-                        onChange={({ target: { options, selectedIndex } }) => {
-                            const { value } = options[selectedIndex]
-
-                            if (value !== forMine) {
-                                route('/search')
-                            }
-                            setSearchMode(parseInt(value))
-                        }}
+                <nav className="navigation">
+                    <div
+                        className="navigation__button icon-button"
+                        aria-label="Set search mode"
                     >
-                        <option key={0} value={0}>
-                            All Videos
-                        </option>
-                        <option key={1} value={1}>
-                            My Videos
-                        </option>
-                    </select>
+                        <select
+                            name="forMine"
+                            value={forMine}
+                            onChange={({
+                                target: { options, selectedIndex }
+                            }) => {
+                                const { value } = options[selectedIndex];
 
-                    <Icon className="icon" name='back' />
-                </div>
-            </nav> */}
+                                setSearchMode(parseInt(value));
+                            }}
+                        >
+                            <option key={0} value={0}>
+                                All Videos
+                            </option>
+                            <option key={1} value={1}>
+                                My Videos
+                            </option>
+                        </select>
+                    </div>
+                </nav>
             </div>
         );
     }

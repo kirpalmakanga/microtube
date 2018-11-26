@@ -5,22 +5,6 @@ import { parseDuration } from '../lib/helpers';
 
 const ITEMS_PER_REQUEST = 50;
 
-function parseID(url) {
-    var ID = '';
-
-    url = url
-        .replace(/(>|<)/gi, '')
-        .split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
-
-    if (url[2] !== undefined) {
-        ID = url[2].split(/[^0-9a-z_\-]/i);
-        ID = ID[0];
-    } else {
-        ID = url.toString();
-    }
-    return ID;
-}
-
 function loadScript(src) {
     return new Promise((resolve, reject) => {
         try {
@@ -284,23 +268,7 @@ export async function getVideo(urlOrId) {
         part: 'contentDetails, snippet, status'
     });
 
-    const {
-        id: videoId,
-        contentDetails: { duration },
-        snippet: { title, thumbnails, channelId, channelTitle, publishedAt },
-        status: { privacyStatus }
-    } = items[0];
-
-    return {
-        videoId,
-        title,
-        thumbnails,
-        duration,
-        publishedAt,
-        channelId,
-        channelTitle,
-        privacyStatus
-    };
+    return parseVideoData(items[0]);
 }
 
 export async function getVideosFromIds(ids) {

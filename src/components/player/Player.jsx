@@ -459,7 +459,9 @@ class Player extends Component {
                                 className={[
                                     'player__controls-button badge icon-button',
                                     showQueue ? 'is-active' : '',
-                                    newQueueItems ? 'badge--active' : ''
+                                    newQueueItems && !showQueue
+                                        ? 'badge--active'
+                                        : ''
                                 ].join(' ')}
                                 onClick={() => toggleQueue(showQueue)}
                                 badge={newQueueItems}

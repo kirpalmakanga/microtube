@@ -50,8 +50,6 @@ export function queuePlaylist({ playlistId, play }) {
 
         const newIndex = queue.length;
 
-        console.log('playlistId', playlistId, 'play', play);
-
         const getItems = async (pageToken) => {
             try {
                 const { items, nextPageToken } = await api.getPlaylistItems({
@@ -83,6 +81,10 @@ export function queuePlaylist({ playlistId, play }) {
     };
 }
 
+if (!window.queuePlaylist) {
+    window.queuePlaylist = queuePlaylist;
+}
+
 export function searchVideos(config) {
     return async (dispatch) => {
         try {
@@ -97,16 +99,20 @@ export function searchVideos(config) {
     };
 }
 
-export function queueVideo(urlOrId) {
+export function importVideos(ids = []) {
     return async (dispatch) => {
         try {
-            const data = await api.getVideo(urlOrId);
+            const data = await api.getVideosFromIds(ids);
 
-            dispatch({ type: 'QUEUE_PUSH', data: [data] });
+            dispatch({ type: 'QUEUE_PUSH', data });
         } catch (err) {
             dispatch({ type: 'NOTIFY', data: 'Error fetching video.' });
         }
     };
+}
+
+if (!window.importVideos) {
+    window.importVideos = importVideos;
 }
 
 export function getSubscriptions(config) {

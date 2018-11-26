@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import VisibilitySensor from 'react-visibility-sensor';
 import { throttle } from 'lodash';
 
 class DraggableList extends PureComponent {
@@ -53,6 +54,8 @@ class DraggableList extends PureComponent {
     };
 
     dragOver = throttle((e) => {
+        e.preventDefault();
+
         const { target, pageY } = e;
 
         const over = target
@@ -74,20 +77,21 @@ class DraggableList extends PureComponent {
         this.insertPlaceholder(pageY);
     }, 50);
 
+    compo;
+
     dragEnd = () => {
-        const {
-            props,
-            container,
-            placeholder,
-            nodePlacement,
-            dragged,
-            over
+        const { props, container, placeholder, nodePlacement } = this;
+
+        let {
+            dragged: {
+                dataset: { index: from }
+            },
+            over: {
+                dataset: { index: to }
+            }
         } = this;
 
         const items = [...props.items];
-
-        const from = Number(dragged.dataset.index);
-        let to = Number(over.dataset.index);
 
         if (from < to) {
             to--;
@@ -124,16 +128,35 @@ class DraggableList extends PureComponent {
                 ref={getContainer}
             >
                 {items.map((data, index) => (
-                    <div
+                    <VisibilitySensor
                         key={index}
-                        className="draggable-list__item"
-                        data-index={index}
-                        onDragStart={dragStart}
-                        onDragEnd={dragEnd}
-                        draggable
+                        resizeCheck={true}
+                        partialVisibility={true}
+                        scrollCheck={true}
+                        scrollThrottle={100}
+                        containment={this.container}
                     >
-                        {renderItem(data, index)}
-                    </div>
+                        {({ isVisible }) => (
+                            <div
+                                key={index}
+                                className={[
+                                    'draggable-list__item',
+                                    !isVisible
+                                        ? 'draggable-list__item--hidden'
+                                        : ''
+                                ].join(' ')}
+                                data-index={index}
+                                onDragStart={dragStart}
+                                onDragEnd={dragEnd}
+                                draggable
+                            >
+                                {renderItem(data, index)}
+                                {/* {isVisible && typeof renderItem === 'function'
+                                    ? renderItem(data, index)
+                                    : null} */}
+                            </div>
+                        )}
+                    </VisibilitySensor>
                 ))}
             </div>
         );

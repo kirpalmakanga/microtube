@@ -15,8 +15,8 @@ class VideoCard extends PureComponent {
         } = this.props;
 
         const subTitles = [
-            channelTitle,
-            formatDate(publishedAt, 'MMMM Do YYYY')
+            { className: 'channel', text: channelTitle },
+            { className: 'date', text: formatDate(publishedAt, 'MMMM Do YYYY') }
         ];
 
         const buttons = [

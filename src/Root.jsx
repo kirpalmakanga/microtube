@@ -116,11 +116,7 @@ const mapDispatchToProps = (dispatch) => ({
 
     signIn: (data) => dispatch({ type: 'auth/SIGN_IN', data }),
 
-<<<<<<< HEAD
-  queueVideos: (ids) => dispatch(queueVideos(ids)),
-=======
-    importVideos: (ids) => dispatch(importVideos(ids)),
->>>>>>> develop
+    queueVideos: (ids) => dispatch(queueVideos(ids)),
 
     queuePlaylist: (data) => dispatch(queuePlaylist(data))
 });

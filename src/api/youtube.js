@@ -231,8 +231,6 @@ export async function searchVideos({ query, forMine, pageToken }) {
     };
 }
 
-/* TODO: Tester et déplacer les parseurs */
-
 export async function getVideo(urlOrId) {
     const { items } = await request('GET', 'videos', {
         id: parseID(urlOrId),

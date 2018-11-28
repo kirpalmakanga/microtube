@@ -8,13 +8,23 @@ class PlaylistCard extends PureComponent {
             itemCount,
             queuePlaylist,
             launchPlaylist,
+            removePlaylist,
             ...props
         } = this.props;
 
         const buttons = [
+            ...(removePlaylist
+                ? [
+                      {
+                          title: `Remove playlist ${props.title}`,
+                          icon: 'delete',
+                          onClick: removePlaylist
+                      }
+                  ]
+                : []),
             {
                 title: 'Queue playlist',
-                icon: 'playlist-add',
+                icon: 'queue',
                 onClick: queuePlaylist
             },
             {

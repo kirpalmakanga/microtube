@@ -10,13 +10,14 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    PROMPT_RESET: () => initialState,
+    'prompt/RESET': () => initialState,
 
-    PROMPT: (state, { data }) =>
+    'prompt/OPEN': (state, { data }) =>
         updateObject(state, {
             ...data,
             isVisible: true
         }),
 
-    PROMPT_CLOSE: (state) => updateObject(state, { ...state, isVisible: false })
+    'prompt/CLOSE': (state) =>
+        updateObject(state, { ...state, isVisible: false })
 });

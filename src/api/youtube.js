@@ -1,7 +1,7 @@
 // https://apis.google.com/js/client.js
 
 import { API_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SCOPE } from '../config/api';
-import { parseDuration } from '../lib/helpers';
+import { parseVideoData, parsePlaylistData } from './parsers';
 
 const ITEMS_PER_REQUEST = 50;
 
@@ -231,35 +231,6 @@ export async function searchVideos({ query, forMine, pageToken }) {
     };
 }
 
-const parseVideoData = ({
-    id,
-    contentDetails: { duration },
-    snippet: { title, thumbnails, channelId, channelTitle, publishedAt },
-    status: { privacyStatus }
-}) => ({
-    id,
-    title,
-    thumbnails,
-    duration: parseDuration(duration),
-    publishedAt,
-    channelId,
-    channelTitle,
-    privacyStatus
-});
-
-const parsePlaylistData = ({
-    id,
-    contentDetails: { itemCount },
-    snippet: { title, thumbnails },
-    status: { privacyStatus }
-}) => ({
-    id,
-    title,
-    thumbnails,
-    itemCount,
-    privacyStatus
-});
-
 /* TODO: Tester et déplacer les parseurs */
 
 export async function getVideo(urlOrId) {
@@ -298,16 +269,16 @@ export async function getPlaylists({ pageToken = '', mine = false }) {
     });
 
     return {
-        items: items.map(({ id, contentDetails, snippet, status }) => ({
-            id,
-            title: snippet.title,
-            thumbnails: snippet.thumbnails,
-            itemCount: contentDetails.itemCount,
-            privacyStatus: status.privacyStatus
-        })),
+        items: items.map(parsePlaylistData),
         nextPageToken,
         totalResults
     };
+}
+
+export async function removePlaylist(id) {
+    return request('DELETE', 'playlists', {
+        id
+    });
 }
 
 export async function getPlaylistTitle(id) {
@@ -316,7 +287,9 @@ export async function getPlaylistTitle(id) {
         part: 'snippet'
     });
 
-    const { title } = items[0].snippet;
+    const {
+        snippet: { title }
+    } = items[0];
 
     return title;
 }
@@ -348,11 +321,9 @@ export async function getPlaylistItems({ pageToken = '', playlistId }) {
 }
 
 export async function removePlaylistItem(id) {
-    const res = await request('DELETE', 'playlistItems', {
+    return request('DELETE', 'playlistItems', {
         id
     });
-
-    console.log('res', res);
 }
 /* Subscriptions */
 

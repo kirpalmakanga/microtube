@@ -17,5 +17,10 @@ export default createReducer(initialState, {
             totalResults
         }),
 
+    'playlists/REMOVE_ITEM': (state, { data: { playlistId } }) =>
+        updateObject(state, {
+            items: state.items.filter((item) => item.id !== playlistId)
+        }),
+
     'auth/SIGN_OUT': () => initialState
 });

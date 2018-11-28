@@ -26,6 +26,35 @@ export function getPlaylists(config) {
 //   }
 // }
 
+export function removePlaylist({ title, playlistId }) {
+    return (dispatch) => {
+        dispatch({
+            type: 'prompt/OPEN',
+            data: {
+                promptText: `Remove ${title} ?`,
+                confirmText: 'Remove',
+                callback: async () => {
+                    try {
+                        await api.removePlaylist(playlistId);
+
+                        dispatch({
+                            type: 'playlists/REMOVE_ITEM',
+                            data: { playlistId }
+                        });
+
+                        dispatch({ type: 'prompt/CLOSE' });
+                    } catch (error) {
+                        dispatch({
+                            type: 'NOTIFY',
+                            data: 'Error deleting playlist.'
+                        });
+                    }
+                }
+            }
+        });
+    };
+}
+
 export function getPlaylistItems(config) {
     return async (dispatch) => {
         try {
@@ -48,7 +77,7 @@ export function getPlaylistItems(config) {
 export function removePlaylistItem({ title, playlistItemId }) {
     return (dispatch) => {
         dispatch({
-            type: 'PROMPT',
+            type: 'prompt/OPEN',
             data: {
                 promptText: `Remove ${title} ?`,
                 confirmText: 'Remove',
@@ -61,8 +90,9 @@ export function removePlaylistItem({ title, playlistItemId }) {
                             data: { playlistItemId }
                         });
 
-                        dispatch({ type: 'PROMPT_CLOSE' });
+                        dispatch({ type: 'prompt/CLOSE' });
                     } catch (error) {
+                        console.log('error', error);
                         dispatch({
                             type: 'NOTIFY',
                             data: 'Error deleting playlist item.'
@@ -250,7 +280,7 @@ export function getChannelVideos(config) {
         try {
             const data = await api.getChannelVideos(config);
 
-            dispatch({ type: 'GET_CHANNEL_VIDEOS', data });
+            dispatch({ type: 'channel/UPDATE_ITEMS', data });
         } catch (err) {
             dispatch({
                 type: 'NOTIFY',

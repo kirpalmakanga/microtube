@@ -53,25 +53,25 @@ const mapDispatchToProps = (dispatch) => ({
     closeQueue: () => dispatch({ type: 'QUEUE_CLOSE' }),
     promptAddVideo: () =>
         dispatch({
-            type: 'PROMPT',
+            type: 'prompt/OPEN',
             data: {
                 promptText: 'Import videos',
                 confirmText: 'Import',
                 form: true,
                 callback: () => {
-                    dispatch({ type: 'PROMPT_CLOSE' });
+                    dispatch({ type: 'prompt/CLOSE' });
                 }
             }
         }),
     promptClearQueue: () =>
         dispatch({
-            type: 'PROMPT',
+            type: 'prompt/OPEN',
             data: {
                 promptText: 'Clear the queue ?',
                 confirmText: 'Clear',
                 callback: () => {
                     dispatch({ type: 'QUEUE_CLEAR' });
-                    dispatch({ type: 'PROMPT_CLOSE' });
+                    dispatch({ type: 'prompt/CLOSE' });
                 }
             }
         })

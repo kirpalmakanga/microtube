@@ -1,29 +1,23 @@
+import { createReducer, updateObject } from '../helpers.js';
+
 const initialState = {
-  items: [],
-  nextPageToken: '',
-  totalResults: 0
-}
+    items: [],
+    nextPageToken: '',
+    totalResults: 0
+};
 
-export default function (state = initialState, { type, data }) {
-  switch (type) {
+export default createReducer(initialState, {
+    'channel/UPDATE_ITEMS': (
+        state,
+        { data: { items, nextPageToken, totalResults } }
+    ) =>
+        updateObject(state, {
+            items: [...state.items, ...items],
+            nextPageToken: nextPageToken || null,
+            totalResults
+        }),
 
-    case 'GET_CHANNEL_VIDEOS':
-      const { items, nextPageToken, totalResults } = data
+    'channel/CLEAR': () => initialState,
 
-      let newData = {
-        items: [...state.items, ...items],
-        nextPageToken: nextPageToken || null,
-        totalResults
-      }
-
-      return { ...state, ...newData }
-
-    case 'CLEAR_CHANNEL_ITEMS':
-    case 'SIGN_OUT':
-      return initialState
-  }
-  return state
-}
-
-
-// export default updateState(actions, initialState)
+    'auth/SIGN_OUT': () => initialState
+});

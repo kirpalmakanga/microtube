@@ -24,7 +24,7 @@ export default createReducer(initialState, {
 
     'playlist/REMOVE_ITEM': (state, { data: { playlistItemId } }) =>
         updateObject(state, {
-            items: items.filter(
+            items: state.items.filter(
                 (item) => item.playlistItemId !== playlistItemId
             )
         }),

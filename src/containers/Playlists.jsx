@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { getPlaylists, queuePlaylist } from '../actions/youtube';
+import {
+    getPlaylists,
+    queuePlaylist,
+    removePlaylist
+} from '../actions/youtube';
 
 import Screen from '../layout/Screen';
 
@@ -16,7 +20,8 @@ class Playlists extends Component {
             nextPageToken,
             getPlaylists,
             makeQueuePlaylist,
-            openPlaylist
+            openPlaylist,
+            removePlaylist
         } = this.props;
 
         return (
@@ -45,6 +50,9 @@ class Playlists extends Component {
                                     playlistId,
                                     play: true
                                 })}
+                                removePlaylist={() =>
+                                    removePlaylist({ title, playlistId })
+                                }
                             />
                         );
                     }}
@@ -61,8 +69,12 @@ const mapStateToProps = ({ playlists: { items, nextPageToken } }) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     getPlaylists: (data) => dispatch(getPlaylists(data)),
+
     makeQueuePlaylist: (data) => () => dispatch(queuePlaylist(data)),
-    openPlaylist: (data) => () => dispatch({ type: 'playlist/OPEN', data })
+
+    openPlaylist: (data) => () => dispatch({ type: 'playlist/OPEN', data }),
+
+    removePlaylist: (data) => dispatch(removePlaylist(data))
 });
 
 export default connect(

@@ -1,18 +1,15 @@
+import { createReducer, updateObject } from '../helpers.js';
+
 const initialState = {
     user: {
         userName: '',
         picture: ''
     },
-    isSignedIn: null
-}
+    isSignedIn: false
+};
 
-export default function(state = initialState, { type, data }) {
-    switch (type) {
-        case 'SIGN_IN':
-            return { ...state, ...data }
+export default createReducer(initialState, {
+    'auth/SIGN_IN': (state, { data }) => updateObject(state, data),
 
-        case 'SIGN_OUT':
-            return initialState
-    }
-    return state
-}
+    'auth/SIGN_OUT': () => initialState
+});

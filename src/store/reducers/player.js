@@ -1,3 +1,5 @@
+import { createReducer, updateObject } from '../helpers.js';
+
 const initialState = {
     queue: [],
     currentIndex: -1,
@@ -8,92 +10,77 @@ const initialState = {
     currentTime: 0
 };
 
-export default function(state = initialState, { type, data }) {
-    switch (type) {
-        case 'SCREEN_OPEN':
-            return {
-                ...state,
-                showScreen: true,
-                showQueue: false
-            };
+const setActiveItem = (index) => (item, i) =>
+    updateObject(item, {
+        active: i === index ? true : false
+    });
 
-        case 'SCREEN_CLOSE':
-            return {
-                ...state,
-                showScreen: false
-            };
+const isActiveItem = (item) => item.active;
 
-        case 'QUEUE_OPEN':
-            return {
-                ...state,
-                showQueue: true,
-                showScreen: false,
-                newQueueItems: 0
-            };
+export default createReducer(initialState, {
+    SCREEN_OPEN: (state) =>
+        updateObject(state, {
+            showScreen: true,
+            showQueue: false
+        }),
 
-        case 'QUEUE_CLOSE':
-            return {
-                ...state,
-                showQueue: false
-            };
+    SCREEN_CLOSE: (state) =>
+        updateObject(state, {
+            showScreen: false
+        }),
 
-        case 'QUEUE_PUSH':
-            return {
-                ...state,
-                queue: [
-                    ...state.queue,
-                    ...(Array.isArray(data) ? data : [data])
-                ],
-                newQueueItems: (state.newQueueItems += Array.isArray(data)
-                    ? data.length
-                    : 1)
-            };
+    QUEUE_OPEN: (state) =>
+        updateObject(state, {
+            showQueue: true,
+            showScreen: false,
+            newQueueItems: 0
+        }),
 
-        case 'QUEUE_REMOVE':
-            return {
-                ...state,
-                queue: state.queue.filter((item, i) => i !== data)
-            };
+    QUEUE_CLOSE: (state) =>
+        updateObject(state, {
+            showQueue: false
+        }),
 
-        case 'QUEUE_CLEAR':
-            return {
-                ...state,
-                queue: state.queue.filter((v) => v.active)
-            };
+    QUEUE_PUSH: (state, { data }) =>
+        updateObject(state, {
+            queue: [...state.queue, ...(Array.isArray(data) ? data : [data])],
+            newQueueItems: (state.newQueueItems += Array.isArray(data)
+                ? data.length
+                : 1)
+        }),
 
-        case 'QUEUE_SET':
-            return {
-                ...state,
-                queue: [...data]
-            };
+    QUEUE_REMOVE: (state, { data: index }) =>
+        updateObject(state, {
+            queue: state.queue.filter((item, i) => i !== index)
+        }),
 
-        case 'QUEUE_SET_ACTIVE_ITEM':
-            let { queue } = state;
-            let { index } = data;
+    QUEUE_CLEAR: (state) =>
+        updateObject(state, {
+            queue: state.queue.filter(isActiveItem)
+        }),
 
-            return {
-                ...state,
-                queue: [
-                    ...queue.map((v, i) => {
-                        v.active = i === index ? true : false;
+    QUEUE_SET: (state, { data: queue }) =>
+        updateObject(state, {
+            queue
+        }),
 
-                        return v;
-                    })
-                ],
-                currentIndex: index
-            };
+    QUEUE_SET_ACTIVE_ITEM: (state, { data: { index } = {} }) => {
+        const { queue } = state;
+        const currentIndex = index || queue.length - 1;
 
-        case 'SET_VOLUME':
-            return {
-                ...state,
-                volume: data
-            };
+        return updateObject(state, {
+            queue: queue.map(setActiveItem(currentIndex)),
+            currentIndex
+        });
+    },
 
-        case 'SET_CURRENT_TIME':
-            return {
-                ...state,
-                currentTime: data
-            };
-    }
-    return state;
-}
+    SET_VOLUME: (state, { data }) =>
+        updateObject(state, {
+            volume: data
+        }),
+
+    SET_CURRENT_TIME: (state, { data }) =>
+        updateObject(state, {
+            currentTime: data
+        })
+});

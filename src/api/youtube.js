@@ -338,12 +338,22 @@ export async function getPlaylistItems({ pageToken = '', playlistId }) {
     const videos = await getVideosFromIds(videoIds);
 
     return {
-        items: videos,
+        items: videos.map((data, index) => ({
+            ...data,
+            playlistItemId: items[index].id
+        })),
         nextPageToken,
         totalResults: pageInfo.totalResults
     };
 }
 
+export async function removePlaylistItem(id) {
+    const res = await request('DELETE', 'playlistItems', {
+        id
+    });
+
+    console.log('res', res);
+}
 /* Subscriptions */
 
 const parseSubscriptionData = ({

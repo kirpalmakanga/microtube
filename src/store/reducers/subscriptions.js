@@ -1,24 +1,23 @@
+import { createReducer, updateObject } from '../helpers.js';
+
 const initialState = {
-  items: [],
-  nextPageToken: ''
-}
+    items: [],
+    nextPageToken: '',
+    totalResults: 0
+};
 
-export default function (state = initialState, { type, data }) {
-  switch (type) {
-    case 'GET_SUBSCRIPTIONS':
-      const { items, nextPageToken, totalResults } = data
+export default createReducer(initialState, {
+    'subscriptions/UPDATE_ITEMS': (
+        state,
+        { data: { items, nextPageToken, totalResults } }
+    ) =>
+        updateObject(state, {
+            items: [...state.items, ...items],
+            nextPageToken: nextPageToken || null,
+            totalResults
+        }),
 
-      let newData = {
-        items: [...state.items, ...items],
-        nextPageToken: nextPageToken || null,
-        totalResults
-      }
+    'subscriptions/CLEAR_ITEMS': () => initialState,
 
-      return { ...state, ...newData }
-
-    case 'CLEAR_SUBSCRIPTIONS':
-    case 'SIGN_OUT':
-      return initialState
-  }
-  return state
-}
+    'auth/SIGN_OUT': () => initialState
+});

@@ -1,3 +1,5 @@
+import { createReducer, updateObject } from '../helpers.js';
+
 const initialState = {
     items: [],
     nextPageToken: '',
@@ -5,35 +7,26 @@ const initialState = {
     query: ''
 };
 
-export default function(state = initialState, { type, data }) {
-    switch (type) {
-        case 'SET_SEARCH_MODE':
-            const { forMine = 0 } = data;
+export default createReducer(initialState, {
+    'search/SET_TARGET': (state, { data: { forMine } }) =>
+        updateObject(state, { items: initialState.items, forMine }),
 
-            state.items = [];
+    'search/SET_QUERY': (state, { data: { query } }) =>
+        updateObject(state, { query }),
 
-            return { ...state, forMine };
+    'search/UPDATE_ITEMS': (
+        state,
+        { data: { items, nextPageToken, totalResults } }
+    ) =>
+        updateObject(state, {
+            items: [...state.items, ...items],
+            nextPageToken: nextPageToken || null,
+            totalResults
+        }),
 
-        case 'SET_QUERY':
-            return { ...state, query: data.query };
-
-        case 'SEARCH_VIDEOS':
-            const { query } = data;
-
-            return { ...state, query };
-
-        case 'SEARCH_VIDEOS_SUCCESS':
-            const { items, nextPageToken, totalResults } = data;
-
-            return {
-                ...state,
-                items: [...state.items, ...items],
-                nextPageToken: nextPageToken || null,
-                totalResults
-            };
-
-        case 'RESET_SEARCH':
-            return { ...state, items: [], nextPageToken: '' };
-    }
-    return state;
-}
+    'search/RESET': (state) =>
+        updateObject(state, {
+            items: initialState.items,
+            nextPageToken: initialState.nextPageToken
+        })
+});

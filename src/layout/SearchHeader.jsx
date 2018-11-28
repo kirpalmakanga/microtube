@@ -63,7 +63,7 @@ const mapStateToProps = ({ search: { query, forMine } }) => ({
 const mapDispatchToProps = (dispatch) => ({
     setSearchMode: (forMine) =>
         dispatch({
-            type: 'SET_SEARCH_MODE',
+            type: 'search/SET_TARGET',
             data: {
                 forMine
             }

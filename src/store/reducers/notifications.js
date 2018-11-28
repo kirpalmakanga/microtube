@@ -1,14 +1,11 @@
+import { createReducer, updateObject } from '../helpers.js';
+
 const initialState = {
-  message: ''
-}
+    message: ''
+};
 
-export default function (state = initialState, { type, data }) {
-  switch (type) {
-    case 'NOTIFY':
-      return { ...state, message: data }
+export default createReducer(initialState, {
+    NOTIFY: (state, message) => updateObject(state, { message }),
 
-    case 'CLEAR_NOTIFICATIONS':
-      return initialState
-  }
-  return state
-}
+    CLEAR_NOTIFICATIONS: () => initialState
+});

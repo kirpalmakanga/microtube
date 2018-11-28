@@ -1,26 +1,22 @@
+import { createReducer, updateObject } from '../helpers.js';
+
 const initialState = {
-  form: false,
-  isVisible: false,
-  promptText: '',
-  confirmText: '',
-  cancelText: 'Annuler',
-  callback: () => {}
-}
+    form: false,
+    isVisible: false,
+    promptText: '',
+    confirmText: '',
+    cancelText: 'Annuler',
+    callback: () => {}
+};
 
-export default function (state = initialState, { type, data }) {
-  switch (type) {
-    case 'PROMPT_RESET':
-      return initialState
+export default createReducer(initialState, {
+    PROMPT_RESET: () => initialState,
 
-    case 'PROMPT':
-      return {
-        ...state,
-        isVisible: true,
-        ...data
-      }
+    PROMPT: (state, { data }) =>
+        updateObject(state, {
+            ...data,
+            isVisible: true
+        }),
 
-    case 'PROMPT_CLOSE':
-      return { ...state, isVisible: false }
-  }
-  return state
-}
+    PROMPT_CLOSE: (state) => updateObject(state, { ...state, isVisible: false })
+});

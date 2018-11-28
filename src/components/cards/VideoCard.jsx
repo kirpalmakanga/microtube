@@ -10,7 +10,8 @@ class VideoCard extends PureComponent {
             publishedAt,
             duration,
             channelTitle,
-            pushToQueue,
+            queueItem,
+            removeItem,
             ...props
         } = this.props;
 
@@ -20,10 +21,19 @@ class VideoCard extends PureComponent {
         ];
 
         const buttons = [
+            ...(typeof removeItem === 'function'
+                ? [
+                      {
+                          title: 'Remove video',
+                          onClick: removeItem,
+                          icon: 'delete'
+                      }
+                  ]
+                : []),
             {
                 title: `Queue video ${props.title}`,
-                onClick: pushToQueue,
-                icon: 'playlist-add'
+                onClick: queueItem,
+                icon: 'queue'
             }
         ];
 

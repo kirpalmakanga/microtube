@@ -1,30 +1,35 @@
+import { createReducer, updateObject } from '../helpers.js';
+
 const initialState = {
-  items: [],
-  nextPageToken: '',
-  totalResults: 0
-}
+    items: [],
+    nextPageToken: '',
+    totalResults: 0
+};
 
-export default function (state = initialState, { type, data }) {
-  switch (type) {
-    case 'PLAYLIST_OPEN':
-      const { playlistTitle } = data
-      return { ...state, playlistTitle }
+export default createReducer(initialState, {
+    'playlist/OPEN': (state, { data: { playlistTitle } }) =>
+        updateObject(state, {
+            playlistTitle
+        }),
 
-    case 'GET_PLAYLIST':
-      const { items, nextPageToken, totalResults } = data
-      // let newItems = items.filter(({ status, snippet }) => status.privacyStatus !== 'private' && snippet.title !== 'Deleted video')
+    'playlist/UPDATE_ITEMS': (
+        state,
+        { data: { items, nextPageToken, totalResults } }
+    ) =>
+        updateObject(state, {
+            items: [...state.items, ...items],
+            nextPageToken: nextPageToken || null,
+            totalResults
+        }),
 
-      let newData = {
-        items: [...state.items, ...items],
-        nextPageToken: nextPageToken || null,
-        totalResults
-      }
+    'playlist/REMOVE_ITEM': (state, { data: { playlistItemId } }) =>
+        updateObject(state, {
+            items: items.filter(
+                (item) => item.playlistItemId !== playlistItemId
+            )
+        }),
 
-      return { ...state, ...newData }
+    'playlist/CLEAR_ITEMS': () => initialState,
 
-    case 'CLEAR_PLAYLIST_ITEMS':
-    case 'SIGN_OUT':
-      return initialState
-  }
-  return state
-}
+    'auth/SIGN_OUT': () => initialState
+});

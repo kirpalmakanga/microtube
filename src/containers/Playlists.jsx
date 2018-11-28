@@ -62,7 +62,7 @@ const mapStateToProps = ({ playlists: { items, nextPageToken } }) => ({
 const mapDispatchToProps = (dispatch) => ({
     getPlaylists: (data) => dispatch(getPlaylists(data)),
     makeQueuePlaylist: (data) => () => dispatch(queuePlaylist(data)),
-    openPlaylist: (data) => () => dispatch({ type: 'PLAYLIST_OPEN', data })
+    openPlaylist: (data) => () => dispatch({ type: 'playlist/OPEN', data })
 });
 
 export default connect(

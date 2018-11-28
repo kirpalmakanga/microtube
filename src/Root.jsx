@@ -49,7 +49,7 @@ class Root extends Component {
         const { queueVideos, queuePlaylist } = this.props;
 
         if (!window.queueVideos) {
-        window.queueVideos = queueVideos;
+            window.queueVideos = queueVideos;
         }
 
         if (!window.queuePlaylist) {

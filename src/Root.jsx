@@ -18,7 +18,6 @@ const Playlist = asyncComponent(() => import('./containers/Playlist'));
 const Search = asyncComponent(() => import('./containers/Search'));
 const Channels = asyncComponent(() => import('./containers/Channels'));
 const Channel = asyncComponent(() => import('./containers/Channel'));
-const Feed = asyncComponent(() => import('./containers/Feed'));
 
 import asyncComponent from './components/asyncComponent';
 import Loader from './components/Loader';
@@ -90,8 +89,6 @@ class Root extends Component {
                                   path="/channel/:channelId"
                                   component={Channel}
                               />
-
-                              <AuthRoute path="/feed" component={Feed} />
 
                               <Route path="/login" component={Login} />
                           </Switch>

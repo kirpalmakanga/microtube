@@ -1,5 +1,5 @@
 import * as api from '../api/youtube';
-import { parseFeed } from '../lib/helpers';
+// import { parseFeed } from '../lib/helpers';
 import { PROXY_URL } from '../config/app';
 import { FEED_URL } from '../config/api';
 
@@ -184,68 +184,68 @@ export function getSubscriptions(config) {
     };
 }
 
-export function getFeed() {
-    return async (dispatch) => {
-        try {
-            const channelIds = [];
+// export function getFeed() {
+//     return async (dispatch) => {
+//         try {
+//             const channelIds = [];
 
-            const getItems = async (pageToken = '') => {
-                const {
-                    items: newItems,
-                    nextPageToken
-                } = await api.getSubscriptions({
-                    mine: true,
-                    pageToken
-                });
+//             const getItems = async (pageToken = '') => {
+//                 const {
+//                     items: newItems,
+//                     nextPageToken
+//                 } = await api.getSubscriptions({
+//                     mine: true,
+//                     pageToken
+//                 });
 
-                channelIds.push(...newItems);
+//                 channelIds.push(...newItems);
 
-                if (nextPageToken) {
-                    getItems(nextPageToken);
-                }
-            };
+//                 if (nextPageToken) {
+//                     getItems(nextPageToken);
+//                 }
+//             };
 
-            await getItems();
+//             await getItems();
 
-            const feeds = await Promise.all(
-                channelIds.map(({ channelId }) =>
-                    parseFeed(
-                        `${PROXY_URL}/${FEED_URL}?channel_id=${channelId}`
-                    )
-                )
-            );
+//             const feeds = await Promise.all(
+//                 channelIds.map(({ channelId }) =>
+//                     parseFeed(
+//                         `${PROXY_URL}/${FEED_URL}?channel_id=${channelId}`
+//                     )
+//                 )
+//             );
 
-            const parseVideo = ({
-                id,
-                author: channelTitle,
-                pubDate: publishedAt,
-                title
-            }) => ({
-                videoId: id.split(':')[2],
-                publishedAt,
-                title,
-                channelTitle
-            });
+//             const parseVideo = ({
+//                 id,
+//                 author: channelTitle,
+//                 pubDate: publishedAt,
+//                 title
+//             }) => ({
+//                 videoId: id.split(':')[2],
+//                 publishedAt,
+//                 title,
+//                 channelTitle
+//             });
 
-            const sortDesc = (key, convert) => (a, b) =>
-                convert(b[key]) - convert(a[key]);
+//             const sortDesc = (key, convert) => (a, b) =>
+//                 convert(b[key]) - convert(a[key]);
 
-            const data = feeds
-                .reduce(
-                    (arr, { items }) => arr.concat(items.map(parseVideo)),
-                    []
-                )
-                .sort(
-                    sortDesc('publishedAt', (date) => new Date(date).getTime())
-                );
+//             const data = feeds
+//                 .reduce(
+//                     (arr, { items }) => arr.concat(items.map(parseVideo)),
+//                     []
+//                 )
+//                 .sort(
+//                     sortDesc('publishedAt', (date) => new Date(date).getTime())
+//                 );
 
-            dispatch({ type: 'GET_FEED_VIDEOS', data });
-        } catch (error) {
-            console.error(error);
-            dispatch({ type: 'NOTIFY', data: 'Error fetching feed.' });
-        }
-    };
-}
+//             dispatch({ type: 'GET_FEED_VIDEOS', data });
+//         } catch (error) {
+//             console.error(error);
+//             dispatch({ type: 'NOTIFY', data: 'Error fetching feed.' });
+//         }
+//     };
+// }
 
 // export function unsubscribe (id) {
 //   return (dispatch) => {

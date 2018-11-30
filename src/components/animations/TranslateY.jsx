@@ -4,13 +4,13 @@ import Transition from 'react-transition-group/Transition';
 const duration = 300;
 
 const defaultStyle = {
-    transition: `opacity ${duration}ms ease-in-out`,
-    opacity: 0
+    transition: `transform ${duration}ms ease-in-out`,
+    transform: 'translateY(100%)'
 };
 
 const transitionStyles = {
-    entering: { opacity: 0 },
-    entered: { opacity: 1 }
+    entering: { transform: 'translateY(100%)' },
+    entered: { transform: 'translateY(0)' }
 };
 
 class Fade extends PureComponent {

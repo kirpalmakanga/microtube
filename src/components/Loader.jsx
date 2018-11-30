@@ -3,17 +3,15 @@ import Fade from './animations/Fade';
 import Icon from './Icon';
 
 class Loader extends PureComponent {
-  render() {
-    const { isActive } = this.props;
+    render() {
+        const { isActive } = this.props;
 
-    return (
-      <Fade in={isActive} unmountOnExit>
-        <div className='loader'>
-          <Icon className='rotating' name='loading' />
-        </div>
-      </Fade>
-    );
-  }
+        return (
+            <Fade className="loader" in={isActive}>
+                <Icon className="rotating" name="loading" />
+            </Fade>
+        );
+    }
 }
 
 export default Loader;

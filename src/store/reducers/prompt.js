@@ -18,6 +18,5 @@ export default createReducer(initialState, {
             isVisible: true
         }),
 
-    'prompt/CLOSE': (state) =>
-        updateObject(state, { ...state, isVisible: false })
+    'prompt/CLOSE': (state) => updateObject(state, { isVisible: false })
 });

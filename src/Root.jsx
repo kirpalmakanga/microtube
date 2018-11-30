@@ -33,17 +33,19 @@ class Root extends Component {
     signInUser = () => {
         const auth = getSignedInUser();
 
-        auth.isSignedIn && this.props.signIn(auth);
+        this.props.listenAuthChange();
+
+        this.props.signIn(auth);
     };
 
-    async componentDidMount() {
+    initApp = async () => {
         await loadAPI();
 
         await loadAuth();
 
         this.signInUser();
 
-        this.setState({ apiLoaded: true }, this.props.listenAuthChange);
+        this.setState({ apiLoaded: true });
 
         const { queueVideos, queuePlaylist } = this.props;
 
@@ -54,6 +56,10 @@ class Root extends Component {
         if (!window.queuePlaylist) {
             window.queuePlaylist = queuePlaylist;
         }
+    };
+
+    componentDidMount() {
+        this.initApp();
     }
 
     render() {

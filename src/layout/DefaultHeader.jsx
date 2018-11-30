@@ -141,7 +141,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = (dispatch) => ({
     signUserIn: (data) => dispatch({ type: 'auth/SIGN_IN', data }),
 
-    signUserOut: () => dispatch({ type: 'SIGN_OUT' })
+    signUserOut: () => dispatch({ type: 'auth/SIGN_OUT' })
 });
 
 export default connect(

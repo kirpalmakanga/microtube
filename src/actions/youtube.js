@@ -1,15 +1,30 @@
 import * as api from '../api/youtube';
-// import { parseFeed } from '../lib/helpers';
-import { PROXY_URL } from '../config/app';
-import { FEED_URL } from '../config/api';
+
+const delay = (t) => new Promise((resolve) => setTimeout(resolve, t));
+
+const notify = ({ message }) => async (dispatch, getState) => {
+    dispatch({ type: 'notifications/OPEN', data: message });
+
+    await delay(4000);
+
+    if (getState().notifications.message) {
+        dispatch({ type: 'notifications/CLOSE' });
+
+        await delay(300);
+
+        dispatch({ type: 'notifications/CLEAR_MESSAGE' });
+    }
+};
 
 export function getPlaylists(config) {
     return async (dispatch) => {
         try {
             const data = await api.getPlaylists(config);
+
             dispatch({ type: 'playlists/UPDATE_ITEMS', data });
         } catch (err) {
-            dispatch({ type: 'NOTIFY', data: 'Error fetching playlists.' });
+            console.error(err);
+            dispatch(notify({ message: 'Error fetching playlists.' }));
         }
     };
 }
@@ -21,7 +36,7 @@ export function getPlaylists(config) {
 //
 //       dispatch({ type: 'SET_PLAYLIST_TITLE', data: { title } })
 //     } catch (err) {
-//       dispatch({ type: 'NOTIFY', data: 'Error fetching playlist title.' })
+//       dispatch({ type: 'notifications/OPEN', data: 'Error fetching playlist title.' })
 //     }
 //   }
 // }
@@ -44,10 +59,9 @@ export function removePlaylist({ title, playlistId }) {
 
                         dispatch({ type: 'prompt/CLOSE' });
                     } catch (error) {
-                        dispatch({
-                            type: 'NOTIFY',
-                            data: 'Error deleting playlist.'
-                        });
+                        dispatch(
+                            notify({ message: 'Error deleting playlist.' })
+                        );
                     }
                 }
             }
@@ -59,17 +73,24 @@ export function getPlaylistItems(config) {
     return async (dispatch) => {
         try {
             const { playlistId } = config;
-            const data = await api.getPlaylistItems(config);
+
+            const [playlistTitle, data] = await Promise.all([
+                api.getPlaylistTitle(playlistId),
+                api.getPlaylistItems(config)
+            ]);
+
+            dispatch({
+                type: 'playlist/OPEN',
+                data: { playlistTitle }
+            });
 
             dispatch({
                 type: 'playlist/UPDATE_ITEMS',
-                data: { ...data, playlistId }
+                data
             });
         } catch (err) {
-            dispatch({
-                type: 'NOTIFY',
-                data: 'Error fetching playlist items.'
-            });
+            console.error(err);
+            dispatch(notify({ message: 'Error fetching playlist items.' }));
         }
     };
 }
@@ -90,13 +111,17 @@ export function removePlaylistItem({ title, playlistItemId }) {
                             data: { playlistItemId }
                         });
 
+                        dispatch(
+                            notify({
+                                message: `Remove "${title}" from playlist.`
+                            })
+                        );
+
                         dispatch({ type: 'prompt/CLOSE' });
                     } catch (error) {
-                        console.log('error', error);
-                        dispatch({
-                            type: 'NOTIFY',
-                            data: 'Error deleting playlist item.'
-                        });
+                        dispatch(
+                            notify({ message: 'Error deleting playlist item.' })
+                        );
                     }
                 }
             }
@@ -132,10 +157,7 @@ export function queuePlaylist({ playlistId, play }) {
                     getItems(nextPageToken);
                 }
             } catch (err) {
-                dispatch({
-                    type: 'NOTIFY',
-                    data: 'Error fetching playlist items.'
-                });
+                dispatch(notify({ message: 'Error fetching playlist items.' }));
             }
         };
 
@@ -155,7 +177,7 @@ export function searchVideos(config) {
 
             dispatch({ type: 'search/UPDATE_ITEMS', data });
         } catch (err) {
-            dispatch({ type: 'NOTIFY', data: 'Error searching videos.' });
+            dispatch(notify({ message: 'Error searching videos.' }));
         }
     };
 }
@@ -167,7 +189,7 @@ export function queueVideos(ids = []) {
 
             dispatch({ type: 'QUEUE_PUSH', data });
         } catch (err) {
-            dispatch({ type: 'NOTIFY', data: 'Error fetching video.' });
+            dispatch(notify({ message: 'Error fetching video.' }));
         }
     };
 }
@@ -179,89 +201,10 @@ export function getSubscriptions(config) {
 
             dispatch({ type: 'subscriptions/UPDATE_ITEMS', data });
         } catch (err) {
-            dispatch({ type: 'NOTIFY', data: 'Error fetching subscriptions.' });
+            dispatch(notify({ message: 'Error fetching subscriptions.' }));
         }
     };
 }
-
-// export function getFeed() {
-//     return async (dispatch) => {
-//         try {
-//             const channelIds = [];
-
-//             const getItems = async (pageToken = '') => {
-//                 const {
-//                     items: newItems,
-//                     nextPageToken
-//                 } = await api.getSubscriptions({
-//                     mine: true,
-//                     pageToken
-//                 });
-
-//                 channelIds.push(...newItems);
-
-//                 if (nextPageToken) {
-//                     getItems(nextPageToken);
-//                 }
-//             };
-
-//             await getItems();
-
-//             const feeds = await Promise.all(
-//                 channelIds.map(({ channelId }) =>
-//                     parseFeed(
-//                         `${PROXY_URL}/${FEED_URL}?channel_id=${channelId}`
-//                     )
-//                 )
-//             );
-
-//             const parseVideo = ({
-//                 id,
-//                 author: channelTitle,
-//                 pubDate: publishedAt,
-//                 title
-//             }) => ({
-//                 videoId: id.split(':')[2],
-//                 publishedAt,
-//                 title,
-//                 channelTitle
-//             });
-
-//             const sortDesc = (key, convert) => (a, b) =>
-//                 convert(b[key]) - convert(a[key]);
-
-//             const data = feeds
-//                 .reduce(
-//                     (arr, { items }) => arr.concat(items.map(parseVideo)),
-//                     []
-//                 )
-//                 .sort(
-//                     sortDesc('publishedAt', (date) => new Date(date).getTime())
-//                 );
-
-//             dispatch({ type: 'GET_FEED_VIDEOS', data });
-//         } catch (error) {
-//             console.error(error);
-//             dispatch({ type: 'NOTIFY', data: 'Error fetching feed.' });
-//         }
-//     };
-// }
-
-// export function unsubscribe (id) {
-//   return (dispatch) => {
-//     dispatch({ type: 'UNSUBSCRIBE'})
-//
-//     api.unsubscribe(id)
-//     .then(data => {
-//       console.log('unsubscribed', data)
-//       // dispatch({
-//       //   type: 'UNSUBSCRIBE_SUCCESS',
-//       //   data
-//       // })
-//     })
-//     .catch(err => dispatch({ type: 'NOTIFY', data: err }))
-//   }
-// }
 
 export function getChannelTitle(channelId) {
     return async (dispatch) => {
@@ -270,7 +213,7 @@ export function getChannelTitle(channelId) {
 
             dispatch({ type: 'SET_CHANNEL_TITLE', data: { title } });
         } catch (err) {
-            dispatch({ type: 'NOTIFY', data: 'Error fetching channel title.' });
+            dispatch(notify({ message: 'Error fetching channel title.' }));
         }
     };
 }
@@ -282,10 +225,7 @@ export function getChannelVideos(config) {
 
             dispatch({ type: 'channel/UPDATE_ITEMS', data });
         } catch (err) {
-            dispatch({
-                type: 'NOTIFY',
-                data: 'Error fetching channel videos.'
-            });
+            dispatch(notify({ message: 'Error fetching channel videos.' }));
         }
     };
 }

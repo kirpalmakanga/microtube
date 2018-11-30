@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { queueVideos } from '../actions/youtube';
 
+import Fade from './animations/Fade';
+
 import Button from './Button';
 
 import { parseID } from '../lib/helpers';
 
 class Prompt extends Component {
     state = {
-        data: {}
+        data: { ids: '' }
     };
 
     close = (e) => {
@@ -19,18 +21,24 @@ class Prompt extends Component {
         }
 
         dispatch({ type: 'prompt/CLOSE' });
-        setTimeout(() => dispatch({ type: 'prompt/RESET' }), 250);
+        setTimeout(() => dispatch({ type: 'prompt/RESET' }), 300);
     };
 
     handleChange = ({ target: { name, value } }) =>
-        this.setState(({ data }) => ({ data: { ...data, name, value } }));
+        this.setState(({ data }) => ({ data: { ...data, [name]: value } }));
 
     handleSubmit = (e) => {
-        const urls = e.target
-            .querySelector('textarea')
-            .value.match(/[^\r\n]+/g);
+        e.preventDefault();
+        const {
+            data: { text }
+        } = this.state;
+        const lines = text.match(/[^\r\n]+/g);
 
-        const ids = urls.map(parseID);
+        if (!lines) {
+            return;
+        }
+
+        const ids = lines.map(parseID);
         e.preventDefault();
 
         this.props.dispatch(queueVideos(ids));
@@ -40,6 +48,7 @@ class Prompt extends Component {
     render() {
         const {
             props: { prompt },
+            state: { text },
             close,
             handleChange,
             handleSubmit
@@ -53,13 +62,7 @@ class Prompt extends Component {
             callback
         } = prompt;
         return (
-            <div
-                className={[
-                    'dialog__overlay',
-                    isVisible ? 'dialog__overlay--show' : ''
-                ].join(' ')}
-                onClick={close}
-            >
+            <Fade className="dialog__overlay" onClick={close} in={isVisible}>
                 <div
                     className="dialog shadow--2dp"
                     onClick={(e) => e.stopPropagation()}
@@ -77,7 +80,8 @@ class Prompt extends Component {
                                     id="videoId"
                                     className="textfield__input"
                                     type="text"
-                                    name="ids"
+                                    name="text"
+                                    value={text}
                                     onChange={handleChange}
                                     autoFocus
                                     placeholder="URLs/IDs..."
@@ -113,7 +117,7 @@ class Prompt extends Component {
                         </div>
                     )}
                 </div>
-            </div>
+            </Fade>
         );
     }
 }

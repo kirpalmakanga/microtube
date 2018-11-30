@@ -1,6 +1,7 @@
 import { createReducer, updateObject } from '../helpers.js';
 
 const initialState = {
+    playlistTitle: '',
     items: [],
     nextPageToken: '',
     totalResults: 0

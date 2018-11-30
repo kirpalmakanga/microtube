@@ -18,7 +18,13 @@ module.exports = {
         if (process.env.NODE_ENV === 'production') {
             config.plugin('offline').use(OfflinePlugin, [
                 {
-                    autoUpdate: true,
+                    excludes: ['**/*.map'],
+                    updateStrategy: 'changed',
+                    autoUpdate: 1000 * 60 * 2,
+                    ServiceWorker: {
+                        events: true,
+                        navigateFallbackURL: '/'
+                    },
                     cacheMaps: [
                         {
                             match: /.+?\:\/\/.+?(\/.+?)(?:#|\?|$)/,

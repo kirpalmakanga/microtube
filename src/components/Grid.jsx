@@ -1,6 +1,7 @@
 import React, { Component, PureComponent } from 'react';
 import VisibilitySensor from 'react-visibility-sensor';
 import Waypoint from 'react-waypoint';
+import Fade from './animations/Fade';
 
 class GridItem extends PureComponent {
     render() {
@@ -52,12 +53,13 @@ class Grid extends Component {
         const {
             props: { items = [], renderItem = () => {} },
             state: { isLoading },
+            grid,
             getContainer
         } = this;
 
         return (
             <div className="grid" ref={getContainer}>
-                {this.grid &&
+                {grid &&
                     items.map((props, i) => (
                         <VisibilitySensor
                             key={i}
@@ -65,7 +67,7 @@ class Grid extends Component {
                             partialVisibility={true}
                             scrollCheck={true}
                             scrollThrottle={100}
-                            containment={this.grid}
+                            containment={grid}
                         >
                             {({ isVisible }) => (
                                 <GridItem
@@ -77,23 +79,18 @@ class Grid extends Component {
                         </VisibilitySensor>
                     ))}
 
-                <div
-                    className={[
-                        'grid__loading',
-                        isLoading ? 'is-active' : ''
-                    ].join(' ')}
-                >
-                    {this.grid ? (
-                        <Waypoint
-                            scrollableAncestor={this.grid}
-                            onEnter={this.loadItems}
-                        />
-                    ) : null}
+                {grid ? (
+                    <Waypoint
+                        scrollableAncestor={grid}
+                        onEnter={this.loadItems}
+                    />
+                ) : null}
 
+                <Fade in={isLoading} className="grid__loading is-active">
                     <svg className="rotating">
                         <use xlinkHref="#icon-loading" />
                     </svg>
-                </div>
+                </Fade>
             </div>
         );
     }

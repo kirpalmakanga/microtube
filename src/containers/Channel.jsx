@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { getChannelVideos } from '../actions/youtube';
+import { getChannelTitle, getChannelVideos } from '../actions/youtube';
 
 import Screen from '../layout/Screen';
 
@@ -10,6 +10,10 @@ import Grid from '../components/Grid';
 import VideoCard from '../components/cards/VideoCard';
 
 class Channel extends Component {
+    componentDidMount() {
+        this.props.getChannelTitle(this.props.channelId);
+    }
+
     componentWillUnmount() {
         this.props.clearChannelVideos();
     }
@@ -64,8 +68,12 @@ const mapStateToProps = (
 });
 
 const mapDispatchToProps = (dispatch) => ({
+    getChannelTitle: (id) => dispatch(getChannelTitle(id)),
+
     getChannelVideos: (params) => dispatch(getChannelVideos(params)),
+
     clearChannelVideos: () => dispatch({ type: 'channel/CLEAR' }),
+
     setAsActiveItem: (video) =>
         dispatch({
             type: 'QUEUE_SET_ACTIVE_ITEM',

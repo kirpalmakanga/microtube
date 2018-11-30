@@ -1,12 +1,16 @@
 import { createReducer, updateObject } from '../helpers.js';
 
 const initialState = {
+    channelTitle: '',
     items: [],
     nextPageToken: '',
     totalResults: 0
 };
 
 export default createReducer(initialState, {
+    'channel/SET_TITLE': (state, { data: { channelTitle } }) =>
+        updateObject(state, { channelTitle }),
+
     'channel/UPDATE_ITEMS': (
         state,
         { data: { items, nextPageToken, totalResults } }

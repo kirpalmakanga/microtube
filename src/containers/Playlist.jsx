@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { getPlaylistItems, removePlaylistItem } from '../actions/youtube';
+import {
+    getPlaylistTitle,
+    getPlaylistItems,
+    removePlaylistItem
+} from '../actions/youtube';
 
 import Screen from '../layout/Screen';
 
@@ -10,6 +14,10 @@ import Grid from '../components/Grid';
 import VideoCard from '../components/cards/VideoCard';
 
 class Playlist extends Component {
+    componentDidMount() {
+        this.props.getPlaylistTitle(this.props.playlistId);
+    }
+
     componentWillUnmount() {
         this.props.clearItems();
     }
@@ -53,7 +61,7 @@ class Playlist extends Component {
 }
 
 const mapStateToProps = (
-    { playlistItems: { items, nextPageToken } },
+    { playlistItems: { playlistTitle, items, nextPageToken } },
     {
         match: {
             params: { playlistId }
@@ -61,11 +69,14 @@ const mapStateToProps = (
     }
 ) => ({
     playlistId,
+    playlistTitle,
     items,
     nextPageToken
 });
 
 const mapDispatchToProps = (dispatch) => ({
+    getPlaylistTitle: (id) => dispatch(getPlaylistTitle(id)),
+
     getPlaylistItems: (params) => dispatch(getPlaylistItems(params)),
 
     removeItem: (data) => dispatch(removePlaylistItem(data)),

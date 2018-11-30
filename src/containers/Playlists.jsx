@@ -20,7 +20,6 @@ class Playlists extends Component {
             nextPageToken,
             getPlaylists,
             makeQueuePlaylist,
-            openPlaylist,
             removePlaylist
         } = this.props;
 
@@ -42,7 +41,6 @@ class Playlists extends Component {
                         return (
                             <PlaylistCard
                                 {...data}
-                                onClick={openPlaylist(title)}
                                 queuePlaylist={makeQueuePlaylist({
                                     playlistId
                                 })}
@@ -71,8 +69,6 @@ const mapDispatchToProps = (dispatch) => ({
     getPlaylists: (data) => dispatch(getPlaylists(data)),
 
     makeQueuePlaylist: (data) => () => dispatch(queuePlaylist(data)),
-
-    openPlaylist: (data) => () => dispatch({ type: 'playlist/OPEN', data }),
 
     removePlaylist: (data) => dispatch(removePlaylist(data))
 });

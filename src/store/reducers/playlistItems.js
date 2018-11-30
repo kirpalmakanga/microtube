@@ -8,7 +8,7 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    'playlist/OPEN': (state, { data: { playlistTitle } }) =>
+    'playlist/SET_TITLE': (state, { data: { playlistTitle } }) =>
         updateObject(state, {
             playlistTitle
         }),

@@ -69,20 +69,21 @@ export function removePlaylist({ title, playlistId }) {
     };
 }
 
+export function getPlaylistTitle(playlistId) {
+    return async (dispatch) => {
+        const playlistTitle = await api.getPlaylistTitle(playlistId);
+
+        dispatch({
+            type: 'playlist/SET_TITLE',
+            data: { playlistTitle }
+        });
+    };
+}
+
 export function getPlaylistItems(config) {
     return async (dispatch) => {
         try {
-            const { playlistId } = config;
-
-            const [playlistTitle, data] = await Promise.all([
-                api.getPlaylistTitle(playlistId),
-                api.getPlaylistItems(config)
-            ]);
-
-            dispatch({
-                type: 'playlist/OPEN',
-                data: { playlistTitle }
-            });
+            const data = await api.getPlaylistItems(config);
 
             dispatch({
                 type: 'playlist/UPDATE_ITEMS',
@@ -96,7 +97,7 @@ export function getPlaylistItems(config) {
 }
 
 export function removePlaylistItem({ title, playlistItemId }) {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         dispatch({
             type: 'prompt/OPEN',
             data: {
@@ -104,6 +105,10 @@ export function removePlaylistItem({ title, playlistItemId }) {
                 confirmText: 'Remove',
                 callback: async () => {
                     try {
+                        const {
+                            playlistItems: { playlistTitle }
+                        } = getState();
+
                         await api.removePlaylistItem(playlistItemId);
 
                         dispatch({
@@ -113,7 +118,7 @@ export function removePlaylistItem({ title, playlistItemId }) {
 
                         dispatch(
                             notify({
-                                message: `Remove "${title}" from playlist.`
+                                message: `Removed "${title}" from playlist: "${playlistTitle}."`
                             })
                         );
 
@@ -211,7 +216,7 @@ export function getChannelTitle(channelId) {
         try {
             const title = await api.getChannelTitle(channelId);
 
-            dispatch({ type: 'SET_CHANNEL_TITLE', data: { title } });
+            dispatch({ type: 'channel/SET_TITLE', data: { title } });
         } catch (err) {
             dispatch(notify({ message: 'Error fetching channel title.' }));
         }

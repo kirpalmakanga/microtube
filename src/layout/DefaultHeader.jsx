@@ -3,57 +3,34 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
-import {
-    signIn,
-    signOut,
-    getPlaylistTitle,
-    getChannelTitle
-} from '../api/youtube';
+import { signIn, signOut } from '../api/youtube';
 
 import Icon from '../components/Icon';
 import Button from '../components/Button';
 
 class DefaultHeader extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            title: 'MicroTube'
-        };
-    }
-
-    setTitle = async () => {
+    getTitle = () => {
         const {
-            location: { pathname: route }
+            location: { pathname },
+            channelTitle,
+            playlistTitle
         } = this.props;
 
         let title = 'MicroTube';
 
-        if (route.includes('/subscriptions')) {
+        if (pathname.includes('/subscriptions')) {
             title = 'Subscriptions';
         }
 
-        if (route.includes('/subscriptions')) {
-            title = 'Subscriptions';
+        if (pathname.includes('/channel')) {
+            title = channelTitle;
         }
 
-        if (route.includes('/channel')) {
-            title = await getChannelTitle(route.slice(1).split('/')[1]);
+        if (pathname.includes('/playlist')) {
+            title = playlistTitle;
         }
 
-        if (route.includes('/playlist')) {
-            title = await getPlaylistTitle(route.slice(1).split('/')[1]);
-        }
-
-        title !== this.state.title && this.setState({ title });
-    };
-
-    componentDidMount = () => {
-        this.setTitle();
-    };
-
-    componentDidUpdate = () => {
-        this.setTitle();
+        return title;
     };
 
     handleAuth = async () => {
@@ -77,8 +54,10 @@ class DefaultHeader extends Component {
                 avatar,
                 location: { pathname: route }
             },
-            state: { title }
+            getTitle
         } = this;
+
+        const title = getTitle();
 
         return (
             <div className="layout__header-row">
@@ -93,6 +72,7 @@ class DefaultHeader extends Component {
                 ) : null}
 
                 <Helmet key="headers" title={title} />
+
                 <span className="layout-title">{title}</span>
 
                 <nav className="navigation">
@@ -132,10 +112,14 @@ const mapStateToProps = ({
     auth: {
         isSignedIn,
         user: { picture: avatar }
-    }
+    },
+    playlistItems: { playlistTitle },
+    channel: { channelTitle }
 }) => ({
     isSignedIn,
-    avatar
+    avatar,
+    playlistTitle,
+    channelTitle
 });
 
 const mapDispatchToProps = (dispatch) => ({

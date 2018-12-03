@@ -66,7 +66,7 @@ export default createReducer(initialState, {
 
     QUEUE_SET_ACTIVE_ITEM: (state, { data: { index } = {} }) => {
         const { queue } = state;
-        const currentIndex = index || queue.length - 1;
+        const currentIndex = !isNaN(index) ? index : queue.length - 1;
 
         return updateObject(state, {
             queue: queue.map(setActiveItem(currentIndex)),

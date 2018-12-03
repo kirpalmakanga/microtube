@@ -136,7 +136,7 @@ class Player extends Component {
         }
     };
 
-    seekTime = throttle(({ target: { value } }) => {
+    seekTime = throttle((value) => {
         if (!this.isPlayerReady()) {
             return;
         }

@@ -55,7 +55,7 @@ class Search extends Component {
     render() {
         const {
             state: { mountGrid },
-            props: { query, items, setAsActiveItem, pushToQueue },
+            props: { query, items, queueAndPlayItem, queueItem },
             loadContent
         } = this;
 
@@ -68,8 +68,8 @@ class Search extends Component {
                         renderItem={(data) => (
                             <VideoCard
                                 {...data}
-                                onClick={() => setAsActiveItem(data)}
-                                pushToQueue={() => pushToQueue(data)}
+                                onClick={() => queueAndPlayItem(data)}
+                                queueItem={() => queueItem(data)}
                             />
                         )}
                     />
@@ -96,15 +96,19 @@ const mapStateToProps = (
 const mapDispatchToProps = (dispatch) => ({
     setQuery: (query) =>
         dispatch({ type: 'search/SET_QUERY', data: { query } }),
+    
     searchVideos: (params) => dispatch(searchVideos(params)),
+    
     clearSearch: () => dispatch({ type: 'search/RESET' }),
-    setAsActiveItem: (video) =>
-        dispatch({
-            type: 'QUEUE_SET_ACTIVE_ITEM',
-            data: { video }
-        }),
 
-    pushToQueue: (data) => dispatch({ type: 'QUEUE_PUSH', data })
+    queueItem: (data) => dispatch({ type: 'QUEUE_PUSH', data }),
+    
+    queueAndPlayItem: (data) => {
+        dispatch({ type: 'QUEUE_PUSH', data });
+        dispatch({
+            type: 'QUEUE_SET_ACTIVE_ITEM'
+        });
+    },
 });
 
 export default connect(

@@ -15,12 +15,18 @@ const transitionStyles = {
 
 class Fade extends PureComponent {
     render() {
-        const { in: inProp, children, ...props } = this.props;
+        const {
+            in: inProp,
+            children,
+            mountOnEnter = true,
+            unmountOnExit = true,
+            ...props
+        } = this.props;
         return (
             <Transition
                 in={inProp}
-                mountOnEnter
-                unmountOnExit
+                mountOnEnter={mountOnEnter}
+                unmountOnExit={unmountOnExit}
                 timeout={duration}
             >
                 {(state) => (

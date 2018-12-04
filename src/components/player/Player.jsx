@@ -172,22 +172,27 @@ class Player extends Component {
     }
 
     watchLoading() {
-        const { youtube } = this.state;
-
-        const loadingWatcher = setInterval(() => {
-            const loaded = youtube.getVideoLoadedFraction();
-
-            this.setState({ loaded });
+        const loadingWatcher = setInterval(async () => {
+            const loaded = await this.updateLoading();
 
             if (loaded === 1) {
                 clearInterval(loadingWatcher);
             }
         }, 500);
 
-        this.setState({ loaded: youtube.getVideoLoadedFraction() });
+        this.updateLoading();
 
         this.loadingWatcher = loadingWatcher;
     }
+
+    updateLoading = () =>
+        new Promise((resolve) => {
+            const { youtube } = this.state;
+
+            const loaded = youtube.getVideoLoadedFraction();
+
+            this.setState({ loaded }, () => resolve(loaded));
+        });
 
     toggleMute = () => {
         const { isMuted, youtube } = this.state;

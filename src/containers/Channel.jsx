@@ -24,8 +24,8 @@ class Channel extends Component {
             items,
             nextPageToken: pageToken,
             getChannelVideos,
-            setAsActiveItem,
-            pushToQueue
+            queueAndPlayItem,
+            queueItem
         } = this.props;
 
         return (
@@ -43,8 +43,8 @@ class Channel extends Component {
                         return (
                             <VideoCard
                                 {...data}
-                                onClick={() => setAsActiveItem(data)}
-                                pushToQueue={() => pushToQueue(data)}
+                                onClick={() => queueAndPlayItem(data)}
+                                queueItem={() => queueItem(data)}
                             />
                         );
                     }}
@@ -74,13 +74,14 @@ const mapDispatchToProps = (dispatch) => ({
 
     clearChannelVideos: () => dispatch({ type: 'channel/CLEAR' }),
 
-    setAsActiveItem: (video) =>
-        dispatch({
-            type: 'QUEUE_SET_ACTIVE_ITEM',
-            data: { video }
-        }),
+    queueItem: (data) => dispatch({ type: 'QUEUE_PUSH', data }),
 
-    pushToQueue: (data) => dispatch({ type: 'QUEUE_PUSH', data })
+    queueAndPlayItem: (data) => {
+        dispatch({ type: 'QUEUE_PUSH', data });
+        dispatch({
+            type: 'QUEUE_SET_ACTIVE_ITEM'
+        });
+    }
 });
 
 export default connect(

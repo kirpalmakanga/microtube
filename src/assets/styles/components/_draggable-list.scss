@@ -1,5 +1,17 @@
 .draggable-list {
-  &__item {
-    position: relative;
-  }
+    &__item {
+        position: relative;
+    }
+
+    &.drag-active &__item {
+        &:after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+    }
 }

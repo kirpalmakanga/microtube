@@ -2,6 +2,7 @@ import React, { Component, PureComponent } from 'react';
 import VisibilitySensor from 'react-visibility-sensor';
 import Waypoint from 'react-waypoint';
 import Fade from './animations/Fade';
+import Icon from './Icon';
 
 class GridItem extends PureComponent {
     render() {
@@ -41,12 +42,20 @@ class Grid extends Component {
         this.setState({ isLoading: true }, async () => {
             await loadContent();
 
+            if (this._unmounting) {
+                return;
+            }
+
             this.setState({ isLoading: false });
         });
     };
 
     componentDidMount() {
         this.forceUpdate();
+    }
+
+    componentWillUnmount() {
+        this._unmounting = true;
     }
 
     render() {
@@ -86,10 +95,12 @@ class Grid extends Component {
                     />
                 ) : null}
 
-                <Fade in={isLoading} className="grid__loading is-active">
-                    <svg className="rotating">
-                        <use xlinkHref="#icon-loading" />
-                    </svg>
+                <Fade
+                    in={isLoading}
+                    className="grid__loading is-active"
+                    unmountOnExit={false}
+                >
+                    <Icon className="rotating" name="loading" />
                 </Fade>
             </div>
         );

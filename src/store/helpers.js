@@ -1,9 +1,6 @@
-export const createReducer = (initialState, handlers) => (
-    state = initialState,
-    action
-) =>
+export const createReducer = (initialState, handlers) => (state = {}, action) =>
     handlers.hasOwnProperty(action.type)
         ? handlers[action.type](state, action)
-        : state;
+        : { ...initialState, ...state };
 
 export const updateObject = (oldData, newData) => ({ ...oldData, ...newData });

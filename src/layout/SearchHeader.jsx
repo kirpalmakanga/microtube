@@ -6,6 +6,8 @@ import SearchForm from '../components/SearchForm';
 import Icon from '../components/Icon';
 import Button from '../components/Button';
 
+import DropDown from '../components/DropDown';
+
 class SearchHeader extends Component {
     render() {
         const {
@@ -26,29 +28,14 @@ class SearchHeader extends Component {
                 <SearchForm query={query} onSubmit={onSearchFormSubmit} />
 
                 <nav className="navigation">
-                    <div
-                        className="navigation__button icon-button"
-                        aria-label="Set search mode"
-                    >
-                        <select
-                            name="forMine"
-                            value={forMine}
-                            onChange={({
-                                target: { options, selectedIndex }
-                            }) => {
-                                const { value } = options[selectedIndex];
-
-                                setSearchMode(parseInt(value));
-                            }}
-                        >
-                            <option key={0} value={0}>
-                                All Videos
-                            </option>
-                            <option key={1} value={1}>
-                                My Videos
-                            </option>
-                        </select>
-                    </div>
+                    <DropDown
+                        currentValue={forMine}
+                        options={[
+                            { label: 'All videos', value: 0 },
+                            { label: 'My Videos', value: 1 }
+                        ]}
+                        onSelect={(value) => setSearchMode(parseInt(value))}
+                    />
                 </nav>
             </div>
         );

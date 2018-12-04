@@ -1,0 +1,48 @@
+.dropdown {
+    position: relative;
+    &__current {
+        position: relative;
+        z-index: 1;
+    }
+
+    .icon {
+        fill: currentColor;
+    }
+
+    &__options {
+        @include transition();
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        transform: translateY(-50%);
+        opacity: 0;
+        visibility: hidden;
+
+        &-item {
+            &.is-active {
+            }
+        }
+    }
+
+    &__current,
+    &__options-item {
+        background-color: $black;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 0 15px;
+
+        &:hover,
+        &.is-active {
+            background-color: lighten($black, 5%);
+        }
+    }
+
+    &.is-open &__options {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+    }
+}

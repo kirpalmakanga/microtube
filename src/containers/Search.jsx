@@ -96,19 +96,19 @@ const mapStateToProps = (
 const mapDispatchToProps = (dispatch) => ({
     setQuery: (query) =>
         dispatch({ type: 'search/SET_QUERY', data: { query } }),
-    
+
     searchVideos: (params) => dispatch(searchVideos(params)),
-    
+
     clearSearch: () => dispatch({ type: 'search/RESET' }),
 
     queueItem: (data) => dispatch({ type: 'QUEUE_PUSH', data }),
-    
+
     queueAndPlayItem: (data) => {
         dispatch({ type: 'QUEUE_PUSH', data });
         dispatch({
             type: 'QUEUE_SET_ACTIVE_ITEM'
         });
-    },
+    }
 });
 
 export default connect(

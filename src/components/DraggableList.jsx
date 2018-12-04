@@ -49,6 +49,8 @@ class DraggableList extends PureComponent {
 
         document.body.style.cursor = 'grabbing';
 
+        this.container.classList.add('drag-active');
+
         this.dragged = dragged;
         this.placeholder = this.getPlaceholder();
     };
@@ -58,11 +60,7 @@ class DraggableList extends PureComponent {
 
         const { target, pageY } = e;
 
-        const over = target
-            ? target.hasAttribute('data-placeholder')
-                ? target
-                : target.parentNode
-            : null;
+        const over = target;
 
         if (
             !over ||
@@ -108,6 +106,7 @@ class DraggableList extends PureComponent {
         document.body.style.cursor = 'default';
 
         container.removeChild(placeholder);
+        container.classList.remove('drag-active');
 
         items.splice(to, 0, items.splice(from, 1)[0]);
 

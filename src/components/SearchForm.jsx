@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 
 class Form extends Component {
     constructor(props) {
@@ -16,6 +15,7 @@ class Form extends Component {
 
     componentDidMount() {
         this.input.focus();
+        this.input.addEventListener('keypress', (e) => e.stopPropagation());
     }
 
     getInputRef = (el) => (this.input = el);

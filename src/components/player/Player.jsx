@@ -300,6 +300,57 @@ class Player extends Component {
         }
     };
 
+    bindKeyboard = () => {
+        if (this.__keyboardListener) {
+            return;
+        }
+
+        this.__keyboardListener = ({ key }) => {
+            if (!this.isPlayerReady()) {
+                return;
+            }
+
+            console.log(`keypress event\n\n key: [${key}]`);
+
+            switch (key) {
+                case 'ArrowLeft':
+                    this.goToVideo(false);
+                    break;
+
+                case 'ArrowRight':
+                    this.goToVideo(true);
+                    break;
+
+                case 'm':
+                    this.toggleMute();
+                    break;
+
+                case 'f':
+                    this.toggleFullScreen();
+                    break;
+
+                case 'q':
+                    this.props.toggleQueue();
+                    break;
+
+                case 'f':
+                    this.toggleFullScreen();
+                    break;
+
+                case ' ':
+                    this.togglePlay();
+                    break;
+            }
+        };
+
+        document.addEventListener('keypress', this.__keyboardListener);
+    };
+
+    unbindKeyboard = () => {
+        document.removeEventListener('keypress', this.__keyboardListener);
+        this.__keyboardListener = null;
+    };
+
     handleFullScreenChange = (isFullScreen) => this.setState({ isFullScreen });
 
     toggleFullScreen = () => {
@@ -316,11 +367,19 @@ class Player extends Component {
 
     componentDidMount() {
         listenFullScreenChange(this._container, this.handleFullScreenChange);
+        this.bindKeyboard();
+    }
+    componentWillUnmount() {
+        this.unbindKeyboard();
     }
 
     render() {
         const {
-            props: { player, toggleQueue, toggleScreen },
+            props: {
+                player: { showQueue, showScreen, newQueueItems },
+                toggleQueue,
+                toggleScreen
+            },
             state: {
                 isPlaying,
                 isBuffering,
@@ -342,8 +401,6 @@ class Player extends Component {
             onYoutubeIframeReady,
             onYoutubeIframeStateChange
         } = this;
-
-        const { showQueue, showScreen, newQueueItems } = player;
 
         return (
             <div
@@ -374,7 +431,7 @@ class Player extends Component {
                 <Screen
                     className={[
                         'screen shadow--2dp',
-                        player.showScreen || isFullScreen ? 'screen--show' : ''
+                        showScreen || isFullScreen ? 'screen--show' : ''
                     ].join(' ')}
                     videoId={videoId}
                     onReady={onYoutubeIframeReady}
@@ -527,15 +584,28 @@ const mapDispatchToProps = (dispatch) => ({
 
     saveCurrentTime: (t) => dispatch({ type: 'SET_CURRENT_TIME', data: t }),
 
-    toggleQueue: (showQueue) =>
-        dispatch({
-            type: showQueue ? 'QUEUE_CLOSE' : 'QUEUE_OPEN'
-        }),
+    toggleQueue: () => {
+        dispatch((_, getState) => {
+            const {
+                player: { showQueue }
+            } = getState();
 
-    toggleScreen: (showScreen) =>
-        dispatch({
-            type: showScreen ? 'SCREEN_CLOSE' : 'SCREEN_OPEN'
-        })
+            dispatch({
+                type: showQueue ? 'QUEUE_CLOSE' : 'QUEUE_OPEN'
+            });
+        });
+    },
+    toggleScreen: () => {
+        dispatch((_, getState) => {
+            const {
+                player: { showScreen }
+            } = getState();
+
+            dispatch({
+                type: showScreen ? 'SCREEN_CLOSE' : 'SCREEN_OPEN'
+            });
+        });
+    }
 });
 
 export default connect(

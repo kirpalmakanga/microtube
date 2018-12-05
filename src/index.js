@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import initReactFastclick from 'react-fastclick';
 
 import Root from './Root';
 
@@ -14,6 +15,8 @@ if (process.env.NODE_ENV === 'production') {
 (() => {
     const appContainer = document.querySelector('#app');
     const store = configureStore();
+
+    initReactFastclick();
 
     render(
         <Provider store={store}>

@@ -12,6 +12,7 @@
     padding: 15px;
     cursor: pointer;
     z-index: 6;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .dialog {
@@ -20,6 +21,7 @@
     background-color: $white;
     padding: 20px;
     position: relative;
+    -webkit-tap-highlight-color: transparent;
     .textfield__input {
         @extend .add-bottom;
         color: $black;

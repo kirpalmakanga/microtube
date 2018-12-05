@@ -1,37 +1,49 @@
 import React, { Component } from 'react';
+import Fade from './animations/Fade';
 
 class Img extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            url: '',
             isLoading: true
         };
     }
 
-    loadImage = (src) =>
-        new Promise((resolve, reject) => {
-            const img = new Image();
+    shouldComponentUpdate({ src }) {
+        const { url } = this.state;
+        return src !== url;
+    }
 
-            img.onload = () => resolve(img);
+    componentDidUpdate() {
+        this.loadImage();
+    }
 
-            img.onerror = (error) => reject(console.error('Error: ', error));
+    loadImage = async () => {
+        const { src: url = '' } = this.props;
 
-            img.src = src;
-        });
-
-    componentDidMount = async () => {
         try {
-            await this.loadImage(this.props.src);
-
+            await new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = (error) =>
+                    reject(console.error('Error: ', error));
+                img.src = url;
+            });
+        } catch (e) {
+            console.error(e);
+        } finally {
             if (this.unmounting) {
                 return;
             }
 
-            this.setState({ isLoading: false });
-        } catch (e) {
-            console.error(e);
+            this.setState({ url, isLoading: false });
         }
+    };
+
+    componentDidMount = () => {
+        this.loadImage();
     };
 
     componentWillUnmount() {
@@ -41,25 +53,29 @@ class Img extends Component {
     render() {
         const {
             props: { src, alt = 'image', background },
-            state: { isLoading }
+            state: { url, isLoading }
         } = this;
 
         return (
-            <figure className={['image', isLoading ? 'loading' : ''].join(' ')}>
-                {background ? (
-                    <div
-                        className="image-background"
-                        style={{ backgroundImage: `url(${src})` }}
-                    />
-                ) : (
-                    <img src={src} alt={alt} />
-                )}
+            <figure className="image">
+                <Fade in={!isLoading}>
+                    {background ? (
+                        <div
+                            className="image__background"
+                            style={{ backgroundImage: `url(${src})` }}
+                        />
+                    ) : (
+                        <img src={url} alt={alt} />
+                    )}
+                </Fade>
 
-                <span className="image-loader">
-                    <svg className="rotating">
-                        <use xlinkHref="#icon-loading" />
-                    </svg>
-                </span>
+                <Fade in={isLoading}>
+                    <span className="image__loader">
+                        <svg className="rotating">
+                            <use xlinkHref="#icon-loading" />
+                        </svg>
+                    </span>
+                </Fade>
             </figure>
         );
     }

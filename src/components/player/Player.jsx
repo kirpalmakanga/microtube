@@ -310,8 +310,6 @@ class Player extends Component {
                 return;
             }
 
-            console.log(`keypress event\n\n key: [${key}]`);
-
             switch (key) {
                 case 'ArrowLeft':
                     this.goToVideo(false);

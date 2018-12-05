@@ -226,7 +226,7 @@ export async function searchVideos({ query, forMine, pageToken }) {
 
     return {
         items: videos,
-        nextPageToken,
+        nextPageToken: items.length !== totalResults ? nextPageToken : null,
         totalResults
     };
 }

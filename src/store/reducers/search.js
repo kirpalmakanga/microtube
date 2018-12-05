@@ -21,7 +21,7 @@ export default createReducer(initialState, {
         updateObject(state, {
             items: [...state.items, ...items],
             nextPageToken: nextPageToken || null,
-            totalResults
+            totalResults: totalResults || state.totalResults
         }),
 
     'search/RESET': (state) =>

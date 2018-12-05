@@ -8,7 +8,8 @@ import SearchHeader from './SearchHeader';
 class Header extends Component {
     state = { location: { pathname: '' } };
 
-    onSearchFormSubmit = (query) => this.props.history.push(`/search/${query}`);
+    onSearchFormSubmit = (query) =>
+        this.props.history.replace(`/search/${query}`);
 
     componentWillMount() {
         const { location = { pathname: '' }, history } = this.props;

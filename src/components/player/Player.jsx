@@ -335,6 +335,10 @@ class Player extends Component {
                     this.toggleFullScreen();
                     break;
 
+                case 's':
+                    this.props.toggleScreen();
+                    break;
+
                 case ' ':
                     this.togglePlay();
                     break;

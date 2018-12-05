@@ -306,10 +306,6 @@ class Player extends Component {
         }
 
         this.__keyboardListener = ({ key }) => {
-            if (!this.isPlayerReady()) {
-                return;
-            }
-
             switch (key) {
                 case 'ArrowLeft':
                     this.goToVideo(false);

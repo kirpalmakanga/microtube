@@ -8,38 +8,74 @@
     background-color: rgba($black, 0.7);
     display: flex;
     justify-content: center;
-    align-items: center;
-    padding: 15px;
+    align-items: flex-end;
     cursor: pointer;
     z-index: 6;
     -webkit-tap-highlight-color: transparent;
 }
 
 .dialog {
-    border-radius: 3px;
     cursor: default;
     background-color: $white;
-    padding: 20px;
     position: relative;
+    max-height: 50vh;
+    overflow: hidden;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     -webkit-tap-highlight-color: transparent;
+    color: $black;
     .textfield__input {
         @extend .add-bottom;
         color: $black;
-        padding-bottom: 20px;
-        border-bottom: 2px solid $black;
+        padding: 20px;
         resize: vertical;
     }
+
+    &__header {
+        padding: 20px;
+        border-bottom: 2px solid $black;
+    }
+
     &__content {
-        color: $black;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        flex: 1;
+    }
+
+    &__footer {
+        border-top: 2px solid $black;
     }
 
     &__actions {
+        border-top: 2px solid $black;
         display: flex;
         justify-content: flex-end;
+        padding: 20px;
         .button {
             &:not(:last-child) {
                 margin-right: 10px;
             }
+        }
+    }
+}
+
+.playlist-menu {
+    display: flex;
+    flex-direction: column;
+    &__item {
+        @include transition();
+        display: flex;
+        align-items: center;
+        padding: 20px;
+        cursor: pointer;
+
+        &:hover {
+            background-color: darken($white, 10%);
+        }
+
+        &-text {
+            margin-left: 10px;
         }
     }
 }

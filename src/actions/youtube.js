@@ -1,6 +1,6 @@
 import * as api from '../api/youtube';
 
-const delay = (t) => new Promise((resolve) => setTimeout(resolve, t));
+import { delay } from '../lib/helpers';
 
 const notify = ({ message }) => async (dispatch, getState) => {
     dispatch({ type: 'notifications/OPEN', data: message });
@@ -134,7 +134,7 @@ export function removePlaylistItem({ title, playlistItemId }) {
     };
 }
 
-export function editPlaylistItem({ id, playlistItemId }) {
+export function editPlaylistItem(data) {
     return async (dispatch) => {
         try {
             dispatch({
@@ -157,14 +157,29 @@ export function editPlaylistItem({ id, playlistItemId }) {
                     promptText: `Add to playlist`,
                     confirmText: 'Done',
                     playlists: playlists.items,
-                    callback: async (actions) => {
+                    callback: async (playlistId, action) => {
                         try {
-                            // await api.addPlaylistItem(playlistId);
-                            // await api.removePlaylistItem(playlistId);
-                            // dispatch({
-                            //     type: 'playlist/REMOVE_ITEM',
-                            //     data: { playlistItemId }
-                            // });
+                            console.log('action', action);
+
+                            if (action === 'insert') {
+                                // const { id } = data;
+                                // const {
+                                //     id: playlistItemId
+                                // } = await api.addPlaylistItem(playlistId, id);
+                                // TODO;
+                                // dispatch({
+                                //     type: 'playlist/UPDATE_ITEMS',
+                                //     data: { items: [{...data, playlistItemId }] }
+                                // });
+                            } else if (action === 'remove') {
+                                // const { playlistItemId } = data;
+                                // await api.removePlaylistItem(playlistItemId);
+                                // dispatch({
+                                //     type: 'playlist/REMOVE_ITEM',
+                                //     data: { playlistItemId }
+                                // });
+                            }
+
                             // dispatch({ type: 'prompt/CLOSE' });
                         } catch (error) {
                             console.log(error);

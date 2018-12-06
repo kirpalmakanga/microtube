@@ -6,22 +6,11 @@ import Fade from './animations/Fade';
 
 import Button from './Button';
 
-import { parseID } from '../lib/helpers';
+import { parseID, delay } from '../lib/helpers';
 
-class Prompt extends Component {
+class ImportVideoForm extends Component {
     state = {
-        data: { ids: '' }
-    };
-
-    close = (e) => {
-        const { dispatch } = this.props;
-
-        if (e) {
-            e.stopPropagation();
-        }
-
-        dispatch({ type: 'prompt/CLOSE' });
-        setTimeout(() => dispatch({ type: 'prompt/RESET' }), 300);
+        data: { text: '' }
     };
 
     handleChange = ({ target: { name, value } }) =>
@@ -29,9 +18,11 @@ class Prompt extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+
         const {
             data: { text }
         } = this.state;
+
         const lines = text.match(/[^\r\n]+/g);
 
         if (!lines) {
@@ -39,11 +30,111 @@ class Prompt extends Component {
         }
 
         const ids = lines.map(parseID);
+
         e.preventDefault();
 
-        this.props.dispatch(queueVideos(ids));
+        this.props.onSubmit(ids);
         this.close();
     };
+
+    render() {
+        const {
+            state: { text },
+            props: { onClickCancel, cancelText, submitText },
+            handleChange,
+            handleSubmit
+        } = this;
+
+        return (
+            <form onSubmit={handleSubmit}>
+                <div className="textfield">
+                    <textarea
+                        id="videoId"
+                        className="textfield__input"
+                        type="text"
+                        name="text"
+                        value={text}
+                        onChange={handleChange}
+                        autoFocus
+                        placeholder="URLs/IDs..."
+                    />
+                </div>
+                <div className="dialog__actions">
+                    <Button
+                        className="button button--close shadow--2dp"
+                        onClick={onClickCancel}
+                        title={cancelText}
+                    />
+
+                    <Button
+                        type="submit"
+                        className="button shadow--2dp"
+                        title={submitText}
+                    />
+                </div>
+            </form>
+        );
+    }
+}
+
+class PlaylistManager extends Component {
+    handleCheck = ({ target: { name, checked } }) =>
+        this.props.onCheck(name, checked ? 'insert' : 'remove');
+
+    render() {
+        const {
+            props: { items },
+            handleCheck
+        } = this;
+
+        return (
+            <div className="playlist-menu">
+                {items.map(({ id, title }) => (
+                    <label
+                        className="playlist-menu__item"
+                        key={id}
+                        htmlFor={id}
+                    >
+                        {/* TODO: Ajouter un <Icon></Icon>, ajouter les checkbox au sprite */}
+                        <input
+                            id={id}
+                            type="checkbox"
+                            name={id}
+                            onChange={handleCheck}
+                        />
+                        <span className="playlist-menu__item-text">
+                            {title}
+                        </span>
+                    </label>
+                ))}
+            </div>
+        );
+    }
+}
+
+class Prompt extends Component {
+    state = {
+        playlistActions: new Map()
+    };
+
+    close = async (e) => {
+        if (e) {
+            e.stopPropagation();
+        }
+
+        this.props.closePrompt();
+    };
+
+    handleIdsChange = (id, action) =>
+        this.setState(({ playlistActions }) => {
+            playlistActions.set(id, action);
+
+            console.log(
+                JSON.stringify([...playlistActions.entries()], null, 2)
+            );
+
+            return { playlistActions };
+        });
 
     render() {
         const {
@@ -56,12 +147,10 @@ class Prompt extends Component {
                     confirmText,
                     cancelText,
                     callback
-                }
+                },
+                queueVideos
             },
-            state: { text },
-            close,
-            handleChange,
-            handleSubmit
+            close
         } = this;
 
         return (
@@ -70,52 +159,26 @@ class Prompt extends Component {
                     className="dialog shadow--2dp"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <div className="dialog__content">
-                        <p>{promptText}</p>
-                    </div>
-                    {form ? (
-                        <form onSubmit={handleSubmit}>
-                            <div className="textfield">
-                                <label labelfor="videoId">
-                                    Video URLs or IDs
-                                </label>
-                                <textarea
-                                    id="videoId"
-                                    className="textfield__input"
-                                    type="text"
-                                    name="text"
-                                    value={text}
-                                    onChange={handleChange}
-                                    autoFocus
-                                    placeholder="URLs/IDs..."
-                                />
-                            </div>
-                            <div className="dialog__actions">
-                                <Button
-                                    className="button button--close shadow--2dp"
-                                    onClick={close}
-                                    title={cancelText}
-                                />
+                    <header className="dialog__header">{promptText}</header>
 
-                                <Button
-                                    type="submit"
-                                    className="button shadow--2dp"
-                                    title={confirmText}
-                                />
-                            </div>
-                        </form>
-                    ) : playlists.length ? (
-                        playlists.map(({ id, title }) => (
-                            <div key={id}>
-                                <label htmlFor={id}>
-                                    {/* TODO: Ajouter un <Icon></Icon>, ajouter les checkbox au sprite */}
-                                    <input id={id} type="checkbox" />
-                                    <span>{title}</span>
-                                </label>
-                            </div>
-                        ))
-                    ) : (
-                        <div className="dialog__actions">
+                    <div className="dialog__content">
+                        {form ? (
+                            <ImportVideoForm
+                                onClickCancel={close}
+                                onSubmit={queueVideos}
+                                cancelText={cancelText}
+                                submitText={confirmText}
+                            />
+                        ) : playlists.length ? (
+                            <PlaylistManager
+                                items={playlists}
+                                onCheck={callback}
+                            />
+                        ) : null}
+                    </div>
+
+                    {!form && !playlists.length && (
+                        <footer className="dialog__actions">
                             <Button
                                 className="button button--close shadow--2dp"
                                 onClick={close}
@@ -127,7 +190,7 @@ class Prompt extends Component {
                                 onClick={callback}
                                 title={confirmText}
                             />
-                        </div>
+                        </footer>
                     )}
                 </div>
             </Fade>
@@ -137,4 +200,19 @@ class Prompt extends Component {
 
 const mapStateToProps = ({ prompt }) => ({ prompt });
 
-export default connect(mapStateToProps)(Prompt);
+const mapDispatchToProps = (dispatch) => ({
+    queueVideos: (ids) => dispatch(queueVideos(ids)),
+
+    closePrompt: async () => {
+        dispatch({ type: 'prompt/CLOSE' });
+
+        await delay(300);
+
+        dispatch({ type: 'prompt/RESET' });
+    }
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Prompt);

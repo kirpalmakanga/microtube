@@ -339,6 +339,19 @@ export async function getPlaylistItems({ pageToken = '', playlistId }) {
     };
 }
 
+export async function addPlaylistItem(playlistId, videoId) {
+    return request(
+        'POST',
+        'playlistItems',
+        { part: 'snippet' },
+        {
+            'snippet.playlistId': playlistId,
+            'snippet.resourceId.kind': 'youtube#video',
+            'snippet.resourceId.videoId': videoId
+        }
+    );
+}
+
 export async function removePlaylistItem(id) {
     return request('DELETE', 'playlistItems', {
         id

@@ -120,3 +120,5 @@ export const pick = (obj, whitelist = []) =>
         }),
         {}
     );
+
+export const delay = (t) => new Promise((resolve) => setTimeout(resolve, t));

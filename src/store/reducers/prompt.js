@@ -5,7 +5,7 @@ const initialState = {
     isVisible: false,
     promptText: '',
     confirmText: '',
-    cancelText: 'Annuler',
+    cancelText: 'Cancel',
     callback: () => {}
 };
 

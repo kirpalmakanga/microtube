@@ -47,20 +47,23 @@ class Prompt extends Component {
 
     render() {
         const {
-            props: { prompt },
+            props: {
+                prompt: {
+                    form,
+                    playlists = [],
+                    isVisible,
+                    promptText,
+                    confirmText,
+                    cancelText,
+                    callback
+                }
+            },
             state: { text },
             close,
             handleChange,
             handleSubmit
         } = this;
-        const {
-            form,
-            isVisible,
-            promptText,
-            confirmText,
-            cancelText,
-            callback
-        } = prompt;
+
         return (
             <Fade className="dialog__overlay" onClick={close} in={isVisible}>
                 <div
@@ -101,6 +104,16 @@ class Prompt extends Component {
                                 />
                             </div>
                         </form>
+                    ) : playlists.length ? (
+                        playlists.map(({ id, title }) => (
+                            <div key={id}>
+                                <label htmlFor={id}>
+                                    {/* TODO: Ajouter un <Icon></Icon>, ajouter les checkbox au sprite */}
+                                    <input id={id} type="checkbox" />
+                                    <span>{title}</span>
+                                </label>
+                            </div>
+                        ))
                     ) : (
                         <div className="dialog__actions">
                             <Button

@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import {
     getPlaylistTitle,
     getPlaylistItems,
-    removePlaylistItem
+    removePlaylistItem,
+    editPlaylistItem
 } from '../actions/youtube';
 
 import Screen from '../layout/Screen';
@@ -30,7 +31,8 @@ class Playlist extends Component {
             getPlaylistItems,
             queueAndPlayItem,
             queueItem,
-            removeItem
+            removeItem,
+            editPlaylistItem
         } = this.props;
 
         return (
@@ -51,6 +53,7 @@ class Playlist extends Component {
                                 onClick={() => queueAndPlayItem(data)}
                                 queueItem={() => queueItem(data)}
                                 removeItem={() => removeItem(data)}
+                                editPlaylistItem={() => editPlaylistItem(data)}
                             />
                         );
                     }}
@@ -89,6 +92,8 @@ const mapDispatchToProps = (dispatch) => ({
             type: 'QUEUE_SET_ACTIVE_ITEM'
         });
     },
+
+    editPlaylistItem: (data) => dispatch(editPlaylistItem(data)),
 
     clearItems: () => dispatch({ type: 'playlist/CLEAR_ITEMS' })
 });

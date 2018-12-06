@@ -254,7 +254,7 @@ export async function getVideosFromIds(ids) {
 
 /* Playlists */
 
-export async function getPlaylists({ pageToken = '', mine = false }) {
+export async function getPlaylists({ pageToken = '', mine = false } = {}) {
     const {
         items,
         nextPageToken,
@@ -270,6 +270,27 @@ export async function getPlaylists({ pageToken = '', mine = false }) {
         items: items.map(parsePlaylistData),
         nextPageToken,
         totalResults
+    };
+}
+
+export async function getAllPlaylists({ mine = false } = {}) {
+    let pageToken = '';
+    let stack = [];
+
+    while (pageToken !== null) {
+        const { items, nextPageToken } = await getPlaylists({
+            pageToken,
+            mine
+        });
+
+        pageToken = nextPageToken || null;
+        stack.push(...items);
+    }
+
+    return {
+        items: stack,
+        nextPageToken: pageToken,
+        totalResults: stack.length
     };
 }
 

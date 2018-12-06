@@ -12,6 +12,7 @@ class VideoCard extends PureComponent {
             channelTitle,
             queueItem,
             removeItem,
+            editPlaylistItem,
             ...props
         } = this.props;
 
@@ -30,6 +31,15 @@ class VideoCard extends PureComponent {
                       }
                   ]
                 : []),
+            // ...(typeof editPlaylistItem === 'function'
+            //     ? [
+            //           {
+            //               title: 'Manage playlists',
+            //               onClick: editPlaylistItem,
+            //               icon: 'playlist-add'
+            //           }
+            //       ]
+            //     : []),
             {
                 title: `Queue video ${props.title}`,
                 onClick: queueItem,

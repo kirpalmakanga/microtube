@@ -134,6 +134,56 @@ export function removePlaylistItem({ title, playlistItemId }) {
     };
 }
 
+export function editPlaylistItem({ id, playlistItemId }) {
+    return async (dispatch) => {
+        try {
+            dispatch({
+                type: 'LOADER',
+                data: { show: true }
+            });
+
+            const playlists = await api.getAllPlaylists({
+                mine: true
+            });
+
+            dispatch({
+                type: 'LOADER',
+                data: { show: false }
+            });
+
+            dispatch({
+                type: 'prompt/OPEN',
+                data: {
+                    promptText: `Add to playlist`,
+                    confirmText: 'Done',
+                    playlists: playlists.items,
+                    callback: async (actions) => {
+                        try {
+                            // await api.addPlaylistItem(playlistId);
+                            // await api.removePlaylistItem(playlistId);
+                            // dispatch({
+                            //     type: 'playlist/REMOVE_ITEM',
+                            //     data: { playlistItemId }
+                            // });
+                            // dispatch({ type: 'prompt/CLOSE' });
+                        } catch (error) {
+                            console.log(error);
+                            dispatch(
+                                notify({
+                                    message: 'Error editing playlist item.'
+                                })
+                            );
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            dispatch(notify({ message: 'Error editing playlist item.' }));
+        }
+    };
+}
+
 export function queuePlaylist({ playlistId, play }) {
     return (dispatch, getState) => {
         const {

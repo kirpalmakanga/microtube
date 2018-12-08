@@ -23,12 +23,16 @@ export default createReducer(initialState, {
             totalResults
         }),
 
-    'playlist/REMOVE_ITEM': (state, { data: { playlistItemId } }) =>
-        updateObject(state, {
-            items: state.items.filter(
-                (item) => item.playlistItemId !== playlistItemId
-            )
-        }),
+    'playlist/REMOVE_ITEM': (state, { data: { playlistItemId } }) => {
+        const items = state.items.filter(
+            (item) => item.playlistItemId !== playlistItemId
+        );
+
+        return updateObject(state, {
+            items,
+            totalResults: items.length
+        });
+    },
 
     'playlist/CLEAR_ITEMS': () => initialState,
 

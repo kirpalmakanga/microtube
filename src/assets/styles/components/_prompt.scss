@@ -41,14 +41,13 @@
         overflow-y: scroll;
         overflow-x: hidden;
         flex: 1;
+        border-bottom: 2px solid $black;
     }
 
     &__footer {
-        border-top: 2px solid $black;
     }
 
     &__actions {
-        border-top: 2px solid $black;
         display: flex;
         justify-content: flex-end;
         padding: 20px;

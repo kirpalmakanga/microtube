@@ -129,10 +129,6 @@ class Prompt extends Component {
         this.setState(({ playlistActions }) => {
             playlistActions.set(id, action);
 
-            console.log(
-                JSON.stringify([...playlistActions.entries()], null, 2)
-            );
-
             return { playlistActions };
         });
 
@@ -161,30 +157,32 @@ class Prompt extends Component {
                 >
                     <header className="dialog__header">{promptText}</header>
 
-                    <div className="dialog__content">
-                        {form ? (
+                    {form ? (
+                        <div className="dialog__content">
                             <ImportVideoForm
                                 onClickCancel={close}
                                 onSubmit={queueVideos}
                                 cancelText={cancelText}
                                 submitText={confirmText}
                             />
-                        ) : playlists.length ? (
+                        </div>
+                    ) : playlists.length ? (
+                        <div className="dialog__content">
                             <PlaylistManager
                                 items={playlists}
                                 onCheck={callback}
-                            />
-                        ) : null}
-                    </div>
+                            />{' '}
+                        </div>
+                    ) : null}
 
-                    {!form && !playlists.length && (
+                    {!form && (
                         <footer className="dialog__actions">
+                            test
                             <Button
                                 className="button button--close shadow--2dp"
                                 onClick={close}
                                 title={cancelText}
                             />
-
                             <Button
                                 className="button shadow--2dp"
                                 onClick={callback}

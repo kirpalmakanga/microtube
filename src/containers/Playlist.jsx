@@ -52,7 +52,9 @@ class Playlist extends Component {
                                 {...data}
                                 onClick={() => queueAndPlayItem(data)}
                                 queueItem={() => queueItem(data)}
-                                removeItem={() => removeItem(data)}
+                                removeItem={() =>
+                                    removeItem({ ...data, playlistId })
+                                }
                                 editPlaylistItem={() => editPlaylistItem(data)}
                             />
                         );

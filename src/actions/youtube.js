@@ -96,7 +96,7 @@ export function getPlaylistItems(config) {
     };
 }
 
-export function removePlaylistItem({ title, playlistItemId }) {
+export function removePlaylistItem({ title, playlistId, playlistItemId }) {
     return (dispatch, getState) => {
         dispatch({
             type: 'prompt/OPEN',
@@ -113,7 +113,7 @@ export function removePlaylistItem({ title, playlistItemId }) {
 
                         dispatch({
                             type: 'playlist/REMOVE_ITEM',
-                            data: { playlistItemId }
+                            data: { playlistItemId, playlistId }
                         });
 
                         dispatch(
@@ -161,24 +161,32 @@ export function editPlaylistItem(data) {
                         try {
                             console.log('action', action);
 
-                            if (action === 'insert') {
-                                // const { id } = data;
-                                // const {
-                                //     id: playlistItemId
-                                // } = await api.addPlaylistItem(playlistId, id);
-                                // TODO;
-                                // dispatch({
-                                //     type: 'playlist/UPDATE_ITEMS',
-                                //     data: { items: [{...data, playlistItemId }] }
-                                // });
-                            } else if (action === 'remove') {
-                                // const { playlistItemId } = data;
-                                // await api.removePlaylistItem(playlistItemId);
-                                // dispatch({
-                                //     type: 'playlist/REMOVE_ITEM',
-                                //     data: { playlistItemId }
-                                // });
-                            }
+                            // if (action === 'insert') {
+                            const { id } = data;
+                            const {
+                                id: playlistItemId
+                            } = await api.addPlaylistItem(playlistId, id);
+                            dispatch({
+                                type: 'playlist/UPDATE_ITEMS',
+                                data: {
+                                    items: [{ ...data, playlistItemId }]
+                                }
+                            });
+
+                            dispatch({
+                                type: 'playlists/UPDATE_ITEM',
+                                data: {
+                                    playlistId
+                                }
+                            });
+                            // } else if (action === 'remove') {
+                            // const { playlistItemId } = data;
+                            // await api.removePlaylistItem(playlistItemId);
+                            // dispatch({
+                            //     type: 'playlist/REMOVE_ITEM',
+                            //     data: { playlistItemId }
+                            // });
+                            // }
 
                             // dispatch({ type: 'prompt/CLOSE' });
                         } catch (error) {

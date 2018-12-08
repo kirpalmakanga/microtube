@@ -6,11 +6,18 @@ class DropDown extends PureComponent {
 
     toggleOptions = () => this.setState(({ isOpen }) => ({ isOpen: !isOpen }));
 
+    handleOptionClick = (value) => {
+        this.toggleOptions();
+
+        this.props.onSelect(value);
+    };
+
     render() {
         const {
             props: { currentValue, options = {}, onSelect },
             state: { isOpen },
-            toggleOptions
+            toggleOptions,
+            handleOptionClick
         } = this;
 
         const currentIndex = options.findIndex(
@@ -35,7 +42,9 @@ class DropDown extends PureComponent {
                                     'dropdown__options-item',
                                     isActiveItem ? 'is-active' : ''
                                 ].join(' ')}
-                                onClick={() => !isActiveItem && onSelect(value)}
+                                onClick={() =>
+                                    !isActiveItem && handleOptionClick(value)
+                                }
                             >
                                 {label}
                             </div>

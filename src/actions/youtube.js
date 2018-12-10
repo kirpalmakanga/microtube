@@ -29,18 +29,6 @@ export function getPlaylists(config) {
     };
 }
 
-// export function getPlaylistTitle (accessToken, playlistId) {
-//   return async (dispatch) => {
-//     try {
-//       const title = await api.getPlaylistTitle(accessToken, [playlistId])
-//
-//       dispatch({ type: 'SET_PLAYLIST_TITLE', data: { title } })
-//     } catch (err) {
-//       dispatch({ type: 'notifications/OPEN', data: 'Error fetching playlist title.' })
-//     }
-//   }
-// }
-
 export function removePlaylist({ title, playlistId }) {
     return (dispatch) => {
         dispatch({
@@ -159,36 +147,36 @@ export function editPlaylistItem(data) {
                     playlists: playlists.items,
                     callback: async (playlistId, action) => {
                         try {
-                            console.log('action', action);
+                            if (playlistId) {
+                                // if (action === 'insert') {
+                                const { id } = data;
+                                const {
+                                    id: playlistItemId
+                                } = await api.addPlaylistItem(playlistId, id);
+                                dispatch({
+                                    type: 'playlist/UPDATE_ITEMS',
+                                    data: {
+                                        items: [{ ...data, playlistItemId }]
+                                    }
+                                });
 
-                            // if (action === 'insert') {
-                            const { id } = data;
-                            const {
-                                id: playlistItemId
-                            } = await api.addPlaylistItem(playlistId, id);
-                            dispatch({
-                                type: 'playlist/UPDATE_ITEMS',
-                                data: {
-                                    items: [{ ...data, playlistItemId }]
-                                }
-                            });
+                                dispatch({
+                                    type: 'playlists/UPDATE_ITEM',
+                                    data: {
+                                        playlistId
+                                    }
+                                });
+                                // } else if (action === 'remove') {
+                                // const { playlistItemId } = data;
+                                // await api.removePlaylistItem(playlistItemId);
+                                // dispatch({
+                                //     type: 'playlist/REMOVE_ITEM',
+                                //     data: { playlistItemId }
+                                // });
+                                // }
+                            }
 
-                            dispatch({
-                                type: 'playlists/UPDATE_ITEM',
-                                data: {
-                                    playlistId
-                                }
-                            });
-                            // } else if (action === 'remove') {
-                            // const { playlistItemId } = data;
-                            // await api.removePlaylistItem(playlistItemId);
-                            // dispatch({
-                            //     type: 'playlist/REMOVE_ITEM',
-                            //     data: { playlistItemId }
-                            // });
-                            // }
-
-                            // dispatch({ type: 'prompt/CLOSE' });
+                            dispatch({ type: 'prompt/CLOSE' });
                         } catch (error) {
                             console.log(error);
                             dispatch(

@@ -41,6 +41,7 @@
 }
 
 .icon-button {
+    color: $white;
     .icon {
         @include transition();
         transform-origin: 50% 50%;

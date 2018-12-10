@@ -66,15 +66,29 @@
         @include transition();
         display: flex;
         align-items: center;
+        justify-content: space-between;
         padding: 20px;
         cursor: pointer;
 
         &:hover {
             background-color: darken($white, 10%);
+            .icon {
+                opacity: 1;
+            }
         }
 
         &-text {
             margin-left: 10px;
+        }
+
+        .icon {
+            @include transition();
+            opacity: 0;
+            fill: currentColor;
+            svg {
+                width: 1em;
+                height: 1em;
+            }
         }
     }
 }

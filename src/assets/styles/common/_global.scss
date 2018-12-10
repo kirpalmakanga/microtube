@@ -63,6 +63,14 @@ input {
     display: none;
 }
 
+.icon {
+    fill: currentColor;
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+}
+
 .rotating {
     -webkit-animation: rotating 2s linear infinite;
     -moz-animation: rotating 2s linear infinite;
@@ -82,15 +90,12 @@ input {
     left: 0;
     bottom: 0;
     background-color: $brand-primary;
-
     display: flex;
     align-items: center;
     justify-content: center;
 
-    fill: $white;
-
-    svg {
-        fill: $brand-secondary;
+    .icon {
+        color: $brand-secondary;
         height: 50px;
         width: 50px;
     }

@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import Fade from './animations/Fade';
 
+import Icon from './Icon';
+
 import Button from './Button';
 
 import { parseID, delay } from '../lib/helpers';
@@ -77,13 +79,13 @@ class ImportVideoForm extends Component {
 }
 
 class PlaylistManager extends Component {
-    handleCheck = ({ target: { name, checked } }) =>
+    handleClick = ({ target: { name, checked } }) =>
         this.props.onClickItem(name, checked ? 'insert' : 'remove');
 
     render() {
         const {
             props: { items },
-            handleCheck
+            handleClick
         } = this;
 
         return (
@@ -93,17 +95,14 @@ class PlaylistManager extends Component {
                         className="playlist-menu__item"
                         key={id}
                         htmlFor={id}
+                        onClick={handleClick}
                     >
                         {/* TODO: Ajouter un <Icon></Icon>, ajouter les checkbox au sprite */}
-                        <input
-                            id={id}
-                            type="checkbox"
-                            name={id}
-                            onChange={handleCheck}
-                        />
+
                         <span className="playlist-menu__item-text">
                             {title}
                         </span>
+                        <Icon name="add" />
                     </label>
                 ))}
             </div>

@@ -31,15 +31,15 @@ class VideoCard extends PureComponent {
                       }
                   ]
                 : []),
-            // ...(typeof editPlaylistItem === 'function'
-            //     ? [
-            //           {
-            //               title: 'Manage playlists',
-            //               onClick: editPlaylistItem,
-            //               icon: 'playlist-add'
-            //           }
-            //       ]
-            //     : []),
+            ...(typeof editPlaylistItem === 'function'
+                ? [
+                      {
+                          title: 'Manage playlists',
+                          onClick: editPlaylistItem,
+                          icon: 'playlist-add'
+                      }
+                  ]
+                : []),
             {
                 title: `Queue video ${props.title}`,
                 onClick: queueItem,

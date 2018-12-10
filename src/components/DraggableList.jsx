@@ -1,166 +1,146 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import VisibilitySensor from 'react-visibility-sensor';
-import { throttle } from 'lodash';
 
-class DraggableList extends PureComponent {
+const reorder = (list, startIndex, endIndex) => {
+    const result = [...list];
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+};
+
+class FlatList extends Component {
+    getContainer = (el) => {
+        this.container = el;
+
+        this.props.containerRef(el);
+    };
+
+    getItemStyle = (isVisible) => ({
+        transition: 'opacity 0.3s ease-out',
+        minHeight: '50px',
+
+        ...(isVisible
+            ? {}
+            : {
+                  opacity: 0,
+                  visibility: 'hidden'
+              })
+    });
+
+    render() {
+        const {
+            props: { className, items, renderItem },
+            getContainer,
+            getItemStyle
+        } = this;
+
+        return (
+            <div className={className} ref={getContainer}>
+                {items.length
+                    ? items.map((props, index) => (
+                          <VisibilitySensor
+                              key={index}
+                              resizeCheck={true}
+                              partialVisibility={true}
+                              scrollCheck={true}
+                              scrollThrottle={100}
+                              containment={this.container}
+                          >
+                              {({ isVisible }) =>
+                                  typeof renderItem === 'function'
+                                      ? renderItem(
+                                            {
+                                                props,
+                                                style: getItemStyle(isVisible)
+                                            },
+                                            index
+                                        )
+                                      : null
+                              }
+                          </VisibilitySensor>
+                      ))
+                    : null}
+            </div>
+        );
+    }
+}
+
+class DraggableList extends Component {
     constructor(props) {
         super(props);
 
-        this.state = { items: props.items };
+        this.state = {
+            items: props.items
+        };
     }
 
-    componentDidUpdate = () => this.setState({ items: this.props.items });
-
-    getContainer = (el) => (this.container = el);
-
-    getPlaceholder = () => {
-        let placeholder = this.placeholder;
-
-        if (!placeholder) {
-            placeholder = document.createElement('div');
-            placeholder.classList.add(
-                'queue__item',
-                'queue__item--placeholder'
-            );
-            placeholder.setAttribute('data-placeholder', '');
-        }
-        return placeholder;
-    };
-
-    insertPlaceholder = (pageY) => {
-        const { container, placeholder, over } = this;
-        const relY = pageY - over.offsetTop;
-        const lastChildY =
-            pageY - container.lastChild.offsetTop + over.offsetHeight / 2;
-
-        if (relY <= lastChildY) {
-            this.nodePlacement = 'after';
-            container.insertBefore(placeholder, over.nextElementSibling);
-        } else {
-            this.nodePlacement = 'before';
-            container.insertBefore(placeholder, over);
-        }
-    };
-
-    dragStart = ({ currentTarget: dragged, dataTransfer }) => {
-        dataTransfer.effectAllowed = 'move';
-
-        dataTransfer.setData('text/html', dragged);
-
-        document.body.style.cursor = 'grabbing';
-
-        this.container.classList.add('drag-active');
-
-        this.dragged = dragged;
-        this.placeholder = this.getPlaceholder();
-    };
-
-    dragOver = throttle((e) => {
-        e.preventDefault();
-
-        const { target, pageY } = e;
-
-        const over = target;
-
-        if (
-            !over ||
-            over.classList.contains('queue__item--placeholder') ||
-            !over.getAttribute('draggable')
-        ) {
+    onDragEnd = (result) => {
+        if (!result.destination) {
             return;
         }
 
-        this.over = over;
+        const items = reorder(
+            this.state.items,
+            result.source.index,
+            result.destination.index
+        );
 
-        this.insertPlaceholder(pageY);
-    }, 50);
-
-    compo;
-
-    dragEnd = () => {
-        const { props, container, placeholder, nodePlacement } = this;
-
-        if (!this.over) {
-            return;
-        }
-
-        let {
-            dragged: {
-                dataset: { index: from }
+        this.setState(
+            {
+                items
             },
-            over: {
-                dataset: { index: to }
-            }
-        } = this;
+            () => this.props.onReorderItems(items)
+        );
+    };
 
-        const items = [...props.items];
+    renderItem = ({ props, style }, index) => {
+        const { renderItem } = this.props;
 
-        if (from < to) {
-            to--;
-        }
-
-        if (nodePlacement === 'after') {
-            to++;
-        }
-
-        document.body.style.cursor = 'default';
-
-        container.removeChild(placeholder);
-        container.classList.remove('drag-active');
-
-        items.splice(to, 0, items.splice(from, 1)[0]);
-
-        this.props.onItemMove(items);
-        this.over = null;
-        this.dragged = null;
+        return (
+            <Draggable
+                key={index}
+                draggableId={`draggable${index}`}
+                index={index}
+            >
+                {({ innerRef, draggableProps, dragHandleProps }) => (
+                    <div
+                        ref={innerRef}
+                        {...draggableProps}
+                        {...dragHandleProps}
+                    >
+                        <div style={style}>
+                            {typeof renderItem === 'function'
+                                ? renderItem(props, index)
+                                : null}
+                        </div>
+                    </div>
+                )}
+            </Draggable>
+        );
     };
 
     render() {
         const {
-            props: { className = '', items = [], renderItem = () => {} },
-            getContainer,
-            dragOver,
-            dragStart,
-            dragEnd
+            props: { className, items },
+            onDragEnd,
+            renderItem
         } = this;
 
         return (
-            <div
-                className={['draggable-list', className].join(' ')}
-                onDragOver={dragOver}
-                ref={getContainer}
-            >
-                {items.map((data, index) => (
-                    <VisibilitySensor
-                        key={index}
-                        resizeCheck={true}
-                        partialVisibility={true}
-                        scrollCheck={true}
-                        scrollThrottle={100}
-                        containment={this.container}
-                    >
-                        {({ isVisible }) => (
-                            <div
-                                key={index}
-                                className={[
-                                    'draggable-list__item',
-                                    !isVisible
-                                        ? 'draggable-list__item--hidden'
-                                        : ''
-                                ].join(' ')}
-                                data-index={index}
-                                onDragStart={dragStart}
-                                onDragEnd={dragEnd}
-                                draggable
-                            >
-                                {isVisible && typeof renderItem === 'function'
-                                    ? renderItem(data, index)
-                                    : null}
-                            </div>
-                        )}
-                    </VisibilitySensor>
-                ))}
-            </div>
+            <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId="droppable">
+                    {({ innerRef }) => (
+                        <FlatList
+                            className={className}
+                            containerRef={innerRef}
+                            items={items}
+                            renderItem={renderItem}
+                        />
+                    )}
+                </Droppable>
+            </DragDropContext>
         );
     }
 }

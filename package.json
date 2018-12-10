@@ -9,6 +9,7 @@
     "dependencies": {
         "moment": "^2.22.2",
         "react": "^16.6.1",
+        "react-beautiful-dnd": "^10.0.2",
         "react-dom": "^16.6.1",
         "react-fastclick": "^3.0.2",
         "react-helmet": "^5.2.0",

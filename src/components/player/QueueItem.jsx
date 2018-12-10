@@ -7,7 +7,6 @@ import { formatTime } from '../../lib/helpers';
 const QueueItem = ({
     title,
     duration,
-    index,
     isActive,
     onClickRemove,
     icon,
@@ -18,7 +17,6 @@ const QueueItem = ({
             ' '
         )}
         {...props}
-        data-index={index}
     >
         <div className="queue__item-button icon-button">
             <Icon

@@ -46,6 +46,8 @@
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
         position: relative;
+        background-color: lighten($brand-primary, 20%);
+        min-height: 50px;
 
         &:active {
             cursor: grabbing;

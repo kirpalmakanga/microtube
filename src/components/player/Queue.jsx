@@ -6,6 +6,8 @@ import QueueItem from './QueueItem';
 
 import DraggableList from '../DraggableList';
 
+import { pick } from '../../lib/helpers';
+
 class Queue extends Component {
     render() {
         const {
@@ -29,34 +31,28 @@ class Queue extends Component {
                 ].join(' ')}
             >
                 <QueueHeader />
-
-                {items.length ? (
-                    <DraggableList
-                        className="queue__items"
-                        items={items}
-                        onItemMove={setQueue}
-                        renderItem={({ title, duration, active }, index) => (
-                            <QueueItem
-                                title={title}
-                                duration={duration}
-                                isActive={active}
-                                icon={
-                                    active && isBuffering
-                                        ? 'loading'
-                                        : active && isPlaying
-                                        ? 'pause'
-                                        : 'play'
-                                }
-                                onClick={
-                                    active
-                                        ? togglePlay
-                                        : makeSetActiveItem(index)
-                                }
-                                onClickRemove={makeRemoveItem(index)}
-                            />
-                        )}
-                    />
-                ) : null}
+                <DraggableList
+                    className="queue__items"
+                    items={items}
+                    renderItem={({ active, ...props }, index) => (
+                        <QueueItem
+                            {...pick(props, ['title', 'duration'])}
+                            isActive={active}
+                            icon={
+                                active && isBuffering
+                                    ? 'loading'
+                                    : active && isPlaying
+                                    ? 'pause'
+                                    : 'play'
+                            }
+                            onClick={
+                                active ? togglePlay : makeSetActiveItem(index)
+                            }
+                            onClickRemove={makeRemoveItem(index)}
+                        />
+                    )}
+                    onReorderItems={setQueue}
+                />
             </section>
         );
     }

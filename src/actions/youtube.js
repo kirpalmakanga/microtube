@@ -145,7 +145,7 @@ export function editPlaylistItem(data) {
                     promptText: `Add to playlist`,
                     confirmText: 'Done',
                     playlists: playlists.items,
-                    callback: async (playlistId, action) => {
+                    callback: async (playlistId) => {
                         try {
                             if (playlistId) {
                                 // if (action === 'insert') {

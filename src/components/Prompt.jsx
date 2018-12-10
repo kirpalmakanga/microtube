@@ -145,7 +145,10 @@ class Prompt extends Component {
                     className="dialog shadow--2dp"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    <header className="dialog__header">{promptText}</header>
+                    <header className="dialog__header">
+                        <Icon name="prompt" />
+                        {promptText}
+                    </header>
 
                     {form ? (
                         <div className="dialog__content">
@@ -174,7 +177,7 @@ class Prompt extends Component {
                             />
                             <Button
                                 className="button shadow--2dp"
-                                onClick={callback}
+                                onClick={playlists.length ? close : callback}
                                 title={confirmText}
                             />
                         </footer>

@@ -4,7 +4,8 @@
     "description": "light youtube player",
     "scripts": {
         "dev": "node ./node_modules/poi/bin/cli.js --serve",
-        "build": "rm -rf dist/ && node ./node_modules/poi/bin/cli.js"
+        "build": "rm -rf dist/ && node ./node_modules/poi/bin/cli.js",
+        "build:production": "rm -rf dist/ && node ./node_modules/poi/bin/cli.js --production"
     },
     "dependencies": {
         "moment": "^2.22.2",

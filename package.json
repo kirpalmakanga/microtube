@@ -3,8 +3,8 @@
     "version": "1.0.0",
     "description": "light youtube player",
     "scripts": {
-        "dev": "node ./node_modules/poi/bin/cli.js",
-        "build": "rm -rf dist/ && node ./node_modules/poi/bin/cli.js build"
+        "dev": "node ./node_modules/poi/bin/cli.js --serve",
+        "build": "rm -rf dist/ && node ./node_modules/poi/bin/cli.js"
     },
     "dependencies": {
         "moment": "^2.22.2",
@@ -24,14 +24,14 @@
     },
     "devDependencies": {
         "@babel/plugin-proposal-class-properties": "^7.1.0",
-        "@babel/plugin-syntax-dynamic-import": "^7.0.0",
         "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+        "@babel/plugin-syntax-dynamic-import": "^7.0.0",
         "@babel/plugin-transform-runtime": "^7.1.0",
         "@babel/preset-env": "^7.1.5",
         "@babel/preset-react": "^7.0.0",
         "node-sass": "^4.10.0",
         "offline-plugin": "^5.0.6",
-        "poi": "^10.2.10",
+        "poi": "^12.0.2",
         "sass-loader": "^6.0.7",
         "typescript": "^2.9.2"
     }

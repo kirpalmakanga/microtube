@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -16,6 +16,7 @@
             content="https://microtube.netlify.com/"
         />
 
+        <link rel="manifest" href="/manifest.json" />
         <link rel="image_src" href="/images/icons/icon-512x512.png" />
 
         <link
@@ -104,21 +105,21 @@
             content="mstile-310x310.png"
         />
 
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title><%= htmlWebpackPlugin.options.title %></title>
-        <% if (htmlWebpackPlugin.options.description) { %>
-        <meta
-            name="description"
-            content="<%= htmlWebpackPlugin.options.description %>"
-        />
-        <% } %>
-        <link rel="manifest" href="/manifest.json" />
-    </head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title><%= html.title %></title>
 
+        <% if (pkg.description) { %>
+        <meta name="description" content="<%= pkg.description %>" />
+        <% } %>
+    </head>
     <body>
-        <noscript>You need to enable JavaScript to run this app.</noscript>
+        <noscript>
+            <%= html.title %> doesn't work without JavaScript enabled. Please
+            enable it to continue.
+        </noscript>
 
         <svg class="icons">
             <symbol id="icon-back" viewBox="0 0 24 24">

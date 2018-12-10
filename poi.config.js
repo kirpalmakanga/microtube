@@ -3,11 +3,12 @@ const OfflinePlugin = require('offline-plugin');
 
 module.exports = {
     entry: './src/index.js',
-    port: 8080,
-    html: {
-        title: 'Microtube'
+    output: {
+        html: {
+            title: 'Microtube'
+        }
     },
-    devServer: { open: true },
+    devServer: { port: 8080, open: true },
     chainWebpack(config) {
         config.resolve.extensions.add('.tsx');
 

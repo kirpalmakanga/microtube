@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { queueVideos } from '../actions/youtube';
 
 import Fade from './animations/Fade';
 
@@ -79,7 +78,7 @@ class ImportVideoForm extends Component {
 
 class PlaylistManager extends Component {
     handleCheck = ({ target: { name, checked } }) =>
-        this.props.onCheck(name, checked ? 'insert' : 'remove');
+        this.props.onClickItem(name, checked ? 'insert' : 'remove');
 
     render() {
         const {
@@ -125,13 +124,6 @@ class Prompt extends Component {
         this.props.closePrompt();
     };
 
-    handleIdsChange = (id, action) =>
-        this.setState(({ playlistActions }) => {
-            playlistActions.set(id, action);
-
-            return { playlistActions };
-        });
-
     render() {
         const {
             props: {
@@ -143,8 +135,7 @@ class Prompt extends Component {
                     confirmText,
                     cancelText,
                     callback
-                },
-                queueVideos
+                }
             },
             close
         } = this;
@@ -161,7 +152,7 @@ class Prompt extends Component {
                         <div className="dialog__content">
                             <ImportVideoForm
                                 onClickCancel={close}
-                                onSubmit={queueVideos}
+                                onSubmit={callback}
                                 cancelText={cancelText}
                                 submitText={confirmText}
                             />
@@ -170,14 +161,13 @@ class Prompt extends Component {
                         <div className="dialog__content">
                             <PlaylistManager
                                 items={playlists}
-                                onCheck={callback}
+                                onClickItem={callback}
                             />{' '}
                         </div>
                     ) : null}
 
                     {!form && (
                         <footer className="dialog__actions">
-                            test
                             <Button
                                 className="button button--close shadow--2dp"
                                 onClick={close}
@@ -199,8 +189,6 @@ class Prompt extends Component {
 const mapStateToProps = ({ prompt }) => ({ prompt });
 
 const mapDispatchToProps = (dispatch) => ({
-    queueVideos: (ids) => dispatch(queueVideos(ids)),
-
     closePrompt: async () => {
         dispatch({ type: 'prompt/CLOSE' });
 

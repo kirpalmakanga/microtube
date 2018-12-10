@@ -8,7 +8,7 @@ module.exports = {
             title: 'Microtube'
         }
     },
-    devServer: { port: 8080, open: true },
+    devServer: { port: 8080 },
     chainWebpack(config) {
         config.resolve.extensions.add('.tsx');
 

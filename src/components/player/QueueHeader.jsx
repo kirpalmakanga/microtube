@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import Button from '../Button';
 
+import { queueVideos } from '../../actions/youtube';
+
 class QueueHeader extends PureComponent {
     render() {
         const {
@@ -58,7 +60,8 @@ const mapDispatchToProps = (dispatch) => ({
                 promptText: 'Import videos',
                 confirmText: 'Import',
                 form: true,
-                callback: () => {
+                callback: async (ids) => {
+                    await dispatch(queueVideos(ids));
                     dispatch({ type: 'prompt/CLOSE' });
                 }
             }

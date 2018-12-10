@@ -78,7 +78,9 @@
         justify-content: space-between;
         padding: 20px;
         cursor: pointer;
-
+        &:not(:last-child) {
+            border-bottom: 1px solid rgba($black, 0.2);
+        }
         &:hover {
             background-color: darken($white, 10%);
             .icon {

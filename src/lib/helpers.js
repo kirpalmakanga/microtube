@@ -122,3 +122,5 @@ export const pick = (obj, whitelist = []) =>
     );
 
 export const delay = (t) => new Promise((resolve) => setTimeout(resolve, t));
+
+export const splitLines = (str) => str.match(/[^\r\n]+/g) || [];

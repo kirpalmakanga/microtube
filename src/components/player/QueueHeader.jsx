@@ -5,6 +5,8 @@ import Button from '../Button';
 
 import { queueVideos } from '../../actions/youtube';
 
+import { parseID, splitLines } from '../../lib/helpers';
+
 class QueueHeader extends PureComponent {
     render() {
         const {
@@ -25,7 +27,7 @@ class QueueHeader extends PureComponent {
                     />
 
                     <span className="layout-title">
-                        {'Queue (' + player.queue.length + ' Items)'}
+                        {`Queue (${player.queue.length} Items)`}
                     </span>
 
                     <nav className="navigation">
@@ -60,8 +62,14 @@ const mapDispatchToProps = (dispatch) => ({
                 promptText: 'Import videos',
                 confirmText: 'Import',
                 form: true,
-                callback: async (ids) => {
-                    await dispatch(queueVideos(ids));
+                callback: async (text) => {
+                    const ids = splitLines(text);
+
+                    if (!ids.length) {
+                        return;
+                    }
+
+                    await dispatch(queueVideos(ids.map(parseID)));
                     dispatch({ type: 'prompt/CLOSE' });
                 }
             }

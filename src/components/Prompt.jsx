@@ -7,7 +7,7 @@ import Icon from './Icon';
 
 import Button from './Button';
 
-import { parseID, delay } from '../lib/helpers';
+import { delay } from '../lib/helpers';
 
 class ImportVideoForm extends Component {
     state = {
@@ -24,18 +24,7 @@ class ImportVideoForm extends Component {
             data: { text }
         } = this.state;
 
-        const lines = text.match(/[^\r\n]+/g);
-
-        if (!lines) {
-            return;
-        }
-
-        const ids = lines.map(parseID);
-
-        e.preventDefault();
-
-        this.props.onSubmit(ids);
-        this.close();
+        this.props.onSubmit(text);
     };
 
     render() {

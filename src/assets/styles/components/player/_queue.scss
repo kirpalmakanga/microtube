@@ -60,16 +60,6 @@
             }
         }
 
-        &:before {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            right: 40px;
-            content: '';
-            display: block;
-        }
-
         &-title,
         &-duration {
             padding: 15px 15px 15px 0px;

@@ -20,6 +20,7 @@ const Channels = asyncComponent(() => import('./containers/Channels'));
 const Channel = asyncComponent(() => import('./containers/Channel'));
 
 import asyncComponent from './components/asyncComponent';
+import Sprite from './components/Sprite';
 import Loader from './components/Loader';
 import Player from './components/player/Player';
 
@@ -70,6 +71,8 @@ class Root extends Component {
 
         return (
             <div className="layout" key="layout">
+                <Sprite />
+
                 {apiLoaded
                     ? [
                           <Header key="header" />,

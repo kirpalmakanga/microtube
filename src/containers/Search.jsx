@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { searchVideos } from '../actions/youtube';
+import { searchVideos, editPlaylistItem } from '../actions/youtube';
 
 import Screen from '../layout/Screen';
 
@@ -55,7 +55,13 @@ class Search extends Component {
     render() {
         const {
             state: { mountGrid },
-            props: { query, items, queueAndPlayItem, queueItem },
+            props: {
+                query,
+                items,
+                queueAndPlayItem,
+                queueItem,
+                editPlaylistItem
+            },
             loadContent
         } = this;
 
@@ -70,6 +76,7 @@ class Search extends Component {
                                 {...data}
                                 onClick={() => queueAndPlayItem(data)}
                                 queueItem={() => queueItem(data)}
+                                editPlaylistItem={() => editPlaylistItem(data)}
                             />
                         )}
                     />
@@ -108,7 +115,9 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({
             type: 'QUEUE_SET_ACTIVE_ITEM'
         });
-    }
+    },
+
+    editPlaylistItem: (data) => dispatch(editPlaylistItem(data))
 });
 
 export default connect(

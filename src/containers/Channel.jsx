@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { getChannelTitle, getChannelVideos } from '../actions/youtube';
+import {
+    getChannelTitle,
+    getChannelVideos,
+    editPlaylistItem
+} from '../actions/youtube';
 
 import Screen from '../layout/Screen';
 
@@ -25,7 +29,8 @@ class Channel extends Component {
             nextPageToken: pageToken,
             getChannelVideos,
             queueAndPlayItem,
-            queueItem
+            queueItem,
+            editPlaylistItem
         } = this.props;
 
         return (
@@ -45,6 +50,7 @@ class Channel extends Component {
                                 {...data}
                                 onClick={() => queueAndPlayItem(data)}
                                 queueItem={() => queueItem(data)}
+                                editPlaylistItem={() => editPlaylistItem(data)}
                             />
                         );
                     }}
@@ -81,7 +87,9 @@ const mapDispatchToProps = (dispatch) => ({
         dispatch({
             type: 'QUEUE_SET_ACTIVE_ITEM'
         });
-    }
+    },
+
+    editPlaylistItem: (data) => dispatch(editPlaylistItem(data))
 });
 
 export default connect(

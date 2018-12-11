@@ -6,6 +6,8 @@ import QueueItem from './QueueItem';
 
 import DraggableList from '../DraggableList';
 
+import { editPlaylistItem } from '../../actions/youtube';
+
 import { pick } from '../../lib/helpers';
 
 class Queue extends Component {
@@ -19,7 +21,8 @@ class Queue extends Component {
                 isBuffering,
                 togglePlay,
                 makeSetActiveItem,
-                makeRemoveItem
+                makeRemoveItem,
+                makeEditPlaylistItem
             }
         } = this;
 
@@ -31,12 +34,13 @@ class Queue extends Component {
                 ].join(' ')}
             >
                 <QueueHeader />
+
                 <DraggableList
                     className="queue__items"
                     items={items}
-                    renderItem={({ active, ...props }, index) => (
+                    renderItem={({ active, ...data }, index) => (
                         <QueueItem
-                            {...pick(props, ['title', 'duration'])}
+                            {...pick(data, ['title', 'duration'])}
                             isActive={active}
                             icon={
                                 active && isBuffering
@@ -49,6 +53,7 @@ class Queue extends Component {
                                 active ? togglePlay : makeSetActiveItem(index)
                             }
                             onClickRemove={makeRemoveItem(index)}
+                            editPlaylistItem={makeEditPlaylistItem(data)}
                         />
                     )}
                     onReorderItems={setQueue}
@@ -76,7 +81,9 @@ const mapDispatchToProps = (dispatch) => ({
     makeRemoveItem: (index) => (e) => {
         e.stopPropagation();
         dispatch({ type: 'QUEUE_REMOVE', data: index });
-    }
+    },
+
+    makeEditPlaylistItem: (data) => () => dispatch(editPlaylistItem(data))
 });
 
 export default connect(

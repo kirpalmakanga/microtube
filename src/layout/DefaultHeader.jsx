@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
-import { signIn, signOut } from '../api/youtube';
+import { signIn, signOut } from '../actions/youtube';
 
 import Icon from '../components/Icon';
 import Button from '../components/Button';
@@ -33,17 +33,12 @@ class DefaultHeader extends Component {
         return title;
     };
 
-    handleAuth = async () => {
+    handleAuth = () => {
         const { isSignedIn, signUserIn, signUserOut } = this.props;
 
         if (!isSignedIn) {
-            const data = await signIn();
-
-            return signUserIn(data);
+            signUserIn();
         }
-
-        await signOut();
-
         signUserOut();
     };
 
@@ -123,9 +118,9 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    signUserIn: (data) => dispatch({ type: 'auth/SIGN_IN', data }),
+    signUserIn: (data) => dispatch(signIn(data)),
 
-    signUserOut: () => dispatch({ type: 'auth/SIGN_OUT' })
+    signUserOut: () => dispatch(signOut())
 });
 
 export default connect(

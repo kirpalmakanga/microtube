@@ -258,50 +258,62 @@ export function searchVideos(config) {
     };
 }
 
-export function queueVideos(ids = []) {
-    return async (dispatch) => {
-        try {
-            const data = await api.getVideosFromIds(ids);
+export const queueVideos = (ids = []) => async (dispatch) => {
+    try {
+        const data = await api.getVideosFromIds(ids);
 
-            dispatch({ type: 'QUEUE_PUSH', data });
-        } catch (err) {
-            dispatch(notify({ message: 'Error fetching video.' }));
-        }
-    };
-}
+        dispatch({ type: 'QUEUE_PUSH', data });
+    } catch (err) {
+        dispatch(notify({ message: 'Error fetching video.' }));
+    }
+};
 
-export function getSubscriptions(config) {
-    return async (dispatch) => {
-        try {
-            const data = await api.getSubscriptions(config);
+export const getSubscriptions = (config) => async (dispatch) => {
+    try {
+        const data = await api.getSubscriptions(config);
 
-            dispatch({ type: 'subscriptions/UPDATE_ITEMS', data });
-        } catch (err) {
-            dispatch(notify({ message: 'Error fetching subscriptions.' }));
-        }
-    };
-}
+        dispatch({ type: 'subscriptions/UPDATE_ITEMS', data });
+    } catch (err) {
+        dispatch(notify({ message: 'Error fetching subscriptions.' }));
+    }
+};
 
-export function getChannelTitle(channelId) {
-    return async (dispatch) => {
-        try {
-            const title = await api.getChannelTitle(channelId);
+export const getChannelTitle = (channelId) => async (dispatch) => {
+    try {
+        const title = await api.getChannelTitle(channelId);
 
-            dispatch({ type: 'channel/SET_TITLE', data: { title } });
-        } catch (err) {
-            dispatch(notify({ message: 'Error fetching channel title.' }));
-        }
-    };
-}
+        dispatch({ type: 'channel/SET_TITLE', data: { title } });
+    } catch (err) {
+        dispatch(notify({ message: 'Error fetching channel title.' }));
+    }
+};
 
-export function getChannelVideos(config) {
-    return async (dispatch) => {
-        try {
-            const data = await api.getChannelVideos(config);
+export const getChannelVideos = (config) => async (dispatch) => {
+    try {
+        const data = await api.getChannelVideos(config);
 
-            dispatch({ type: 'channel/UPDATE_ITEMS', data });
-        } catch (err) {
-            dispatch(notify({ message: 'Error fetching channel videos.' }));
-        }
-    };
-}
+        dispatch({ type: 'channel/UPDATE_ITEMS', data });
+    } catch (err) {
+        dispatch(notify({ message: 'Error fetching channel videos.' }));
+    }
+};
+
+export const signIn = () => async (dispatch) => {
+    try {
+        const data = await api.signIn();
+
+        dispatch({ type: 'auth/SIGN_IN', data });
+    } catch (error) {
+        dispatch(notify({ message: 'Error signing in user.' }));
+    }
+};
+
+export const signOut = () => async (dispatch) => {
+    try {
+        await api.signOut();
+
+        dispatch({ type: 'auth/SIGN_OUT' });
+    } catch (error) {
+        dispatch(notify({ message: 'Error signing out user.' }));
+    }
+};

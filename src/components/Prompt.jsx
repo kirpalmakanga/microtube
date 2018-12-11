@@ -68,8 +68,7 @@ class ImportVideoForm extends Component {
 }
 
 class PlaylistManager extends Component {
-    handleClick = ({ target: { name, checked } }) =>
-        this.props.onClickItem(name, checked ? 'insert' : 'remove');
+    handleClick = (id) => () => this.props.onClickItem(id);
 
     render() {
         const {
@@ -84,10 +83,8 @@ class PlaylistManager extends Component {
                         className="playlist-menu__item"
                         key={id}
                         htmlFor={id}
-                        onClick={handleClick}
+                        onClick={handleClick(id)}
                     >
-                        {/* TODO: Ajouter un <Icon></Icon>, ajouter les checkbox au sprite */}
-
                         <span className="playlist-menu__item-text">
                             {title}
                         </span>

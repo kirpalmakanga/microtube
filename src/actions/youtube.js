@@ -122,22 +122,32 @@ export function removePlaylistItem({ title, playlistId, playlistItemId }) {
     };
 }
 
+const loadData = (promise) => async (dispatch) => {
+    dispatch({
+        type: 'app/SET_LOADER',
+        data: true
+    });
+
+    const data = await promise;
+
+    dispatch({
+        type: 'app/SET_LOADER',
+        data: false
+    });
+
+    return data;
+};
+
 export function editPlaylistItem(data) {
     return async (dispatch) => {
         try {
-            dispatch({
-                type: 'LOADER',
-                data: { show: true }
-            });
-
-            const playlists = await api.getAllPlaylists({
-                mine: true
-            });
-
-            dispatch({
-                type: 'LOADER',
-                data: { show: false }
-            });
+            const playlists = await dispatch(
+                loadData(
+                    api.getAllPlaylists({
+                        mine: true
+                    })
+                )
+            );
 
             dispatch({
                 type: 'prompt/OPEN',

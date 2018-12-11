@@ -85,17 +85,23 @@ input {
 }
 
 .loader {
-    @include transition();
-    position: absolute;
     z-index: 7;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background-color: $brand-primary;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    &,
+    &__background {
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+    }
+
+    &__background {
+        background-color: $brand-primary;
+    }
 
     .icon {
         color: $brand-secondary;

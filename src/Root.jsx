@@ -64,6 +64,7 @@ class Root extends Component {
 
     render() {
         const {
+            props: { isLoading },
             state: { apiLoaded }
         } = this;
 
@@ -103,15 +104,16 @@ class Root extends Component {
 
                 <Player />
 
-                <Loader isActive={!apiLoaded} />
+                <Loader
+                    isActive={!apiLoaded || isLoading}
+                    style={isLoading ? { opacity: 0.5 } : {}}
+                />
             </div>
         );
     }
 }
 
-const mapStateToProps = ({ notifications: { message } }) => ({
-    message
-});
+const mapStateToProps = ({ app: { isLoading } }) => ({ isLoading });
 
 const mapDispatchToProps = (dispatch) => ({
     listenAuthChange: () =>

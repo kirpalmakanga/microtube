@@ -3,7 +3,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import VisibilitySensor from 'react-visibility-sensor';
 
 const reorder = (list, startIndex, endIndex) => {
-    const result = [...list];
+    const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
 
@@ -68,31 +68,21 @@ class FlatList extends Component {
 }
 
 class DraggableList extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            items: props.items
-        };
-    }
-
     onDragEnd = (result) => {
         if (!result.destination) {
             return;
         }
 
-        const items = reorder(
-            this.state.items,
-            result.source.index,
-            result.destination.index
-        );
+        const {
+            source: { index: startIndex },
+            destination: { index: endIndex }
+        } = result;
 
-        this.setState(
-            {
-                items
-            },
-            () => this.props.onReorderItems(items)
-        );
+        const items = reorder(this.props.items, startIndex, endIndex);
+
+        console.log('items', items);
+
+        this.props.onReorderItems(items);
     };
 
     renderItem = ({ props, style }, index) => {
@@ -123,7 +113,7 @@ class DraggableList extends Component {
 
     render() {
         const {
-            props: { className, items },
+            props: { className, items = [] },
             onDragEnd,
             renderItem
         } = this;

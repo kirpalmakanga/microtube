@@ -11,7 +11,13 @@ import DropDown from '../components/DropDown';
 class SearchHeader extends Component {
     render() {
         const {
-            props: { onSearchFormSubmit, query, setSearchMode, forMine }
+            props: {
+                isSignedIn,
+                onSearchFormSubmit,
+                query,
+                setSearchMode,
+                forMine
+            }
         } = this;
 
         return (
@@ -27,22 +33,28 @@ class SearchHeader extends Component {
 
                 <SearchForm query={query} onSubmit={onSearchFormSubmit} />
 
-                <nav className="navigation">
-                    <DropDown
-                        currentValue={forMine}
-                        options={[
-                            { label: 'All videos', value: 0 },
-                            { label: 'My Videos', value: 1 }
-                        ]}
-                        onSelect={(value) => setSearchMode(parseInt(value))}
-                    />
-                </nav>
+                {isSignedIn ? (
+                    <nav className="navigation">
+                        <DropDown
+                            currentValue={forMine}
+                            options={[
+                                { label: 'All videos', value: 0 },
+                                { label: 'My Videos', value: 1 }
+                            ]}
+                            onSelect={(value) => setSearchMode(parseInt(value))}
+                        />
+                    </nav>
+                ) : null}
             </div>
         );
     }
 }
 
-const mapStateToProps = ({ search: { query, forMine } }) => ({
+const mapStateToProps = ({
+    auth: { isSignedIn },
+    search: { query, forMine }
+}) => ({
+    isSignedIn,
     query,
     forMine
 });

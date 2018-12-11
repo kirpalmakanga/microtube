@@ -160,9 +160,11 @@ export function editPlaylistItem(data) {
                             if (playlistId) {
                                 // if (action === 'insert') {
                                 const { id } = data;
+
                                 const {
                                     id: playlistItemId
                                 } = await api.addPlaylistItem(playlistId, id);
+
                                 dispatch({
                                     type: 'playlist/UPDATE_ITEMS',
                                     data: {

@@ -9,6 +9,7 @@ const QueueItem = ({
     duration,
     isActive,
     onClickRemove,
+    editPlaylistItem,
     icon,
     ...props
 }) => (
@@ -31,6 +32,13 @@ const QueueItem = ({
         <div className="queue__item-title">{title}</div>
 
         <div className="queue__item-duration">{formatTime(duration)}</div>
+
+        <button
+            className="queue__item-button icon-button"
+            onClick={editPlaylistItem}
+        >
+            <Icon className="icon" name="playlist-add" />
+        </button>
 
         <button
             className="queue__item-button icon-button"

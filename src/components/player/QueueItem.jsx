@@ -13,9 +13,10 @@ const QueueItem = ({
     ...props
 }) => (
     <div
-        className={['queue__item', isActive ? 'queue__item--active' : ''].join(
-            ' '
-        )}
+        className={[
+            'queue__item shadow--2dp',
+            isActive ? 'queue__item--active' : ''
+        ].join(' ')}
         {...props}
     >
         <div className="queue__item-button icon-button">

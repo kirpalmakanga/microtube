@@ -80,8 +80,6 @@ class DraggableList extends Component {
 
         const items = reorder(this.props.items, startIndex, endIndex);
 
-        console.log('items', items);
-
         this.props.onReorderItems(items);
     };
 

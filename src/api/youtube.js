@@ -277,15 +277,15 @@ export async function getAllPlaylists({ mine = false } = {}) {
     let pageToken = '';
     let stack = [];
 
-    // while (pageToken !== null) {
-    const { items, nextPageToken } = await getPlaylists({
-        pageToken,
-        mine
-    });
+    while (pageToken !== null) {
+        const { items, nextPageToken } = await getPlaylists({
+            pageToken,
+            mine
+        });
 
-    pageToken = nextPageToken || null;
-    stack.push(...items);
-    // }
+        pageToken = nextPageToken || null;
+        stack.push(...items);
+    }
 
     return {
         items: stack,

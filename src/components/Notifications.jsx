@@ -1,20 +1,22 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import TranslateY from './animations/TranslateY';
+import { delay } from '../lib/helpers';
 
 class Notifications extends Component {
     render() {
         const {
             notifications: { message, isActive },
-            onClickClose
+            close
         } = this.props;
+
         return (
             <TranslateY in={isActive} className="notification">
                 <div className="notification__content">
                     <div className="notification__text">{message || ''}</div>
                     <button
                         className="notification__action icon-button"
-                        onClick={onClickClose}
+                        onClick={close}
                     >
                         <span className="icon">
                             <svg>
@@ -30,4 +32,17 @@ class Notifications extends Component {
 
 const mapStateToProps = ({ notifications }) => ({ notifications });
 
-export default connect(mapStateToProps)(Notifications);
+const mapDispatchToProps = (dispatch) => ({
+    close: async () => {
+        dispatch({ type: 'notifications/CLOSE' });
+
+        await delay(300);
+
+        dispatch({ type: 'notifications/CLEAR_MESSAGE' });
+    }
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Notifications);

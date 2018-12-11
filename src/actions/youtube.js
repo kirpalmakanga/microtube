@@ -165,12 +165,12 @@ export function editPlaylistItem(data) {
                                     id: playlistItemId
                                 } = await api.addPlaylistItem(playlistId, id);
 
-                                dispatch({
-                                    type: 'playlist/UPDATE_ITEMS',
-                                    data: {
-                                        items: [{ ...data, playlistItemId }]
-                                    }
-                                });
+                                // dispatch({
+                                //     type: 'playlist/UPDATE_ITEMS',
+                                //     data: {
+                                //         items: [{ ...data, playlistItemId }]
+                                //     }
+                                // });
 
                                 dispatch({
                                     type: 'playlists/UPDATE_ITEM',

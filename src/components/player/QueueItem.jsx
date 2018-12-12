@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Icon from '../Icon';
 
-import { formatTime } from '../../lib/helpers';
+import { formatTime, stopPropagation } from '../../lib/helpers';
 
 const QueueItem = ({
     title,
@@ -35,14 +35,14 @@ const QueueItem = ({
 
         <button
             className="queue__item-button icon-button"
-            onClick={editPlaylistItem}
+            onClick={stopPropagation(editPlaylistItem)}
         >
             <Icon className="icon" name="playlist-add" />
         </button>
 
         <button
             className="queue__item-button icon-button"
-            onClick={onClickRemove}
+            onClick={stopPropagation(onClickRemove)}
         >
             <Icon className="icon" name="close" />
         </button>

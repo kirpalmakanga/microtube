@@ -98,17 +98,13 @@ class Prompt extends Component {
 
     render() {
         const {
-            props: {
-                prompt: {
-                    form,
-                    playlists = [],
-                    isVisible,
-                    promptText,
-                    confirmText,
-                    cancelText,
-                    callback
-                }
-            },
+            form,
+            playlists = [],
+            isVisible,
+            promptText,
+            confirmText,
+            cancelText,
+            callback,
             close
         } = this;
 
@@ -165,7 +161,7 @@ class Prompt extends Component {
     }
 }
 
-const mapStateToProps = ({ prompt }) => ({ prompt });
+const mapStateToProps = ({ prompt }) => prompt;
 
 const mapDispatchToProps = (dispatch) => ({
     closePrompt: async () => {

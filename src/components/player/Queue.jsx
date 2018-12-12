@@ -8,7 +8,7 @@ import DraggableList from '../DraggableList';
 
 import { editPlaylistItem } from '../../actions/youtube';
 
-import { pick } from '../../lib/helpers';
+import { pick, stopPropagation } from '../../lib/helpers';
 
 class Queue extends Component {
     render() {
@@ -78,10 +78,8 @@ const mapDispatchToProps = (dispatch) => ({
         });
     },
 
-    makeRemoveItem: (index) => (e) => {
-        e.stopPropagation();
-        dispatch({ type: 'QUEUE_REMOVE', data: index });
-    },
+    makeRemoveItem: (index) => () =>
+        dispatch({ type: 'QUEUE_REMOVE', data: index }),
 
     makeEditPlaylistItem: (data) => () => dispatch(editPlaylistItem(data))
 });

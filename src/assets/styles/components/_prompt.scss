@@ -37,6 +37,7 @@
         border-bottom: 2px solid rgba($black, 0.5);
         display: flex;
         align-items: center;
+        flex-shrink: 0;
         font-size: 1.5em;
         font-weight: 700;
         .icon {
@@ -53,12 +54,10 @@
         border-bottom: 2px solid rgba($black, 0.5);
     }
 
-    &__footer {
-    }
-
     &__actions {
         display: flex;
         justify-content: flex-end;
+        flex-shrink: 0;
         padding: 20px;
         .button {
             &:not(:last-child) {

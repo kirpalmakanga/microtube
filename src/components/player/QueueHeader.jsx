@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import Button from '../Button';
 
-import { queueVideos } from '../../actions/youtube';
+import { prompt, queueVideos } from '../../actions/youtube';
 
 import { parseID, splitLines } from '../../lib/helpers';
 
@@ -55,10 +55,10 @@ const mapStateToProps = ({ player }) => ({ player });
 
 const mapDispatchToProps = (dispatch) => ({
     closeQueue: () => dispatch({ type: 'QUEUE_CLOSE' }),
+
     promptAddVideo: () =>
-        dispatch({
-            type: 'prompt/OPEN',
-            data: {
+        dispatch(
+            prompt({
                 promptText: 'Import videos',
                 confirmText: 'Import',
                 form: true,
@@ -70,22 +70,20 @@ const mapDispatchToProps = (dispatch) => ({
                     }
 
                     await dispatch(queueVideos(ids.map(parseID)));
-                    dispatch({ type: 'prompt/CLOSE' });
                 }
-            }
-        }),
+            })
+        ),
+
     promptClearQueue: () =>
-        dispatch({
-            type: 'prompt/OPEN',
-            data: {
+        dispatch(
+            prompt({
                 promptText: 'Clear the queue ?',
                 confirmText: 'Clear',
-                callback: () => {
+                callback: async () => {
                     dispatch({ type: 'QUEUE_CLEAR' });
-                    dispatch({ type: 'prompt/CLOSE' });
                 }
-            }
-        })
+            })
+        )
 });
 
 export default connect(

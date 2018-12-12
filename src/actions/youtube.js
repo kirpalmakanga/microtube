@@ -16,6 +16,32 @@ const notify = ({ message }) => async (dispatch, getState) => {
     }
 };
 
+export const closePrompt = () => async (dispatch) => {
+    dispatch({ type: 'prompt/CLOSE' });
+
+    await delay(300);
+
+    dispatch({ type: 'prompt/RESET' });
+};
+
+export const prompt = ({
+    callback = async () => {},
+    errorMessage = 'Error.',
+    ...config
+} = {}) => (dispatch) => {
+    dispatch({
+        type: 'prompt/OPEN',
+        data: {
+            ...config,
+            callback: async (data) => {
+                await callback(data);
+
+                dispatch(closePrompt());
+            }
+        }
+    });
+};
+
 export function getPlaylists(config) {
     return async (dispatch) => {
         try {
@@ -31,9 +57,8 @@ export function getPlaylists(config) {
 
 export function removePlaylist({ title, playlistId }) {
     return (dispatch) => {
-        dispatch({
-            type: 'prompt/OPEN',
-            data: {
+        dispatch(
+            prompt({
                 promptText: `Remove ${title} ?`,
                 confirmText: 'Remove',
                 callback: async () => {
@@ -45,15 +70,19 @@ export function removePlaylist({ title, playlistId }) {
                             data: { playlistId }
                         });
 
-                        dispatch({ type: 'prompt/CLOSE' });
+                        dispatch(
+                            notify({
+                                message: `Removed playlist "${title}".`
+                            })
+                        );
                     } catch (error) {
                         dispatch(
                             notify({ message: 'Error deleting playlist.' })
                         );
                     }
                 }
-            }
-        });
+            })
+        );
     };
 }
 
@@ -86,9 +115,8 @@ export function getPlaylistItems(config) {
 
 export function removePlaylistItem({ title, playlistId, playlistItemId }) {
     return (dispatch, getState) => {
-        dispatch({
-            type: 'prompt/OPEN',
-            data: {
+        dispatch(
+            prompt({
                 promptText: `Remove ${title} ?`,
                 confirmText: 'Remove',
                 callback: async () => {
@@ -109,16 +137,14 @@ export function removePlaylistItem({ title, playlistId, playlistItemId }) {
                                 message: `Removed "${title}" from playlist: "${playlistTitle}."`
                             })
                         );
-
-                        dispatch({ type: 'prompt/CLOSE' });
                     } catch (error) {
                         dispatch(
                             notify({ message: 'Error deleting playlist item.' })
                         );
                     }
                 }
-            }
-        });
+            })
+        );
     };
 }
 
@@ -149,21 +175,22 @@ export function editPlaylistItem(data) {
                 )
             );
 
-            dispatch({
-                type: 'prompt/OPEN',
-                data: {
+            dispatch(
+                prompt({
                     promptText: `Add to playlist`,
                     confirmText: 'Done',
                     playlists: playlists.items,
+                    errorMessage: 'Error editing playlist item.',
                     callback: async (playlistId) => {
                         try {
                             if (playlistId) {
                                 // if (action === 'insert') {
                                 const { id } = data;
 
-                                const {
-                                    id: playlistItemId
-                                } = await api.addPlaylistItem(playlistId, id);
+                                // const {
+                                //     id: playlistItemId
+                                // } =
+                                await api.addPlaylistItem(playlistId, id);
 
                                 // dispatch({
                                 //     type: 'playlist/UPDATE_ITEMS',
@@ -187,10 +214,7 @@ export function editPlaylistItem(data) {
                                 // });
                                 // }
                             }
-
-                            dispatch({ type: 'prompt/CLOSE' });
                         } catch (error) {
-                            console.log(error);
                             dispatch(
                                 notify({
                                     message: 'Error editing playlist item.'
@@ -198,8 +222,8 @@ export function editPlaylistItem(data) {
                             );
                         }
                     }
-                }
-            });
+                })
+            );
         } catch (error) {
             console.log(error);
             dispatch(notify({ message: 'Error editing playlist item.' }));

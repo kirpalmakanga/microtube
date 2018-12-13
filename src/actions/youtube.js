@@ -28,7 +28,7 @@ export const prompt = ({
     callback = async () => {},
     errorMessage = 'Error.',
     ...config
-} = {}) => (dispatch) => {
+} = {}) => (dispatch) =>
     dispatch({
         type: 'prompt/OPEN',
         data: {
@@ -40,7 +40,6 @@ export const prompt = ({
             }
         }
     });
-};
 
 export function getPlaylists(config) {
     return async (dispatch) => {

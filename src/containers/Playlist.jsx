@@ -15,12 +15,14 @@ import Grid from '../components/Grid';
 import VideoCard from '../components/cards/VideoCard';
 
 class Playlist extends Component {
-    componentDidMount() {
-        this.props.getPlaylistTitle(this.props.playlistId);
+    constructor(props) {
+        super(props);
+
+        props.clearItems();
     }
 
-    componentWillUnmount() {
-        this.props.clearItems();
+    componentDidMount() {
+        this.props.getPlaylistTitle(this.props.playlistId);
     }
 
     render() {

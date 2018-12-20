@@ -3,7 +3,6 @@ import './assets/styles/app.scss';
 import React, { Component } from 'react';
 import { withRouter, Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-
 import { loadAPI, loadAuth, listenAuth, getSignedInUser } from './api/youtube';
 
 import { queueVideos, queuePlaylist } from './actions/youtube';
@@ -14,22 +13,18 @@ import Header from './layout/Header';
 import Playlists from './containers/Playlists';
 import Login from './containers/Login';
 
-const Playlist = asyncComponent(() => import('./containers/Playlist'));
-const Search = asyncComponent(() => import('./containers/Search'));
-const Channels = asyncComponent(() => import('./containers/Channels'));
-const Channel = asyncComponent(() => import('./containers/Channel'));
-
 import asyncComponent from './components/asyncComponent';
 import Sprite from './components/Sprite';
 import Loader from './components/Loader';
 import Player from './components/player/Player';
 
-class Root extends Component {
-    constructor(props) {
-        super(props);
+const Playlist = asyncComponent(() => import('./containers/Playlist'));
+const Search = asyncComponent(() => import('./containers/Search'));
+const Channels = asyncComponent(() => import('./containers/Channels'));
+const Channel = asyncComponent(() => import('./containers/Channel'));
 
-        this.state = { apiLoaded: false };
-    }
+class Root extends Component {
+    state = { apiLoaded: false };
 
     signInUser = () => {
         const auth = getSignedInUser();

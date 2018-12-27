@@ -15,9 +15,6 @@
         top: 100%;
         left: 0;
         width: 100%;
-        transform: translateY(-50%);
-        opacity: 0;
-        visibility: hidden;
 
         &-item {
             &.is-active {
@@ -40,7 +37,13 @@
         }
     }
 
-    &.is-open &__options {
+    &[data-state='closed'] &__options {
+        transform: translateY(-50%);
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    &[data-state='open'] &__options {
         transform: translateY(0);
         opacity: 1;
         visibility: visible;

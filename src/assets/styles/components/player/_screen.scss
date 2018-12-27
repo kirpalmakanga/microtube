@@ -1,39 +1,40 @@
 .screen {
-  background-color: lighten($brand-primary, 20%);
-  @include transition();
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  transform: translateY(100%);
-  bottom: 100px;
-  z-index: 1;
+    background-color: lighten($brand-primary, 20%);
+    @include transition();
+    position: fixed;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 100px;
+    display: flex;
 
-  @media screen and (min-width: 480px) {
-    bottom: 50px;
-  }
+    & > div {
+        flex: 1;
+    }
 
-  .is-fullscreen & {
-    top: 0;
+    &[data-state='hidden'] {
+        transform: translateY(100%);
+        visibility: hidden;
+    }
+
+    &[data-state='visible'] {
+        transform: translate(0);
+    }
 
     @media screen and (min-width: 480px) {
-      bottom: 0;
+        bottom: 50px;
     }
-  }
 
-  &.screen--show {
-    transform: translate(0);
-  }
+    [data-state-fullscreen='enabled'] & {
+        top: 0;
 
-  &__no-video {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+        @media screen and (min-width: 480px) {
+            bottom: 0;
+        }
+    }
 
-  iframe,
-  &__no-video {
-    width: 100%;
-    height: 100%;
-  }
+    iframe {
+        width: 100%;
+        height: 100%;
+    }
 }

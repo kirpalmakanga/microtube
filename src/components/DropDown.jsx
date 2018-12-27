@@ -14,7 +14,7 @@ class DropDown extends PureComponent {
 
     render() {
         const {
-            props: { currentValue, options = {}, onSelect },
+            props: { currentValue, options = {} },
             state: { isOpen },
             toggleOptions,
             handleOptionClick
@@ -25,7 +25,7 @@ class DropDown extends PureComponent {
         );
 
         return (
-            <div className={['dropdown', isOpen ? 'is-open' : ''].join(' ')}>
+            <div className="dropdown" data-state={isOpen ? 'open' : 'closed'}>
                 <div className="dropdown__current" onClick={toggleOptions}>
                     <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} />
                     <span>{options[currentIndex].label}</span>

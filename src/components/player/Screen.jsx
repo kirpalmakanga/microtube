@@ -14,23 +14,18 @@ const playerOptions = {
 
 class Screen extends PureComponent {
     render() {
-        const {
-            className,
-            videoId,
-            onReady,
-            onEnd,
-            onStateChange
-        } = this.props;
+        const { videoId, onReady, onEnd, onStateChange, ...props } = this.props;
 
         return (
-            <YoutubePlayer
-                className={className}
-                videoId={videoId}
-                opts={playerOptions}
-                onReady={onReady}
-                onEnd={onEnd}
-                onStateChange={onStateChange}
-            />
+            <div {...props}>
+                <YoutubePlayer
+                    videoId={videoId}
+                    opts={playerOptions}
+                    onReady={onReady}
+                    onEnd={onEnd}
+                    onStateChange={onStateChange}
+                />
+            </div>
         );
     }
 }

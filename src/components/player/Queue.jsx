@@ -28,10 +28,8 @@ class Queue extends Component {
 
         return (
             <section
-                className={[
-                    'queue shadow--2dp',
-                    showQueue ? 'queue--show' : ''
-                ].join(' ')}
+                className="queue shadow--2dp"
+                data-state={showQueue ? 'visible' : 'hidden'}
             >
                 <QueueHeader />
 
@@ -46,8 +44,8 @@ class Queue extends Component {
                                 active && isBuffering
                                     ? 'loading'
                                     : active && isPlaying
-                                    ? 'pause'
-                                    : 'play'
+                                        ? 'pause'
+                                        : 'play'
                             }
                             onClick={
                                 active ? togglePlay : makeSetActiveItem(index)

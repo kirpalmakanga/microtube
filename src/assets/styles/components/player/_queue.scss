@@ -1,5 +1,4 @@
 .queue {
-    z-index: 3;
     overflow: hidden;
     background-color: lighten($brand-primary, 20%);
     @include transition();
@@ -7,7 +6,6 @@
     top: 0;
     left: 0;
     right: 0;
-    transform: translateY(100%);
     bottom: 100px;
     display: flex;
     flex-direction: column;
@@ -16,7 +14,16 @@
         bottom: 50px;
     }
 
-    .is-fullscreen & {
+    &[data-state='hidden'] {
+        transform: translateY(100%);
+        visibility: hidden;
+    }
+
+    &[data-state='visible'] {
+        transform: translate(0);
+    }
+
+    [data-state-fullscreen='enabled'] & {
         bottom: 0;
 
         @media screen and (min-width: 480px) {
@@ -111,8 +118,4 @@
         height: 52px;
         background-color: lighten($brand-primary, 50%);
     }
-}
-
-.queue--show {
-    transform: translate(0);
 }

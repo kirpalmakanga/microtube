@@ -3,8 +3,9 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    z-index: 1;
 
-    &.is-fullscreen {
+    &[data-state-fullscreen='enabled'] {
         background-color: $black;
         position: fixed;
         z-index: 2;
@@ -24,7 +25,6 @@
 
 .player {
     position: relative;
-    z-index: 4;
 
     &__inner {
         @include transition();
@@ -33,10 +33,11 @@
         flex-wrap: wrap;
     }
 
-    .is-fullscreen &__inner {
+    [data-state-fullscreen='enabled'] &__inner {
         transform: translateY(100%);
     }
-    .is-fullscreen &:hover &__inner {
+
+    [data-state-fullscreen='enabled'] &:hover &__inner {
         transform: translateY(0);
     }
 

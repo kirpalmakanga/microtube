@@ -266,6 +266,8 @@ class Player extends Component {
                 this.updateTime();
             }
 
+            youtube.setPlaybackQuality('hd1080');
+
             this.setVolume(volume);
         });
     };
@@ -402,11 +404,9 @@ class Player extends Component {
 
         return (
             <div
-                className={[
-                    'player__container',
-                    isFullScreen ? 'is-fullscreen' : ''
-                ].join(' ')}
+                className="player__container"
                 ref={getPlayerContainer}
+                data-state-fullscreen={isFullScreen ? 'enabled' : 'disabled'}
             >
                 {title ? (
                     <Helmet
@@ -420,21 +420,21 @@ class Player extends Component {
                     />
                 ) : null}
 
-                <Queue
-                    isPlaying={isPlaying}
-                    isBuffering={isBuffering}
-                    togglePlay={togglePlay}
-                />
-
                 <Screen
-                    className={[
-                        'screen shadow--2dp',
-                        showScreen || isFullScreen ? 'screen--show' : ''
-                    ].join(' ')}
+                    className="screen shadow--2dp"
                     videoId={videoId}
                     onReady={onYoutubeIframeReady}
                     onEnd={goToVideo}
                     onStateChange={onYoutubeIframeStateChange}
+                    data-state={
+                        showScreen || isFullScreen ? 'visible' : 'hidden'
+                    }
+                />
+
+                <Queue
+                    isPlaying={isPlaying}
+                    isBuffering={isBuffering}
+                    togglePlay={togglePlay}
                 />
 
                 <div
@@ -459,8 +459,8 @@ class Player extends Component {
                                     isBuffering
                                         ? 'loading'
                                         : isPlaying
-                                        ? 'pause'
-                                        : 'play'
+                                            ? 'pause'
+                                            : 'play'
                                 }
                                 iconTransitionClass={
                                     isBuffering ? 'rotating' : ''
@@ -489,10 +489,10 @@ class Player extends Component {
                                             isMuted
                                                 ? 'volume-mute'
                                                 : volume >= 50
-                                                ? 'volume-up'
-                                                : volume > 0 && volume <= 50
-                                                ? 'volume-down'
-                                                : 'volume-off'
+                                                    ? 'volume-up'
+                                                    : volume > 0 && volume <= 50
+                                                        ? 'volume-down'
+                                                        : 'volume-off'
                                         }
                                         ariaLabel={isMuted ? 'Unmute' : 'Mute'}
                                     />

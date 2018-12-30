@@ -49,17 +49,10 @@ export const getAuthInstance = () => {
     return auth2.init(params);
 };
 
-export const getClient = () => {
-    const { client } = window.gapi;
+export const loadAuth = () => {
+    const GoogleAuth = getAuthInstance();
 
-    // const params = {
-    //     clientId: GOOGLE_CLIENT_ID,
-    //     scope: GOOGLE_CLIENT_SCOPE
-    // }
-
-    // client.init(params)
-
-    return client;
+    return GoogleAuth;
 };
 
 export const signIn = async () => {
@@ -80,13 +73,7 @@ export const signIn = async () => {
 export const signOut = async () => {
     const auth = getAuthInstance();
 
-    await auth.signOut();
-};
-
-export const loadAuth = () => {
-    const GoogleAuth = getAuthInstance();
-
-    return GoogleAuth;
+    return auth.signOut();
 };
 
 export const getSignedInUser = () => {
@@ -109,37 +96,15 @@ export const getSignedInUser = () => {
     };
 };
 
-export const listenAuth = (callback) => {
-    const GoogleAuth = getAuthInstance();
-
-    const hasAuthenticatedUser = GoogleAuth.isSignedIn.get();
-
-    const getUser = () => {
-        const {
-            w3: { Paa: picture = '', ig = '', ofa = '' }
-        } = GoogleAuth.currentUser.get();
-
-        const userName = ig || ofa;
-
-        return {
-            picture,
-            userName
-        };
-    };
-
-    const sendData = (isSignedIn) =>
-        isSignedIn &&
-        callback({
-            user: getUser(),
-            isSignedIn
-        });
-
-    if (hasAuthenticatedUser) {
-        sendData(hasAuthenticatedUser);
-    }
-
-    GoogleAuth.isSignedIn.listen(sendData);
-};
+export const listenAuth = (callback) =>
+    getAuthInstance().isSignedIn.listen(
+        (isSignedIn) =>
+            isSignedIn &&
+            callback({
+                user: getSignedInUser(),
+                isSignedIn
+            })
+    );
 
 function createResource(properties) {
     var resource = {};
@@ -187,7 +152,7 @@ function removeEmptyParams(params) {
 }
 
 const request = async (method, path, params, properties) => {
-    const client = getClient();
+    const { client } = window.gapi;
 
     const config = {
         method,

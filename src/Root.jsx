@@ -3,7 +3,13 @@ import './assets/styles/app.scss';
 import React, { Component } from 'react';
 import { withRouter, Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { loadAPI, loadAuth, listenAuth, getSignedInUser } from './api/youtube';
+import {
+    loadAPI,
+    loadAuth,
+    getAuthInstance,
+    listenAuth,
+    getSignedInUser
+} from './api/youtube';
 
 import { queueVideos, queuePlaylist } from './actions/youtube';
 
@@ -26,20 +32,14 @@ const Channel = asyncComponent(() => import('./containers/Channel'));
 class Root extends Component {
     state = { apiLoaded: false };
 
-    signInUser = () => {
-        const auth = getSignedInUser();
-
-        this.props.listenAuthChange();
-
-        this.props.signIn(auth);
-    };
-
     initApp = async () => {
         await loadAPI();
 
         await loadAuth();
 
-        this.signInUser();
+        this.props.signIn();
+
+        this.props.listenAuthChange();
 
         this.setState({ apiLoaded: true });
 
@@ -117,7 +117,11 @@ const mapDispatchToProps = (dispatch) => ({
     listenAuthChange: () =>
         listenAuth((data) => dispatch({ type: 'auth/SIGN_IN', data })),
 
-    signIn: (data) => dispatch({ type: 'auth/SIGN_IN', data }),
+    signIn: () => {
+        const data = getSignedInUser();
+
+        dispatch({ type: 'auth/SIGN_IN', data });
+    },
 
     queueVideos: (ids) => dispatch(queueVideos(ids)),
 

@@ -31,7 +31,7 @@ class DropDown extends PureComponent {
                     <span>{options[currentIndex].label}</span>
                 </div>
 
-                <div className="dropdown__options">
+                <div className="dropdown__options shadow--2dp">
                     {options.map(({ label, value }, i) => {
                         const isActiveItem = currentValue === value;
 

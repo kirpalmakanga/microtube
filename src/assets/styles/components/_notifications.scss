@@ -1,52 +1,51 @@
 .notification {
-  @include transition();
-  transform: translateY(100%);
-  z-index: 3;
-  position: fixed;
-  bottom: 100px;
-  left: 0;
-  right: 0;
-  background-color: $brand-primary;
-  &__content {
-    position: relative;
-    display: flex;
-    height: calc(1em + 40px);
-  }
-  &__text {
-    flex: 1;
-    padding: 20px;
-  }
-  &__action {
-    cursor: pointer;
     @include transition();
-    height: 100%;
-    background-color: $red;
-    display: flex;
-    align-items: center;
-    border: none;
-    fill: $white;
-    svg {
-      width: 30px;
-      height: 30px;
+    transform: translateY(100%);
+    position: fixed;
+    bottom: 100px;
+    left: 0;
+    right: 0;
+    background-color: $brand-primary;
+    &__content {
+        position: relative;
+        display: flex;
+        height: calc(1em + 40px);
     }
-    &:focus {
-      outline: none;
+    &__text {
+        flex: 1;
+        padding: 20px;
     }
-    justify-content: center;
-    &:hover {
-      background-color: lighten($red, 20%);
+    &__action {
+        cursor: pointer;
+        @include transition();
+        height: 100%;
+        background-color: $red;
+        display: flex;
+        align-items: center;
+        border: none;
+        fill: $white;
+        svg {
+            width: 30px;
+            height: 30px;
+        }
+        &:focus {
+            outline: none;
+        }
+        justify-content: center;
+        &:hover {
+            background-color: lighten($red, 20%);
+        }
+        &:active {
+            svg {
+                transform: scale(0.7);
+            }
+        }
     }
-    &:active {
-      svg {
-        transform: scale(0.7);
-      }
+    @media screen and (min-width: 480px) {
+        bottom: 50px;
     }
-  }
-  @media screen and (min-width: 480px) {
-    bottom: 50px;
-  }
 }
 
 .notification--active {
-  transform: translateY(0);
+    transform: translateY(0);
 }

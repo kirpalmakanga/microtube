@@ -1,8 +1,13 @@
 .dropdown {
     position: relative;
+    color: $white;
     &__current {
         position: relative;
         z-index: 1;
+        .icon {
+            height: 24px;
+            width: 24px;
+        }
     }
 
     .icon {
@@ -15,15 +20,11 @@
         top: 100%;
         left: 0;
         width: 100%;
-
-        &-item {
-            &.is-active {
-            }
-        }
     }
 
     &__current,
     &__options-item {
+        @include transition();
         background-color: $black;
         height: 56px;
         display: flex;
@@ -38,7 +39,7 @@
     }
 
     &[data-state='closed'] &__options {
-        transform: translateY(-50%);
+        // transform: translateY(-25%);
         opacity: 0;
         visibility: hidden;
     }

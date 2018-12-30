@@ -163,6 +163,19 @@ const loadData = (promise) => async (dispatch) => {
     return data;
 };
 
+export function addPlaylistItem({ playlistId, videoId }) {
+    return async (dispatch) => {
+        await api.addPlaylistItem(playlistId, videoId);
+
+        dispatch({
+            type: 'playlists/UPDATE_ITEM',
+            data: {
+                playlistId
+            }
+        });
+    };
+}
+
 export function editPlaylistItem(data) {
     return async (dispatch) => {
         try {
@@ -180,40 +193,26 @@ export function editPlaylistItem(data) {
                     confirmText: 'Done',
                     playlists: playlists.items,
                     errorMessage: 'Error editing playlist item.',
-                    callback: async (playlistId) => {
+                    callback: async ({ title, privacyStatus, playlistId }) => {
                         try {
-                            if (playlistId) {
-                                // if (action === 'insert') {
-                                const { id } = data;
+                            const { id: videoId } = data;
 
-                                // const {
-                                //     id: playlistItemId
-                                // } =
-                                await api.addPlaylistItem(playlistId, id);
-
-                                // dispatch({
-                                //     type: 'playlist/UPDATE_ITEMS',
-                                //     data: {
-                                //         items: [{ ...data, playlistItemId }]
-                                //     }
-                                // });
-
-                                dispatch({
-                                    type: 'playlists/UPDATE_ITEM',
-                                    data: {
-                                        playlistId
-                                    }
+                            if (title) {
+                                const { id } = await api.createPlaylist({
+                                    title,
+                                    privacyStatus
                                 });
-                                // } else if (action === 'remove') {
-                                // const { playlistItemId } = data;
-                                // await api.removePlaylistItem(playlistItemId);
-                                // dispatch({
-                                //     type: 'playlist/REMOVE_ITEM',
-                                //     data: { playlistItemId }
-                                // });
-                                // }
+
+                                playlistId = id;
+                            }
+
+                            if (playlistId) {
+                                await dispatch(
+                                    addPlaylistItem({ playlistId, videoId })
+                                );
                             }
                         } catch (error) {
+                            console.error(error);
                             dispatch(
                                 notify({
                                     message: 'Error editing playlist item.'

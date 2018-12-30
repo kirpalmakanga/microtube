@@ -6,6 +6,7 @@ import Fade from './animations/Fade';
 import Icon from './Icon';
 
 import Button from './Button';
+import DropDown from './DropDown';
 
 import { delay } from '../lib/helpers';
 
@@ -54,29 +55,82 @@ class ImportVideoForm extends Component {
     }
 }
 
+class NewPlayListForm extends Component {
+    state = { title: '', privacyStatus: 'public' };
+
+    privacyOptions = [
+        { label: 'Public', value: 'public' },
+        { label: 'Private', value: 'private' },
+        { label: 'Unlisted', value: 'unlisted' }
+    ];
+
+    setValue = (key, value) => this.setState({ [key]: value });
+
+    handleInput = ({ target: { name, value } }) => this.setValue(name, value);
+
+    handleSubmit = (e) => {
+        e.preventDefault();
+        this.props.onSubmit(this.state);
+    };
+
+    render() {
+        const {
+            state: { title, privacyStatus },
+            privacyOptions,
+            setValue,
+            handleInput,
+            handleSubmit
+        } = this;
+
+        return (
+            <form className="playlist-menu__item" onSubmit={handleSubmit}>
+                <input
+                    className="playlist-menu__item-text"
+                    name="title"
+                    value={title}
+                    placeholder="Playlist title"
+                    onChange={handleInput}
+                />
+
+                <DropDown
+                    currentValue={privacyStatus}
+                    options={privacyOptions}
+                    onSelect={(value) => setValue('privacyStatus', value)}
+                />
+
+                <Button type="submit" title="Create" />
+            </form>
+        );
+    }
+}
+
 class PlaylistManager extends Component {
-    handleClick = (id) => () => this.props.onClickItem(id);
+    onCreatePlaylist = (data) => this.props.onClickItem(data);
+
+    onClickItem = (playlistId) => () => this.props.onClickItem({ playlistId });
 
     render() {
         const {
             props: { items },
-            handleClick
+            onCreatePlaylist,
+            onClickItem
         } = this;
 
         return (
             <div className="playlist-menu">
+                <NewPlayListForm onSubmit={onCreatePlaylist} />
+
                 {items.map(({ id, title }) => (
-                    <label
+                    <button
                         className="playlist-menu__item"
                         key={id}
-                        htmlFor={id}
-                        onClick={handleClick(id)}
+                        onClick={onClickItem(id)}
                     >
                         <span className="playlist-menu__item-text">
                             {title}
                         </span>
                         <Icon name="add" />
-                    </label>
+                    </button>
                 ))}
             </div>
         );
@@ -84,10 +138,6 @@ class PlaylistManager extends Component {
 }
 
 class Prompt extends Component {
-    state = {
-        playlistActions: new Map()
-    };
-
     close = async (e) => {
         if (e) {
             e.stopPropagation();
@@ -151,8 +201,8 @@ class Prompt extends Component {
                                 form
                                     ? () => {}
                                     : playlists.length
-                                    ? close
-                                    : callback
+                                        ? close
+                                        : callback
                             }
                             title={confirmText}
                         />

@@ -10,7 +10,7 @@
     justify-content: center;
     align-items: flex-end;
     cursor: pointer;
-    z-index: 6;
+    z-index: 2;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -74,26 +74,74 @@
         @include transition();
         display: flex;
         align-items: center;
-        justify-content: space-between;
-        padding: 20px;
+        text-align: left;
+        margin: 0;
+        padding: 0;
         cursor: pointer;
+        border-top: none;
+        border-left: none;
+        border-right: none;
         &:not(:last-child) {
             border-bottom: 1px solid rgba($black, 0.2);
         }
         &:hover {
             background-color: darken($white, 10%);
-            .icon {
+            > .icon {
                 opacity: 1;
             }
         }
 
-        &-text {
-            margin-left: 10px;
+        [type='submit'] {
+            @include transition();
+            background-color: $black;
+            color: $white;
+            border: none;
+            padding: 0 20px;
+            margin: 0;
+            height: 100%;
+            cursor: pointer;
+            &:hover {
+                background-color: lighten($black, 5%);
+            }
         }
 
-        .icon {
+        input {
+            background-color: transparent;
+            border: none;
+        }
+
+        .dropdown {
+            color: $black;
+            border-left: 1px solid rgba($black, 0.2);
+            border-right: 1px solid rgba($black, 0.2);
+            &__current,
+            &__options-item {
+                background-color: $white;
+                color: $black;
+
+                &:hover,
+                &.is-active {
+                    background-color: darken($white, 5%);
+                }
+            }
+        }
+
+        &-text {
+            line-height: 0.9em;
+            flex: 1;
+        }
+
+        input,
+        &-text {
+            padding: 20px;
+        }
+
+        > .icon {
             @include transition();
             opacity: 0;
+            height: 57px;
+            width: 57px;
+            flex-shrink: 0;
             fill: currentColor;
             svg {
                 width: 1em;

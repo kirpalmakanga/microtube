@@ -1,5 +1,3 @@
-// https://apis.google.com/js/client.js
-
 import { API_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SCOPE } from '../config/api';
 import { parseVideoData, parsePlaylistData } from './parsers';
 
@@ -257,6 +255,20 @@ export async function getAllPlaylists({ mine = false } = {}) {
         nextPageToken: pageToken,
         totalResults: stack.length
     };
+}
+
+export async function createPlaylist({ title, privacyStatus }) {
+    return request(
+        'POST',
+        'playlists',
+        {
+            part: 'snippet,status'
+        },
+        {
+            'snippet.title': title,
+            'status.privacyStatus': privacyStatus
+        }
+    );
 }
 
 export async function removePlaylist(id) {

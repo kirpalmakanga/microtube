@@ -254,6 +254,12 @@ class Player extends Component {
         setActiveQueueItem(newIndex);
     };
 
+    setPlaybackQuality = (value = 'hd1080') => {
+        const { youtube } = this.state;
+
+        youtube.setPlaybackQuality(value);
+    };
+
     onYoutubeIframeReady = ({ target: youtube }) => {
         const { volume, currentTime } = this.props.player;
 
@@ -266,7 +272,7 @@ class Player extends Component {
                 this.updateTime();
             }
 
-            youtube.setPlaybackQuality('hd1080');
+            this.setPlaybackQuality();
 
             this.setVolume(volume);
         });
@@ -294,6 +300,7 @@ class Player extends Component {
             case 3:
                 this.clearWatchers();
                 this.setState({ isBuffering: true });
+                this.setPlaybackQuality();
                 break;
 
             case 5:

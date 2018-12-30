@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import SearchForm from '../components/SearchForm';
 import Icon from '../components/Icon';
-import Button from '../components/Button';
 
 import DropDown from '../components/DropDown';
 

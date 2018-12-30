@@ -10,8 +10,6 @@ module.exports = {
     },
     devServer: { port: 8080 },
     chainWebpack(config) {
-        config.resolve.extensions.add('.tsx');
-
         config
             .plugin('ignore-moment-locales')
             .use(IgnorePlugin, [/^\.\/locale$/, /moment$/]);

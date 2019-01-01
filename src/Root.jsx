@@ -3,13 +3,7 @@ import './assets/styles/app.scss';
 import React, { Component } from 'react';
 import { withRouter, Switch, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {
-    loadAPI,
-    loadAuth,
-    getAuthInstance,
-    listenAuth,
-    getSignedInUser
-} from './api/youtube';
+import { loadAPI, loadAuth, listenAuth, getSignedInUser } from './api/youtube';
 
 import { queueVideos, queuePlaylist } from './actions/youtube';
 
@@ -20,6 +14,7 @@ import Playlists from './containers/Playlists';
 import Login from './containers/Login';
 
 import asyncComponent from './components/asyncComponent';
+import Head from './components/Head';
 import Sprite from './components/Sprite';
 import Loader from './components/Loader';
 import Player from './components/player/Player';
@@ -66,6 +61,8 @@ class Root extends Component {
 
         return (
             <div className="layout" key="layout">
+                <Head />
+
                 <Sprite />
 
                 {apiLoaded

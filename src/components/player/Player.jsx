@@ -2,8 +2,6 @@ import React, { Component, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { throttle } from 'lodash';
 
-import { Helmet } from 'react-helmet';
-
 import { isMobile } from '../../lib/helpers';
 
 import {
@@ -11,8 +9,6 @@ import {
     exitFullScreen,
     listenFullScreenChange
 } from '../../lib/fullscreen';
-
-import { formatTime } from '../../lib/helpers';
 
 import Queue from './Queue';
 import Screen from './Screen';
@@ -415,18 +411,6 @@ class Player extends Component {
                 ref={getPlayerContainer}
                 data-state-fullscreen={isFullScreen ? 'enabled' : 'disabled'}
             >
-                {title ? (
-                    <Helmet
-                        title={
-                            title
-                                ? `Microtube | ${title} - ${formatTime(
-                                      currentTime
-                                  )} / ${formatTime(duration)}`
-                                : ''
-                        }
-                    />
-                ) : null}
-
                 <Screen
                     className="screen shadow--2dp"
                     videoId={videoId}

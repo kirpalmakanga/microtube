@@ -5,18 +5,21 @@ import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';
 
 class Header extends Component {
-    state = { location: { pathname: '' } };
+    state = { route: '' };
 
     onSearchFormSubmit = (query) =>
         this.props.history.replace(`/search/${query}`);
 
     componentWillMount() {
-        const { location = { pathname: '' }, history } = this.props;
+        const {
+            location: { pathname: route },
+            history
+        } = this.props;
 
-        this.setState({ location });
+        this.setState({ route });
 
-        this.unlisten = history.listen((location) =>
-            this.setState({ location })
+        this.unlisten = history.listen(({ pathname: route }) =>
+            this.setState({ route })
         );
     }
 
@@ -26,9 +29,7 @@ class Header extends Component {
 
     render() {
         const {
-            state: {
-                location: { pathname: route }
-            },
+            state: { route },
             onSearchFormSubmit
         } = this;
 
@@ -37,7 +38,7 @@ class Header extends Component {
                 {route.startsWith('/search') ? (
                     <SearchHeader onSearchFormSubmit={onSearchFormSubmit} />
                 ) : (
-                    <DefaultHeader location={this.state.location} />
+                    <DefaultHeader route={route} />
                 )}
             </header>
         );

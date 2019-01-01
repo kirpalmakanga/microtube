@@ -10,23 +10,19 @@ import Button from '../components/Button';
 
 class DefaultHeader extends Component {
     getTitle = () => {
-        const {
-            location: { pathname },
-            channelTitle,
-            playlistTitle
-        } = this.props;
+        const { route, channelTitle, playlistTitle } = this.props;
 
         let title = 'MicroTube';
 
-        if (pathname.includes('/subscriptions')) {
+        if (route.includes('/subscriptions')) {
             title = 'Subscriptions';
         }
 
-        if (pathname.includes('/channel')) {
+        if (route.includes('/channel')) {
             title = channelTitle;
         }
 
-        if (pathname.includes('/playlist')) {
+        if (route.includes('/playlist')) {
             title = playlistTitle;
         }
 
@@ -37,18 +33,14 @@ class DefaultHeader extends Component {
         const { isSignedIn, signUserIn, signUserOut } = this.props;
 
         if (!isSignedIn) {
-            signUserIn();
+            return signUserIn();
         }
         signUserOut();
     };
 
     render() {
         const {
-            props: {
-                isSignedIn,
-                avatar,
-                location: { pathname: route }
-            },
+            props: { isSignedIn, avatar, route },
             getTitle
         } = this;
 
@@ -65,8 +57,6 @@ class DefaultHeader extends Component {
                         <Icon name="back" />
                     </Link>
                 ) : null}
-
-                <Helmet key="headers" title={title} />
 
                 <span className="layout-title">{title}</span>
 

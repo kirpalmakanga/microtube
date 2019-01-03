@@ -1,6 +1,7 @@
 .dropdown {
     position: relative;
     color: $white;
+    z-index: 1;
     &__current {
         position: relative;
         z-index: 1;

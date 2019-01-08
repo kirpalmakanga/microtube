@@ -17,7 +17,7 @@ class QueueHeader extends PureComponent {
         } = this.props;
 
         return (
-            <header className="layout__header queue__header">
+            <header className="layout__header queue__header shadow--2dp">
                 <div className="layout__header-row">
                     <Button
                         className="navigation__link layout__back-button icon-button"

@@ -34,7 +34,6 @@ class Playlists extends Component {
                             pageToken: nextPageToken
                         })
                     }
-                    ItemComponent={PlaylistCard}
                     renderItem={(data) => {
                         const { id: playlistId, title } = data;
 

@@ -34,16 +34,24 @@ class Grid extends Component {
             state: { isLoading }
         } = this;
 
+        console.log('load');
+
         if (isLoading) {
             return;
         }
 
+        console.log('loading');
+
         this.setState({ isLoading: true }, async () => {
             await loadContent();
+
+            console.log('done loading');
 
             if (this._unmounting) {
                 return;
             }
+
+            console.log('done');
 
             this.setState({ isLoading: false });
         });

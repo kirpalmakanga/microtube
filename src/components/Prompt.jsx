@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { getPlaylists } from '../actions/youtube';
+
 import Fade from './animations/Fade';
 
 import Icon from './Icon';
 
 import Button from './Button';
 import DropDown from './DropDown';
+
+import Grid from './Grid';
 
 import { delay } from '../lib/helpers';
 
@@ -111,7 +115,7 @@ class PlaylistManager extends Component {
 
     render() {
         const {
-            props: { items },
+            props: { items, loadContent },
             onCreatePlaylist,
             onClickItem
         } = this;
@@ -120,18 +124,27 @@ class PlaylistManager extends Component {
             <div className="playlist-menu">
                 <NewPlayListForm onSubmit={onCreatePlaylist} />
 
-                {items.map(({ id, title }) => (
-                    <button
-                        className="playlist-menu__item"
-                        key={id}
-                        onClick={onClickItem(id)}
-                    >
-                        <span className="playlist-menu__item-text">
-                            {title}
-                        </span>
-                        <Icon name="add" />
-                    </button>
-                ))}
+                <Grid
+                    items={items}
+                    loadContent={loadContent}
+                    renderItem={(data) => {
+                        const { id, title, totalResults } = data;
+
+                        return (
+                            <button
+                                className="playlist-menu__item"
+                                key={id}
+                                onClick={onClickItem(id)}
+                            >
+                                <span className="playlist-menu__item-text">
+                                    {title}
+                                </span>
+                                <span>{totalResults}</span>
+                                <Icon name="add" />
+                            </button>
+                        );
+                    }}
+                />
             </div>
         );
     }
@@ -149,13 +162,15 @@ class Prompt extends Component {
     render() {
         const {
             props: {
+                mode,
                 form,
-                playlists = [],
+                playlists,
                 isVisible,
                 promptText,
                 confirmText,
                 cancelText,
-                callback
+                callback,
+                getPlaylists
             },
             close
         } = this;
@@ -178,21 +193,31 @@ class Prompt extends Component {
                                 onSubmit={callback}
                             />
                         </div>
-                    ) : playlists.length ? (
+                    ) : mode === 'playlist' ? (
                         <div className="dialog__content">
                             <PlaylistManager
-                                items={playlists}
+                                items={playlists.items}
+                                loadContent={() =>
+                                    playlists.nextPageToken !== null &&
+                                    getPlaylists({
+                                        mine: true,
+                                        pageToken: playlists.nextPageToken
+                                    })
+                                }
                                 onClickItem={callback}
-                            />{' '}
+                            />
                         </div>
                     ) : null}
 
                     <footer className="dialog__actions">
-                        <Button
-                            className="button button--close shadow--2dp"
-                            onClick={close}
-                            title={cancelText}
-                        />
+                        {!playlists.items.length ? (
+                            <Button
+                                className="button button--close shadow--2dp"
+                                onClick={close}
+                                title={cancelText}
+                            />
+                        ) : null}
+
                         <Button
                             className="button shadow--2dp"
                             type={form ? 'submit' : 'button'}
@@ -200,7 +225,7 @@ class Prompt extends Component {
                             onClick={
                                 form
                                     ? () => {}
-                                    : playlists.length
+                                    : mode === 'playlist'
                                         ? close
                                         : callback
                             }
@@ -213,9 +238,14 @@ class Prompt extends Component {
     }
 }
 
-const mapStateToProps = ({ prompt }) => ({ ...prompt });
+const mapStateToProps = ({ prompt, playlists: { items, nextPageToken } }) => ({
+    ...prompt,
+    playlists: { items, nextPageToken }
+});
 
 const mapDispatchToProps = (dispatch) => ({
+    getPlaylists: (data) => dispatch(getPlaylists(data)),
+
     closePrompt: async () => {
         dispatch({ type: 'prompt/CLOSE' });
 

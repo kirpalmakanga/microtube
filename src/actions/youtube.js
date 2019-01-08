@@ -179,19 +179,11 @@ export function addPlaylistItem({ playlistId, videoId }) {
 export function editPlaylistItem(data) {
     return async (dispatch) => {
         try {
-            const playlists = await dispatch(
-                loadData(
-                    api.getAllPlaylists({
-                        mine: true
-                    })
-                )
-            );
-
             dispatch(
                 prompt({
+                    mode: 'playlist',
                     promptText: `Add to playlist`,
                     confirmText: 'Done',
-                    playlists: playlists.items,
                     errorMessage: 'Error editing playlist item.',
                     callback: async ({ title, privacyStatus, playlistId }) => {
                         try {

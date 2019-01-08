@@ -48,8 +48,7 @@
     }
 
     &__content {
-        overflow-y: scroll;
-        overflow-x: hidden;
+        overflow: auto;
         flex: 1;
         border-bottom: 2px solid rgba($black, 0.5);
     }
@@ -70,6 +69,7 @@
 .playlist-menu {
     display: flex;
     flex-direction: column;
+    height: 30vh;
     &__item {
         background-color: $white;
         @include transition();
@@ -93,6 +93,7 @@
         }
 
         [type='submit'] {
+            height: 56px;
             @include transition();
             background-color: $black;
             color: $white;

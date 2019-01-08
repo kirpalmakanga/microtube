@@ -10,10 +10,7 @@
     }
 
     &__content {
-        height: calc(100vh - 56px - 100px);
-
-        @media screen and (min-width: 480px) {
-            height: calc(100vh - 56px - 50px);
-        }
+        flex: 1;
+        overflow: hidden;
     }
 }

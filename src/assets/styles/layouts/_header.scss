@@ -8,7 +8,9 @@
     position: relative;
     background-color: $brand-primary;
     display: flex;
+    flex-shrink: 0;
     height: 56px;
+    z-index: 1;
     &-row {
         display: flex;
         flex: 1;

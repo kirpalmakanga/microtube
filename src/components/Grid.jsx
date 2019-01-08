@@ -10,9 +10,8 @@ class GridItem extends PureComponent {
 
         return (
             <div
-                className={['grid__item', showContent ? '' : 'hidden'].join(
-                    ' '
-                )}
+                className="grid__item"
+                data-state={showContent ? 'visible' : 'hidden'}
             >
                 {showContent && typeof renderChildren === 'function'
                     ? renderChildren(props)
@@ -97,7 +96,7 @@ class Grid extends Component {
 
                 <Fade
                     in={isLoading}
-                    className="grid__loading is-active"
+                    className="grid__loading"
                     unmountOnExit={false}
                 >
                     <Icon className="rotating" name="loading" />

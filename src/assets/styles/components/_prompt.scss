@@ -72,6 +72,7 @@
     height: 30vh;
     form {
         border-bottom: 2px solid lighten($brand-primary, 20%);
+        flex: 1 0 auto;
     }
 
     .grid {

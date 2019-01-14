@@ -208,7 +208,7 @@ class Prompt extends Component {
                     ) : null}
 
                     <footer className="dialog__actions">
-                        {!playlists.items.length ? (
+                        {mode !== 'playlist' ? (
                             <Button
                                 className="button button--close shadow--2dp"
                                 onClick={close}

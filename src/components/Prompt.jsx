@@ -127,23 +127,21 @@ class PlaylistManager extends Component {
                 <Grid
                     items={items}
                     loadContent={loadContent}
-                    renderItem={(data) => {
-                        const { id, title, totalResults } = data;
+                    renderItem={({ id, title, itemCount }) => (
+                        <button
+                            className="playlist-menu__item"
+                            key={id}
+                            onClick={onClickItem(id)}
+                        >
+                            <span className="playlist-menu__item-text">
+                                {title}
+                            </span>
 
-                        return (
-                            <button
-                                className="playlist-menu__item"
-                                key={id}
-                                onClick={onClickItem(id)}
-                            >
-                                <span className="playlist-menu__item-text">
-                                    {title}
-                                </span>
-                                <span>{totalResults}</span>
-                                <Icon name="add" />
-                            </button>
-                        );
-                    }}
+                            <span className="playlist-menu__item-count">
+                                {itemCount}
+                            </span>
+                        </button>
+                    )}
                 />
             </div>
         );

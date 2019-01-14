@@ -18,7 +18,6 @@
     cursor: default;
     background-color: $white;
     position: relative;
-    max-height: 50vh;
     overflow: hidden;
     width: 100%;
     display: flex;
@@ -69,14 +68,15 @@
 .playlist-menu {
     display: flex;
     flex-direction: column;
-    height: 30vh;
+    height: 40vh;
     form {
         border-bottom: 2px solid lighten($brand-primary, 20%);
+        flex: 1 0 auto;
     }
 
     .grid {
         &__item {
-            height: 59px;
+            height: 54px;
         }
     }
 
@@ -91,12 +91,7 @@
         padding: 0;
         cursor: pointer;
         border: none;
-        &:hover {
-            background-color: darken($white, 10%);
-            > .icon {
-                opacity: 1;
-            }
-        }
+        overflow: hidden;
 
         [type='submit'] {
             height: 56px;
@@ -137,6 +132,9 @@
         &-text {
             line-height: 0.9em;
             flex: 1;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
         }
 
         input,
@@ -144,17 +142,8 @@
             padding: 20px;
         }
 
-        > .icon {
-            @include transition();
-            opacity: 0;
-            height: 57px;
-            width: 57px;
-            flex-shrink: 0;
-            fill: currentColor;
-            svg {
-                width: 1em;
-                height: 1em;
-            }
+        &-count {
+            padding: 20px 20px 20px 0;
         }
     }
 }

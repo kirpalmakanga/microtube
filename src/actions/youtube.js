@@ -48,7 +48,6 @@ export function getPlaylists(config) {
 
             dispatch({ type: 'playlists/UPDATE_ITEMS', data });
         } catch (err) {
-            console.error(err);
             dispatch(notify({ message: 'Error fetching playlists.' }));
         }
     };
@@ -106,7 +105,6 @@ export function getPlaylistItems(config) {
                 data
             });
         } catch (err) {
-            console.error(err);
             dispatch(notify({ message: 'Error fetching playlist items.' }));
         }
     };
@@ -204,7 +202,6 @@ export function editPlaylistItem(data) {
                                 );
                             }
                         } catch (error) {
-                            console.error(error);
                             dispatch(
                                 notify({
                                     message: 'Error editing playlist item.'
@@ -215,7 +212,6 @@ export function editPlaylistItem(data) {
                 })
             );
         } catch (error) {
-            console.log(error);
             dispatch(notify({ message: 'Error editing playlist item.' }));
         }
     };

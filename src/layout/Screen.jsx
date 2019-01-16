@@ -7,13 +7,13 @@ class Screen extends PureComponent {
     render() {
         const { children } = this.props;
 
-        return [
-            <main className="layout__content" key="layout-content">
-                {children}
-            </main>,
-            <Notifications key="notifications" />,
-            <Prompt key="prompt" />
-        ];
+        return (
+            <>
+                <main className="layout__content">{children}</main>
+                <Notifications />
+                <Prompt />
+            </>
+        );
     }
 }
 export default Screen;

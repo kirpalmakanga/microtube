@@ -60,42 +60,42 @@ class Root extends Component {
         } = this;
 
         return (
-            <div className="layout" key="layout">
+            <div className="layout">
                 <Head />
 
                 <Sprite />
 
-                {apiLoaded
-                    ? [
-                          <Header key="header" />,
-                          <Switch key="routes">
-                              <AuthRoute exact path="/" component={Playlists} />
+                {apiLoaded ? (
+                    <>
+                        <Header />
+                        <Switch>
+                            <AuthRoute exact path="/" component={Playlists} />
 
-                              <AuthRoute
-                                  path="/playlist/:playlistId"
-                                  component={Playlist}
-                              />
+                            <AuthRoute
+                                path="/playlist/:playlistId"
+                                component={Playlist}
+                            />
 
-                              <Route exact path="/search" component={Search} />
+                            <Route exact path="/search" component={Search} />
 
-                              <Route path="/search/:query" component={Search} />
+                            <Route path="/search/:query" component={Search} />
 
-                              <AuthRoute
-                                  exact
-                                  path="/subscriptions"
-                                  component={Channels}
-                              />
+                            <AuthRoute
+                                exact
+                                path="/subscriptions"
+                                component={Channels}
+                            />
 
-                              <Route
-                                  exact
-                                  path="/channel/:channelId"
-                                  component={Channel}
-                              />
+                            <Route
+                                exact
+                                path="/channel/:channelId"
+                                component={Channel}
+                            />
 
-                              <Route path="/login" component={Login} />
-                          </Switch>
-                      ]
-                    : null}
+                            <Route path="/login" component={Login} />
+                        </Switch>
+                    </>
+                ) : null}
 
                 <Player />
 

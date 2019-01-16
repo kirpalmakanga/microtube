@@ -34,7 +34,7 @@ class Header extends Component {
         } = this;
 
         return (
-            <header key="header" className="layout__header shadow--2dp">
+            <header className="layout__header shadow--2dp">
                 {route.startsWith('/search') ? (
                     <SearchHeader onSearchFormSubmit={onSearchFormSubmit} />
                 ) : (

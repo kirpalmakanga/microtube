@@ -12,7 +12,7 @@ import DropDown from './DropDown';
 
 import Grid from './Grid';
 
-import { delay } from '../lib/helpers';
+import { delay, stopPropagation } from '../lib/helpers';
 
 class ImportVideoForm extends Component {
     state = {
@@ -149,14 +149,6 @@ class PlaylistManager extends Component {
 }
 
 class Prompt extends Component {
-    close = async (e) => {
-        if (e) {
-            e.stopPropagation();
-        }
-
-        this.props.closePrompt();
-    };
-
     render() {
         const {
             props: {
@@ -168,17 +160,18 @@ class Prompt extends Component {
                 confirmText,
                 cancelText,
                 callback,
-                getPlaylists
-            },
-            close
+                getPlaylists,
+                closePrompt
+            }
         } = this;
 
         return (
-            <Fade className="dialog__overlay" onClick={close} in={isVisible}>
-                <div
-                    className="dialog shadow--2dp"
-                    onClick={(e) => e.stopPropagation()}
-                >
+            <Fade
+                className="dialog__overlay"
+                onClick={closePrompt}
+                in={isVisible}
+            >
+                <div className="dialog shadow--2dp" onClick={stopPropagation()}>
                     <header className="dialog__header">
                         <Icon name="prompt" />
                         {promptText}
@@ -211,7 +204,7 @@ class Prompt extends Component {
                         {mode !== 'playlist' ? (
                             <Button
                                 className="button button--close shadow--2dp"
-                                onClick={close}
+                                onClick={closePrompt}
                                 title={cancelText}
                             />
                         ) : null}
@@ -224,7 +217,7 @@ class Prompt extends Component {
                                 form
                                     ? () => {}
                                     : mode === 'playlist'
-                                        ? close
+                                        ? closePrompt
                                         : callback
                             }
                             title={confirmText}

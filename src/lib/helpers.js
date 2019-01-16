@@ -127,5 +127,5 @@ export const splitLines = (str) => str.match(/[^\r\n]+/g) || [];
 
 export const stopPropagation = (func) => (e) => {
     e.stopPropagation();
-    func(e);
+    func && func(e);
 };

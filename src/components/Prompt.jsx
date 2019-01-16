@@ -70,16 +70,32 @@ class NewPlayListForm extends Component {
 
     setValue = (key, value) => this.setState({ [key]: value });
 
-    handleInput = ({ target: { name, value } }) => this.setValue(name, value);
+    handleInput = stopPropagation(({ target: { name, value } }) =>
+        this.setValue(name, value)
+    );
 
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.onSubmit(this.state);
     };
 
+    getInputRef = (el) => (this.input = el);
+
+    componentDidMount() {
+        this.input.focus();
+
+        this.__keyPressHandler = (e) => e.stopPropagation();
+        this.input.addEventListener('keypress', this.__keyPressHandler);
+    }
+
+    componentWillUnmount() {
+        this.input.removeEventListener('keypress', this.__keyPressHandler);
+    }
+
     render() {
         const {
             state: { title, privacyStatus },
+            getInputRef,
             privacyOptions,
             setValue,
             handleInput,
@@ -87,8 +103,9 @@ class NewPlayListForm extends Component {
         } = this;
 
         return (
-            <form className="playlist-menu__item" onSubmit={handleSubmit}>
+            <form className="playlist-menu__form" onSubmit={handleSubmit}>
                 <input
+                    ref={getInputRef}
                     className="playlist-menu__item-text"
                     name="title"
                     value={title}

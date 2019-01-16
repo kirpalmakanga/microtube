@@ -145,22 +145,6 @@ export function removePlaylistItem({ title, playlistId, playlistItemId }) {
     };
 }
 
-const loadData = (promise) => async (dispatch) => {
-    dispatch({
-        type: 'app/SET_LOADER',
-        data: true
-    });
-
-    const data = await promise;
-
-    dispatch({
-        type: 'app/SET_LOADER',
-        data: false
-    });
-
-    return data;
-};
-
 export function addPlaylistItem({ playlistId, videoId }) {
     return async (dispatch) => {
         await api.addPlaylistItem(playlistId, videoId);

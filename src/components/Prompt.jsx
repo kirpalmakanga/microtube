@@ -20,7 +20,9 @@ class ImportVideoForm extends Component {
     };
 
     handleChange = ({ target: { name, value } }) =>
-        this.setState(({ data }) => ({ data: { ...data, [name]: value } }));
+        this.setState(({ data }) => ({
+            data: { ...data, [name]: value }
+        }));
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -32,10 +34,26 @@ class ImportVideoForm extends Component {
         this.props.onSubmit(text);
     };
 
+    getInputRef = (el) => (this.input = el);
+
+    componentDidMount() {
+        this.input.focus();
+
+        this.__keyPressHandler = (e) => e.stopPropagation();
+        this.input.addEventListener('keypress', this.__keyPressHandler);
+    }
+
+    componentWillUnmount() {
+        this.input.removeEventListener('keypress', this.__keyPressHandler);
+    }
+
     render() {
         const {
-            state: { text },
+            state: {
+                data: { text }
+            },
             props: { id = '' },
+            getInputRef,
             handleChange,
             handleSubmit
         } = this;
@@ -45,6 +63,7 @@ class ImportVideoForm extends Component {
                 <div className="textfield">
                     <textarea
                         id="videoId"
+                        ref={getInputRef}
                         className="textfield__input"
                         type="text"
                         name="text"

@@ -5,7 +5,7 @@ import Button from '../Button';
 
 import { prompt, queueVideos } from '../../actions/youtube';
 
-import { parseID, splitLines } from '../../lib/helpers';
+import { parseID, splitLines, chunk } from '../../lib/helpers';
 
 class QueueHeader extends PureComponent {
     render() {
@@ -69,7 +69,13 @@ const mapDispatchToProps = (dispatch) => ({
                         return;
                     }
 
-                    await dispatch(queueVideos(ids.map(parseID)));
+                    const chunks = chunk(ids, 50);
+
+                    for (let i = 0; i < chunks.length; i++) {
+                        const chunk = chunks[i];
+
+                        await dispatch(queueVideos(chunk.map(parseID)));
+                    }
                 }
             })
         ),

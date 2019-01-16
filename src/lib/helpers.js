@@ -109,6 +109,7 @@ export const isMobile =
 
 export const parseID = (url) => {
     url = url.split(/(vi\/|v%3D|v=|\/v\/|youtu\.be\/|\/embed\/)/);
+    console.log('url', url);
     return undefined !== url[2] ? url[2].split(/[^0-9a-z_\-]/i)[0] : url[0];
 };
 
@@ -128,4 +129,14 @@ export const splitLines = (str) => str.match(/[^\r\n]+/g) || [];
 export const stopPropagation = (func) => (e) => {
     e.stopPropagation();
     func && func(e);
+};
+
+export const chunk = (array = [], size) => {
+    const chunks = [];
+    let index = 0;
+    while (index < array.length) {
+        chunks.push(array.slice(index, size + index));
+        index += size;
+    }
+    return chunks;
 };

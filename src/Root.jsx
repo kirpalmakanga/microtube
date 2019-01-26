@@ -2,27 +2,21 @@ import './assets/styles/app.scss';
 
 import React, { Component } from 'react';
 import { withRouter, Switch, Route } from 'react-router-dom';
+
 import { connect } from 'react-redux';
 import { loadAPI, loadAuth, listenAuth, getSignedInUser } from './api/youtube';
 
 import { queueVideos, queuePlaylist } from './actions/youtube';
 
-import AuthRoute from './AuthRoute';
-
 import Header from './layout/Header';
-import Playlists from './containers/Playlists';
-import Login from './containers/Login';
 
-import asyncComponent from './components/asyncComponent';
 import Head from './components/Head';
 import Sprite from './components/Sprite';
 import Loader from './components/Loader';
 import Player from './components/player/Player';
 
-const Playlist = asyncComponent(() => import('./containers/Playlist'));
-const Search = asyncComponent(() => import('./containers/Search'));
-const Channels = asyncComponent(() => import('./containers/Channels'));
-const Channel = asyncComponent(() => import('./containers/Channel'));
+import Prompt from './components/Prompt';
+import Notifications from './components/Notifications';
 
 class Root extends Component {
     state = { apiLoaded: false };
@@ -55,7 +49,7 @@ class Root extends Component {
 
     render() {
         const {
-            props: { isLoading, closeScreen },
+            props: { isLoading, closeScreen, children },
             state: { apiLoaded }
         } = this;
 
@@ -68,36 +62,16 @@ class Root extends Component {
                 {apiLoaded ? (
                     <>
                         <Header onClick={closeScreen} />
-                        <Switch>
-                            <AuthRoute exact path="/" component={Playlists} />
 
-                            <AuthRoute
-                                path="/playlist/:playlistId"
-                                component={Playlist}
-                            />
+                        <main className="layout__content">{children}</main>
 
-                            <Route exact path="/search" component={Search} />
-
-                            <Route path="/search/:query" component={Search} />
-
-                            <AuthRoute
-                                exact
-                                path="/subscriptions"
-                                component={Channels}
-                            />
-
-                            <Route
-                                exact
-                                path="/channel/:channelId"
-                                component={Channel}
-                            />
-
-                            <Route path="/login" component={Login} />
-                        </Switch>
+                        <Notifications />
                     </>
                 ) : null}
 
                 <Player />
+
+                <Prompt />
 
                 <Loader
                     isActive={!apiLoaded || isLoading}

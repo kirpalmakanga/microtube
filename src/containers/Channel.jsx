@@ -7,8 +7,6 @@ import {
     editPlaylistItem
 } from '../actions/youtube';
 
-import Screen from '../layout/Screen';
-
 import Grid from '../components/Grid';
 
 import VideoCard from '../components/cards/VideoCard';
@@ -34,28 +32,26 @@ class Channel extends Component {
         } = this.props;
 
         return (
-            <Screen>
-                <Grid
-                    items={items}
-                    loadContent={() =>
-                        pageToken !== null &&
-                        getChannelVideos({
-                            channelId,
-                            pageToken
-                        })
-                    }
-                    renderItem={(data) => {
-                        return (
-                            <VideoCard
-                                {...data}
-                                onClick={() => queueAndPlayItem(data)}
-                                queueItem={() => queueItem(data)}
-                                editPlaylistItem={() => editPlaylistItem(data)}
-                            />
-                        );
-                    }}
-                />
-            </Screen>
+            <Grid
+                items={items}
+                loadContent={() =>
+                    pageToken !== null &&
+                    getChannelVideos({
+                        channelId,
+                        pageToken
+                    })
+                }
+                renderItem={(data) => {
+                    return (
+                        <VideoCard
+                            {...data}
+                            onClick={() => queueAndPlayItem(data)}
+                            queueItem={() => queueItem(data)}
+                            editPlaylistItem={() => editPlaylistItem(data)}
+                        />
+                    );
+                }}
+            />
         );
     }
 }

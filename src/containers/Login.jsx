@@ -5,8 +5,6 @@ import { signIn } from '../api/youtube';
 
 import { parseURLSearchParams } from '../lib/helpers';
 
-import Screen from '../layout/Screen';
-
 import Button from '../components/Button';
 
 class Login extends Component {
@@ -32,15 +30,13 @@ class Login extends Component {
 
     render() {
         return (
-            <Screen>
-                <div className="log-in">
-                    <Button
-                        className="button shadow--2dp"
-                        title="Log in"
-                        onClick={signIn}
-                    />
-                </div>
-            </Screen>
+            <div className="log-in">
+                <Button
+                    className="button shadow--2dp"
+                    title="Log in"
+                    onClick={signIn}
+                />
+            </div>
         );
     }
 }

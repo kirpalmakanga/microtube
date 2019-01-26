@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 
 import { searchVideos, editPlaylistItem } from '../actions/youtube';
 
-import Screen from '../layout/Screen';
-
 import Grid from '../components/Grid';
 
 import VideoCard from '../components/cards/VideoCard';
@@ -65,24 +63,20 @@ class Search extends Component {
             loadContent
         } = this;
 
-        return (
-            <Screen>
-                {query && mountGrid ? (
-                    <Grid
-                        items={items}
-                        loadContent={loadContent}
-                        renderItem={(data) => (
-                            <VideoCard
-                                {...data}
-                                onClick={() => queueAndPlayItem(data)}
-                                queueItem={() => queueItem(data)}
-                                editPlaylistItem={() => editPlaylistItem(data)}
-                            />
-                        )}
+        return query && mountGrid ? (
+            <Grid
+                items={items}
+                loadContent={loadContent}
+                renderItem={(data) => (
+                    <VideoCard
+                        {...data}
+                        onClick={() => queueAndPlayItem(data)}
+                        queueItem={() => queueItem(data)}
+                        editPlaylistItem={() => editPlaylistItem(data)}
                     />
-                ) : null}
-            </Screen>
-        );
+                )}
+            />
+        ) : null;
     }
 }
 

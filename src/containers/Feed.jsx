@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 
 import { getFeed } from '../actions/youtube';
 
-import Screen from '../layout/Screen';
-
 import Grid from '../components/Grid';
 
 import VideoCard from '../components/cards/VideoCard';
@@ -18,21 +16,19 @@ class Feed extends Component {
         const { items, getFeed } = this.props;
 
         return (
-            <Screen>
-                <Grid
-                    items={items}
-                    loadContent={getFeed}
-                    renderItem={(data) => {
-                        return (
-                            <VideoCard
-                                {...data}
-                                onClick={() => setAsActiveItem(data)}
-                                pushToQueue={() => pushToQueue(data)}
-                            />
-                        );
-                    }}
-                />
-            </Screen>
+            <Grid
+                items={items}
+                loadContent={getFeed}
+                renderItem={(data) => {
+                    return (
+                        <VideoCard
+                            {...data}
+                            onClick={() => setAsActiveItem(data)}
+                            pushToQueue={() => pushToQueue(data)}
+                        />
+                    );
+                }}
+            />
         );
     }
 }

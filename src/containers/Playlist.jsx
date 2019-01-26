@@ -8,8 +8,6 @@ import {
     editPlaylistItem
 } from '../actions/youtube';
 
-import Screen from '../layout/Screen';
-
 import Grid from '../components/Grid';
 
 import VideoCard from '../components/cards/VideoCard';
@@ -38,31 +36,29 @@ class Playlist extends Component {
         } = this.props;
 
         return (
-            <Screen>
-                <Grid
-                    items={items}
-                    loadContent={() =>
-                        nextPageToken !== null &&
-                        getPlaylistItems({
-                            playlistId,
-                            pageToken: nextPageToken
-                        })
-                    }
-                    renderItem={(data) => {
-                        return (
-                            <VideoCard
-                                {...data}
-                                onClick={() => queueAndPlayItem(data)}
-                                queueItem={() => queueItem(data)}
-                                removeItem={() =>
-                                    removeItem({ ...data, playlistId })
-                                }
-                                editPlaylistItem={() => editPlaylistItem(data)}
-                            />
-                        );
-                    }}
-                />
-            </Screen>
+            <Grid
+                items={items}
+                loadContent={() =>
+                    nextPageToken !== null &&
+                    getPlaylistItems({
+                        playlistId,
+                        pageToken: nextPageToken
+                    })
+                }
+                renderItem={(data) => {
+                    return (
+                        <VideoCard
+                            {...data}
+                            onClick={() => queueAndPlayItem(data)}
+                            queueItem={() => queueItem(data)}
+                            removeItem={() =>
+                                removeItem({ ...data, playlistId })
+                            }
+                            editPlaylistItem={() => editPlaylistItem(data)}
+                        />
+                    );
+                }}
+            />
         );
     }
 }

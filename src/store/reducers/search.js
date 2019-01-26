@@ -26,6 +26,7 @@ export default createReducer(initialState, {
 
     'search/RESET': (state) =>
         updateObject(state, {
+            query: initialState.query,
             items: initialState.items,
             nextPageToken: initialState.nextPageToken
         })

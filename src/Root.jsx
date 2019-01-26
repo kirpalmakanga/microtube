@@ -55,7 +55,7 @@ class Root extends Component {
 
     render() {
         const {
-            props: { isLoading },
+            props: { isLoading, closeScreen },
             state: { apiLoaded }
         } = this;
 
@@ -67,7 +67,7 @@ class Root extends Component {
 
                 {apiLoaded ? (
                     <>
-                        <Header />
+                        <Header onClick={closeScreen} />
                         <Switch>
                             <AuthRoute exact path="/" component={Playlists} />
 
@@ -111,6 +111,8 @@ class Root extends Component {
 const mapStateToProps = ({ app: { isLoading } }) => ({ isLoading });
 
 const mapDispatchToProps = (dispatch) => ({
+    closeScreen: () => dispatch({ type: 'SCREEN_CLOSE' }),
+
     listenAuthChange: () =>
         listenAuth((data) => dispatch({ type: 'auth/SIGN_IN', data })),
 

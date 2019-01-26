@@ -29,12 +29,13 @@ class Header extends Component {
 
     render() {
         const {
+            props: { onClick },
             state: { route },
             onSearchFormSubmit
         } = this;
 
         return (
-            <header className="layout__header shadow--2dp">
+            <header className="layout__header shadow--2dp" onClick={onClick}>
                 {route.startsWith('/search') ? (
                     <SearchHeader onSearchFormSubmit={onSearchFormSubmit} />
                 ) : (

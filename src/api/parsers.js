@@ -28,3 +28,9 @@ export const parsePlaylistData = ({
     itemCount,
     privacyStatus
 });
+
+export const parseChannelData = ({ id, snippet: { title, thumbnails } }) => ({
+    id,
+    title,
+    thumbnails
+});

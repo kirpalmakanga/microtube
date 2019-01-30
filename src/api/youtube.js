@@ -1,5 +1,6 @@
 import { API_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SCOPE } from '../config/api';
-import { parseVideoData, parsePlaylistData } from './parsers';
+import { parseVideoData, parsePlaylistData, parseChannelData } from './parsers';
+import { pick } from '../lib/helpers';
 
 const ITEMS_PER_REQUEST = 50;
 
@@ -335,26 +336,21 @@ export async function removePlaylistItem(id) {
     });
 }
 /* Subscriptions */
+async function getChannelsFromIds(ids) {
+    const { items } = await request('GET', 'channels', {
+        part: 'snippet',
+        id: ids.join(', '),
+        maxResults: ITEMS_PER_REQUEST
+    });
 
-const parseSubscriptionData = ({
-    id,
-    contentDetails: { totalItemCount: itemCount },
-    snippet: {
-        title,
-        thumbnails,
-        resourceId: { channelId }
-    }
-}) => ({
-    id,
-    channelId,
-    title,
-    thumbnails,
-    itemCount
-});
+    const channels = items.map(parseChannelData);
+
+    return channels;
+}
 
 export async function getSubscriptions({ pageToken = '', mine = false }) {
     const {
-        items,
+        items: subscriptions,
         nextPageToken,
         pageInfo: { totalResults }
     } = await request('GET', 'subscriptions', {
@@ -365,25 +361,50 @@ export async function getSubscriptions({ pageToken = '', mine = false }) {
         order: 'alphabetical'
     });
 
+    const channelIds = subscriptions.map(
+        ({
+            snippet: {
+                resourceId: { channelId }
+            }
+        }) => channelId
+    );
+
+    const channels = await getChannelsFromIds(channelIds);
+
     return {
-        items: items.map(parseSubscriptionData),
+        items: channels.map((data) => {
+            const index = subscriptions.findIndex(
+                ({
+                    snippet: {
+                        resourceId: { channelId }
+                    }
+                }) => channelId === data.id
+            );
+
+            const matchingSubscription = subscriptions[index];
+
+            const subscriptionProps = matchingSubscription
+                ? {
+                      subscriptionId: matchingSubscription.id,
+                      ...pick(subscriptions[index].contentDetails, [
+                          'totalItemCount',
+                          'newItemCount'
+                      ])
+                  }
+                : {};
+
+            return {
+                ...data,
+                ...subscriptionProps,
+                isUnsubscribed: false
+            };
+        }),
         nextPageToken,
         totalResults
     };
 }
 
 /* Channels */
-export async function getChannelId(forUsername) {
-    const { items } = await request('GET', 'channels', {
-        forUsername,
-        part: 'snippet'
-    });
-
-    const { id } = items[0];
-
-    return id;
-}
-
 export async function getChannelTitle(id) {
     const { items } = await request('GET', 'channels', {
         id,
@@ -413,4 +434,20 @@ export async function getChannelVideos({ channelId, pageToken }) {
         nextPageToken,
         totalResults: pageInfo.totalResults
     };
+}
+
+export async function subscribeToChannel(channelId) {
+    return request(
+        'POST',
+        'subscriptions',
+        { part: 'snippet' },
+        {
+            'snippet.resourceId.kind': 'youtube#channel',
+            'snippet.resourceId.channelId': channelId
+        }
+    );
+}
+
+export async function unsubscribeFromChannel(id) {
+    return request('DELETE', 'subscriptions', { id });
 }

@@ -17,6 +17,36 @@ export default createReducer(initialState, {
             totalResults
         }),
 
+    'subscriptions/SUBSCRIBE': (state, { data: { channelId } }) => {
+        const items = [...state.items];
+
+        const index = items.findIndex(({ id }) => id === channelId);
+
+        if (index > -1) {
+            items[index].isUnsubscribed = false;
+
+            return updateObject(state, { items });
+        }
+
+        return { ...state };
+    },
+
+    'subscriptions/UNSUBSCRIBE': (state, { data: { subscriptionId } }) => {
+        const items = [...state.items];
+
+        const index = items.findIndex(
+            (item) => item.subscriptionId === subscriptionId
+        );
+
+        if (index > -1) {
+            items[index].isUnsubscribed = true;
+
+            return updateObject(state, { items });
+        }
+
+        return { ...state };
+    },
+
     'subscriptions/CLEAR_ITEMS': () => initialState,
 
     'auth/SIGN_OUT': () => initialState

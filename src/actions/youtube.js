@@ -264,6 +264,7 @@ export const queueVideos = (ids = []) => async (dispatch) => {
     }
 };
 
+/* Channels */
 export const getSubscriptions = (config) => async (dispatch) => {
     try {
         const data = await api.getSubscriptions(config);
@@ -271,6 +272,29 @@ export const getSubscriptions = (config) => async (dispatch) => {
         dispatch({ type: 'subscriptions/UPDATE_ITEMS', data });
     } catch (err) {
         dispatch(notify({ message: 'Error fetching subscriptions.' }));
+    }
+};
+
+export const subscribeToChannel = (channelId) => async (dispatch) => {
+    try {
+        await api.subscribeToChannel(channelId);
+
+        dispatch({ type: 'subscriptions/SUBSCRIBE', data: { channelId } });
+    } catch (error) {
+        dispatch(notify({ message: 'Error subscribing to channel.' }));
+    }
+};
+
+export const unsubscribeFromChannel = (subscriptionId) => async (dispatch) => {
+    try {
+        await api.unsubscribeFromChannel(subscriptionId);
+
+        dispatch({
+            type: 'subscriptions/UNSUBSCRIBE',
+            data: { subscriptionId }
+        });
+    } catch (error) {
+        dispatch(notify({ message: 'Error subscribing to channel.' }));
     }
 };
 
@@ -294,6 +318,7 @@ export const getChannelVideos = (config) => async (dispatch) => {
     }
 };
 
+/* Auth */
 export const signIn = () => async (dispatch) => {
     try {
         const data = await api.signIn();

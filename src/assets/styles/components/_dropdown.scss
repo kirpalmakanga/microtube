@@ -2,7 +2,7 @@
     position: relative;
     color: $white;
     z-index: 1;
-    &__current {
+    &__header {
         position: relative;
         z-index: 1;
         .icon {
@@ -15,7 +15,10 @@
         fill: currentColor;
     }
 
-    &__options {
+    &__list {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
         @include transition();
         position: absolute;
         top: 100%;
@@ -23,8 +26,8 @@
         width: 100%;
     }
 
-    &__current,
-    &__options-item {
+    &__header,
+    &__list-item {
         @include transition();
         background-color: $black;
         height: 56px;
@@ -39,13 +42,13 @@
         }
     }
 
-    &[data-state='closed'] &__options {
+    &[data-state='closed'] &__list {
         // transform: translateY(-25%);
         opacity: 0;
         visibility: hidden;
     }
 
-    &[data-state='open'] &__options {
+    &[data-state='open'] &__list {
         transform: translateY(0);
         opacity: 1;
         visibility: visible;

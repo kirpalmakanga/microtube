@@ -79,8 +79,8 @@
             color: $black;
             border-left: 2px solid lighten($brand-primary, 20%);
             border-right: 2px solid lighten($brand-primary, 20%);
-            &__current,
-            &__options-item {
+            &__header,
+            &__list-item {
                 background-color: $white;
                 color: $black;
 

@@ -26,20 +26,22 @@ class DropDown extends PureComponent {
 
         return (
             <div className="dropdown" data-state={isOpen ? 'open' : 'closed'}>
-                <div className="dropdown__current" onClick={toggleOptions}>
+                <div className="dropdown__header" onClick={toggleOptions}>
                     <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} />
-                    <span>{options[currentIndex].label}</span>
+                    <span className="dropdown__header-title">
+                        {options[currentIndex].label}
+                    </span>
                 </div>
 
-                <div className="dropdown__options shadow--2dp">
+                <ul className="dropdown__list shadow--2dp">
                     {options.map(({ label, value }, i) => {
                         const isActiveItem = currentValue === value;
 
                         return (
-                            <div
+                            <li
                                 key={i}
                                 className={[
-                                    'dropdown__options-item',
+                                    'dropdown__list-item',
                                     isActiveItem ? 'is-active' : ''
                                 ].join(' ')}
                                 onClick={() =>
@@ -47,10 +49,10 @@ class DropDown extends PureComponent {
                                 }
                             >
                                 {label}
-                            </div>
+                            </li>
                         );
                     })}
-                </div>
+                </ul>
             </div>
         );
     }

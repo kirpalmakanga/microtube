@@ -1,4 +1,4 @@
-import React, { Component, PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { throttle } from 'lodash';
 
@@ -529,7 +529,7 @@ class Player extends Component {
                                         showScreen ? 'is-active' : ''
                                     ].join(' ')}
                                     onClick={() => toggleScreen(showScreen)}
-                                    icon="film"
+                                    icon="screen"
                                     ariaLabel={
                                         showScreen
                                             ? 'Close screen'

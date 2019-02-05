@@ -85,7 +85,14 @@ class Root extends Component {
 const mapStateToProps = ({ app: { isLoading } }) => ({ isLoading });
 
 const mapDispatchToProps = (dispatch) => ({
-    closeScreen: () => dispatch({ type: 'SCREEN_CLOSE' }),
+    closeScreen: () =>
+        dispatch((_, getState) => {
+            const {
+                player: { showScreen }
+            } = getState();
+
+            showScreen && dispatch({ type: 'SCREEN_CLOSE' });
+        }),
 
     listenAuthChange: () =>
         listenAuth((data) => dispatch({ type: 'auth/SIGN_IN', data })),

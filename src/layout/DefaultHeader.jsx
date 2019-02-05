@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
 
 import { signIn, signOut } from '../actions/youtube';
 
@@ -70,13 +69,22 @@ class DefaultHeader extends Component {
                     </Link>
 
                     {isSignedIn ? (
-                        <Link
-                            className="navigation__link icon-button"
-                            to="/subscriptions"
-                            aria-label="Open subscriptions"
-                        >
-                            <Icon name="subscriptions" />
-                        </Link>
+                        <>
+                            <Link
+                                className="navigation__link icon-button"
+                                aria-label="Playlists"
+                                to="/"
+                            >
+                                <Icon name="folder" />
+                            </Link>
+                            <Link
+                                className="navigation__link icon-button"
+                                to="/subscriptions"
+                                aria-label="Open subscriptions"
+                            >
+                                <Icon name="subscriptions" />
+                            </Link>
+                        </>
                     ) : null}
 
                     <Button

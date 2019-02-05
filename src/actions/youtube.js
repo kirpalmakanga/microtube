@@ -24,11 +24,9 @@ export const closePrompt = () => async (dispatch) => {
     dispatch({ type: 'prompt/RESET' });
 };
 
-export const prompt = ({
-    callback = async () => {},
-    errorMessage = 'Error.',
-    ...config
-} = {}) => (dispatch) =>
+export const prompt = ({ callback = async () => {}, ...config } = {}) => (
+    dispatch
+) =>
     dispatch({
         type: 'prompt/OPEN',
         data: {
@@ -110,35 +108,39 @@ export function getPlaylistItems(config) {
     };
 }
 
-export function removePlaylistItem({ title, playlistId, playlistItemId }) {
+export function removePlaylistItem({ playlistId, playlistItemId }) {
     return (dispatch, getState) => {
         dispatch(
             prompt({
-                promptText: `Remove ${title} ?`,
+                promptText: `Remove "${title}" ?`,
                 confirmText: 'Remove',
-                callback: async () => {
-                    try {
-                        const {
-                            playlistItems: { playlistTitle }
-                        } = getState();
+                callback: () => {
+                    const {
+                        playlistItems: { playlistTitle }
+                    } = getState();
 
-                        await api.removePlaylistItem(playlistItemId);
+                    (async () => {
+                        try {
+                            await api.removePlaylistItem(playlistItemId);
 
-                        dispatch({
-                            type: 'playlist/REMOVE_ITEM',
-                            data: { playlistItemId, playlistId }
-                        });
+                            dispatch({
+                                type: 'playlist/REMOVE_ITEM',
+                                data: { playlistItemId, playlistId }
+                            });
 
-                        dispatch(
-                            notify({
-                                message: `Removed "${title}" from playlist: "${playlistTitle}."`
-                            })
-                        );
-                    } catch (error) {
-                        dispatch(
-                            notify({ message: 'Error deleting playlist item.' })
-                        );
-                    }
+                            dispatch(
+                                notify({
+                                    message: `Removed from playlist: "${playlistTitle}."`
+                                })
+                            );
+                        } catch (error) {
+                            dispatch(
+                                notify({
+                                    message: 'Error deleting playlist item.'
+                                })
+                            );
+                        }
+                    })();
                 }
             })
         );
@@ -158,22 +160,24 @@ export function addPlaylistItem({ playlistId, videoId }) {
     };
 }
 
-export function editPlaylistItem(data) {
-    return async (dispatch) => {
-        try {
-            dispatch(
-                prompt({
-                    mode: 'playlist',
-                    promptText: `Add to playlist`,
-                    confirmText: 'Done',
-                    errorMessage: 'Error editing playlist item.',
-                    callback: async ({ title, privacyStatus, playlistId }) => {
+export function editPlaylistItem({ id: videoId }) {
+    return (dispatch) =>
+        dispatch(
+            prompt({
+                mode: 'playlist',
+                promptText: `Add to playlist`,
+                confirmText: 'Done',
+                callback: ({
+                    newPlaylistTitle,
+                    playlistTitle,
+                    privacyStatus,
+                    playlistId
+                }) => {
+                    (async () => {
                         try {
-                            const { id: videoId } = data;
-
-                            if (title) {
+                            if (newPlaylistTitle) {
                                 const { id } = await api.createPlaylist({
-                                    title,
+                                    title: newPlaylistTitle,
                                     privacyStatus
                                 });
 
@@ -184,21 +188,26 @@ export function editPlaylistItem(data) {
                                 await dispatch(
                                     addPlaylistItem({ playlistId, videoId })
                                 );
+
+                                dispatch(
+                                    notify({
+                                        message: `Added to playlist "${newPlaylistTitle ||
+                                            playlistTitle}."`
+                                    })
+                                );
                             }
                         } catch (error) {
+                            console.error('error', error);
                             dispatch(
                                 notify({
                                     message: 'Error editing playlist item.'
                                 })
                             );
                         }
-                    }
-                })
-            );
-        } catch (error) {
-            dispatch(notify({ message: 'Error editing playlist item.' }));
-        }
-    };
+                    })();
+                }
+            })
+        );
 }
 
 export function queuePlaylist({ playlistId, play }) {

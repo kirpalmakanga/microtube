@@ -79,7 +79,7 @@ class ImportVideoForm extends Component {
 }
 
 class NewPlayListForm extends Component {
-    state = { title: '', privacyStatus: 'public' };
+    state = { newPlaylistTitle: '', privacyStatus: 'public' };
 
     privacyOptions = [
         { label: 'Public', value: 'public' },
@@ -113,7 +113,7 @@ class NewPlayListForm extends Component {
 
     render() {
         const {
-            state: { title, privacyStatus },
+            state: { newPlaylistTitle, privacyStatus },
             getInputRef,
             privacyOptions,
             setValue,
@@ -126,8 +126,8 @@ class NewPlayListForm extends Component {
                 <input
                     ref={getInputRef}
                     className="playlist-menu__item-text"
-                    name="title"
-                    value={title}
+                    name="newPlaylistTitle"
+                    value={newPlaylistTitle}
                     placeholder="Playlist title"
                     onChange={handleInput}
                 />
@@ -147,7 +147,7 @@ class NewPlayListForm extends Component {
 class PlaylistManager extends Component {
     onCreatePlaylist = (data) => this.props.onClickItem(data);
 
-    onClickItem = (playlistId) => () => this.props.onClickItem({ playlistId });
+    onClickItem = (data) => () => this.props.onClickItem(data);
 
     render() {
         const {
@@ -163,14 +163,18 @@ class PlaylistManager extends Component {
                 <Grid
                     items={items}
                     loadContent={loadContent}
-                    renderItem={({ id, title, itemCount }) => (
+                    renderItem={({
+                        id: playlistId,
+                        title: playlistTitle,
+                        itemCount
+                    }) => (
                         <button
                             className="playlist-menu__item"
-                            key={id}
-                            onClick={onClickItem(id)}
+                            key={playlistId}
+                            onClick={onClickItem({ playlistId, playlistTitle })}
                         >
                             <span className="playlist-menu__item-text">
-                                {title}
+                                {playlistTitle}
                             </span>
 
                             <span className="playlist-menu__item-count">

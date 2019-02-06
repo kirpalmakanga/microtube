@@ -108,7 +108,7 @@ export function getPlaylistItems(config) {
     };
 }
 
-export function removePlaylistItem({ playlistId, playlistItemId }) {
+export function removePlaylistItem({ title, playlistId, playlistItemId }) {
     return (dispatch, getState) => {
         dispatch(
             prompt({

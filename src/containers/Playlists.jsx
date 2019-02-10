@@ -12,8 +12,13 @@ import Grid from '../components/Grid';
 import PlaylistCard from '../components/cards/PlaylistCard';
 
 class Playlists extends Component {
+    componentWillUnmount() {
+        this.props.clearItems();
+    }
+
     render() {
         const {
+            channelId,
             items,
             nextPageToken,
             getPlaylists,
@@ -27,7 +32,7 @@ class Playlists extends Component {
                 loadContent={() =>
                     nextPageToken !== null &&
                     getPlaylists({
-                        mine: true,
+                        ...(channelId ? { channelId } : { mine: true }),
                         pageToken: nextPageToken
                     })
                 }
@@ -65,7 +70,9 @@ const mapDispatchToProps = (dispatch) => ({
 
     makeQueuePlaylist: (data) => () => dispatch(queuePlaylist(data)),
 
-    removePlaylist: (data) => dispatch(removePlaylist(data))
+    removePlaylist: (data) => dispatch(removePlaylist(data)),
+
+    clearItems: () => dispatch({ type: 'playlists/CLEAR_ITEMS' })
 });
 
 export default connect(

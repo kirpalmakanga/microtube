@@ -13,7 +13,7 @@ class DefaultHeader extends Component {
 
         let title = 'MicroTube';
 
-        if (route.includes('/subscriptions')) {
+        if (route.startsWith('/subscriptions')) {
             title = 'Subscriptions';
         }
 
@@ -21,7 +21,7 @@ class DefaultHeader extends Component {
             title = channelTitle;
         }
 
-        if (route.includes('/playlist')) {
+        if (route.startsWith('/playlist')) {
             title = playlistTitle;
         }
 

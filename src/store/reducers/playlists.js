@@ -48,5 +48,7 @@ export default createReducer(initialState, {
         return { ...state };
     },
 
+    'playlists/CLEAR_ITEMS': () => initialState,
+
     'auth/SIGN_OUT': () => initialState
 });

@@ -7,6 +7,8 @@
         "build": "poi --prod"
     },
     "dependencies": {
+        "butterchurn": "^2.6.2",
+        "butterchurn-presets": "^2.4.7",
         "moment": "^2.22.2",
         "react": "^16.6.1",
         "react-beautiful-dnd": "^10.0.2",

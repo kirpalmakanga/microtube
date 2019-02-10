@@ -11,7 +11,7 @@ import asyncComponent from './components/asyncComponent';
 const Playlist = asyncComponent(() => import('./containers/Playlist'));
 const Search = asyncComponent(() => import('./containers/Search'));
 const Channels = asyncComponent(() => import('./containers/Channels'));
-const Channel = asyncComponent(() => import('./containers/Channel'));
+const Channel = asyncComponent(() => import('./containers/channel/Channel'));
 
 class Routes extends Component {
     render() {
@@ -25,7 +25,7 @@ class Routes extends Component {
 
                 <AuthRoute exact path="/subscriptions" component={Channels} />
 
-                <Route exact path="/channel/:channelId" component={Channel} />
+                <Route path="/channel/:channelId" component={Channel} />
 
                 <Route path="/login" component={Login} />
             </Switch>

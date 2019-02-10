@@ -218,7 +218,11 @@ export async function getVideosFromIds(ids) {
 
 /* Playlists */
 
-export async function getPlaylists({ pageToken = '', mine = false } = {}) {
+export async function getPlaylists({
+    pageToken = '',
+    mine = false,
+    channelId = ''
+} = {}) {
     const {
         items,
         nextPageToken,
@@ -226,6 +230,7 @@ export async function getPlaylists({ pageToken = '', mine = false } = {}) {
     } = await request('GET', 'playlists', {
         pageToken,
         mine,
+        channelId,
         part: 'snippet, contentDetails, status',
         maxResults: ITEMS_PER_REQUEST
     });
@@ -405,15 +410,17 @@ export async function getSubscriptions({ pageToken = '', mine = false }) {
 }
 
 /* Channels */
-export async function getChannelTitle(id) {
+export async function getChannel(id) {
     const { items } = await request('GET', 'channels', {
         id,
-        part: 'snippet'
+        part: 'snippet, contentDetails'
     });
 
-    const { title } = items[0].snippet;
+    const {
+        snippet: { title: channelTitle, thumbnails }
+    } = items[0];
 
-    return title;
+    return { channelTitle, thumbnails };
 }
 
 export async function getChannelVideos({ channelId, pageToken }) {

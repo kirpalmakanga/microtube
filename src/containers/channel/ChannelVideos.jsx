@@ -1,35 +1,28 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import {
-    getChannelTitle,
-    getChannelVideos,
-    editPlaylistItem
-} from '../actions/youtube';
+import { getChannelVideos, editPlaylistItem } from '../../actions/youtube';
 
-import Grid from '../components/Grid';
+import Grid from '../../components/Grid';
+import VideoCard from '../../components/cards/VideoCard';
 
-import VideoCard from '../components/cards/VideoCard';
-
-class Channel extends Component {
-    componentDidMount() {
-        this.props.getChannelTitle(this.props.channelId);
-    }
-
+class ChannelVideos extends Component {
     componentWillUnmount() {
-        this.props.clearChannelVideos();
+        this.props.clearItems();
     }
 
     render() {
         const {
-            channelId,
-            items,
-            nextPageToken: pageToken,
-            getChannelVideos,
-            queueAndPlayItem,
-            queueItem,
-            editPlaylistItem
-        } = this.props;
+            props: {
+                channelId,
+                items,
+                nextPageToken: pageToken,
+                getChannelVideos,
+                queueAndPlayItem,
+                queueItem,
+                editPlaylistItem
+            }
+        } = this;
 
         return (
             <Grid
@@ -70,11 +63,9 @@ const mapStateToProps = (
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getChannelTitle: (id) => dispatch(getChannelTitle(id)),
-
     getChannelVideos: (params) => dispatch(getChannelVideos(params)),
 
-    clearChannelVideos: () => dispatch({ type: 'channel/CLEAR' }),
+    clearItems: () => dispatch({ type: 'channel/CLEAR_ITEMS' }),
 
     queueItem: (data) => dispatch({ type: 'QUEUE_PUSH', data }),
 
@@ -91,4 +82,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Channel);
+)(ChannelVideos);

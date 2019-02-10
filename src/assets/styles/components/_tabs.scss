@@ -1,0 +1,43 @@
+.tabs {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+
+    .tab {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        a {
+            @include transition();
+            background-color: $brand-primary;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: $white;
+            height: 50px;
+            text-decoration: none;
+            &:focus {
+                outline: none;
+            }
+            &:hover {
+                background-color: lighten($brand-primary, 20%);
+            }
+        }
+
+        &[data-state='active'] {
+            &:after {
+                content: '';
+                display: block;
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: 2px;
+                background-color: $white;
+            }
+        }
+    }
+}

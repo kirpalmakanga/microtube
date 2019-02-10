@@ -2,7 +2,7 @@ $gutter: 16px;
 
 .grid {
     position: relative;
-    height: 100%;
+    flex: 1;
     overflow-y: scroll;
 
     &__item {

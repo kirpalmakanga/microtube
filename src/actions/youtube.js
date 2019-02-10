@@ -307,13 +307,13 @@ export const unsubscribeFromChannel = (subscriptionId) => async (dispatch) => {
     }
 };
 
-export const getChannelTitle = (channelId) => async (dispatch) => {
+export const getChannel = (channelId) => async (dispatch) => {
     try {
-        const title = await api.getChannelTitle(channelId);
+        const data = await api.getChannel(channelId);
 
-        dispatch({ type: 'channel/SET_TITLE', data: { title } });
+        dispatch({ type: 'channel/UPDATE_DATA', data });
     } catch (err) {
-        dispatch(notify({ message: 'Error fetching channel title.' }));
+        dispatch(notify({ message: 'Error fetching channel data.' }));
     }
 };
 

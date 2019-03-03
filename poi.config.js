@@ -17,7 +17,7 @@ module.exports = {
         if (process.env.NODE_ENV === 'production') {
             config.plugin('offline').use(OfflinePlugin, [
                 {
-                    excludes: ['**/*.map', './_redirects'],
+                    excludes: ['**/*.map', '**/_redirects'],
                     updateStrategy: 'changed',
                     autoUpdate: 1000 * 60 * 2,
                     ServiceWorker: {

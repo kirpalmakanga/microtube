@@ -68,6 +68,7 @@ class Form extends Component {
                         Search
                     </label>
                     <input
+                        aria-label="Search"
                         ref={getInputRef}
                         value={input}
                         name="search"

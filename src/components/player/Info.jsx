@@ -24,6 +24,7 @@ class Info extends PureComponent {
                 </label>
 
                 <input
+                    aria-label="Seek time"
                     id="seek-time"
                     className="player__info-progress-loaded"
                     type="range"

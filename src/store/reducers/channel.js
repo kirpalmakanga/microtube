@@ -1,32 +1,36 @@
-import { createReducer, updateObject } from '../helpers.js';
+import { createReducer } from '../helpers.js';
 
 const initialState = {
     channelTitle: '',
-    thumbnails: {},
+    thumbnails: {
+        default: { url: '' },
+        medium: { url: '' },
+        high: { url: '' }
+    },
     items: [],
     nextPageToken: '',
     totalResults: 0
 };
 
 export default createReducer(initialState, {
-    'channel/UPDATE_DATA': (state, { data }) => updateObject(state, data),
+    'channel/UPDATE_DATA': (state, { data }) => ({ ...state, ...data }),
 
     'channel/UPDATE_ITEMS': (
         state,
         { data: { items, nextPageToken, totalResults } }
-    ) =>
-        updateObject(state, {
-            items: [...state.items, ...items],
-            nextPageToken: nextPageToken || null,
-            totalResults
-        }),
+    ) => ({
+        ...state,
+        items: [...state.items, ...items],
+        nextPageToken: nextPageToken || null,
+        totalResults
+    }),
 
-    'channel/CLEAR_ITEMS': (state) =>
-        updateObject(state, {
-            items: [],
-            nextPageToken: '',
-            totalResults: 0
-        }),
+    'channel/CLEAR_ITEMS': (state) => ({
+        ...state,
+        items: [],
+        nextPageToken: '',
+        totalResults: 0
+    }),
 
     'channel/CLEAR_DATA': () => initialState,
 

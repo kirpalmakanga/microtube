@@ -1,10 +1,9 @@
-import { createReducer, updateObject } from '../helpers.js';
+import { createReducer } from '../helpers.js';
 
 const initialState = {
     isLoading: false
 };
 
 export default createReducer(initialState, {
-    'app/SET_LOADER': (state, { data: isLoading }) =>
-        updateObject(state, { isLoading })
+    'app/SET_LOADER': (state, { data: isLoading }) => ({ ...state, isLoading })
 });

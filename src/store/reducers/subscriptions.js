@@ -1,4 +1,4 @@
-import { createReducer, updateObject } from '../helpers.js';
+import { createReducer } from '../helpers.js';
 
 const initialState = {
     items: [],
@@ -10,12 +10,12 @@ export default createReducer(initialState, {
     'subscriptions/UPDATE_ITEMS': (
         state,
         { data: { items, nextPageToken, totalResults } }
-    ) =>
-        updateObject(state, {
-            items: [...state.items, ...items],
-            nextPageToken: nextPageToken || null,
-            totalResults
-        }),
+    ) => ({
+        ...state,
+        items: [...state.items, ...items],
+        nextPageToken: nextPageToken || null,
+        totalResults
+    }),
 
     'subscriptions/SUBSCRIBE': (state, { data: { channelId } }) => {
         const items = [...state.items];
@@ -25,7 +25,7 @@ export default createReducer(initialState, {
         if (index > -1) {
             items[index].isUnsubscribed = false;
 
-            return updateObject(state, { items });
+            return { ...state, items };
         }
 
         return { ...state };
@@ -41,7 +41,7 @@ export default createReducer(initialState, {
         if (index > -1) {
             items[index].isUnsubscribed = true;
 
-            return updateObject(state, { items });
+            return { ...state, items };
         }
 
         return { ...state };

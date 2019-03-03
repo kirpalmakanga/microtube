@@ -1,4 +1,4 @@
-import { createReducer, updateObject } from '../helpers.js';
+import { createReducer } from '../helpers.js';
 
 const initialState = {
     message: '',
@@ -6,12 +6,19 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    'notifications/OPEN': (state, { data: message }) =>
-        updateObject(state, { message, isActive: true }),
+    'notifications/OPEN': (state, { data: message }) => ({
+        ...state,
+        message,
+        isActive: true
+    }),
 
-    'notifications/CLOSE': (state) =>
-        updateObject(state, { isActive: initialState.isActive }),
+    'notifications/CLOSE': (state) => ({
+        ...state,
+        isActive: initialState.isActive
+    }),
 
-    'notifications/CLEAR_MESSAGE': (state) =>
-        updateObject(state, { message: initialState.message })
+    'notifications/CLEAR_MESSAGE': (state) => ({
+        ...state,
+        message: initialState.message
+    })
 });

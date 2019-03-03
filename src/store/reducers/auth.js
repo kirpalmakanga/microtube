@@ -1,4 +1,4 @@
-import { createReducer, updateObject } from '../helpers.js';
+import { createReducer } from '../helpers.js';
 
 const initialState = {
     user: {
@@ -9,7 +9,7 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    'auth/SIGN_IN': (state, { data }) => updateObject(state, data),
+    'auth/SIGN_IN': (state, { data }) => ({ ...state, ...data }),
 
     'auth/SIGN_OUT': () => initialState
 });

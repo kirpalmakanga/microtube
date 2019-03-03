@@ -1,4 +1,4 @@
-import { createReducer, updateObject } from '../helpers.js';
+import { createReducer } from '../helpers.js';
 
 const initialState = {
     queue: [],
@@ -10,77 +10,59 @@ const initialState = {
     currentTime: 0
 };
 
-const setActiveItem = (index) => (item, i) =>
-    updateObject(item, {
-        active: i === index ? true : false
-    });
+const setActiveItem = (index) => (item, i) => ({
+    ...item,
+    active: i === index ? true : false
+});
 
 const isActiveItem = (item) => item.active;
 
 export default createReducer(initialState, {
-    SCREEN_OPEN: (state) =>
-        updateObject(state, {
-            showScreen: true,
-            showQueue: false
-        }),
+    SCREEN_OPEN: (state) => ({ ...state, showScreen: true, showQueue: false }),
 
-    SCREEN_CLOSE: (state) =>
-        updateObject(state, {
-            showScreen: false
-        }),
+    SCREEN_CLOSE: (state) => ({ ...state, showScreen: false }),
 
-    QUEUE_OPEN: (state) =>
-        updateObject(state, {
-            showQueue: true,
-            showScreen: false,
-            newQueueItems: 0
-        }),
+    QUEUE_OPEN: (state) => ({
+        ...state,
+        showQueue: true,
+        showScreen: false,
+        newQueueItems: 0
+    }),
 
-    QUEUE_CLOSE: (state) =>
-        updateObject(state, {
-            showQueue: false
-        }),
+    QUEUE_CLOSE: (state) => ({ ...state, showQueue: false }),
 
-    QUEUE_PUSH: (state, { data }) =>
-        updateObject(state, {
-            queue: [...state.queue, ...(Array.isArray(data) ? data : [data])],
-            newQueueItems: (state.newQueueItems += Array.isArray(data)
-                ? data.length
-                : 1)
-        }),
+    QUEUE_PUSH: (state, { data }) => ({
+        ...state,
+        queue: [...state.queue, ...(Array.isArray(data) ? data : [data])],
+        newQueueItems: (state.newQueueItems += Array.isArray(data)
+            ? data.length
+            : 1)
+    }),
 
-    QUEUE_REMOVE: (state, { data: index }) =>
-        updateObject(state, {
-            queue: state.queue.filter((item, i) => i !== index)
-        }),
+    QUEUE_REMOVE: (state, { data: index }) => ({
+        ...state,
+        queue: state.queue.filter((item, i) => i !== index)
+    }),
 
-    QUEUE_CLEAR: (state) =>
-        updateObject(state, {
-            queue: state.queue.filter(isActiveItem)
-        }),
+    QUEUE_CLEAR: (state) => ({
+        ...state,
+        queue: state.queue.filter(isActiveItem)
+    }),
 
-    QUEUE_SET: (state, { data: queue }) =>
-        updateObject(state, {
-            queue
-        }),
+    QUEUE_SET: (state, { data: queue }) => ({ ...state, queue }),
 
     QUEUE_SET_ACTIVE_ITEM: (state, { data: { index } = {} }) => {
         const { queue } = state;
         const currentIndex = !isNaN(index) ? index : queue.length - 1;
 
-        return updateObject(state, {
+        return {
+            ...state,
             queue: queue.map(setActiveItem(currentIndex)),
             currentIndex
-        });
+        };
     },
 
-    SET_VOLUME: (state, { data }) =>
-        updateObject(state, {
-            volume: data
-        }),
+    SET_VOLUME: (state, { data }) => ({ ...state, volume: data }),
 
-    SET_CURRENT_TIME: (state, { data }) =>
-        updateObject(state, {
-            currentTime: data
-        })
+    SET_CURRENT_TIME: (state, { data }) => ({ ...state, currentTime: data })
 });

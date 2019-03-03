@@ -7,7 +7,6 @@ import playlistItems from './playlistItems';
 import channel from './channel';
 import subscriptions from './subscriptions';
 import search from './search';
-import feed from './feed';
 import player from './player';
 import prompt from './prompt';
 import notifications from './notifications';
@@ -20,7 +19,6 @@ export default combineReducers({
     channel,
     subscriptions,
     search,
-    feed,
     notifications,
     player,
     prompt

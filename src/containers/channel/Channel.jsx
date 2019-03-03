@@ -86,7 +86,7 @@ class Channel extends Component {
                 <div className="channel">
                     <div className="channel__thumbnail">
                         <Img
-                            src={getThumbnails(thumbnails, 'default')}
+                            src={getThumbnails(thumbnails, 'medium')}
                             alt="Channel thumbnail"
                         />
                     </div>

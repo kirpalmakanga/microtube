@@ -21,7 +21,13 @@ class Img extends Component {
     }
 
     loadImage = async () => {
-        const { src: url = '' } = this.props;
+        const {
+            props: { src: url = '' }
+        } = this;
+
+        if (!url) {
+            return;
+        }
 
         try {
             await new Promise((resolve, reject) => {

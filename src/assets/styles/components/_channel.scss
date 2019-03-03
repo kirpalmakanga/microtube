@@ -3,9 +3,11 @@
     padding: 20px;
     &__thumbnail {
         margin-right: 20px;
+        width: 88px;
+        height: 88px;
+        display: flex;
         .image {
-            width: 88px;
-            height: 88px;
+            flex: 1;
         }
     }
 

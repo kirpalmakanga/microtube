@@ -32,7 +32,7 @@ class Card extends PureComponent {
                     <div className="card__thumb">
                         {thumbnails ? (
                             <Img
-                                src={getThumbnails(thumbnails, 'high')}
+                                src={getThumbnails(thumbnails, 'medium')}
                                 alt={title}
                                 background
                             />

@@ -1,7 +1,7 @@
 .card {
     @include transition();
     display: flex;
-    background-color: lighten($black, 40%);
+    background-color: lighten($black, 30%);
     width: 100%;
     position: relative;
 

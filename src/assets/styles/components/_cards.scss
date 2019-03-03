@@ -71,6 +71,11 @@
             font-size: 14px;
             line-height: 1em;
             margin: 0;
+            color: $white;
+            text-decoration: none;
+            display: block;
+            clear: both;
+
             &:not(:last-child) {
                 margin-bottom: 10px;
             }

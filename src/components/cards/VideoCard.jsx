@@ -9,6 +9,7 @@ class VideoCard extends PureComponent {
         const {
             publishedAt,
             duration,
+            channelId,
             channelTitle,
             queueItem,
             removeItem,
@@ -17,7 +18,11 @@ class VideoCard extends PureComponent {
         } = this.props;
 
         const subTitles = [
-            { className: 'author', text: channelTitle },
+            {
+                className: 'author',
+                text: channelTitle,
+                to: `/channel/${channelId}`
+            },
             { className: 'date', text: formatDate(publishedAt, 'MMMM Do YYYY') }
         ];
 

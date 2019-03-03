@@ -269,7 +269,7 @@ export const queueVideos = (ids = []) => async (dispatch) => {
 
         dispatch({ type: 'QUEUE_PUSH', data });
     } catch (err) {
-        dispatch(notify({ message: 'Error fetching video.' }));
+        dispatch(notify({ message: 'Error queuing videos.' }));
     }
 };
 

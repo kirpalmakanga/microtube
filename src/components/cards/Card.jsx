@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
-import { getThumbnails } from '../../lib/helpers';
+import { getThumbnails, stopPropagation } from '../../lib/helpers';
 
 import Img from '../Img';
 import Button from '../Button';
@@ -47,17 +47,30 @@ class Card extends PureComponent {
                         <h2 className="card__text-title">{title}</h2>
                         {subTitles.length
                             ? subTitles.map(
-                                  ({ text, className = '' }, index) => (
-                                      <div
-                                          key={index}
-                                          className={[
-                                              'card__text-subtitle',
-                                              className
-                                          ].join(' ')}
-                                      >
-                                          {text}
-                                      </div>
-                                  )
+                                  ({ text, className = '', to }, index) =>
+                                      to ? (
+                                          <Link
+                                              key={index}
+                                              className={[
+                                                  'card__text-subtitle',
+                                                  className
+                                              ].join(' ')}
+                                              onClick={stopPropagation()}
+                                              to={to}
+                                          >
+                                              {text}
+                                          </Link>
+                                      ) : (
+                                          <div
+                                              key={index}
+                                              className={[
+                                                  'card__text-subtitle',
+                                                  className
+                                              ].join(' ')}
+                                          >
+                                              {text}
+                                          </div>
+                                      )
                               )
                             : null}
                     </div>

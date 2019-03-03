@@ -3,7 +3,8 @@ import moment from 'moment';
 export const preventDefault = (e) => e.preventDefault();
 
 export const getThumbnails = (thumbnails, size = 'default') => {
-    return thumbnails[size].url.replace('http:', 'https:');
+    const { url = '' } = thumbnails[size] || {};
+    return url.replace('http:', 'https:');
 };
 
 export const formatDate = (date, format) => moment(date).format(format);

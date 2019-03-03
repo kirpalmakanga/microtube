@@ -1,0 +1,17 @@
+.channel {
+    display: flex;
+    padding: 20px;
+    &__thumbnail {
+        margin-right: 20px;
+        .image {
+            width: 88px;
+            height: 88px;
+        }
+    }
+
+    &__details {
+        &-title {
+            font-size: 20px;
+        }
+    }
+}

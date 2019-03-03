@@ -2,7 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, Link } from 'react-router-dom';
 
+import { getThumbnails } from '../../lib/helpers';
+
 import { getChannel } from '../../actions/youtube';
+
+import Img from '../../components/Img';
 
 import ChannelVideos from './ChannelVideos';
 import ChannelAbout from './ChannelAbout';
@@ -70,15 +74,28 @@ class Channel extends Component {
                 match: {
                     params: { channelId },
                     path: channelPath
-                }
+                },
+                channelTitle,
+                thumbnails
             },
             renderTabs
         } = this;
 
         return (
             <>
-                <div className="channel__info">
-                    <div className="channel__info-thumbnail" />
+                <div className="channel">
+                    <div className="channel__thumbnail">
+                        <Img
+                            src={getThumbnails(thumbnails, 'default')}
+                            alt="Channel thumbnail"
+                        />
+                    </div>
+
+                    <div className="channel__details">
+                        <div className="channel__details-title">
+                            {channelTitle}
+                        </div>
+                    </div>
                 </div>
 
                 {renderTabs()}
@@ -102,7 +119,10 @@ class Channel extends Component {
     }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = ({ channel: { channelTitle, thumbnails } }) => ({
+    channelTitle,
+    thumbnails
+});
 
 const mapDispatchToProps = (dispatch) => ({
     clearData: () => dispatch({ type: 'channel/CLEAR_DATA' }),

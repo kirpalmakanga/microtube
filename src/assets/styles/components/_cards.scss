@@ -55,14 +55,6 @@
     &__text {
         color: $white;
         overflow: hidden;
-        div {
-            &:last-child {
-                font-size: 14px;
-                @media screen and (min-width: 1024px) {
-                    font-size: 20px;
-                }
-            }
-        }
 
         &-title {
             text-overflow: ellipsis;
@@ -83,7 +75,7 @@
                 margin-bottom: 10px;
             }
 
-            &.channel {
+            &.author {
                 font-size: 15px;
                 line-height: 14px;
                 opacity: 0.9;

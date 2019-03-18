@@ -32,9 +32,14 @@ class Img extends Component {
         try {
             await new Promise((resolve, reject) => {
                 const img = new Image();
-                img.onload = () => resolve(img);
-                img.onerror = reject;
                 img.src = url;
+
+                if (img.complete) {
+                    return resolve();
+                }
+
+                img.onload = resolve;
+                img.onerror = reject;
             });
         } catch (e) {
             console.error(e);

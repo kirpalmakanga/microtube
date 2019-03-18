@@ -478,6 +478,7 @@ class Player extends Component {
                                 <div
                                     className="player__controls-volume"
                                     onWheel={handleWheelVolume}
+                                    data-state-disabled={disableControls}
                                 >
                                     <Button
                                         className="player__controls-button icon-button"

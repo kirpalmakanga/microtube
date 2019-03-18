@@ -3,8 +3,23 @@ import { connect } from 'react-redux';
 
 class ChannelAbout extends Component {
     render() {
-        return <p style={{ marginLeft: '20px' }}>Coming soon.</p>;
+        const {
+            props: { description }
+        } = this;
+
+        return (
+            <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+                {description
+                    ? description
+                          .split('\n')
+                          .filter(Boolean)
+                          .map((line, index) => <p key={index}>{line}</p>)
+                    : null}
+            </div>
+        );
     }
 }
 
-export default connect()(ChannelAbout);
+const mapStateToProps = ({ channel: { description } }) => ({ description });
+
+export default connect(mapStateToProps)(ChannelAbout);

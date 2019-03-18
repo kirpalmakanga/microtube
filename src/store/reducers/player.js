@@ -39,10 +39,21 @@ export default createReducer(initialState, {
             : 1)
     }),
 
-    QUEUE_REMOVE: (state, { data: index }) => ({
-        ...state,
-        queue: state.queue.filter((item, i) => i !== index)
-    }),
+    QUEUE_REMOVE: (
+        { queue: currentQueue, currentIndex, ...state },
+        { data: index }
+    ) => {
+        const queue = currentQueue.filter(({}, i) => i !== index);
+
+        return {
+            ...state,
+            queue,
+            currentIndex:
+                index === currentIndex
+                    ? initialState.currentIndex
+                    : currentIndex
+        };
+    },
 
     QUEUE_CLEAR: (state) => ({
         ...state,

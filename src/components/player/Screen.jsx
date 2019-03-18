@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react';
 
 import YoutubePlayer from '../YoutubePlayer';
+import Icon from '../Icon';
 
 const playerOptions = {
     playerVars: {
@@ -25,6 +26,12 @@ class Screen extends PureComponent {
                     onEnd={onEnd}
                     onStateChange={onStateChange}
                 />
+                {!videoId && (
+                    <div className="screen__placeholder">
+                        <Icon name="screen" />
+                        <p className="screen__placeholder-text">No video.</p>
+                    </div>
+                )}
             </div>
         );
     }

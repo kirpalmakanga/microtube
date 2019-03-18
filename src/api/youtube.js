@@ -416,11 +416,15 @@ export async function getChannel(id) {
         part: 'snippet, contentDetails'
     });
 
+    if (!items.length) {
+        return {};
+    }
+
     const {
-        snippet: { title: channelTitle, thumbnails }
+        snippet: { title: channelTitle, thumbnails, description }
     } = items[0];
 
-    return { channelTitle, thumbnails };
+    return { channelTitle, description, thumbnails };
 }
 
 export async function getChannelVideos({ channelId, pageToken }) {

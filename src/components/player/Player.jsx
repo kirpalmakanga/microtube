@@ -257,11 +257,11 @@ class Player extends Component {
     };
 
     onYoutubeIframeReady = ({ target: youtube }) => {
-        const { volume, currentTime } = this.props.player;
-
         youtube.pauseVideo();
 
         this.setState({ youtube }, () => {
+            const { volume, currentTime } = this.props.player;
+
             if (currentTime) {
                 youtube.seekTo(currentTime);
 
@@ -402,8 +402,11 @@ class Player extends Component {
             togglePlay,
             goToVideo,
             onYoutubeIframeReady,
-            onYoutubeIframeStateChange
+            onYoutubeIframeStateChange,
+            isPlayerReady
         } = this;
+
+        const disableControls = !isPlayerReady() || !videoId;
 
         return (
             <div
@@ -441,6 +444,7 @@ class Player extends Component {
                                 onClick={() => goToVideo(false)}
                                 icon="skip-previous"
                                 ariaLabel="Go to previous video"
+                                data-state-disabled={disableControls}
                             />
 
                             <Button
@@ -450,8 +454,8 @@ class Player extends Component {
                                     isBuffering
                                         ? 'loading'
                                         : isPlaying
-                                            ? 'pause'
-                                            : 'play'
+                                        ? 'pause'
+                                        : 'play'
                                 }
                                 iconTransitionClass={
                                     isBuffering ? 'rotating' : ''
@@ -459,6 +463,7 @@ class Player extends Component {
                                 ariaLabel={
                                     isPlaying ? 'Pause video' : 'Play video'
                                 }
+                                data-state-disabled={disableControls}
                             />
 
                             <Button
@@ -466,6 +471,7 @@ class Player extends Component {
                                 onClick={() => goToVideo(true)}
                                 icon="skip-next"
                                 ariaLabel="Go to next video"
+                                data-state-disabled={disableControls}
                             />
 
                             {!isMobile ? (
@@ -480,12 +486,13 @@ class Player extends Component {
                                             isMuted
                                                 ? 'volume-mute'
                                                 : volume >= 50
-                                                    ? 'volume-up'
-                                                    : volume > 0 && volume <= 50
-                                                        ? 'volume-down'
-                                                        : 'volume-off'
+                                                ? 'volume-up'
+                                                : volume > 0 && volume <= 50
+                                                ? 'volume-down'
+                                                : 'volume-off'
                                         }
                                         ariaLabel={isMuted ? 'Unmute' : 'Mute'}
+                                        data-state-disabled={disableControls}
                                     />
                                     <VolumeRange
                                         value={volume}

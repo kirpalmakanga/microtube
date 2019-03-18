@@ -2,7 +2,8 @@
     position: relative;
     color: $white;
     z-index: 1;
-    &__header {
+    &__trigger {
+        border: none;
         position: relative;
         z-index: 1;
         .icon {
@@ -26,7 +27,7 @@
         width: 100%;
     }
 
-    &__header,
+    &__trigger,
     &__list-item {
         @include transition();
         background-color: $black;

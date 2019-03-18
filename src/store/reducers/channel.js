@@ -2,6 +2,7 @@ import { createReducer } from '../helpers.js';
 
 const initialState = {
     channelTitle: '',
+    description: '',
     thumbnails: {
         default: { url: '' },
         medium: { url: '' },

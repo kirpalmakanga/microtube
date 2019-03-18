@@ -4,10 +4,12 @@ import Icon from './Icon';
 class DropDown extends PureComponent {
     state = { isOpen: false };
 
+    closeOptions = () => this.state.isOpen && this.setState({ isOpen: false });
+
     toggleOptions = () => this.setState(({ isOpen }) => ({ isOpen: !isOpen }));
 
     handleOptionClick = (value) => {
-        this.toggleOptions();
+        this.closeOptions();
 
         this.props.onSelect(value);
     };
@@ -17,6 +19,7 @@ class DropDown extends PureComponent {
             props: { currentValue, options = {} },
             state: { isOpen },
             toggleOptions,
+            closeOptions,
             handleOptionClick
         } = this;
 
@@ -26,12 +29,16 @@ class DropDown extends PureComponent {
 
         return (
             <div className="dropdown" data-state={isOpen ? 'open' : 'closed'}>
-                <div className="dropdown__header" onClick={toggleOptions}>
+                <button
+                    className="dropdown__trigger"
+                    onClick={toggleOptions}
+                    onBlur={closeOptions}
+                >
                     <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} />
-                    <span className="dropdown__header-title">
+                    <span className="dropdown__trigger-title">
                         {options[currentIndex].label}
                     </span>
-                </div>
+                </button>
 
                 <ul className="dropdown__list shadow--2dp">
                     {options.map(({ label, value }, i) => {

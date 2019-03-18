@@ -16,25 +16,6 @@
     &:focus {
         outline: none;
     }
-
-    &--icon {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        fill: $brand-secondary;
-
-        svg {
-            @include transition();
-            width: 30px;
-            height: 30px;
-        }
-
-        &:active {
-            svg {
-                transform: scale(0.7);
-            }
-        }
-    }
 }
 .button--close {
     background-color: lighten($black, 40%);
@@ -45,7 +26,6 @@
     .icon {
         @include transition();
         transform-origin: 50% 50%;
-
         &.rotating {
             svg {
                 width: 24px;
@@ -61,9 +41,13 @@
         justify-content: center;
         align-items: center;
     }
-    &:active {
+    &[data-state-disabled='false']:active {
         .icon {
             transform: scale(0.7);
         }
+    }
+
+    &[data-state-disabled='true'] .icon {
+        opacity: 0.5;
     }
 }

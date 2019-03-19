@@ -31,12 +31,10 @@ export default createReducer(initialState, {
 
     QUEUE_CLOSE: (state) => ({ ...state, showQueue: false }),
 
-    QUEUE_PUSH: (state, { data }) => ({
+    QUEUE_PUSH: (state, { items }) => ({
         ...state,
-        queue: [...state.queue, ...(Array.isArray(data) ? data : [data])],
-        newQueueItems: (state.newQueueItems += Array.isArray(data)
-            ? data.length
-            : 1)
+        queue: [...state.queue, ...items],
+        newQueueItems: (state.newQueueItems += items.length)
     }),
 
     QUEUE_REMOVE: (

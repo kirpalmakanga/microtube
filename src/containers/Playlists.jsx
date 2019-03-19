@@ -49,9 +49,12 @@ class Playlists extends Component {
                                 playlistId,
                                 play: true
                             })}
-                            removePlaylist={() =>
-                                removePlaylist({ title, playlistId })
-                            }
+                            {...(channelId
+                                ? {}
+                                : {
+                                      removePlaylist: () =>
+                                          removePlaylist({ title, playlistId })
+                                  })}
                         />
                     );
                 }}

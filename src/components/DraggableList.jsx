@@ -49,15 +49,14 @@ class FlatList extends Component {
                               containment={this.container}
                           >
                               {({ isVisible }) =>
-                                  typeof renderItem === 'function'
-                                      ? renderItem(
-                                            {
-                                                props,
-                                                style: getItemStyle(isVisible)
-                                            },
-                                            index
-                                        )
-                                      : null
+                                  typeof renderItem === 'function' &&
+                                  renderItem(
+                                      {
+                                          props,
+                                          style: getItemStyle(isVisible)
+                                      },
+                                      index
+                                  )
                               }
                           </VisibilitySensor>
                       ))

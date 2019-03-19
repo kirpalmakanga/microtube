@@ -114,7 +114,7 @@ export const parseID = (url) => {
     return undefined !== url[2] ? url[2].split(/[^0-9a-z_\-]/i)[0] : url[0];
 };
 
-export const pick = (obj, whitelist = []) =>
+export const pick = (obj = {}, whitelist = []) =>
     Object.keys(obj).reduce(
         (newObj, key) => ({
             ...newObj,

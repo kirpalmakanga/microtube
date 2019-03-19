@@ -84,10 +84,10 @@ const mapDispatchToProps = (dispatch) => ({
 
     removeItem: (data) => dispatch(removePlaylistItem(data)),
 
-    queueItem: (data) => dispatch({ type: 'QUEUE_PUSH', data }),
+    queueItem: (data) => dispatch({ type: 'QUEUE_PUSH', items: [data] }),
 
     queueAndPlayItem: (data) => {
-        dispatch({ type: 'QUEUE_PUSH', data });
+        dispatch({ type: 'QUEUE_PUSH', items: [data] });
         dispatch({
             type: 'QUEUE_SET_ACTIVE_ITEM'
         });

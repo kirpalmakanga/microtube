@@ -1,4 +1,4 @@
-import moment from 'moment';
+import { format } from 'date-fns';
 
 export const preventDefault = (e) => e.preventDefault();
 
@@ -7,7 +7,8 @@ export const getThumbnails = (thumbnails, size = 'default') => {
     return url.replace('http:', 'https:');
 };
 
-export const formatDate = (date, format) => moment(date).format(format);
+export const formatDate = (date, formatString) =>
+    format(new Date(date), formatString);
 
 export const parseDuration = (PT = '') => {
     const matches = PT.match(

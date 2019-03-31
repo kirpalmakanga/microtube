@@ -25,7 +25,7 @@
     "devDependencies": {
         "node-sass": "^4.11.0",
         "offline-plugin": "^5.0.6",
-        "poi": "^12.5.5",
+        "poi": "^12.5.9",
         "sass-loader": "^6.0.7"
     }
 }

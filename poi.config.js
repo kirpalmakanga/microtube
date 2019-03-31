@@ -10,10 +10,6 @@ module.exports = {
     },
     devServer: { port: 8080 },
     chainWebpack(config) {
-        config
-            .plugin('ignore-moment-locales')
-            .use(IgnorePlugin, [/^\.\/locale$/, /moment$/]);
-
         if (process.env.NODE_ENV === 'production') {
             config.plugin('offline').use(OfflinePlugin, [
                 {

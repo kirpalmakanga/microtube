@@ -40,7 +40,7 @@ $gutter: 16px;
 }
 
 .layout__content .grid__item {
-    height: calc(100% / 4);
+    height: calc(100% / 3);
 
     @media screen and (min-width: 480px) {
         height: calc(100% / 5);

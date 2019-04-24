@@ -18,6 +18,13 @@ import VolumeRange from './controls/VolumeRange';
 
 import Info from './Info';
 
+const PLAYING = 1;
+const UNSTARTED = -1;
+const ENDED = 0;
+const PAUSED = 2;
+const BUFFERING = 3;
+const CUED = 5;
+
 class Player extends Component {
     constructor(props) {
         super(props);
@@ -275,31 +282,37 @@ class Player extends Component {
     };
 
     onYoutubeIframeStateChange = ({ data }) => {
+        console.log('playerState', data);
+
         switch (data) {
-            case -1:
-            case 0:
+            case UNSTARTED:
+            case ENDED:
                 this.setState({ isPlaying: false });
                 break;
 
-            case 1:
+            case PLAYING:
                 this.setState({ isPlaying: true, isBuffering: false }, () => {
                     this.watchTime();
                     this.watchLoading();
                 });
                 break;
 
-            case 2:
+            case PAUSED:
                 this.clearWatchers();
                 this.setState({ isPlaying: false });
                 break;
 
-            case 3:
+            case BUFFERING:
                 this.clearWatchers();
-                this.setState({ isBuffering: true });
+
+                if (this.state.isPlaying) {
+                    this.setState({ isBuffering: true });
+                }
+
                 this.setPlaybackQuality();
                 break;
 
-            case 5:
+            case CUED:
                 this.togglePlay();
                 break;
         }

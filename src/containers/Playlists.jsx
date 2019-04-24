@@ -12,10 +12,6 @@ import List from '../components/List';
 import PlaylistCard from '../components/cards/PlaylistCard';
 
 class Playlists extends Component {
-    componentDidMount() {
-        this.props.loadContent();
-    }
-
     componentWillUnmount() {
         this.props.clearItems();
     }

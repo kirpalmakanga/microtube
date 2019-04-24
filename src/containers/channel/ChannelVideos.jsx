@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { getChannelVideos, editPlaylistItem } from '../../actions/youtube';
 
-import Grid from '../../components/Grid';
+import List from '../../components/List';
 import VideoCard from '../../components/cards/VideoCard';
 
 class ChannelVideos extends Component {
@@ -14,10 +14,8 @@ class ChannelVideos extends Component {
     render() {
         const {
             props: {
-                channelId,
                 items,
-                nextPageToken: pageToken,
-                getChannelVideos,
+                loadContent,
                 queueAndPlayItem,
                 queueItem,
                 editPlaylistItem
@@ -25,16 +23,10 @@ class ChannelVideos extends Component {
         } = this;
 
         return (
-            <Grid
+            <List
                 items={items}
-                loadContent={() =>
-                    pageToken !== null &&
-                    getChannelVideos({
-                        channelId,
-                        pageToken
-                    })
-                }
-                renderItem={(data) => {
+                loadMoreItems={loadContent}
+                renderItem={({ data }) => {
                     return (
                         <VideoCard
                             {...data}
@@ -49,21 +41,19 @@ class ChannelVideos extends Component {
     }
 }
 
-const mapStateToProps = (
-    { channel: { items, nextPageToken } },
+const mapStateToProps = ({ channel: { items } }) => ({
+    items
+});
+
+const mapDispatchToProps = (
+    dispatch,
     {
         match: {
             params: { channelId }
         }
     }
 ) => ({
-    channelId,
-    items,
-    nextPageToken
-});
-
-const mapDispatchToProps = (dispatch) => ({
-    getChannelVideos: (params) => dispatch(getChannelVideos(params)),
+    loadContent: () => dispatch(getChannelVideos({ channelId })),
 
     clearItems: () => dispatch({ type: 'channel/CLEAR_ITEMS' }),
 

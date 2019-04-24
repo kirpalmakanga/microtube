@@ -93,6 +93,8 @@ class List extends Component {
             _getItemKey
         } = this;
 
+        /* TODO: Fix la hauteur des items */
+
         return (
             <AutoSizer>
                 {({ height, width }) => (
@@ -102,12 +104,13 @@ class List extends Component {
                         width={width}
                         innerRef={_getInnerContainer}
                         itemKey={_getItemKey()}
-                        itemData={items}
+                        itemData={[...items]}
                         itemCount={isLoading ? items.length + 1 : items.length}
                         itemSize={(index) =>
-                            index === items.length
-                                ? 50
-                                : height / (isMobile ? 3 : 6)
+                            // isLoading && index === items.length
+                            //     ? 50
+                            //     :
+                            height / (isMobile ? 3 : 6)
                         }
                         onScroll={_handleScroll}
                     >

@@ -7,7 +7,7 @@ import {
     unsubscribeFromChannel
 } from '../actions/youtube';
 
-import Grid from '../components/Grid';
+import List from '../components/List';
 
 import ChannelCard from '../components/cards/ChannelCard';
 
@@ -15,23 +15,16 @@ class Subscriptions extends Component {
     render() {
         const {
             items,
-            nextPageToken,
-            getSubscriptions,
+            loadContent,
             makeSubscribeToChannel,
             makeUnsubscribeFromChannel
         } = this.props;
 
         return (
-            <Grid
+            <List
                 items={items}
-                loadContent={() =>
-                    nextPageToken !== null &&
-                    getSubscriptions({
-                        mine: true,
-                        pageToken: nextPageToken
-                    })
-                }
-                renderItem={(data) => {
+                loadMoreItems={loadContent}
+                renderItem={({ data }) => {
                     const { id, subscriptionId } = data;
 
                     return (
@@ -49,13 +42,12 @@ class Subscriptions extends Component {
     }
 }
 
-const mapStateToProps = ({ subscriptions: { items, nextPageToken } }) => ({
-    items,
-    nextPageToken
+const mapStateToProps = ({ subscriptions: { items } }) => ({
+    items
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    getSubscriptions: (params) => dispatch(getSubscriptions(params)),
+    loadContent: () => dispatch(getSubscriptions()),
 
     makeSubscribeToChannel: (id) => () => dispatch(subscribeToChannel(id)),
 

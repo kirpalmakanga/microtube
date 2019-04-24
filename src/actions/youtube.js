@@ -291,9 +291,17 @@ export const queueVideos = (ids = []) => async (dispatch) => {
 };
 
 /* Channels */
-export const getSubscriptions = (config) => async (dispatch) => {
+export const getSubscriptions = () => async (dispatch, getState) => {
     try {
-        const data = await api.getSubscriptions(config);
+        const {
+            subscriptions: { nextPageToken: pageToken, hasNextPage }
+        } = getState();
+
+        if (!hasNextPage) {
+            return;
+        }
+
+        const data = await api.getSubscriptions({ mine: true, pageToken });
 
         dispatch({ type: 'subscriptions/UPDATE_ITEMS', data });
     } catch (err) {
@@ -334,9 +342,20 @@ export const getChannel = (channelId) => async (dispatch) => {
     }
 };
 
-export const getChannelVideos = (config) => async (dispatch) => {
+export const getChannelVideos = ({ channelId }) => async (
+    dispatch,
+    getState
+) => {
     try {
-        const data = await api.getChannelVideos(config);
+        const {
+            channel: { nextPageToken: pageToken, hasNextPage }
+        } = getState();
+
+        if (!hasNextPage) {
+            return;
+        }
+
+        const data = await api.getChannelVideos({ channelId, pageToken });
 
         dispatch({ type: 'channel/UPDATE_ITEMS', data });
     } catch (err) {

@@ -10,6 +10,7 @@ const initialState = {
     },
     items: [],
     nextPageToken: '',
+    hasNextPage: true,
     totalResults: 0
 };
 
@@ -23,6 +24,7 @@ export default createReducer(initialState, {
         ...state,
         items: [...state.items, ...items],
         nextPageToken: nextPageToken || null,
+        hasNextPage: !!nextPageToken,
         totalResults
     }),
 

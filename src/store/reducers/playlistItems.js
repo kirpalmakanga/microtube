@@ -4,7 +4,8 @@ const initialState = {
     playlistTitle: '',
     items: [],
     nextPageToken: '',
-    totalResults: 0
+    totalResults: 0,
+    hasNextPage: true
 };
 
 export default createReducer(initialState, {
@@ -20,6 +21,7 @@ export default createReducer(initialState, {
         ...state,
         items: [...state.items, ...items],
         nextPageToken: nextPageToken || null,
+        hasNextPage: !!nextPageToken,
         totalResults
     }),
 

@@ -81,40 +81,50 @@ class Channel extends Component {
             renderTabs
         } = this;
 
-        return (
-            <>
-                <div className="channel">
-                    <div className="channel__thumbnail">
-                        <Img
-                            src={getThumbnails(thumbnails, 'medium')}
-                            alt="Channel thumbnail"
-                        />
-                    </div>
+        console.log('thumbnails', getThumbnails(thumbnails, 'medium'));
 
-                    <div className="channel__details">
-                        <div className="channel__details-title">
-                            {channelTitle}
+        return (
+            <div className="channel">
+                <div className="channel__header">
+                    <div className="channel__header-inner">
+                        <div className="channel__thumbnail">
+                            <Img
+                                src={getThumbnails(thumbnails, 'medium')}
+                                alt="Channel thumbnail"
+                            />
+                        </div>
+
+                        <div className="channel__details">
+                            <div className="channel__details-title">
+                                {channelTitle}
+                            </div>
                         </div>
                     </div>
+
+                    {renderTabs()}
                 </div>
 
-                {renderTabs()}
+                <div className="channel__content">
+                    <Switch>
+                        <Route
+                            exact
+                            path={channelPath}
+                            component={ChannelVideos}
+                        />
 
-                <Switch>
-                    <Route exact path={channelPath} component={ChannelVideos} />
-
-                    <Route
-                        path={`${channelPath}/playlists`}
-                        component={(props) => (
-                            <Playlists {...props} channelId={channelId} />
-                        )}
-                    />
-                    <Route
-                        path={`${channelPath}/about`}
-                        component={ChannelAbout}
-                    />
-                </Switch>
-            </>
+                        <Route
+                            path={`${channelPath}/playlists`}
+                            component={(props) => (
+                                <Playlists {...props} channelId={channelId} />
+                            )}
+                        />
+                        <Route
+                            path={`${channelPath}/about`}
+                            component={ChannelAbout}
+                        />
+                    </Switch>
+                </div>
+            </div>
         );
     }
 }

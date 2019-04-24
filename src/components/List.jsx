@@ -94,10 +94,6 @@ class List extends Component {
             _getItemKey
         } = this;
 
-        /* TODO: Fix la hauteur des items */
-
-        console.log(items.length);
-
         return isLoading && !items.length ? (
             _renderLoader()
         ) : (

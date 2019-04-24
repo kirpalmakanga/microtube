@@ -1,6 +1,15 @@
 .channel {
     display: flex;
-    padding: 20px;
+    flex-direction: column;
+    flex: 1;
+
+    &__header {
+        &-inner {
+            display: flex;
+            padding: 20px;
+        }
+    }
+
     &__thumbnail {
         margin-right: 20px;
         width: 88px;
@@ -15,5 +24,9 @@
         &-title {
             font-size: 20px;
         }
+    }
+
+    &__content {
+        flex: 1;
     }
 }

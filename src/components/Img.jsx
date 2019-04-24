@@ -3,11 +3,12 @@ import Fade from './animations/Fade';
 
 class Img extends Component {
     static defaultProps = {
-        src: ''
+        src: '',
+        alt: 'image',
+        background: false
     };
 
     state = {
-        url: '',
         isLoading: false
     };
 
@@ -17,21 +18,18 @@ class Img extends Component {
 
     loadImage = async () => {
         const {
-            props: { src: url = '' }
+            props: { src: url }
         } = this;
 
         if (!url) {
             return;
         }
 
-        console.log('loadImage');
-
         try {
             const img = new Image();
             img.src = url;
 
             if (img.complete) {
-                console.log('complete');
                 return;
             }
 
@@ -53,7 +51,7 @@ class Img extends Component {
     };
 
     componentDidMount = () => {
-        this.img = new this.loadImage();
+        this.loadImage();
     };
 
     componentWillUnmount() {
@@ -62,8 +60,8 @@ class Img extends Component {
 
     render() {
         const {
-            props: { src, alt = 'image', background },
-            state: { url, isLoading }
+            props: { src, alt, background },
+            state: { isLoading }
         } = this;
 
         return (
@@ -75,7 +73,7 @@ class Img extends Component {
                             style={{ backgroundImage: `url(${src})` }}
                         />
                     ) : (
-                        <img src={url} alt={alt} />
+                        <img src={src} alt={alt} />
                     )}
                 </Fade>
             </figure>

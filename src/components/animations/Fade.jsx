@@ -18,6 +18,7 @@ class Fade extends PureComponent {
         const {
             in: inProp,
             children,
+            duration = 200,
             mountOnEnter = true,
             unmountOnExit = true,
             ...props

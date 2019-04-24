@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
-import { VariableSizeList } from 'react-window';
+import { FixedSizeList } from 'react-window';
 import { throttle, isMobile } from '../lib/helpers.js';
 
 import Fade from '../components/animations/Fade';
@@ -87,6 +87,7 @@ class List extends Component {
         const {
             props: { items },
             state: { isLoading },
+            _renderLoader,
             _handleScroll,
             _renderRow,
             _getInnerContainer,
@@ -95,10 +96,14 @@ class List extends Component {
 
         /* TODO: Fix la hauteur des items */
 
-        return (
+        console.log(items.length);
+
+        return isLoading && !items.length ? (
+            _renderLoader()
+        ) : (
             <AutoSizer>
                 {({ height, width }) => (
-                    <VariableSizeList
+                    <FixedSizeList
                         className="list"
                         height={height}
                         width={width}
@@ -106,16 +111,11 @@ class List extends Component {
                         itemKey={_getItemKey()}
                         itemData={[...items]}
                         itemCount={isLoading ? items.length + 1 : items.length}
-                        itemSize={(index) =>
-                            // isLoading && index === items.length
-                            //     ? 50
-                            //     :
-                            height / (isMobile ? 3 : 6)
-                        }
+                        itemSize={height / (isMobile ? 3 : 6)}
                         onScroll={_handleScroll}
                     >
                         {_renderRow}
-                    </VariableSizeList>
+                    </FixedSizeList>
                 )}
             </AutoSizer>
         );

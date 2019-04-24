@@ -2,23 +2,18 @@ import React, { Component } from 'react';
 import Fade from './animations/Fade';
 
 class Img extends Component {
-    constructor(props) {
-        super(props);
+    static defaultProps = {
+        src: ''
+    };
 
-        this.state = {
-            url: '',
-            isLoading: true
-        };
-    }
+    state = {
+        url: '',
+        isLoading: false
+    };
 
-    shouldComponentUpdate({ src }) {
-        const { url } = this.state;
-        return src !== url;
-    }
-
-    componentDidUpdate() {
-        this.loadImage();
-    }
+    transition = {
+        transition: 'opacity 0.3s ease-out'
+    };
 
     loadImage = async () => {
         const {
@@ -29,15 +24,20 @@ class Img extends Component {
             return;
         }
 
+        console.log('loadImage');
+
         try {
+            const img = new Image();
+            img.src = url;
+
+            if (img.complete) {
+                console.log('complete');
+                return;
+            }
+
+            this.setState({ isLoading: true });
+
             await new Promise((resolve, reject) => {
-                const img = new Image();
-                img.src = url;
-
-                if (img.complete) {
-                    return resolve();
-                }
-
                 img.onload = resolve;
                 img.onerror = reject;
             });
@@ -53,7 +53,7 @@ class Img extends Component {
     };
 
     componentDidMount = () => {
-        this.loadImage();
+        this.img = new this.loadImage();
     };
 
     componentWillUnmount() {
@@ -68,7 +68,7 @@ class Img extends Component {
 
         return (
             <figure className="image">
-                <Fade in={!isLoading}>
+                <Fade in={!isLoading} duration={300}>
                     {background ? (
                         <div
                             className="image__background"
@@ -77,14 +77,6 @@ class Img extends Component {
                     ) : (
                         <img src={url} alt={alt} />
                     )}
-                </Fade>
-
-                <Fade in={isLoading}>
-                    <span className="image__loader">
-                        <svg className="rotating">
-                            <use xlinkHref="#icon-loading" />
-                        </svg>
-                    </span>
                 </Fade>
             </figure>
         );

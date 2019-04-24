@@ -16,8 +16,10 @@
         "react-redux": "^5.1.1",
         "react-router-dom": "^4.3.1",
         "react-transition-group": "^2.6.0",
+        "react-virtualized-auto-sizer": "^1.0.2",
         "react-visibility-sensor": "^5.0.2",
         "react-waypoint": "^8.0.3",
+        "react-window": "^1.8.1",
         "redux": "^3.7.2",
         "redux-thunk": "^2.3.0",
         "youtube-player": "^5.5.2"
@@ -25,7 +27,7 @@
     "devDependencies": {
         "node-sass": "^4.11.0",
         "offline-plugin": "^5.0.6",
-        "poi": "^12.5.9",
+        "poi": "^12.6.5",
         "sass-loader": "^6.0.7"
     }
 }

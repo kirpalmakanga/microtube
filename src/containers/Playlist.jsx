@@ -8,7 +8,7 @@ import {
     editPlaylistItem
 } from '../actions/youtube';
 
-import Grid from '../components/Grid';
+import List from '../components/List';
 
 import VideoCard from '../components/cards/VideoCard';
 
@@ -27,8 +27,7 @@ class Playlist extends Component {
         const {
             playlistId,
             items,
-            nextPageToken,
-            getPlaylistItems,
+            loadContent,
             queueAndPlayItem,
             queueItem,
             removeItem,
@@ -36,16 +35,9 @@ class Playlist extends Component {
         } = this.props;
 
         return (
-            <Grid
+            <List
                 items={items}
-                loadContent={() =>
-                    nextPageToken !== null &&
-                    getPlaylistItems({
-                        playlistId,
-                        pageToken: nextPageToken
-                    })
-                }
-                renderItem={(data) => {
+                renderItem={({ data }) => {
                     return (
                         <VideoCard
                             {...data}
@@ -58,6 +50,7 @@ class Playlist extends Component {
                         />
                     );
                 }}
+                loadMoreItems={loadContent}
             />
         );
     }
@@ -77,10 +70,17 @@ const mapStateToProps = (
     nextPageToken
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (
+    dispatch,
+    {
+        match: {
+            params: { playlistId }
+        }
+    }
+) => ({
     getPlaylistTitle: (id) => dispatch(getPlaylistTitle(id)),
 
-    getPlaylistItems: (params) => dispatch(getPlaylistItems(params)),
+    loadContent: () => dispatch(getPlaylistItems({ playlistId })),
 
     removeItem: (data) => dispatch(removePlaylistItem(data)),
 

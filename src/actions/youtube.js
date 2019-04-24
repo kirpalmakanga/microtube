@@ -40,9 +40,17 @@ export const prompt = ({ callback = async () => {}, ...config } = {}) => (
     });
 
 export function getPlaylists(config) {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const data = await api.getPlaylists(config);
+            const {
+                playlists: { nextPageToken: pageToken, hasNextPage }
+            } = getState();
+
+            if (!hasNextPage) {
+                return;
+            }
+
+            const data = await api.getPlaylists({ ...config, pageToken });
 
             dispatch({ type: 'playlists/UPDATE_ITEMS', data });
         } catch (err) {
@@ -94,15 +102,24 @@ export function getPlaylistTitle(playlistId) {
 }
 
 export function getPlaylistItems(config) {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
-            const data = await api.getPlaylistItems(config);
+            const {
+                playlists: { nextPageToken: pageToken, hasNextPage }
+            } = getState();
+
+            if (!hasNextPage) {
+                return;
+            }
+
+            const data = await api.getPlaylistItems({ ...config, pageToken });
 
             dispatch({
                 type: 'playlist/UPDATE_ITEMS',
                 data
             });
         } catch (err) {
+            console.error(err);
             dispatch(notify({ message: 'Error fetching playlist items.' }));
         }
     };

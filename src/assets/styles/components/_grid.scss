@@ -1,20 +1,15 @@
 $gutter: 16px;
 
-.grid {
-    position: relative;
-    flex: 1;
-    overflow-y: scroll;
-
+.list {
     &__item {
-        @include transition(opacity, 0.3s);
         display: flex;
 
         &:not(:last-child) {
             border-bottom: 2px solid lighten($brand-primary, 20%);
         }
 
-        &[data-state='hidden'] {
-            opacity: 0;
+        .card {
+            flex: 1;
         }
     }
 
@@ -36,13 +31,5 @@ $gutter: 16px;
             height: 24px;
             width: 24px;
         }
-    }
-}
-
-.layout__content .grid__item {
-    height: calc(100% / 3);
-
-    @media screen and (min-width: 480px) {
-        height: calc(100% / 5);
     }
 }

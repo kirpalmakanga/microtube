@@ -7,36 +7,35 @@ import {
     removePlaylist
 } from '../actions/youtube';
 
-import Grid from '../components/Grid';
+import List from '../components/List';
 
 import PlaylistCard from '../components/cards/PlaylistCard';
 
 class Playlists extends Component {
+    componentDidMount() {
+        this.props.loadContent();
+    }
+
     componentWillUnmount() {
         this.props.clearItems();
     }
 
     render() {
         const {
-            channelId,
-            items,
-            nextPageToken,
-            getPlaylists,
-            makeQueuePlaylist,
-            removePlaylist
-        } = this.props;
+            props: {
+                channelId,
+                items,
+                makeQueuePlaylist,
+                removePlaylist,
+                loadContent
+            }
+        } = this;
 
         return (
-            <Grid
+            <List
                 items={items}
-                loadContent={() =>
-                    nextPageToken !== null &&
-                    getPlaylists({
-                        ...(channelId ? { channelId } : { mine: true }),
-                        pageToken: nextPageToken
-                    })
-                }
-                renderItem={(data) => {
+                itemKey={(index, data) => data[index].id}
+                renderItem={({ data }) => {
                     const { id: playlistId, title } = data;
 
                     return (
@@ -58,18 +57,23 @@ class Playlists extends Component {
                         />
                     );
                 }}
+                loadMoreItems={loadContent}
             />
         );
     }
 }
 
-const mapStateToProps = ({ playlists: { items, nextPageToken } }) => ({
-    items,
-    nextPageToken
+const mapStateToProps = ({ playlists: { items } }) => ({
+    items
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    getPlaylists: (data) => dispatch(getPlaylists(data)),
+const mapDispatchToProps = (dispatch, { channelId }) => ({
+    loadContent: () =>
+        dispatch(
+            getPlaylists({
+                ...(channelId ? { channelId } : { mine: true })
+            })
+        ),
 
     makeQueuePlaylist: (data) => () => dispatch(queuePlaylist(data)),
 

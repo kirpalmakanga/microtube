@@ -282,8 +282,6 @@ class Player extends Component {
     };
 
     onYoutubeIframeStateChange = ({ data }) => {
-        console.log('playerState', data);
-
         switch (data) {
             case UNSTARTED:
             case ENDED:

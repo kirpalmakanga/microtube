@@ -141,6 +141,10 @@ input {
             height: 24px;
         }
     }
+
+    img[src=''] {
+        opacity: 0;
+    }
 }
 
 .log-in {

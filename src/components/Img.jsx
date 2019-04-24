@@ -54,6 +54,14 @@ class Img extends Component {
         this.loadImage();
     };
 
+    componentDidUpdate = ({ src: previousSrc }) => {
+        const { src } = this.props;
+
+        if (src !== previousSrc) {
+            this.loadImage();
+        }
+    };
+
     componentWillUnmount() {
         this.unmounting = true;
     }

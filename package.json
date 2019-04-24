@@ -22,11 +22,12 @@
         "react-window": "^1.8.1",
         "redux": "^3.7.2",
         "redux-thunk": "^2.3.0",
+        "register-service-worker": "^1.6.2",
         "youtube-player": "^5.5.2"
     },
     "devDependencies": {
+        "@poi/plugin-pwa": "^12.0.3",
         "node-sass": "^4.11.0",
-        "offline-plugin": "^5.0.6",
         "poi": "^12.6.5",
         "sass-loader": "^6.0.7"
     }

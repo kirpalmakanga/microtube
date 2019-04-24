@@ -9,26 +9,10 @@ module.exports = {
         }
     },
     devServer: { port: 8080 },
-    chainWebpack(config) {
-        if (process.env.NODE_ENV === 'production') {
-            config.plugin('offline').use(OfflinePlugin, [
-                {
-                    excludes: ['**/*.map', '**/_redirects'],
-                    updateStrategy: 'changed',
-                    autoUpdate: 1000 * 60 * 2,
-                    ServiceWorker: {
-                        events: true,
-                        navigateFallbackURL: '/'
-                    },
-                    cacheMaps: [
-                        {
-                            match: /.+?\:\/\/.+?(\/.+?)(?:#|\?|$)/,
-                            to: '/',
-                            requestTypes: ['navigate', 'same-origin']
-                        }
-                    ]
-                }
-            ]);
+    plugins: [
+        {
+            resolve: '@poi/plugin-pwa',
+            options: {}
         }
-    }
+    ]
 };

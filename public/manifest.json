@@ -1,11 +1,10 @@
 {
     "name": "MicroTube",
     "short_name": "MicroTube",
-    "theme_color": "#191919",
-    "background_color": "#7f7f7f",
+    "theme_color": "#7f7f7f",
+    "background_color": "#191919",
     "display": "standalone",
-    "orientation": "portrait",
-    "scope": "/",
+    "Scope": "/",
     "start_url": "/",
     "icons": [
         {

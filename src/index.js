@@ -10,7 +10,7 @@ import Routes from './Routes';
 import configureStore from './store/configureStore';
 
 if (process.env.NODE_ENV === 'production') {
-    require('../pwa');
+    require('./pwa');
 }
 
 (() => {

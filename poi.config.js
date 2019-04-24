@@ -1,6 +1,3 @@
-const { IgnorePlugin } = require('webpack');
-const OfflinePlugin = require('offline-plugin');
-
 module.exports = {
     entry: './src/index.js',
     output: {

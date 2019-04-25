@@ -15,7 +15,6 @@ register(process.env.PUBLIC_URL + 'service-worker.js', {
     },
     updated() {
         console.log('New content is available; please refresh.');
-        location.reload();
     },
     offline() {
         console.log(

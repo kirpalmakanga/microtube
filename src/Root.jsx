@@ -22,17 +22,22 @@ class Root extends Component {
     state = { apiLoaded: false };
 
     initApp = async () => {
+        const {
+            signIn,
+            listenAuthChange,
+            queueVideos,
+            queuePlaylist
+        } = this.props;
+
         await loadAPI();
 
         await loadAuth();
 
-        this.props.signIn();
+        signIn();
 
-        this.props.listenAuthChange();
+        listenAuthChange();
 
         this.setState({ apiLoaded: true });
-
-        const { queueVideos, queuePlaylist } = this.props;
 
         if (!window.queueVideos) {
             window.queueVideos = queueVideos;

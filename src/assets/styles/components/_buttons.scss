@@ -8,6 +8,7 @@
     cursor: pointer;
     font-size: 14px;
     font-weight: 700;
+    border-radius: 2px;
 
     &:hover {
         background-color: lighten($black, 5%);

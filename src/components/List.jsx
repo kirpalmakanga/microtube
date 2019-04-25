@@ -13,12 +13,19 @@ class List extends Component {
         items: [],
         itemKey: noop,
         renderItem: noop,
-        loadMoreItems: noop
+        loadMoreItems: noop,
+        innerRef: noop
     };
 
     state = { isLoading: false };
 
-    _getInnerContainer = (el) => (this.innerContainer = el);
+    _getInnerContainer = (el) => {
+        const { innerRef = noop } = this.props;
+
+        this.innerContainer = el;
+
+        innerRef(el);
+    };
 
     _loadMoreItems = async () => {
         const {

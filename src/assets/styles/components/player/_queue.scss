@@ -42,6 +42,11 @@
         flex: 1;
     }
 
+    &__items > div[data-react-beautiful-dnd-draggable='0'],
+    &__item {
+        min-height: 50px;
+    }
+
     &__item {
         @include transition(opacity, 0.2s, ease-out);
         border-bottom: 2px solid rgba($brand-primary, 0.5);

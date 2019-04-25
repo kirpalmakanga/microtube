@@ -10,80 +10,34 @@ const reorder = (list, startIndex, endIndex) => {
     return result;
 };
 
-class FlatList extends Component {
-    getContainer = (el) => {
+class DraggableList extends Component {
+    getContainer = (innerRef) => (el) => {
         this.container = el;
 
-        this.props.containerRef(el);
+        innerRef(el);
     };
 
-    getItemStyle = (isVisible) => ({
-        transition: 'opacity 0.3s ease-out',
-        minHeight: '50px',
-
-        ...(isVisible
-            ? {}
-            : {
-                  opacity: 0,
-                  visibility: 'hidden'
-              })
-    });
-
-    render() {
-        const {
-            props: { className, items, renderItem },
-            getContainer,
-            getItemStyle
-        } = this;
-
-        return (
-            <div className={className} ref={getContainer}>
-                {items.length
-                    ? items.map((props, index) => (
-                          <VisibilitySensor
-                              key={index}
-                              resizeCheck={true}
-                              partialVisibility={true}
-                              scrollCheck={true}
-                              scrollThrottle={100}
-                              containment={this.container}
-                          >
-                              {({ isVisible }) =>
-                                  typeof renderItem === 'function' &&
-                                  renderItem(
-                                      {
-                                          props,
-                                          style: getItemStyle(isVisible)
-                                      },
-                                      index
-                                  )
-                              }
-                          </VisibilitySensor>
-                      ))
-                    : null}
-            </div>
-        );
-    }
-}
-
-class DraggableList extends Component {
     onDragEnd = (result) => {
         if (!result.destination) {
             return;
         }
+
+        const { items, onReorderItems } = this.props;
 
         const {
             source: { index: startIndex },
             destination: { index: endIndex }
         } = result;
 
-        const items = reorder(this.props.items, startIndex, endIndex);
+        const updatedItems = reorder(items, startIndex, endIndex);
 
-        this.props.onReorderItems(items);
+        onReorderItems(updatedItems);
     };
 
-    renderItem = ({ props, style }, index) => {
+    renderItem = (props, index) => {
         const { renderItem } = this.props;
+
+        console.log(this.container);
 
         return (
             <Draggable
@@ -92,17 +46,24 @@ class DraggableList extends Component {
                 index={index}
             >
                 {({ innerRef, draggableProps, dragHandleProps }) => (
-                    <div
-                        ref={innerRef}
-                        {...draggableProps}
-                        {...dragHandleProps}
+                    <VisibilitySensor
+                        key={index}
+                        resizeCheck={true}
+                        partialVisibility={true}
+                        scrollCheck={true}
+                        scrollThrottle={100}
+                        containment={this.container}
                     >
-                        <div style={style}>
-                            {typeof renderItem === 'function'
-                                ? renderItem(props, index)
-                                : null}
-                        </div>
-                    </div>
+                        {({ isVisible }) => (
+                            <div
+                                ref={innerRef}
+                                {...draggableProps}
+                                {...dragHandleProps}
+                            >
+                                {isVisible ? renderItem(props, index) : null}
+                            </div>
+                        )}
+                    </VisibilitySensor>
                 )}
             </Draggable>
         );
@@ -111,6 +72,7 @@ class DraggableList extends Component {
     render() {
         const {
             props: { className, items = [] },
+            getContainer,
             onDragEnd,
             renderItem
         } = this;
@@ -119,12 +81,9 @@ class DraggableList extends Component {
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable">
                     {({ innerRef }) => (
-                        <FlatList
-                            className={className}
-                            containerRef={innerRef}
-                            items={items}
-                            renderItem={renderItem}
-                        />
+                        <div className={className} ref={getContainer(innerRef)}>
+                            {items.length ? items.map(renderItem) : null}
+                        </div>
                     )}
                 </Droppable>
             </DragDropContext>

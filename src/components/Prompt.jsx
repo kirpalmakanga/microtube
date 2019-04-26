@@ -10,7 +10,7 @@ import Icon from './Icon';
 import Button from './Button';
 import DropDown from './DropDown';
 
-import Grid from './Grid';
+import List from './List';
 
 import { delay, stopPropagation } from '../lib/helpers';
 
@@ -145,44 +145,43 @@ class NewPlayListForm extends Component {
 }
 
 class PlaylistManager extends Component {
-    onCreatePlaylist = (data) => this.props.onClickItem(data);
+    onCreatePlaylist = (data = {}) =>
+        data.newPlaylistTitle && this.props.onClickItem(data);
 
-    onClickItem = (data) => () => this.props.onClickItem(data);
+    makeOnClickItem = (data) => () => this.props.onClickItem(data);
+
+    renderOption = ({
+        data: { id: playlistId, title: playlistTitle, itemCount }
+    }) => (
+        <button
+            className="playlist-menu__item"
+            key={playlistId}
+            onClick={this.makeOnClickItem({ playlistId, playlistTitle })}
+        >
+            <span className="playlist-menu__item-text">{playlistTitle}</span>
+
+            <span className="playlist-menu__item-count">{itemCount}</span>
+        </button>
+    );
 
     render() {
         const {
             props: { items, loadContent },
             onCreatePlaylist,
-            onClickItem
+            renderOption
         } = this;
 
         return (
             <div className="playlist-menu">
                 <NewPlayListForm onSubmit={onCreatePlaylist} />
 
-                <Grid
-                    items={items}
-                    loadContent={loadContent}
-                    renderItem={({
-                        id: playlistId,
-                        title: playlistTitle,
-                        itemCount
-                    }) => (
-                        <button
-                            className="playlist-menu__item"
-                            key={playlistId}
-                            onClick={onClickItem({ playlistId, playlistTitle })}
-                        >
-                            <span className="playlist-menu__item-text">
-                                {playlistTitle}
-                            </span>
-
-                            <span className="playlist-menu__item-count">
-                                {itemCount}
-                            </span>
-                        </button>
-                    )}
-                />
+                <div className="playlist-menu__items">
+                    <List
+                        items={items}
+                        loadMoreItems={loadContent}
+                        renderItem={renderOption}
+                    />
+                </div>
             </div>
         );
     }
@@ -257,8 +256,8 @@ class Prompt extends Component {
                                 form
                                     ? () => {}
                                     : mode === 'playlist'
-                                        ? closePrompt
-                                        : callback
+                                    ? closePrompt
+                                    : callback
                             }
                             title={confirmText}
                         />

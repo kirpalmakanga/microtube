@@ -78,7 +78,7 @@
             color: $black;
             border-left: 2px solid lighten($brand-primary, 20%);
             border-right: 2px solid lighten($brand-primary, 20%);
-            &__header,
+            &__trigger,
             &__list-item {
                 background-color: $white;
                 color: $black;
@@ -116,9 +116,19 @@
         }
     }
 
-    .grid {
+    &__items {
+        flex: 1;
+        display: flex;
+    }
+
+    .grid,
+    .list {
+        flex: 1;
         &__item {
             height: 54px;
+        }
+        &__loading .icon {
+            color: $brand-primary;
         }
     }
 

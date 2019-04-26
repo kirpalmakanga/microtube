@@ -3,6 +3,7 @@ import { createReducer } from '../helpers.js';
 const initialState = {
     items: [],
     nextPageToken: '',
+    hasNextPage: true,
     forMine: 0,
     query: ''
 };
@@ -23,6 +24,7 @@ export default createReducer(initialState, {
         ...state,
         items: [...state.items, ...items],
         nextPageToken: nextPageToken || null,
+        hasNextPage: !!nextPageToken,
         totalResults: totalResults || state.totalResults
     }),
 

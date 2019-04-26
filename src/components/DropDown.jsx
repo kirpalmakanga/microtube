@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import Icon from './Icon';
 
+import { stopPropagation } from '../lib/helpers.js';
+
 class DropDown extends PureComponent {
     state = { isOpen: false };
 
@@ -28,7 +30,11 @@ class DropDown extends PureComponent {
         );
 
         return (
-            <div className="dropdown" data-state={isOpen ? 'open' : 'closed'}>
+            <div
+                className="dropdown"
+                data-state={isOpen ? 'open' : 'closed'}
+                onClick={stopPropagation()}
+            >
                 <button
                     className="dropdown__trigger"
                     onClick={toggleOptions}

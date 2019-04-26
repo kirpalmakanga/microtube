@@ -264,14 +264,26 @@ export function queuePlaylist({ playlistId, play }) {
 }
 
 export function searchVideos(config) {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
         try {
+            const {
+                search: { hasNextPage, forMine, nextPageToken: pageToken }
+            } = getState();
+
+            if (!hasNextPage) {
+                return;
+            }
+
             dispatch({
                 type: 'search/SET_QUERY',
                 data: { query: config.query }
             });
 
-            const data = await api.searchVideos(config);
+            const data = await api.searchVideos({
+                ...config,
+                forMine,
+                pageToken
+            });
 
             dispatch({ type: 'search/UPDATE_ITEMS', data });
         } catch (err) {

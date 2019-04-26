@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { searchVideos, editPlaylistItem } from '../actions/youtube';
 
-import Grid from '../components/Grid';
+import List from '../components/List';
 
 import VideoCard from '../components/cards/VideoCard';
 
@@ -17,13 +17,11 @@ class Search extends Component {
     loadContent = async () => {
         const query = this.getQuery();
 
-        const { nextPageToken: pageToken, searchVideos, forMine } = this.props;
+        const { searchVideos } = this.props;
 
-        if (query && pageToken !== null) {
+        if (query) {
             return searchVideos({
-                query,
-                pageToken,
-                forMine
+                query
             });
         }
     };
@@ -64,10 +62,10 @@ class Search extends Component {
         } = this;
 
         return query && mountGrid ? (
-            <Grid
+            <List
                 items={items}
-                loadContent={loadContent}
-                renderItem={(data) => (
+                loadMoreItems={loadContent}
+                renderItem={({ data }) => (
                     <VideoCard
                         {...data}
                         onClick={() => queueAndPlayItem(data)}
@@ -81,7 +79,7 @@ class Search extends Component {
 }
 
 const mapStateToProps = (
-    { search: { items, nextPageToken, forMine } },
+    { search: { items } },
     {
         match: {
             params: { query = '' }
@@ -89,9 +87,7 @@ const mapStateToProps = (
     }
 ) => ({
     query,
-    items,
-    nextPageToken,
-    forMine
+    items
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -37,8 +37,6 @@ class DraggableList extends Component {
     renderItem = (props, index) => {
         const { renderItem } = this.props;
 
-        console.log(this.container);
-
         return (
             <Draggable
                 key={index}

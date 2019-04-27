@@ -15,9 +15,7 @@ class Search extends Component {
     getQuery = () => this.props.query;
 
     loadContent = async () => {
-        const query = this.getQuery();
-
-        const { searchVideos } = this.props;
+        const { query, searchVideos } = this.props;
 
         if (query) {
             return searchVideos({
@@ -33,6 +31,8 @@ class Search extends Component {
         });
 
     componentWillMount() {
+        const { query } = this.props;
+
         this.props.setQuery(this.getQuery());
     }
 

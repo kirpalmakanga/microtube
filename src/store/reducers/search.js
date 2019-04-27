@@ -5,13 +5,14 @@ const initialState = {
     nextPageToken: '',
     hasNextPage: true,
     forMine: 0,
-    query: ''
+    query: '',
+    totalResults: 0
 };
 
 export default createReducer(initialState, {
     'search/SET_TARGET': (state, { data: { forMine } }) => ({
         ...state,
-        items: initialState.items,
+        items: [],
         forMine
     }),
 
@@ -30,8 +31,6 @@ export default createReducer(initialState, {
 
     'search/RESET': (state) => ({
         ...state,
-        query: initialState.query,
-        items: initialState.items,
-        nextPageToken: initialState.nextPageToken
+        ...initialState
     })
 });

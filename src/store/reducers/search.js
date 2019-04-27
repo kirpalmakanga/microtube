@@ -1,3 +1,4 @@
+import { omit } from '../../lib/helpers';
 import { createReducer } from '../helpers.js';
 
 const initialState = {
@@ -12,7 +13,6 @@ const initialState = {
 export default createReducer(initialState, {
     'search/SET_TARGET': (state, { data: { forMine } }) => ({
         ...state,
-        items: [],
         forMine
     }),
 
@@ -31,6 +31,6 @@ export default createReducer(initialState, {
 
     'search/RESET': (state) => ({
         ...state,
-        ...initialState
+        ...omit(initialState, ['forMine'])
     })
 });

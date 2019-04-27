@@ -44,8 +44,8 @@ class Queue extends Component {
                                 active && isBuffering
                                     ? 'loading'
                                     : active && isPlaying
-                                        ? 'pause'
-                                        : 'play'
+                                    ? 'pause'
+                                    : 'play'
                             }
                             onClick={
                                 active ? togglePlay : makeSetActiveItem(index)
@@ -67,17 +67,17 @@ const mapStateToProps = ({ player: { queue: items, showQueue } }) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    setQueue: (data) => dispatch({ type: 'QUEUE_SET', data }),
+    setQueue: (data) => dispatch({ type: 'player/UPDATE_QUEUE', data }),
 
     makeSetActiveItem: (index) => () => {
         dispatch({
-            type: 'QUEUE_SET_ACTIVE_ITEM',
+            type: 'player/SET_ACTIVE_QUEUE_ITEM',
             data: { index }
         });
     },
 
     makeRemoveItem: (index) => () =>
-        dispatch({ type: 'QUEUE_REMOVE', data: index }),
+        dispatch({ type: 'player/REMOVE_QUEUE_ITEM', data: index }),
 
     makeEditPlaylistItem: (data) => () => dispatch(editPlaylistItem(data))
 });

@@ -18,30 +18,34 @@ const setActiveItem = (index) => (item, i) => ({
 const isActiveItem = (item) => item.active;
 
 export default createReducer(initialState, {
-    SCREEN_OPEN: (state) => ({ ...state, showScreen: true, showQueue: false }),
+    'player/OPEN_SCREEN': (state) => ({
+        ...state,
+        showScreen: true,
+        showQueue: false
+    }),
 
-    SCREEN_CLOSE: (state) => ({ ...state, showScreen: false }),
+    'player/CLOSE_SCREEN': (state) => ({ ...state, showScreen: false }),
 
-    QUEUE_OPEN: (state) => ({
+    'player/OPEN_QUEUE': (state) => ({
         ...state,
         showQueue: true,
         showScreen: false,
         newQueueItems: 0
     }),
 
-    QUEUE_CLOSE: (state) => ({ ...state, showQueue: false }),
+    'player/CLOSE_QUEUE': (state) => ({ ...state, showQueue: false }),
 
-    QUEUE_PUSH: (state, { items }) => ({
+    'player/QUEUE_PUSH': (state, { items }) => ({
         ...state,
         queue: [...state.queue, ...items],
         newQueueItems: (state.newQueueItems += items.length)
     }),
 
-    QUEUE_REMOVE: (
+    'player/REMOVE_QUEUE_ITEM': (
         { queue: currentQueue, currentIndex, ...state },
         { data: index }
     ) => {
-        const queue = currentQueue.filter(({}, i) => i !== index);
+        const queue = currentQueue.filter((_, i) => i !== index);
 
         return {
             ...state,
@@ -53,14 +57,14 @@ export default createReducer(initialState, {
         };
     },
 
-    QUEUE_CLEAR: (state) => ({
+    'player/CLEAR_QUEUE': (state) => ({
         ...state,
         queue: state.queue.filter(isActiveItem)
     }),
 
-    QUEUE_SET: (state, { data: queue }) => ({ ...state, queue }),
+    'player/UPDATE_QUEUE': (state, { data: queue }) => ({ ...state, queue }),
 
-    QUEUE_SET_ACTIVE_ITEM: (state, { data: { index } = {} }) => {
+    'player/SET_ACTIVE_QUEUE_ITEM': (state, { data: { index } = {} }) => {
         const { queue } = state;
         const currentIndex = !isNaN(index) ? index : queue.length - 1;
 
@@ -71,7 +75,10 @@ export default createReducer(initialState, {
         };
     },
 
-    SET_VOLUME: (state, { data }) => ({ ...state, volume: data }),
+    'player/SET_VOLUME': (state, { data }) => ({ ...state, volume: data }),
 
-    SET_CURRENT_TIME: (state, { data }) => ({ ...state, currentTime: data })
+    'player/SET_CURRENT_TIME': (state, { data }) => ({
+        ...state,
+        currentTime: data
+    })
 });

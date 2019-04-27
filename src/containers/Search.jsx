@@ -12,39 +12,28 @@ class Search extends Component {
         mountGrid: true
     };
 
-    getQuery = () => this.props.query;
+    reloadGrid = () => {
+        const { clearSearch } = this.props;
 
-    loadContent = async () => {
-        const { query, searchVideos } = this.props;
-
-        if (query) {
-            return searchVideos({
-                query
-            });
-        }
-    };
-
-    reloadGrid = () =>
         this.setState({ mountGrid: false }, () => {
-            this.props.clearSearch();
+            clearSearch();
+
             this.setState({ mountGrid: true });
         });
-
-    componentWillMount() {
-        const { query } = this.props;
-
-        this.props.setQuery(this.getQuery());
-    }
+    };
 
     componentWillUnmount() {
         this.props.clearSearch();
     }
 
-    componentDidUpdate({ query }) {
-        const newQuery = this.getQuery();
+    componentDidUpdate({ query, forMine }) {
+        const {
+            props: { query: newQuery, forMine: newForMine },
+            reloadGrid
+        } = this;
 
-        if (newQuery !== query) {
-            this.reloadGrid();
+        if (newQuery !== query || newForMine !== forMine) {
+            reloadGrid();
         }
     }
 
@@ -54,11 +43,11 @@ class Search extends Component {
             props: {
                 query,
                 items,
+                loadContent,
                 queueAndPlayItem,
                 queueItem,
                 editPlaylistItem
-            },
-            loadContent
+            }
         } = this;
 
         return query && mountGrid ? (
@@ -79,7 +68,7 @@ class Search extends Component {
 }
 
 const mapStateToProps = (
-    { search: { items } },
+    { search: { items, forMine } },
     {
         match: {
             params: { query = '' }
@@ -87,23 +76,28 @@ const mapStateToProps = (
     }
 ) => ({
     query,
+    forMine,
     items
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    setQuery: (query) =>
-        dispatch({ type: 'search/SET_QUERY', data: { query } }),
-
-    searchVideos: (params) => dispatch(searchVideos(params)),
+const mapDispatchToProps = (
+    dispatch,
+    {
+        match: {
+            params: { query = '' }
+        }
+    }
+) => ({
+    loadContent: () => dispatch(searchVideos({ query })),
 
     clearSearch: () => dispatch({ type: 'search/RESET' }),
 
-    queueItem: (data) => dispatch({ type: 'QUEUE_PUSH', items: [data] }),
+    queueItem: (data) => dispatch({ type: 'player/QUEUE_PUSH', items: [data] }),
 
     queueAndPlayItem: (data) => {
-        dispatch({ type: 'QUEUE_PUSH', items: [data] });
+        dispatch({ type: 'player/QUEUE_PUSH', items: [data] });
         dispatch({
-            type: 'QUEUE_SET_ACTIVE_ITEM'
+            type: 'player/SET_ACTIVE_QUEUE_ITEM'
         });
     },
 

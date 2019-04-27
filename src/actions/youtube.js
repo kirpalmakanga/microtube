@@ -242,11 +242,11 @@ export function queuePlaylist({ playlistId, play }) {
                     pageToken
                 });
 
-                dispatch({ type: 'QUEUE_PUSH', items });
+                dispatch({ type: 'player/QUEUE_PUSH', items });
 
                 if (play && !pageToken && items.length) {
                     dispatch({
-                        type: 'QUEUE_SET_ACTIVE_ITEM',
+                        type: 'player/SET_ACTIVE_QUEUE_ITEM',
                         data: { index: newIndex }
                     });
                 }
@@ -296,7 +296,7 @@ export const queueVideos = (ids = []) => async (dispatch) => {
     try {
         const items = await api.getVideosFromIds(ids);
 
-        dispatch({ type: 'QUEUE_PUSH', items });
+        dispatch({ type: 'player/QUEUE_PUSH', items });
     } catch (err) {
         dispatch(notify({ message: 'Error queuing videos.' }));
     }

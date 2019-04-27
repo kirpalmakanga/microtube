@@ -153,3 +153,15 @@ export const throttle = (fn, delay) => {
         return fn(...args);
     };
 };
+
+export const omit = (obj, blacklist = []) => {
+    const result = {};
+
+    for (const key in obj) {
+        if (!blacklist.includes(key)) {
+            result[key] = obj[key];
+        }
+    }
+
+    return result;
+};

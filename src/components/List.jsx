@@ -17,7 +17,7 @@ class List extends Component {
         innerRef: noop
     };
 
-    state = { isLoading: false };
+    state = { isLoadingMoreItems: false };
 
     _getInnerContainer = (el) => {
         const { innerRef = noop } = this.props;
@@ -30,18 +30,18 @@ class List extends Component {
     _loadMoreItems = async () => {
         const {
             props: { loadMoreItems },
-            state: { isLoading }
+            state: { isLoadingMoreItems }
         } = this;
 
-        if (isLoading) {
+        if (isLoadingMoreItems) {
             return;
         }
 
-        this.setState({ isLoading: true });
+        this.setState({ isLoadingMoreItems: true });
 
         await loadMoreItems();
 
-        this.setState({ isLoading: false });
+        this.setState({ isLoadingMoreItems: false });
     };
 
     _handleScroll = throttle(({ scrollOffset }) => {
@@ -57,7 +57,7 @@ class List extends Component {
         ) {
             this._loadMoreItems();
         }
-    }, 10);
+    }, 20);
 
     _renderRow = ({ data, index, style }) => {
         const {
@@ -93,7 +93,7 @@ class List extends Component {
     render() {
         const {
             props: { items },
-            state: { isLoading },
+            state: { isLoadingMoreItems },
             _renderLoader,
             _handleScroll,
             _renderRow,
@@ -101,7 +101,7 @@ class List extends Component {
             _getItemKey
         } = this;
 
-        return isLoading && !items.length ? (
+        return isLoadingMoreItems && !items.length ? (
             _renderLoader()
         ) : (
             <AutoSizer>
@@ -113,7 +113,9 @@ class List extends Component {
                         innerRef={_getInnerContainer}
                         itemKey={_getItemKey()}
                         itemData={[...items]}
-                        itemCount={isLoading ? items.length + 1 : items.length}
+                        itemCount={
+                            isLoadingMoreItems ? items.length + 1 : items.length
+                        }
                         itemSize={height / (isMobile ? 3 : 6)}
                         onScroll={_handleScroll}
                     >

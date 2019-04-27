@@ -96,7 +96,7 @@ const mapDispatchToProps = (dispatch) => ({
                 player: { showScreen }
             } = getState();
 
-            showScreen && dispatch({ type: 'SCREEN_CLOSE' });
+            showScreen && dispatch({ type: 'player/CLOSE_SCREEN' });
         }),
 
     listenAuthChange: () =>

@@ -54,7 +54,7 @@ class QueueHeader extends PureComponent {
 const mapStateToProps = ({ player }) => ({ player });
 
 const mapDispatchToProps = (dispatch) => ({
-    closeQueue: () => dispatch({ type: 'QUEUE_CLOSE' }),
+    closeQueue: () => dispatch({ type: 'player/CLOSE_QUEUE' }),
 
     promptAddVideo: () =>
         dispatch(
@@ -86,7 +86,7 @@ const mapDispatchToProps = (dispatch) => ({
                 promptText: 'Clear the queue ?',
                 confirmText: 'Clear',
                 callback: async () => {
-                    dispatch({ type: 'QUEUE_CLEAR' });
+                    dispatch({ type: 'player/CLEAR_QUEUE' });
                 }
             })
         )

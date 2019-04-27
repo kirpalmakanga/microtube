@@ -584,13 +584,15 @@ const mapStateToProps = ({ player }) => ({ player });
 const mapDispatchToProps = (dispatch) => ({
     setActiveQueueItem: (index) =>
         dispatch({
-            type: 'QUEUE_SET_ACTIVE_ITEM',
+            type: 'player/SET_ACTIVE_QUEUE_ITEM',
             data: { index }
         }),
 
-    saveVolume: (volume) => dispatch({ type: 'SET_VOLUME', data: volume }),
+    saveVolume: (volume) =>
+        dispatch({ type: 'player/SET_VOLUME', data: volume }),
 
-    saveCurrentTime: (t) => dispatch({ type: 'SET_CURRENT_TIME', data: t }),
+    saveCurrentTime: (t) =>
+        dispatch({ type: 'player/SET_CURRENT_TIME', data: t }),
 
     toggleQueue: () => {
         dispatch((_, getState) => {
@@ -599,7 +601,7 @@ const mapDispatchToProps = (dispatch) => ({
             } = getState();
 
             dispatch({
-                type: showQueue ? 'QUEUE_CLOSE' : 'QUEUE_OPEN'
+                type: showQueue ? 'player/CLOSE_QUEUE' : 'player/OPEN_QUEUE'
             });
         });
     },
@@ -610,7 +612,7 @@ const mapDispatchToProps = (dispatch) => ({
             } = getState();
 
             dispatch({
-                type: showScreen ? 'SCREEN_CLOSE' : 'SCREEN_OPEN'
+                type: showScreen ? 'player/CLOSE_SCREEN' : 'player/OPEN_SCREEN'
             });
         });
     }

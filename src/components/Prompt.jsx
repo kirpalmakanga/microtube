@@ -101,8 +101,6 @@ class NewPlayListForm extends Component {
     getInputRef = (el) => (this.input = el);
 
     componentDidMount() {
-        this.input.focus();
-
         this.__keyPressHandler = (e) => e.stopPropagation();
         this.input.addEventListener('keypress', this.__keyPressHandler);
     }

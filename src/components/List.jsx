@@ -12,6 +12,7 @@ class List extends Component {
     static defaultProps = {
         items: [],
         itemKey: noop,
+        itemSize: null,
         renderItem: noop,
         loadMoreItems: noop,
         innerRef: noop
@@ -86,6 +87,16 @@ class List extends Component {
         return (index, data) => (data[index] ? itemKey(index, data) : index);
     };
 
+    _getItemSize = (containerHeight) => {
+        const { itemSize } = this.props;
+
+        if (itemSize) {
+            return itemSize;
+        }
+
+        return containerHeight / (isMobile ? 3 : 6);
+    };
+
     componentDidMount() {
         this._loadMoreItems();
     }
@@ -98,7 +109,8 @@ class List extends Component {
             _handleScroll,
             _renderRow,
             _getInnerContainer,
-            _getItemKey
+            _getItemKey,
+            _getItemSize
         } = this;
 
         return isLoadingMoreItems && !items.length ? (
@@ -116,7 +128,7 @@ class List extends Component {
                         itemCount={
                             isLoadingMoreItems ? items.length + 1 : items.length
                         }
-                        itemSize={height / (isMobile ? 3 : 6)}
+                        itemSize={_getItemSize(height)}
                         onScroll={_handleScroll}
                     >
                         {_renderRow}

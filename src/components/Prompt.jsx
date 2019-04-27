@@ -180,6 +180,7 @@ class PlaylistManager extends Component {
                         items={items}
                         loadMoreItems={loadContent}
                         renderItem={renderOption}
+                        itemSize={50}
                     />
                 </div>
             </div>
@@ -279,7 +280,7 @@ const mapDispatchToProps = (dispatch) => ({
     closePrompt: async () => {
         dispatch({ type: 'prompt/CLOSE' });
 
-        await delay(300);
+        await delay(200);
 
         dispatch({ type: 'prompt/RESET' });
     }

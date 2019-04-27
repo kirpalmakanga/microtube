@@ -57,7 +57,9 @@ class DefaultHeader extends Component {
                     </Link>
                 ) : null}
 
-                <span className="layout-title">{title}</span>
+                <span className="layout-title-wrapper">
+                    <span className="layout-title">{title}</span>
+                </span>
 
                 <nav className="navigation">
                     <Link

@@ -5,9 +5,6 @@
     justify-content: space-between;
     position: relative;
     height: 100vh;
-    &-title {
-        font-family: $font-primary;
-    }
 
     &__content {
         flex: 1;

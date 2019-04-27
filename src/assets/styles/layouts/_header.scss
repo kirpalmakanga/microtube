@@ -1,8 +1,17 @@
-.layout-title {
-    font-size: 20px;
-    display: flex;
+.layout-title-wrapper {
+    overflow: hidden;
     flex: 1;
+    display: flex;
 }
+
+.layout-title {
+    font-family: $font-primary;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 20px;
+}
+
 .layout__header {
     @include transition();
     position: relative;
@@ -13,9 +22,9 @@
     z-index: 1;
     &-row {
         display: flex;
-        flex: 1;
         align-items: center;
         padding: 0 16px 0 16px;
+        width: 100%;
     }
 }
 

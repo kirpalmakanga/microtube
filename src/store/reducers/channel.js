@@ -1,3 +1,4 @@
+import { omit } from '../../lib/helpers';
 import { createReducer } from '../helpers.js';
 
 const initialState = {
@@ -11,31 +12,29 @@ const initialState = {
     items: [],
     nextPageToken: '',
     hasNextPage: true,
-    totalResults: 0
+    totalResults: null
 };
 
 export default createReducer(initialState, {
     'channel/UPDATE_DATA': (state, { data }) => ({ ...state, ...data }),
 
     'channel/UPDATE_ITEMS': (
-        state,
-        { data: { items, nextPageToken, totalResults } }
+        { items, ...state },
+        { data: { items: newItems, nextPageToken = '', totalResults } }
     ) => ({
         ...state,
-        items: [...state.items, ...items],
-        nextPageToken: nextPageToken || null,
+        items: [...items, ...newItems],
+        nextPageToken,
         hasNextPage: !!nextPageToken,
         totalResults
     }),
 
     'channel/CLEAR_ITEMS': (state) => ({
         ...state,
-        items: [],
-        nextPageToken: '',
-        totalResults: 0
+        ...omit(initialState, ['channelTitle', 'description', 'thumbnails'])
     }),
 
-    'channel/CLEAR_DATA': () => initialState,
+    'channel/CLEAR_DATA': () => ({ ...initialState }),
 
-    'auth/SIGN_OUT': () => initialState
+    'auth/SIGN_OUT': () => ({ ...initialState })
 });

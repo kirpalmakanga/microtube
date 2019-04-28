@@ -8,6 +8,7 @@ import {
 } from '../actions/youtube';
 
 import List from '../components/List';
+import Placeholder from '../components/Placeholder';
 
 import ChannelCard from '../components/cards/ChannelCard';
 
@@ -15,12 +16,18 @@ class Subscriptions extends Component {
     render() {
         const {
             items,
+            totalResults,
             loadContent,
             makeSubscribeToChannel,
             makeUnsubscribeFromChannel
         } = this.props;
 
-        return (
+        return totalResults === 0 ? (
+            <Placeholder
+                icon="empty"
+                text="You haven't subscribed to any channel yet."
+            />
+        ) : (
             <List
                 items={items}
                 loadMoreItems={loadContent}
@@ -42,8 +49,9 @@ class Subscriptions extends Component {
     }
 }
 
-const mapStateToProps = ({ subscriptions: { items } }) => ({
-    items
+const mapStateToProps = ({ subscriptions: { items, totalResults } }) => ({
+    items,
+    totalResults
 });
 
 const mapDispatchToProps = (dispatch) => ({

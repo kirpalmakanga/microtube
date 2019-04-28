@@ -9,16 +9,11 @@ import {
 } from '../actions/youtube';
 
 import List from '../components/List';
+import Placeholder from '../components/Placeholder';
 
 import VideoCard from '../components/cards/VideoCard';
 
 class Playlist extends Component {
-    constructor(props) {
-        super(props);
-
-        props.clearItems();
-    }
-
     componentDidMount() {
         this.props.getPlaylistTitle(this.props.playlistId);
     }
@@ -27,6 +22,7 @@ class Playlist extends Component {
         const {
             playlistId,
             items,
+            totalResults,
             loadContent,
             queueAndPlayItem,
             queueItem,
@@ -34,7 +30,9 @@ class Playlist extends Component {
             editPlaylistItem
         } = this.props;
 
-        return (
+        return totalResults === 0 ? (
+            <Placeholder icon="empty" text="This playlist is empty." />
+        ) : (
             <List
                 items={items}
                 renderItem={({ data }) => {
@@ -57,7 +55,7 @@ class Playlist extends Component {
 }
 
 const mapStateToProps = (
-    { playlistItems: { playlistTitle, items, nextPageToken } },
+    { playlistItems: { playlistTitle, items, nextPageToken, totalResults } },
     {
         match: {
             params: { playlistId }
@@ -67,7 +65,8 @@ const mapStateToProps = (
     playlistId,
     playlistTitle,
     items,
-    nextPageToken
+    nextPageToken,
+    totalResults
 });
 
 const mapDispatchToProps = (
@@ -93,9 +92,7 @@ const mapDispatchToProps = (
         });
     },
 
-    editPlaylistItem: (data) => dispatch(editPlaylistItem(data)),
-
-    clearItems: () => dispatch({ type: 'playlist/CLEAR_ITEMS' })
+    editPlaylistItem: (data) => dispatch(editPlaylistItem(data))
 });
 
 export default connect(

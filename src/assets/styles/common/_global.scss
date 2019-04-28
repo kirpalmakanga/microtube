@@ -147,7 +147,7 @@ input {
     }
 }
 
-.log-in {
+.placeholder {
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -158,6 +158,8 @@ input {
     padding: 20px;
 
     .icon {
+        width: 100px;
+        height: 100px;
     }
 
     p {

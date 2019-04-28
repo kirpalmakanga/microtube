@@ -4,7 +4,7 @@ const initialState = {
     playlistTitle: '',
     items: [],
     nextPageToken: '',
-    totalResults: 0,
+    totalResults: null,
     hasNextPage: true
 };
 
@@ -15,12 +15,12 @@ export default createReducer(initialState, {
     }),
 
     'playlist/UPDATE_ITEMS': (
-        state,
-        { data: { items, nextPageToken, totalResults } }
+        { items, ...state },
+        { data: { items: newItems, nextPageToken = '', totalResults } }
     ) => ({
         ...state,
-        items: [...state.items, ...items],
-        nextPageToken: nextPageToken || null,
+        items: [...items, ...newItems],
+        nextPageToken,
         hasNextPage: !!nextPageToken,
         totalResults
     }),
@@ -33,7 +33,7 @@ export default createReducer(initialState, {
         return { ...state, items, totalResults: items.length };
     },
 
-    'playlist/CLEAR_ITEMS': () => initialState,
+    'playlist/CLEAR_ITEMS': () => ({ ...initialState }),
 
-    'auth/SIGN_OUT': () => initialState
+    'auth/SIGN_OUT': () => ({ ...initialState })
 });

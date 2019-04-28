@@ -81,8 +81,6 @@ class Channel extends Component {
             renderTabs
         } = this;
 
-        console.log('thumbnails', getThumbnails(thumbnails, 'medium'));
-
         return (
             <div className="channel">
                 <div className="channel__header">

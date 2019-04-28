@@ -6,6 +6,7 @@ import { searchVideos, editPlaylistItem } from '../actions/youtube';
 import List from '../components/List';
 
 import VideoCard from '../components/cards/VideoCard';
+import Placeholder from '../components/Placeholder';
 
 class Search extends Component {
     state = {
@@ -49,6 +50,10 @@ class Search extends Component {
                 editPlaylistItem
             }
         } = this;
+
+        if (!query) {
+            return <Placeholder />;
+        }
 
         return query && mountGrid ? (
             <List

@@ -297,28 +297,40 @@ export async function getPlaylistTitle(id) {
 }
 
 export async function getPlaylistItems({ pageToken = '', playlistId }) {
-    const { items, nextPageToken, pageInfo } = await request(
-        'GET',
-        'playlistItems',
-        {
-            playlistId,
-            pageToken,
-            part: 'snippet, status',
-            maxResults: ITEMS_PER_REQUEST
-        }
-    );
+    const {
+        items: playlistItems,
+        nextPageToken,
+        pageInfo: { totalResults }
+    } = await request('GET', 'playlistItems', {
+        playlistId,
+        pageToken,
+        part: 'snippet, status',
+        maxResults: ITEMS_PER_REQUEST
+    });
 
-    const videoIds = items.map(({ snippet }) => snippet.resourceId.videoId);
+    let items = [];
 
-    const videos = await getVideosFromIds(videoIds);
+    if (playlistItems.length) {
+        const videoIds = playlistItems.map(
+            ({
+                snippet: {
+                    resourceId: { videoId }
+                }
+            }) => videoId
+        );
+
+        const videos = await getVideosFromIds(videoIds);
+
+        items = videos.map((data, index) => ({
+            ...data,
+            playlistItemId: playlistItems[index].id
+        }));
+    }
 
     return {
-        items: videos.map((data, index) => ({
-            ...data,
-            playlistItemId: items[index].id
-        })),
+        items,
         nextPageToken,
-        totalResults: pageInfo.totalResults
+        totalResults
     };
 }
 

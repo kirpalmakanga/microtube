@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { getChannelVideos, editPlaylistItem } from '../../actions/youtube';
 
 import List from '../../components/List';
+import Placeholder from '../../components/Placeholder';
 import VideoCard from '../../components/cards/VideoCard';
 
 class ChannelVideos extends Component {
@@ -15,6 +16,7 @@ class ChannelVideos extends Component {
         const {
             props: {
                 items,
+                totalResults,
                 loadContent,
                 queueAndPlayItem,
                 queueItem,
@@ -22,7 +24,12 @@ class ChannelVideos extends Component {
             }
         } = this;
 
-        return (
+        return totalResults === 0 ? (
+            <Placeholder
+                icon="empty"
+                text={"This channel hasn't uploaded videos."}
+            />
+        ) : (
             <List
                 items={items}
                 loadMoreItems={loadContent}
@@ -41,8 +48,9 @@ class ChannelVideos extends Component {
     }
 }
 
-const mapStateToProps = ({ channel: { items } }) => ({
-    items
+const mapStateToProps = ({ channel: { items, totalResults } }) => ({
+    items,
+    totalResults
 });
 
 const mapDispatchToProps = (

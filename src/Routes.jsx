@@ -5,6 +5,7 @@ import AuthRoute from './AuthRoute';
 
 import Playlists from './containers/Playlists';
 import Login from './containers/Login';
+import NotFound from './containers/NotFound';
 
 import asyncComponent from './components/asyncComponent';
 
@@ -28,6 +29,8 @@ class Routes extends Component {
                 <Route path="/channel/:channelId" component={Channel} />
 
                 <Route path="/login" component={Login} />
+
+                <Route path="*" component={NotFound} />
             </Switch>
         );
     }

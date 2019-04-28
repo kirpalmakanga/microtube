@@ -8,6 +8,7 @@ import {
 } from '../actions/youtube';
 
 import List from '../components/List';
+import Placeholder from '../components/Placeholder';
 
 import PlaylistCard from '../components/cards/PlaylistCard';
 
@@ -21,13 +22,23 @@ class Playlists extends Component {
             props: {
                 channelId,
                 items,
+                totalResults,
                 makeQueuePlaylist,
                 removePlaylist,
                 loadContent
             }
         } = this;
 
-        return (
+        return totalResults === 0 ? (
+            <Placeholder
+                icon="empty"
+                text={
+                    channelId
+                        ? "This channel doesn't have playlists."
+                        : "You haven't created playlists yet."
+                }
+            />
+        ) : (
             <List
                 items={items}
                 itemKey={(index, data) => data[index].id}
@@ -59,8 +70,9 @@ class Playlists extends Component {
     }
 }
 
-const mapStateToProps = ({ playlists: { items } }) => ({
-    items
+const mapStateToProps = ({ playlists: { items, totalResults } }) => ({
+    items,
+    totalResults
 });
 
 const mapDispatchToProps = (dispatch, { channelId }) => ({

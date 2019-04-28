@@ -4,24 +4,23 @@ import { connect } from 'react-redux';
 import { signIn } from '../api/youtube';
 
 import Button from '../components/Button';
-import Icon from '../components/Icon';
+import Placeholder from '../components/Placeholder';
 
 class Login extends Component {
     render() {
         return (
-            <div className="log-in">
-                <Icon name="lock" />
-                <p>You must be logged in to access this content.</p>
+            <Placeholder
+                icon="lock"
+                text="You must be logged in to access this content."
+            >
                 <Button
                     className="button shadow--2dp"
                     title="Log in"
                     onClick={signIn}
                 />
-            </div>
+            </Placeholder>
         );
     }
 }
 
-const mapStateToProps = ({ auth: { isSignedIn } }) => ({ isSignedIn });
-
-export default connect(mapStateToProps)(Login);
+export default Login;

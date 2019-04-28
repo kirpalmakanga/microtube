@@ -112,6 +112,8 @@ export function getPlaylistItems(config) {
                 return;
             }
 
+            dispatch({ type: 'playlist/CLEAR_ITEMS' });
+
             const data = await api.getPlaylistItems({ ...config, pageToken });
 
             dispatch({
@@ -126,41 +128,43 @@ export function getPlaylistItems(config) {
 }
 
 export function removePlaylistItem({ title, playlistId, playlistItemId }) {
-    return (dispatch, getState) => {
-        dispatch(
-            prompt({
-                promptText: `Remove "${title}" ?`,
-                confirmText: 'Remove',
-                callback: () => {
-                    const {
-                        playlistItems: { playlistTitle }
-                    } = getState();
+    return async (dispatch, getState) => {
+        await new Promise((callback) => {
+            dispatch(
+                prompt({
+                    promptText: `Remove "${title}" ?`,
+                    confirmText: 'Remove',
+                    callback
+                })
+            );
+        });
 
-                    (async () => {
-                        try {
-                            await api.removePlaylistItem(playlistItemId);
+        const {
+            playlistItems: { playlistTitle }
+        } = getState();
 
-                            dispatch({
-                                type: 'playlist/REMOVE_ITEM',
-                                data: { playlistItemId, playlistId }
-                            });
+        (async () => {
+            try {
+                await api.removePlaylistItem(playlistItemId);
 
-                            dispatch(
-                                notify({
-                                    message: `Removed from playlist: "${playlistTitle}."`
-                                })
-                            );
-                        } catch (error) {
-                            dispatch(
-                                notify({
-                                    message: 'Error deleting playlist item.'
-                                })
-                            );
-                        }
-                    })();
-                }
-            })
-        );
+                dispatch({
+                    type: 'playlist/REMOVE_ITEM',
+                    data: { playlistItemId, playlistId }
+                });
+
+                dispatch(
+                    notify({
+                        message: `Removed from playlist: "${playlistTitle}."`
+                    })
+                );
+            } catch (error) {
+                dispatch(
+                    notify({
+                        message: 'Error deleting playlist item.'
+                    })
+                );
+            }
+        })();
     };
 }
 
@@ -273,11 +277,6 @@ export function searchVideos(config) {
             if (!hasNextPage) {
                 return;
             }
-
-            dispatch({
-                type: 'search/SET_QUERY',
-                data: { query: config.query }
-            });
 
             const data = await api.searchVideos({
                 ...config,

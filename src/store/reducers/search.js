@@ -6,8 +6,7 @@ const initialState = {
     nextPageToken: '',
     hasNextPage: true,
     forMine: 0,
-    query: '',
-    totalResults: 0
+    totalResults: null
 };
 
 export default createReducer(initialState, {
@@ -16,17 +15,15 @@ export default createReducer(initialState, {
         forMine
     }),
 
-    'search/SET_QUERY': (state, { data: { query } }) => ({ ...state, query }),
-
     'search/UPDATE_ITEMS': (
-        state,
-        { data: { items, nextPageToken, totalResults } }
+        { items, ...state },
+        { data: { items: newItems, nextPageToken = '', totalResults } }
     ) => ({
         ...state,
-        items: [...state.items, ...items],
-        nextPageToken: nextPageToken || null,
+        items: [...items, ...newItems],
+        nextPageToken,
         hasNextPage: !!nextPageToken,
-        totalResults: totalResults || state.totalResults
+        totalResults
     }),
 
     'search/RESET': (state) => ({

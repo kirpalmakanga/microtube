@@ -3,18 +3,18 @@ import { createReducer } from '../helpers.js';
 const initialState = {
     items: [],
     nextPageToken: '',
-    totalResults: 0,
+    totalResults: null,
     hasNextPage: true
 };
 
 export default createReducer(initialState, {
     'subscriptions/UPDATE_ITEMS': (
-        state,
-        { data: { items, nextPageToken, totalResults } }
+        { items, ...state },
+        { data: { items: newItems, nextPageToken = '', totalResults } }
     ) => ({
         ...state,
-        items: [...state.items, ...items],
-        nextPageToken: nextPageToken || null,
+        items: [...items, ...newItems],
+        nextPageToken,
         hasNextPage: !!nextPageToken,
         totalResults
     }),
@@ -49,7 +49,7 @@ export default createReducer(initialState, {
         return { ...state };
     },
 
-    'subscriptions/CLEAR_ITEMS': () => initialState,
+    'subscriptions/CLEAR_ITEMS': () => ({ ...initialState }),
 
-    'auth/SIGN_OUT': () => initialState
+    'auth/SIGN_OUT': () => ({ ...initialState })
 });

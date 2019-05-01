@@ -26,8 +26,10 @@ class QueueHeader extends PureComponent {
                         icon="chevron-down"
                     />
 
-                    <span className="layout-title">
-                        {`Queue (${player.queue.length} Items)`}
+                    <span className="layout__title">
+                        <span className="layout__title-inner">
+                            {`Queue (${player.queue.length} Items)`}
+                        </span>
                     </span>
 
                     <nav className="navigation">

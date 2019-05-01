@@ -44,6 +44,7 @@ class Search extends Component {
             props: {
                 query,
                 items,
+                totalResults,
                 loadContent,
                 queueAndPlayItem,
                 queueItem,
@@ -51,29 +52,29 @@ class Search extends Component {
             }
         } = this;
 
-        if (!query) {
-            return <Placeholder />;
-        }
-
         return query && mountGrid ? (
-            <List
-                items={items}
-                loadMoreItems={loadContent}
-                renderItem={({ data }) => (
-                    <VideoCard
-                        {...data}
-                        onClick={() => queueAndPlayItem(data)}
-                        queueItem={() => queueItem(data)}
-                        editPlaylistItem={() => editPlaylistItem(data)}
-                    />
-                )}
-            />
+            totalResults === 0 ? (
+                <Placeholder icon="empty" text="No results found." />
+            ) : (
+                <List
+                    items={items}
+                    loadMoreItems={loadContent}
+                    renderItem={({ data }) => (
+                        <VideoCard
+                            {...data}
+                            onClick={() => queueAndPlayItem(data)}
+                            queueItem={() => queueItem(data)}
+                            editPlaylistItem={() => editPlaylistItem(data)}
+                        />
+                    )}
+                />
+            )
         ) : null;
     }
 }
 
 const mapStateToProps = (
-    { search: { items, forMine } },
+    { search: { items, forMine, totalResults } },
     {
         match: {
             params: { query = '' }
@@ -82,7 +83,8 @@ const mapStateToProps = (
 ) => ({
     query,
     forMine,
-    items
+    items,
+    totalResults
 });
 
 const mapDispatchToProps = (

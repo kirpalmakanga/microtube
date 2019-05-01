@@ -57,8 +57,8 @@ class DefaultHeader extends Component {
                     </Link>
                 ) : null}
 
-                <span className="layout-title-wrapper">
-                    <span className="layout-title">{title}</span>
+                <span className="layout__title">
+                    <span className="layout__title-inner">{title}</span>
                 </span>
 
                 <nav className="navigation">
@@ -103,18 +103,22 @@ class DefaultHeader extends Component {
     }
 }
 
-const mapStateToProps = ({
-    auth: {
-        isSignedIn,
-        user: { picture: avatar }
+const mapStateToProps = (
+    {
+        auth: {
+            isSignedIn,
+            user: { picture: avatar }
+        },
+        playlistItems: { playlistTitle },
+        channel: { channelTitle }
     },
-    playlistItems: { playlistTitle },
-    channel: { channelTitle }
-}) => ({
+    { location: { pathname: route } }
+) => ({
     isSignedIn,
     avatar,
     playlistTitle,
-    channelTitle
+    channelTitle,
+    route
 });
 
 const mapDispatchToProps = (dispatch) => ({

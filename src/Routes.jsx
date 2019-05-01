@@ -22,7 +22,7 @@ class Routes extends Component {
 
                 <AuthRoute path="/playlist/:playlistId" component={Playlist} />
 
-                <Route path="/search/:query" component={Search} />
+                <Route path="/search/:query?" component={Search} />
 
                 <AuthRoute exact path="/subscriptions" component={Channels} />
 

@@ -58,7 +58,7 @@ class List extends Component {
         ) {
             this._loadMoreItems();
         }
-    }, 20);
+    }, 10);
 
     _renderRow = ({ data, index, style }) => {
         const {

@@ -1,54 +1,56 @@
-.layout-title-wrapper {
-    overflow: hidden;
-    flex: 1;
-    display: flex;
-}
-
-.layout-title {
-    font-family: $font-primary;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    font-size: 20px;
-}
-
-.layout__header {
-    @include transition();
-    position: relative;
-    background-color: $brand-primary;
-    display: flex;
-    flex-shrink: 0;
-    height: 56px;
-    z-index: 1;
-    &-row {
+.layout {
+    &__title {
+        overflow: hidden;
+        flex: 1;
         display: flex;
-        align-items: center;
-        padding: 0 16px 0 16px;
-        width: 100%;
-    }
-}
 
-.layout__back-button {
-    background-color: transparent;
-    border: none;
-    fill: $white;
-    height: 100%;
-    cursor: pointer;
-    margin-right: 15px;
-    text-overflow: ellipsis;
-    padding: 0 15px;
-    margin-left: -15px;
-    position: relative;
-
-    &:focus {
-        outline: none;
+        &-inner {
+            font-family: $font-primary;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            font-size: 20px;
+        }
     }
-    svg {
-        height: 22px;
-        width: 22px;
-        @media screen and (min-width: 480px) {
-            height: 24px;
-            width: 24px;
+
+    &__header {
+        @include transition();
+        position: relative;
+        background-color: $brand-primary;
+        display: flex;
+        flex-shrink: 0;
+        height: 56px;
+        z-index: 1;
+        &-row {
+            display: flex;
+            align-items: center;
+            padding: 0 16px 0 16px;
+            width: 100%;
+        }
+    }
+
+    &__back-button {
+        background-color: transparent;
+        border: none;
+        fill: $white;
+        height: 100%;
+        cursor: pointer;
+        margin-right: 15px;
+        text-overflow: ellipsis;
+        padding: 0 15px;
+        margin-left: -15px;
+        position: relative;
+
+        &:focus {
+            outline: none;
+        }
+        svg {
+            height: 22px;
+            width: 22px;
+            @media screen and (min-width: 480px) {
+                height: 24px;
+                width: 24px;
+            }
         }
     }
 }

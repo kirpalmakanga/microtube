@@ -286,6 +286,7 @@ export function searchVideos(config) {
 
             dispatch({ type: 'search/UPDATE_ITEMS', data });
         } catch (err) {
+            console.error(err);
             dispatch(notify({ message: 'Error searching videos.' }));
         }
     };

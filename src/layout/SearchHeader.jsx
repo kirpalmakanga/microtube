@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
 import SearchForm from '../components/SearchForm';
 import Icon from '../components/Icon';
@@ -8,15 +8,23 @@ import Icon from '../components/Icon';
 import DropDown from '../components/DropDown';
 
 class SearchHeader extends Component {
+    handleFormSubmit = (query) => {
+        const { history } = this.props;
+
+        history.replace(`/search/${query}`);
+    };
+
+    handleDropDownSelect = (value) => {
+        const { setSearchMode } = this.props;
+
+        setSearchMode(parseInt(value));
+    };
+
     render() {
         const {
-            props: {
-                isSignedIn,
-                onSearchFormSubmit,
-                query,
-                setSearchMode,
-                forMine
-            }
+            props: { isSignedIn, forMine, query },
+            handleFormSubmit,
+            handleDropDownSelect
         } = this;
 
         return (
@@ -30,7 +38,7 @@ class SearchHeader extends Component {
                     <Icon name="back" />
                 </Link>
 
-                <SearchForm query={query} onSubmit={onSearchFormSubmit} />
+                <SearchForm query={query} onSubmit={handleFormSubmit} />
 
                 {isSignedIn ? (
                     <nav className="navigation">
@@ -40,7 +48,7 @@ class SearchHeader extends Component {
                                 { label: 'All videos', value: 0 },
                                 { label: 'My Videos', value: 1 }
                             ]}
-                            onSelect={(value) => setSearchMode(parseInt(value))}
+                            onSelect={handleDropDownSelect}
                         />
                     </nav>
                 ) : null}
@@ -49,13 +57,17 @@ class SearchHeader extends Component {
     }
 }
 
-const mapStateToProps = ({
-    auth: { isSignedIn },
-    search: { query, forMine }
-}) => ({
+const mapStateToProps = (
+    { auth: { isSignedIn }, search: { forMine } },
+    {
+        match: {
+            params: { query }
+        }
+    }
+) => ({
     isSignedIn,
-    query,
-    forMine
+    forMine,
+    query
 });
 
 const mapDispatchToProps = (dispatch) => ({

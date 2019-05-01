@@ -172,7 +172,7 @@ const request = async (method, path, params, properties) => {
 
 export async function searchVideos({ query, forMine, pageToken }) {
     const {
-        items,
+        items: searchResults,
         nextPageToken,
         pageInfo: { totalResults }
     } = await request('GET', 'search', {
@@ -184,12 +184,16 @@ export async function searchVideos({ query, forMine, pageToken }) {
         maxResults: ITEMS_PER_REQUEST
     });
 
-    const videoIds = items.map(({ id }) => id.videoId);
+    let items = [];
 
-    const videos = await getVideosFromIds(videoIds);
+    if (searchResults.length) {
+        const videoIds = searchResults.map(({ id }) => id.videoId);
+
+        items = await getVideosFromIds(videoIds);
+    }
 
     return {
-        items: videos,
+        items,
         nextPageToken: items.length !== totalResults ? nextPageToken : null,
         totalResults
     };

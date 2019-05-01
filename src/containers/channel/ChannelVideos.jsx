@@ -27,7 +27,7 @@ class ChannelVideos extends Component {
         return totalResults === 0 ? (
             <Placeholder
                 icon="empty"
-                text={"This channel hasn't uploaded videos."}
+                text="This channel hasn't uploaded videos."
             />
         ) : (
             <List

@@ -3,11 +3,9 @@ import thunk from 'redux-thunk';
 
 import rootReducer from './reducers';
 
-import { throttle } from 'lodash';
-
 import { saveState, loadState } from '../lib/localStorage';
 
-import { pick } from '../lib/helpers';
+import { pick, throttle } from '../lib/helpers';
 
 const composeEnhancers =
     typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__

@@ -33,20 +33,13 @@
         }
     }
 
-    &__placeholder {
+    .placeholder {
         background-color: lighten($brand-primary, 20%);
         position: absolute;
         left: 0;
         right: 0;
         bottom: 0;
         top: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        &-text {
-            font-size: 2rem;
-        }
     }
 
     iframe {

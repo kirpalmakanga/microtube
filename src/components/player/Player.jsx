@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { throttle } from 'lodash';
-
-import { isMobile } from '../../lib/helpers';
+import { isMobile, throttle } from '../../lib/helpers';
 
 import {
     enableFullScreen,

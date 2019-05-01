@@ -29,6 +29,9 @@
 
     &__trigger,
     &__list-item {
+        &-title {
+            white-space: nowrap;
+        }
         @include transition();
         background-color: $black;
         color: $white;

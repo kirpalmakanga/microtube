@@ -260,7 +260,7 @@ export function queuePlaylist({ playlistId, play }) {
                 }
             } catch (err) {
                 console.error(err);
-                dispatch(notify({ message: 'Error fetching playlist items.' }));
+                dispatch(notify({ message: 'Error queueing playlist items.' }));
             }
         };
 

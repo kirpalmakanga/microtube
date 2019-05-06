@@ -2,9 +2,9 @@ import { parseDuration } from '../lib/helpers';
 
 export const parseVideoData = ({
     id,
-    contentDetails: { duration },
+    contentDetails: { duration = '' } = {},
     snippet: { title, thumbnails, channelId, channelTitle, publishedAt },
-    status: { privacyStatus }
+    status: { privacyStatus = 'deleted' } = {}
 }) => ({
     id,
     title,

@@ -259,6 +259,7 @@ export function queuePlaylist({ playlistId, play }) {
                     getItems(nextPageToken);
                 }
             } catch (err) {
+                console.error(err);
                 dispatch(notify({ message: 'Error fetching playlist items.' }));
             }
         };

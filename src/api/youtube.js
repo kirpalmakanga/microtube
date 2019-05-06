@@ -215,6 +215,8 @@ export async function getVideosFromIds(ids) {
         maxResults: ITEMS_PER_REQUEST
     });
 
+    console.log('items', items);
+
     const videos = items.map(parseVideoData);
 
     return videos;

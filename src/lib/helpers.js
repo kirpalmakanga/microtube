@@ -11,6 +11,10 @@ export const formatDate = (date, formatString) =>
     format(new Date(date), formatString);
 
 export const parseDuration = (PT = '') => {
+    if (!PT) {
+        return 0;
+    }
+
     const matches = PT.match(
         /P(?:(\d*)Y)?(?:(\d*)M)?(?:(\d*)W)?(?:(\d*)D)?T?(?:(\d*)H)?(?:(\d*)M)?(?:(\d*)S)?/i
     );

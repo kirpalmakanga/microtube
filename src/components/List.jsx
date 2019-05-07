@@ -20,6 +20,14 @@ class List extends Component {
 
     state = { isLoadingMoreItems: false };
 
+    _getOuterContainer = (el) => {
+        const { outerRef = noop } = this.props;
+
+        this.outerContainer = el;
+
+        outerRef(el);
+    };
+
     _getInnerContainer = (el) => {
         const { innerRef = noop } = this.props;
 
@@ -46,16 +54,15 @@ class List extends Component {
     };
 
     _handleScroll = throttle(({ scrollOffset }) => {
-        const { innerContainer } = this;
+        const { outerContainer, innerContainer } = this;
 
-        if (!innerContainer) {
+        if (!(outerContainer && innerContainer)) {
             return;
         }
 
-        if (
-            innerContainer.offsetHeight ===
-            scrollOffset + innerContainer.parentNode.offsetHeight
-        ) {
+        const scrollPosition = scrollOffset + outerContainer.offsetHeight;
+
+        if (scrollPosition >= innerContainer.offsetHeight - 1) {
             this._loadMoreItems();
         }
     }, 10);
@@ -108,6 +115,7 @@ class List extends Component {
             _renderLoader,
             _handleScroll,
             _renderRow,
+            _getOuterContainer,
             _getInnerContainer,
             _getItemKey,
             _getItemSize
@@ -122,6 +130,7 @@ class List extends Component {
                         className="list"
                         height={height}
                         width={width}
+                        outerRef={_getOuterContainer}
                         innerRef={_getInnerContainer}
                         itemKey={_getItemKey()}
                         itemData={[...items]}

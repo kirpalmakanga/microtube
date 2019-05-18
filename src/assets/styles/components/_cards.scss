@@ -5,9 +5,11 @@
     width: 100%;
     position: relative;
 
-    &:active,
-    &:hover {
-        background-color: lighten($black, 60%);
+    @media screen and (min-width: 480px) {
+        &:active,
+        &:hover {
+            background-color: lighten($black, 60%);
+        }
     }
 
     &__thumb {
@@ -21,10 +23,13 @@
             right: 5px;
             background-color: rgba($black, 0.8);
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 10px;
             font-weight: bold;
             padding: 2px 4px;
             color: $white;
+            @media screen and (min-width: 480px) {
+                font-size: 14px;
+            }
         }
 
         img {
@@ -61,10 +66,13 @@
             white-space: nowrap;
             overflow: hidden;
             letter-spacing: 0.1em;
-            font-size: 16px;
+            font-size: 12px;
             line-height: 1em;
             margin-top: 0;
             margin-bottom: 10px;
+            @media screen and (min-width: 480px) {
+                font-size: 16px;
+            }
         }
 
         &-subtitle {
@@ -116,8 +124,10 @@
             border-bottom: 2px solid lighten($brand-primary, 20%);
         }
 
-        &:hover {
-            background-color: lighten($black, 10%);
+        @media screen and (min-width: 480px) {
+            &:hover {
+                background-color: lighten($black, 10%);
+            }
         }
 
         &:focus {

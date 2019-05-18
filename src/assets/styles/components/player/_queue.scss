@@ -61,9 +61,10 @@
         &:active {
             cursor: grabbing;
         }
-
-        &:hover {
-            background-color: lighten($brand-primary, 30%);
+        @media screen and (min-width: 480px) {
+            &:hover {
+                background-color: lighten($brand-primary, 30%);
+            }
         }
 
         &-title,

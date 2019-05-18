@@ -41,14 +41,14 @@ class VideoCard extends PureComponent {
                       {
                           title: 'Manage playlists',
                           onClick: editPlaylistItem,
-                          icon: 'playlist-add'
+                          icon: 'queue'
                       }
                   ]
                 : []),
             {
                 title: `Queue video ${props.title}`,
                 onClick: queueItem,
-                icon: 'queue'
+                icon: 'playlist-add'
             }
         ];
 

@@ -24,7 +24,7 @@ class PlaylistCard extends PureComponent {
                 : []),
             {
                 title: 'Queue playlist',
-                icon: 'queue',
+                icon: 'playlist-add',
                 onClick: queuePlaylist
             },
             {

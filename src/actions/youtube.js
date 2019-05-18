@@ -105,14 +105,12 @@ export function getPlaylistItems(config) {
     return async (dispatch, getState) => {
         try {
             const {
-                playlists: { nextPageToken: pageToken, hasNextPage }
+                playlistItems: { nextPageToken: pageToken, hasNextPage }
             } = getState();
 
             if (!hasNextPage) {
                 return;
             }
-
-            dispatch({ type: 'playlist/CLEAR_ITEMS' });
 
             const data = await api.getPlaylistItems({ ...config, pageToken });
 
@@ -121,7 +119,6 @@ export function getPlaylistItems(config) {
                 data
             });
         } catch (err) {
-            console.error(err);
             dispatch(notify({ message: 'Error fetching playlist items.' }));
         }
     };
@@ -218,7 +215,6 @@ export function editPlaylistItem({ id: videoId }) {
                                 );
                             }
                         } catch (error) {
-                            console.error('error', error);
                             dispatch(
                                 notify({
                                     message: 'Error editing playlist item.'
@@ -259,7 +255,7 @@ export function queuePlaylist({ playlistId, play }) {
                     getItems(nextPageToken);
                 }
             } catch (err) {
-                dispatch(notify({ message: 'Error fetching playlist items.' }));
+                dispatch(notify({ message: 'Error queueing playlist items.' }));
             }
         };
 
@@ -286,7 +282,6 @@ export function searchVideos(config) {
 
             dispatch({ type: 'search/UPDATE_ITEMS', data });
         } catch (err) {
-            console.error(err);
             dispatch(notify({ message: 'Error searching videos.' }));
         }
     };

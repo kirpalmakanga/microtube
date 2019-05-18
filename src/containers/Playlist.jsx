@@ -18,6 +18,18 @@ class Playlist extends Component {
         this.props.getPlaylistTitle(this.props.playlistId);
     }
 
+    componentWillUnmount() {
+        this.props.clearItems();
+    }
+
+    componentDidUpdate({ playlistId: previousPlaylistId }) {
+        const { playlistId, clearItems } = this.props;
+
+        if (playlistId !== previousPlaylistId) {
+            clearItems();
+        }
+    }
+
     render() {
         const {
             playlistId,
@@ -92,7 +104,9 @@ const mapDispatchToProps = (
         });
     },
 
-    editPlaylistItem: (data) => dispatch(editPlaylistItem(data))
+    editPlaylistItem: (data) => dispatch(editPlaylistItem(data)),
+
+    clearItems: () => dispatch({ type: 'playlist/CLEAR_ITEMS' })
 });
 
 export default connect(

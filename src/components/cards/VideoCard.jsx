@@ -14,16 +14,28 @@ class VideoCard extends PureComponent {
             queueItem,
             removeItem,
             editPlaylistItem,
+            privacyStatus,
             ...props
         } = this.props;
 
         const subTitles = [
-            {
-                className: 'author',
-                text: channelTitle,
-                to: `/channel/${channelId}`
-            },
-            { className: 'date', text: formatDate(publishedAt, 'MMMM Do YYYY') }
+            ...(privacyStatus !== 'deleted'
+                ? [
+                      {
+                          className: 'author',
+                          text: channelTitle,
+                          to: `/channel/${channelId}`
+                      }
+                  ]
+                : []),
+            ...(publishedAt
+                ? [
+                      {
+                          className: 'date',
+                          text: formatDate(publishedAt, 'MMMM Do YYYY')
+                      }
+                  ]
+                : [])
         ];
 
         const buttons = [
@@ -56,7 +68,7 @@ class VideoCard extends PureComponent {
             <Card
                 {...props}
                 subTitles={subTitles}
-                badge={formatTime(duration)}
+                badge={duration ? formatTime(duration) : null}
                 buttons={buttons}
             />
         );

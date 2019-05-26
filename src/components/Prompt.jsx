@@ -178,7 +178,7 @@ class PlaylistManager extends Component {
                         items={items}
                         loadMoreItems={loadContent}
                         renderItem={renderOption}
-                        itemSize={50}
+                        itemSize={54}
                     />
                 </div>
             </div>

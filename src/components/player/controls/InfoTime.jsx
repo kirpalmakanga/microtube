@@ -8,9 +8,9 @@ class Time extends PureComponent {
 
         return (
             <div className="player__info-time">
-                <span>{formatTime(currentTime)}</span>
+                <span>{duration ? formatTime(currentTime) : '--'}</span>
                 <span className="separator">/</span>
-                <span>{formatTime(duration)}</span>
+                <span>{duration ? formatTime(duration) : '--'}</span>
             </div>
         );
     }

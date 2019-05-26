@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 
 import Button from '../Button';
 
-import { prompt, queueVideos } from '../../actions/youtube';
+import { queueVideos } from '../../actions/youtube';
+import { prompt } from '../../actions/prompt';
 
 import { parseID, splitLines, chunk } from '../../lib/helpers';
 
@@ -87,9 +88,7 @@ const mapDispatchToProps = (dispatch) => ({
             prompt({
                 promptText: 'Clear the queue ?',
                 confirmText: 'Clear',
-                callback: async () => {
-                    dispatch({ type: 'player/CLEAR_QUEUE' });
-                }
+                callback: () => dispatch({ type: 'player/CLEAR_QUEUE' })
             })
         )
 });

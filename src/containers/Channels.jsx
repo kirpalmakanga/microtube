@@ -32,14 +32,17 @@ class Subscriptions extends Component {
                 items={items}
                 loadMoreItems={loadContent}
                 renderItem={({ data }) => {
-                    const { id, subscriptionId } = data;
+                    const { id, title, subscriptionId } = data;
+
+                    console.log('title', title);
 
                     return (
                         <ChannelCard
                             {...data}
                             subscribe={makeSubscribeToChannel(id)}
                             unsubscribe={makeUnsubscribeFromChannel(
-                                subscriptionId
+                                subscriptionId,
+                                title
                             )}
                         />
                     );
@@ -59,8 +62,8 @@ const mapDispatchToProps = (dispatch) => ({
 
     makeSubscribeToChannel: (id) => () => dispatch(subscribeToChannel(id)),
 
-    makeUnsubscribeFromChannel: (id) => () =>
-        dispatch(unsubscribeFromChannel(id))
+    makeUnsubscribeFromChannel: (...params) => () =>
+        dispatch(unsubscribeFromChannel(...params))
 });
 
 export default connect(

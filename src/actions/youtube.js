@@ -1,6 +1,8 @@
 import * as api from '../api/youtube';
 
-import { delay } from '../lib/helpers';
+import { delay, catchErrors } from '../lib/helpers';
+
+import { prompt } from './prompt';
 
 const notify = ({ message }) => async (dispatch, getState) => {
     dispatch({ type: 'notifications/OPEN', data: message });
@@ -16,47 +18,24 @@ const notify = ({ message }) => async (dispatch, getState) => {
     }
 };
 
-export const closePrompt = () => async (dispatch) => {
-    dispatch({ type: 'prompt/CLOSE' });
-
-    await delay(300);
-
-    dispatch({ type: 'prompt/RESET' });
-};
-
-export const prompt = ({ callback = async () => {}, ...config } = {}) => (
-    dispatch
-) =>
-    dispatch({
-        type: 'prompt/OPEN',
-        data: {
-            ...config,
-            callback: async (data) => {
-                await callback(data);
-
-                dispatch(closePrompt());
-            }
-        }
-    });
-
 export function getPlaylists(config) {
-    return async (dispatch, getState) => {
-        try {
-            const {
-                playlists: { nextPageToken: pageToken, hasNextPage }
-            } = getState();
+    return async (dispatch, getState) =>
+        catchErrors(
+            async () => {
+                const {
+                    playlists: { nextPageToken: pageToken, hasNextPage }
+                } = getState();
 
-            if (!hasNextPage) {
-                return;
-            }
+                if (!hasNextPage) {
+                    return;
+                }
 
-            const data = await api.getPlaylists({ ...config, pageToken });
+                const data = await api.getPlaylists({ ...config, pageToken });
 
-            dispatch({ type: 'playlists/UPDATE_ITEMS', data });
-        } catch (err) {
-            dispatch(notify({ message: 'Error fetching playlists.' }));
-        }
-    };
+                dispatch({ type: 'playlists/UPDATE_ITEMS', data });
+            },
+            () => dispatch(notify({ message: 'Error fetching playlists.' }))
+        );
 }
 
 export function removePlaylist({ title, playlistId }) {
@@ -65,26 +44,28 @@ export function removePlaylist({ title, playlistId }) {
             prompt({
                 promptText: `Remove ${title} ?`,
                 confirmText: 'Remove',
-                callback: async () => {
-                    try {
-                        await api.removePlaylist(playlistId);
+                callback: () =>
+                    catchErrors(
+                        async () => {
+                            await api.removePlaylist(playlistId);
 
-                        dispatch({
-                            type: 'playlists/REMOVE_ITEM',
-                            data: { playlistId }
-                        });
+                            dispatch({
+                                type: 'playlists/REMOVE_ITEM',
+                                data: { playlistId }
+                            });
 
-                        dispatch(
-                            notify({
-                                message: `Removed playlist "${title}".`
-                            })
-                        );
-                    } catch (error) {
-                        dispatch(
-                            notify({ message: 'Error deleting playlist.' })
-                        );
-                    }
-                }
+                            dispatch(
+                                notify({
+                                    message: `Removed playlist "${title}".`
+                                })
+                            );
+                        },
+                        () => {
+                            dispatch(
+                                notify({ message: 'Error deleting playlist.' })
+                            );
+                        }
+                    )
             })
         );
     };
@@ -102,80 +83,85 @@ export function getPlaylistTitle(playlistId) {
 }
 
 export function getPlaylistItems(config) {
-    return async (dispatch, getState) => {
-        try {
-            const {
-                playlistItems: { nextPageToken: pageToken, hasNextPage }
-            } = getState();
+    return (dispatch, getState) =>
+        catchErrors(
+            async () => {
+                const {
+                    playlistItems: { nextPageToken: pageToken, hasNextPage }
+                } = getState();
 
-            if (!hasNextPage) {
-                return;
-            }
+                if (!hasNextPage) {
+                    return;
+                }
 
-            const data = await api.getPlaylistItems({ ...config, pageToken });
+                const data = await api.getPlaylistItems({
+                    ...config,
+                    pageToken
+                });
 
-            dispatch({
-                type: 'playlist/UPDATE_ITEMS',
-                data
-            });
-        } catch (err) {
-            dispatch(notify({ message: 'Error fetching playlist items.' }));
-        }
-    };
+                dispatch({
+                    type: 'playlist/UPDATE_ITEMS',
+                    data
+                });
+            },
+            () =>
+                dispatch(notify({ message: 'Error fetching playlist items.' }))
+        );
 }
 
 export function removePlaylistItem({ title, playlistId, playlistItemId }) {
-    return async (dispatch, getState) => {
-        await new Promise((callback) => {
-            dispatch(
-                prompt({
-                    promptText: `Remove "${title}" ?`,
-                    confirmText: 'Remove',
-                    callback
-                })
-            );
-        });
+    return async (dispatch) => {
+        dispatch(
+            prompt({
+                promptText: `Remove "${title}" ?`,
+                confirmText: 'Remove',
+                callback: () => {
+                    dispatch({
+                        type: 'playlist/REMOVE_ITEM',
+                        data: { playlistItemId, playlistId }
+                    });
 
-        const {
-            playlistItems: { playlistTitle }
-        } = getState();
+                    dispatch(
+                        notify({
+                            message: `Removed ${title}.`
+                        })
+                    );
 
-        (async () => {
-            try {
-                await api.removePlaylistItem(playlistItemId);
-
-                dispatch({
-                    type: 'playlist/REMOVE_ITEM',
-                    data: { playlistItemId, playlistId }
-                });
-
-                dispatch(
-                    notify({
-                        message: `Removed from playlist: "${playlistTitle}."`
-                    })
-                );
-            } catch (error) {
-                dispatch(
-                    notify({
-                        message: 'Error deleting playlist item.'
-                    })
-                );
-            }
-        })();
+                    catchErrors(
+                        () => api.removePlaylistItem(playlistItemId),
+                        () =>
+                            dispatch(
+                                notify({
+                                    message: 'Error deleting playlist item.'
+                                })
+                            )
+                    );
+                }
+            })
+        );
     };
 }
 
 export function addPlaylistItem({ playlistId, videoId }) {
-    return async (dispatch) => {
-        await api.addPlaylistItem(playlistId, videoId);
+    return (dispatch) =>
+        catchErrors(
+            async () => {
+                await api.addPlaylistItem(playlistId, videoId);
 
-        dispatch({
-            type: 'playlists/UPDATE_ITEM',
-            data: {
-                playlistId
-            }
-        });
-    };
+                dispatch({
+                    type: 'playlists/UPDATE_ITEM',
+                    data: {
+                        playlistId
+                    }
+                });
+            },
+            () => () =>
+                dispatch(
+                    notify({
+                        message: 'Error deleting playlist item.'
+                    })
+                )
+        );
 }
 
 export function editPlaylistItem({ id: videoId }) {
@@ -191,8 +177,8 @@ export function editPlaylistItem({ id: videoId }) {
                     privacyStatus,
                     playlistId
                 }) => {
-                    (async () => {
-                        try {
+                    catchErrors(
+                        async () => {
                             if (newPlaylistTitle) {
                                 const { id } = await api.createPlaylist({
                                     title: newPlaylistTitle,
@@ -202,26 +188,28 @@ export function editPlaylistItem({ id: videoId }) {
                                 playlistId = id;
                             }
 
-                            if (playlistId) {
-                                await dispatch(
-                                    addPlaylistItem({ playlistId, videoId })
-                                );
-
-                                dispatch(
-                                    notify({
-                                        message: `Added to playlist "${newPlaylistTitle ||
-                                            playlistTitle}."`
-                                    })
-                                );
+                            if (!playlistId) {
+                                return;
                             }
-                        } catch (error) {
+
+                            await dispatch(
+                                addPlaylistItem({ playlistId, videoId })
+                            );
+
+                            dispatch(
+                                notify({
+                                    message: `Added to playlist "${newPlaylistTitle ||
+                                        playlistTitle}."`
+                                })
+                            );
+                        },
+                        () =>
                             dispatch(
                                 notify({
                                     message: 'Error editing playlist item.'
                                 })
-                            );
-                        }
-                    })();
+                            )
+                    );
                 }
             })
         );
@@ -236,157 +224,165 @@ export function queuePlaylist({ playlistId, play }) {
         const newIndex = queue.length;
 
         const getItems = async (pageToken) => {
-            try {
-                const { items, nextPageToken } = await api.getPlaylistItems({
-                    playlistId,
-                    pageToken
+            const { items, nextPageToken } = await api.getPlaylistItems({
+                playlistId,
+                pageToken
+            });
+
+            dispatch({ type: 'player/QUEUE_PUSH', items });
+
+            if (play && !pageToken && items.length) {
+                dispatch({
+                    type: 'player/SET_ACTIVE_QUEUE_ITEM',
+                    data: { index: newIndex }
                 });
+            }
 
-                dispatch({ type: 'player/QUEUE_PUSH', items });
-
-                if (play && !pageToken && items.length) {
-                    dispatch({
-                        type: 'player/SET_ACTIVE_QUEUE_ITEM',
-                        data: { index: newIndex }
-                    });
-                }
-
-                if (nextPageToken) {
-                    getItems(nextPageToken);
-                }
-            } catch (err) {
-                dispatch(notify({ message: 'Error queueing playlist items.' }));
+            if (nextPageToken) {
+                await getItems(nextPageToken);
             }
         };
 
-        getItems();
+        catchErrors(getItems, () =>
+            dispatch(notify({ message: 'Error queueing playlist items.' }))
+        );
     };
 }
 
 export function searchVideos(config) {
-    return async (dispatch, getState) => {
-        try {
+    return (dispatch, getState) =>
+        catchErrors(
+            async () => {
+                const {
+                    search: { hasNextPage, forMine, nextPageToken: pageToken }
+                } = getState();
+
+                if (!hasNextPage) {
+                    return;
+                }
+
+                const data = await api.searchVideos({
+                    ...config,
+                    forMine,
+                    pageToken
+                });
+
+                dispatch({ type: 'search/UPDATE_ITEMS', data });
+            },
+            () => dispatch(notify({ message: 'Error searching videos.' }))
+        );
+}
+
+export const queueVideos = (ids = []) => (dispatch) =>
+    catchErrors(
+        async () => {
+            const items = await api.getVideosFromIds(ids);
+
+            dispatch({ type: 'player/QUEUE_PUSH', items });
+        },
+        () => dispatch(notify({ message: 'Error queuing videos.' }))
+    );
+
+/* Channels */
+export const getSubscriptions = () => (dispatch, getState) =>
+    catchErrors(
+        async () => {
             const {
-                search: { hasNextPage, forMine, nextPageToken: pageToken }
+                subscriptions: { nextPageToken: pageToken, hasNextPage }
             } = getState();
 
             if (!hasNextPage) {
                 return;
             }
 
-            const data = await api.searchVideos({
-                ...config,
-                forMine,
-                pageToken
-            });
+            const data = await api.getSubscriptions({ mine: true, pageToken });
 
-            dispatch({ type: 'search/UPDATE_ITEMS', data });
-        } catch (err) {
-            dispatch(notify({ message: 'Error searching videos.' }));
-        }
-    };
-}
+            dispatch({ type: 'subscriptions/UPDATE_ITEMS', data });
+        },
+        () => dispatch(notify({ message: 'Error fetching subscriptions.' }))
+    );
 
-export const queueVideos = (ids = []) => async (dispatch) => {
-    try {
-        const items = await api.getVideosFromIds(ids);
+export const subscribeToChannel = (channelId) => async (dispatch) =>
+    catchErrors(
+        async () => {
+            await api.subscribeToChannel(channelId);
 
-        dispatch({ type: 'player/QUEUE_PUSH', items });
-    } catch (err) {
-        dispatch(notify({ message: 'Error queuing videos.' }));
-    }
-};
+            dispatch({ type: 'subscriptions/SUBSCRIBE', data: { channelId } });
+        },
+        () => dispatch(notify({ message: 'Error subscribing to channel.' }))
+    );
 
-/* Channels */
-export const getSubscriptions = () => async (dispatch, getState) => {
-    try {
-        const {
-            subscriptions: { nextPageToken: pageToken, hasNextPage }
-        } = getState();
+export const unsubscribeFromChannel = (subscriptionId, channelTitle) => async (
+    dispatch
+) =>
+    dispatch(
+        prompt({
+            promptText: `Unsubscribe from ${channelTitle}`,
+            confirmText: 'Done',
+            callback: () => {
+                dispatch({
+                    type: 'subscriptions/UNSUBSCRIBE',
+                    data: { subscriptionId }
+                });
 
-        if (!hasNextPage) {
-            return;
-        }
+                catchErrors(
+                    () => api.unsubscribeFromChannel(subscriptionId),
+                    () =>
+                        dispatch(
+                            notify({
+                                message: 'Error unsubscribing to channel.'
+                            })
+                        )
+                );
+            }
+        })
+    );
 
-        const data = await api.getSubscriptions({ mine: true, pageToken });
+export const getChannel = (channelId) => async (dispatch) =>
+    catchErrors(
+        async () => {
+            const data = await api.getChannel(channelId);
 
-        dispatch({ type: 'subscriptions/UPDATE_ITEMS', data });
-    } catch (err) {
-        dispatch(notify({ message: 'Error fetching subscriptions.' }));
-    }
-};
+            dispatch({ type: 'channel/UPDATE_DATA', data });
+        },
+        () => dispatch(notify({ message: 'Error fetching channel data.' }))
+    );
 
-export const subscribeToChannel = (channelId) => async (dispatch) => {
-    try {
-        await api.subscribeToChannel(channelId);
+export const getChannelVideos = ({ channelId }) => async (dispatch, getState) =>
+    catchErrors(
+        async () => {
+            const {
+                channel: { nextPageToken: pageToken, hasNextPage }
+            } = getState();
 
-        dispatch({ type: 'subscriptions/SUBSCRIBE', data: { channelId } });
-    } catch (error) {
-        dispatch(notify({ message: 'Error subscribing to channel.' }));
-    }
-};
+            if (!hasNextPage) {
+                return;
+            }
 
-export const unsubscribeFromChannel = (subscriptionId) => async (dispatch) => {
-    try {
-        await api.unsubscribeFromChannel(subscriptionId);
+            const data = await api.getChannelVideos({ channelId, pageToken });
 
-        dispatch({
-            type: 'subscriptions/UNSUBSCRIBE',
-            data: { subscriptionId }
-        });
-    } catch (error) {
-        dispatch(notify({ message: 'Error subscribing to channel.' }));
-    }
-};
-
-export const getChannel = (channelId) => async (dispatch) => {
-    try {
-        const data = await api.getChannel(channelId);
-
-        dispatch({ type: 'channel/UPDATE_DATA', data });
-    } catch (err) {
-        dispatch(notify({ message: 'Error fetching channel data.' }));
-    }
-};
-
-export const getChannelVideos = ({ channelId }) => async (
-    dispatch,
-    getState
-) => {
-    try {
-        const {
-            channel: { nextPageToken: pageToken, hasNextPage }
-        } = getState();
-
-        if (!hasNextPage) {
-            return;
-        }
-
-        const data = await api.getChannelVideos({ channelId, pageToken });
-
-        dispatch({ type: 'channel/UPDATE_ITEMS', data });
-    } catch (err) {
-        dispatch(notify({ message: 'Error fetching channel videos.' }));
-    }
-};
+            dispatch({ type: 'channel/UPDATE_ITEMS', data });
+        },
+        () => dispatch(notify({ message: 'Error fetching channel videos.' }))
+    );
 
 /* Auth */
-export const signIn = () => async (dispatch) => {
-    try {
-        const data = await api.signIn();
+export const signIn = () => async (dispatch) =>
+    catchErrors(
+        async () => {
+            const data = await api.signIn();
 
-        dispatch({ type: 'auth/SIGN_IN', data });
-    } catch (error) {
-        dispatch(notify({ message: 'Error signing in user.' }));
-    }
-};
+            dispatch({ type: 'auth/SIGN_IN', data });
+        },
+        () => dispatch(notify({ message: 'Error signing in user.' }))
+    );
 
-export const signOut = () => async (dispatch) => {
-    try {
-        await api.signOut();
+export const signOut = () => async (dispatch) =>
+    catchErrors(
+        async () => {
+            await api.signOut();
 
-        dispatch({ type: 'auth/SIGN_OUT' });
-    } catch (error) {
-        dispatch(notify({ message: 'Error signing out user.' }));
-    }
-};
+            dispatch({ type: 'auth/SIGN_OUT' });
+        },
+        () => dispatch(notify({ message: 'Error signing out user.' }))
+    );

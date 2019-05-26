@@ -169,3 +169,19 @@ export const omit = (obj, blacklist = []) => {
 
     return result;
 };
+
+export const catchErrors = async (
+    fn = async () => {},
+    onError = () => {},
+    anyway = async () => {}
+) => {
+    try {
+        await fn();
+    } catch (error) {
+        onError(error);
+
+        throw error;
+    } finally {
+        await anyway();
+    }
+};

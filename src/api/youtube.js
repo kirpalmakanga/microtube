@@ -447,6 +447,7 @@ export async function getChannelVideos({ channelId, pageToken }) {
     const { items, nextPageToken, pageInfo } = await request('GET', 'search', {
         part: 'snippet',
         type: 'video',
+        order: 'date',
         channelId,
         pageToken,
         maxResults: ITEMS_PER_REQUEST

@@ -3,6 +3,8 @@ import Icon from './Icon';
 
 import { stopPropagation } from '../lib/helpers.js';
 
+const noop = () => {};
+
 class DropDown extends PureComponent {
     state = { isOpen: false };
 
@@ -10,10 +12,17 @@ class DropDown extends PureComponent {
 
     toggleOptions = () => this.setState(({ isOpen }) => ({ isOpen: !isOpen }));
 
-    handleOptionClick = (value) => {
-        this.closeOptions();
+    handleOptionClick = (value) => (e) => {
+        const {
+            props: { onSelect },
+            closeOptions
+        } = this;
 
-        this.props.onSelect(value);
+        e.preventDefault();
+
+        closeOptions();
+
+        onSelect(value);
     };
 
     render() {
@@ -39,6 +48,7 @@ class DropDown extends PureComponent {
                     className="dropdown__trigger"
                     onClick={toggleOptions}
                     onBlur={closeOptions}
+                    type="button"
                 >
                     <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} />
                     <span className="dropdown__trigger-title">
@@ -57,9 +67,7 @@ class DropDown extends PureComponent {
                                     'dropdown__list-item',
                                     isActiveItem ? 'is-active' : ''
                                 ].join(' ')}
-                                onClick={() =>
-                                    !isActiveItem && handleOptionClick(value)
-                                }
+                                onClick={handleOptionClick(value, isActiveItem)}
                             >
                                 {label}
                             </li>

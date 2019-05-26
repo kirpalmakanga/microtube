@@ -29,12 +29,11 @@ class Subscriptions extends Component {
             />
         ) : (
             <List
+                className="channels"
                 items={items}
                 loadMoreItems={loadContent}
                 renderItem={({ data }) => {
                     const { id, title, subscriptionId } = data;
-
-                    console.log('title', title);
 
                     return (
                         <ChannelCard

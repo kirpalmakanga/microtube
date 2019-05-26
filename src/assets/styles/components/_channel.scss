@@ -30,3 +30,26 @@
         flex: 1;
     }
 }
+
+.list {
+    &.channels &__item {
+        .card {
+            &__thumb {
+                .image {
+                    width: 100px;
+                    height: 100px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                }
+            }
+
+            &__content {
+                align-items: center;
+            }
+
+            &__text-title {
+                margin: 0;
+            }
+        }
+    }
+}

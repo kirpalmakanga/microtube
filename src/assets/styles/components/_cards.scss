@@ -33,11 +33,17 @@
         }
 
         img {
+            object-fit: cover;
             display: inline-block;
             max-height: 100%;
             max-width: 100%;
             height: 100%;
             width: auto;
+
+            // width: 100px;
+            // @media screen and (min-width: 480px) {
+            //     width: 200px;
+            // }
         }
 
         .image {

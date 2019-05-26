@@ -110,7 +110,7 @@ class List extends Component {
 
     render() {
         const {
-            props: { items },
+            props: { className = '', items },
             state: { isLoadingMoreItems },
             _renderLoader,
             _handleScroll,
@@ -127,7 +127,7 @@ class List extends Component {
             <AutoSizer>
                 {({ height, width }) => (
                     <FixedSizeList
-                        className="list"
+                        className={`list ${className}`.trim()}
                         height={height}
                         width={width}
                         outerRef={_getOuterContainer}

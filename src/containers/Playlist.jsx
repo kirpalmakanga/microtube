@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 import {
     getPlaylistTitle,
     getPlaylistItems,
+    clearPlaylistItems,
+    queueItem,
+    playItem,
     removePlaylistItem,
     editPlaylistItem
 } from '../actions/youtube';
@@ -19,7 +22,7 @@ class Playlist extends Component {
     }
 
     componentWillUnmount() {
-        this.props.clearItems();
+        this.props.clearPlaylistItems();
     }
 
     componentDidUpdate({ playlistId: previousPlaylistId }) {
@@ -35,10 +38,10 @@ class Playlist extends Component {
             playlistId,
             items,
             totalResults,
-            loadContent,
-            queueAndPlayItem,
+            getPlaylistItems,
+            playItem,
             queueItem,
-            removeItem,
+            removePlaylistItem,
             editPlaylistItem
         } = this.props;
 
@@ -51,16 +54,16 @@ class Playlist extends Component {
                     return (
                         <VideoCard
                             {...data}
-                            onClick={() => queueAndPlayItem(data)}
+                            onClick={() => playItem(data)}
                             queueItem={() => queueItem(data)}
                             removeItem={() =>
-                                removeItem({ ...data, playlistId })
+                                removePlaylistItem({ ...data, playlistId })
                             }
                             editPlaylistItem={() => editPlaylistItem(data)}
                         />
                     );
                 }}
-                loadMoreItems={loadContent}
+                loadMoreItems={() => getPlaylistItems({ playlistId })}
             />
         );
     }
@@ -81,33 +84,15 @@ const mapStateToProps = (
     totalResults
 });
 
-const mapDispatchToProps = (
-    dispatch,
-    {
-        match: {
-            params: { playlistId }
-        }
-    }
-) => ({
-    getPlaylistTitle: (id) => dispatch(getPlaylistTitle(id)),
-
-    loadContent: () => dispatch(getPlaylistItems({ playlistId })),
-
-    removeItem: (data) => dispatch(removePlaylistItem(data)),
-
-    queueItem: (data) => dispatch({ type: 'player/QUEUE_PUSH', items: [data] }),
-
-    queueAndPlayItem: (data) => {
-        dispatch({ type: 'player/QUEUE_PUSH', items: [data] });
-        dispatch({
-            type: 'player/SET_ACTIVE_QUEUE_ITEM'
-        });
-    },
-
-    editPlaylistItem: (data) => dispatch(editPlaylistItem(data)),
-
-    clearItems: () => dispatch({ type: 'playlist/CLEAR_ITEMS' })
-});
+const mapDispatchToProps = {
+    getPlaylistTitle,
+    getPlaylistItems,
+    clearPlaylistItems,
+    editPlaylistItem,
+    removePlaylistItem,
+    queueItem,
+    playItem
+};
 
 export default connect(
     mapStateToProps,

@@ -38,6 +38,9 @@ export function getPlaylists(config) {
         );
 }
 
+export const clearPlaylists = () => (dispatch) =>
+    dispatch({ type: 'playlists/CLEAR_ITEMS' });
+
 export function removePlaylist({ title, playlistId }) {
     return (dispatch) => {
         dispatch(
@@ -109,6 +112,9 @@ export function getPlaylistItems(config) {
         );
 }
 
+export const clearPlaylistItems = () => (dispatch) =>
+    dispatch({ type: 'playlist/CLEAR_ITEMS' });
+
 export function removePlaylistItem({ title, playlistId, playlistItemId }) {
     return async (dispatch) => {
         dispatch(
@@ -141,9 +147,6 @@ export function removePlaylistItem({ title, playlistId, playlistItemId }) {
         );
     };
 }
-
-export const clearPlaylists = () => (dispatch) =>
-    dispatch({ type: 'playlists/CLEAR_ITEMS' });
 
 export function addPlaylistItem({ playlistId, videoId }) {
     return (dispatch) =>
@@ -217,6 +220,16 @@ export function editPlaylistItem({ id: videoId }) {
             })
         );
 }
+
+export const queueItem = (data) => (dispatch) =>
+    dispatch({ type: 'player/QUEUE_PUSH', items: [data] });
+
+export const playItem = (data) => (dispatch) => {
+    dispatch({ type: 'player/QUEUE_PUSH', items: [data] });
+    dispatch({
+        type: 'player/SET_ACTIVE_QUEUE_ITEM'
+    });
+};
 
 export function queuePlaylist({ playlistId, play }) {
     return (dispatch, getState) => {

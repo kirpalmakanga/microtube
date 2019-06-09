@@ -289,6 +289,9 @@ export function searchVideos(config) {
         );
 }
 
+export const clearSearch = () => (dispatch) =>
+    dispatch({ type: 'search/RESET' });
+
 export const queueVideos = (ids = []) => (dispatch) =>
     catchErrors(
         async () => {

@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { searchVideos, editPlaylistItem } from '../actions/youtube';
+import {
+    searchVideos,
+    clearSearch,
+    editPlaylistItem,
+    queueItem,
+    playItem
+} from '../actions/youtube';
 
 import List from '../components/List';
 
@@ -13,7 +19,7 @@ class Search extends Component {
         mountGrid: true
     };
 
-    reloadGrid = () => {
+    reloadQuery = () => {
         const { clearSearch } = this.props;
 
         this.setState({ mountGrid: false }, () => {
@@ -30,11 +36,11 @@ class Search extends Component {
     componentDidUpdate({ query, forMine }) {
         const {
             props: { query: newQuery, forMine: newForMine },
-            reloadGrid
+            reloadQuery
         } = this;
 
         if (newQuery !== query || newForMine !== forMine) {
-            reloadGrid();
+            reloadQuery();
         }
     }
 
@@ -45,8 +51,8 @@ class Search extends Component {
                 query,
                 items,
                 totalResults,
-                loadContent,
-                queueAndPlayItem,
+                searchVideos,
+                playItem,
                 queueItem,
                 editPlaylistItem
             }
@@ -58,11 +64,11 @@ class Search extends Component {
             ) : (
                 <List
                     items={items}
-                    loadMoreItems={loadContent}
+                    loadMoreItems={() => searchVideos({ query })}
                     renderItem={({ data }) => (
                         <VideoCard
                             {...data}
-                            onClick={() => queueAndPlayItem(data)}
+                            onClick={() => playItem(data)}
                             queueItem={() => queueItem(data)}
                             editPlaylistItem={() => editPlaylistItem(data)}
                         />
@@ -87,29 +93,13 @@ const mapStateToProps = (
     totalResults
 });
 
-const mapDispatchToProps = (
-    dispatch,
-    {
-        match: {
-            params: { query = '' }
-        }
-    }
-) => ({
-    loadContent: () => dispatch(searchVideos({ query })),
-
-    clearSearch: () => dispatch({ type: 'search/RESET' }),
-
-    queueItem: (data) => dispatch({ type: 'player/QUEUE_PUSH', items: [data] }),
-
-    queueAndPlayItem: (data) => {
-        dispatch({ type: 'player/QUEUE_PUSH', items: [data] });
-        dispatch({
-            type: 'player/SET_ACTIVE_QUEUE_ITEM'
-        });
-    },
-
-    editPlaylistItem: (data) => dispatch(editPlaylistItem(data))
-});
+const mapDispatchToProps = {
+    searchVideos,
+    clearSearch,
+    queueItem,
+    playItem,
+    editPlaylistItem
+};
 
 export default connect(
     mapStateToProps,

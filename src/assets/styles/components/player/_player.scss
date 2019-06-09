@@ -59,15 +59,20 @@
             fill: $brand-secondary;
             flex: 1;
             height: 50px;
+
+            &.is-active {
+                background-color: lighten($brand-primary, 20%);
+            }
+
             @media screen and (min-width: 480px) {
                 width: 50px;
                 flex: initial;
 
-                &.is-active,
                 &:hover {
                     background-color: lighten($brand-primary, 20%);
                 }
             }
+
             cursor: pointer;
             position: relative;
 

@@ -4,7 +4,7 @@ import { Switch, Route, Link } from 'react-router-dom';
 
 import { getThumbnails } from '../../lib/helpers';
 
-import { getChannel } from '../../actions/youtube';
+import { getChannel, clearChannelData } from '../../actions/youtube';
 
 import Img from '../../components/Img';
 
@@ -14,15 +14,21 @@ import ChannelAbout from './ChannelAbout';
 import Playlists from '../Playlists';
 
 class Tabs extends Component {
-    renderTab = ([title, href], index) => (
-        <li
-            key={index}
-            className="tab"
-            data-state={href === this.props.activePath ? 'active' : 'inactive'}
-        >
-            <Link to={href}>{title}</Link>
-        </li>
-    );
+    renderTab = ([title, href], index) => {
+        const isActive = href === this.props.activePath;
+
+        return (
+            <li
+                key={index}
+                className="tab"
+                data-state={isActive ? 'active' : 'inactive'}
+            >
+                <Link to={href} onClick={(e) => isActive && e.preventDefault()}>
+                    {title}
+                </Link>
+            </li>
+        );
+    };
 
     render() {
         const {
@@ -46,38 +52,28 @@ class Channel extends Component {
     }
 
     componentWillUnmount() {
-        this.props.clearData();
+        this.props.clearChannelData();
     }
 
     getTabData = () => {};
 
     renderTabs = () => {
-        const {
-            match: { url: channelPath },
-            location: { pathname: currentPath }
-        } = this.props;
+        const { channelRoute, currentRoute } = this.props;
 
         const tabs = {
-            Videos: channelPath,
+            Videos: channelRoute,
 
-            Playlists: `${channelPath}/playlists`,
+            Playlists: `${channelRoute}/playlists`,
 
-            About: `${channelPath}/about`
+            About: `${channelRoute}/about`
         };
 
-        return <Tabs data={tabs} activePath={currentPath} />;
+        return <Tabs data={tabs} activePath={currentRoute} />;
     };
 
     render() {
         const {
-            props: {
-                match: {
-                    params: { channelId },
-                    path: channelPath
-                },
-                channelTitle,
-                thumbnails
-            },
+            props: { channelId, channelPath, channelTitle, thumbnails },
             renderTabs
         } = this;
 
@@ -127,16 +123,26 @@ class Channel extends Component {
     }
 }
 
-const mapStateToProps = ({ channel: { channelTitle, thumbnails } }) => ({
+const mapStateToProps = (
+    { channel: { channelTitle, thumbnails } },
+    {
+        match: {
+            params: { channelId },
+            path: channelPath,
+            url: channelRoute
+        },
+        location: { pathname: currentRoute }
+    }
+) => ({
+    channelId,
+    channelPath,
+    channelRoute,
+    currentRoute,
     channelTitle,
     thumbnails
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    clearData: () => dispatch({ type: 'channel/CLEAR_DATA' }),
-
-    getChannel: (id) => dispatch(getChannel(id))
-});
+const mapDispatchToProps = { getChannel, clearChannelData };
 
 export default connect(
     mapStateToProps,

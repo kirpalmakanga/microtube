@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { getChannelVideos, editPlaylistItem } from '../../actions/youtube';
+import {
+    getChannelVideos,
+    clearChannelVideos,
+    queueItem,
+    playItem,
+    editPlaylistItem,
+    removePlaylistItem
+} from '../../actions/youtube';
 
 import List from '../../components/List';
 import Placeholder from '../../components/Placeholder';
@@ -9,17 +16,18 @@ import VideoCard from '../../components/cards/VideoCard';
 
 class ChannelVideos extends Component {
     componentWillUnmount() {
-        this.props.clearItems();
+        this.props.clearChannelVideos();
     }
 
     render() {
         const {
             props: {
+                channelId,
                 items,
                 totalResults,
-                loadContent,
-                queueAndPlayItem,
+                getChannelVideos,
                 queueItem,
+                playItem,
                 editPlaylistItem
             }
         } = this;
@@ -32,12 +40,12 @@ class ChannelVideos extends Component {
         ) : (
             <List
                 items={items}
-                loadMoreItems={loadContent}
+                loadMoreItems={() => getChannelVideos({ channelId })}
                 renderItem={({ data }) => {
                     return (
                         <VideoCard
                             {...data}
-                            onClick={() => queueAndPlayItem(data)}
+                            onClick={() => playItem(data)}
                             queueItem={() => queueItem(data)}
                             editPlaylistItem={() => editPlaylistItem(data)}
                         />
@@ -48,34 +56,27 @@ class ChannelVideos extends Component {
     }
 }
 
-const mapStateToProps = ({ channel: { items, totalResults } }) => ({
-    items,
-    totalResults
-});
-
-const mapDispatchToProps = (
-    dispatch,
+const mapStateToProps = (
+    { channel: { items, totalResults } },
     {
         match: {
             params: { channelId }
         }
     }
 ) => ({
-    loadContent: () => dispatch(getChannelVideos({ channelId })),
-
-    clearItems: () => dispatch({ type: 'channel/CLEAR_ITEMS' }),
-
-    queueItem: (data) => dispatch({ type: 'player/QUEUE_PUSH', items: [data] }),
-
-    queueAndPlayItem: (data) => {
-        dispatch({ type: 'player/QUEUE_PUSH', items: [data] });
-        dispatch({
-            type: 'player/SET_ACTIVE_QUEUE_ITEM'
-        });
-    },
-
-    editPlaylistItem: (data) => dispatch(editPlaylistItem(data))
+    channelId,
+    items,
+    totalResults
 });
+
+const mapDispatchToProps = {
+    getChannelVideos,
+    clearChannelVideos,
+    editPlaylistItem,
+    removePlaylistItem,
+    queueItem,
+    playItem
+};
 
 export default connect(
     mapStateToProps,

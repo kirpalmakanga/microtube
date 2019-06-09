@@ -17,9 +17,9 @@ class Subscriptions extends Component {
         const {
             items,
             totalResults,
-            loadContent,
-            makeSubscribeToChannel,
-            makeUnsubscribeFromChannel
+            getSubscriptions,
+            subscribeToChannel,
+            unsubscribeFromChannel
         } = this.props;
 
         return totalResults === 0 ? (
@@ -31,18 +31,17 @@ class Subscriptions extends Component {
             <List
                 className="channels"
                 items={items}
-                loadMoreItems={loadContent}
+                loadMoreItems={getSubscriptions}
                 renderItem={({ data }) => {
                     const { id, title, subscriptionId } = data;
 
                     return (
                         <ChannelCard
                             {...data}
-                            subscribe={makeSubscribeToChannel(id)}
-                            unsubscribe={makeUnsubscribeFromChannel(
-                                subscriptionId,
-                                title
-                            )}
+                            subscribe={() => subscribeToChannel(id)}
+                            unsubscribe={() =>
+                                unsubscribeFromChannel(subscriptionId, title)
+                            }
                         />
                     );
                 }}
@@ -56,14 +55,11 @@ const mapStateToProps = ({ subscriptions: { items, totalResults } }) => ({
     totalResults
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    loadContent: () => dispatch(getSubscriptions()),
-
-    makeSubscribeToChannel: (id) => () => dispatch(subscribeToChannel(id)),
-
-    makeUnsubscribeFromChannel: (...params) => () =>
-        dispatch(unsubscribeFromChannel(...params))
-});
+const mapDispatchToProps = {
+    getSubscriptions,
+    subscribeToChannel,
+    unsubscribeFromChannel
+};
 
 export default connect(
     mapStateToProps,

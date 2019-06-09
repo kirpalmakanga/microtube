@@ -303,7 +303,7 @@ export const queueVideos = (ids = []) => (dispatch) =>
     );
 
 /* Channels */
-export const getSubscriptions = () => (dispatch, getState) =>
+export const getSubscriptions = (channelId) => (dispatch, getState) =>
     catchErrors(
         async () => {
             const {
@@ -314,7 +314,11 @@ export const getSubscriptions = () => (dispatch, getState) =>
                 return;
             }
 
-            const data = await api.getSubscriptions({ mine: true, pageToken });
+            const data = await api.getSubscriptions({
+                pageToken,
+                channelId,
+                ...(!channelId ? { mine: true } : {})
+            });
 
             dispatch({ type: 'subscriptions/UPDATE_ITEMS', data });
         },
@@ -367,6 +371,9 @@ export const getChannel = (channelId) => async (dispatch) =>
         () => dispatch(notify({ message: 'Error fetching channel data.' }))
     );
 
+export const clearChannelData = () => (dispatch) =>
+    dispatch({ type: 'channel/CLEAR_DATA' });
+
 export const getChannelVideos = ({ channelId }) => async (dispatch, getState) =>
     catchErrors(
         async () => {
@@ -384,6 +391,9 @@ export const getChannelVideos = ({ channelId }) => async (dispatch, getState) =>
         },
         () => dispatch(notify({ message: 'Error fetching channel videos.' }))
     );
+
+export const clearChannelVideos = () => (dispatch) =>
+    dispatch({ type: 'channel/CLEAR_ITEMS' });
 
 /* Auth */
 export const signIn = () => async (dispatch) =>

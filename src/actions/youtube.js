@@ -142,6 +142,9 @@ export function removePlaylistItem({ title, playlistId, playlistItemId }) {
     };
 }
 
+export const clearPlaylists = () => (dispatch) =>
+    dispatch({ type: 'playlists/CLEAR_ITEMS' });
+
 export function addPlaylistItem({ playlistId, videoId }) {
     return (dispatch) =>
         catchErrors(

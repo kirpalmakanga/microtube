@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import {
     getPlaylists,
+    clearPlaylists,
     queuePlaylist,
     removePlaylist
 } from '../actions/youtube';
@@ -14,7 +15,7 @@ import PlaylistCard from '../components/cards/PlaylistCard';
 
 class Playlists extends Component {
     componentWillUnmount() {
-        this.props.clearItems();
+        this.props.clearPlaylists();
     }
 
     render() {
@@ -23,9 +24,9 @@ class Playlists extends Component {
                 channelId,
                 items,
                 totalResults,
-                makeQueuePlaylist,
-                removePlaylist,
-                loadContent
+                getPlaylists,
+                queuePlaylist,
+                removePlaylist
             }
         } = this;
 
@@ -48,13 +49,17 @@ class Playlists extends Component {
                     return (
                         <PlaylistCard
                             {...data}
-                            queuePlaylist={makeQueuePlaylist({
-                                playlistId
-                            })}
-                            launchPlaylist={makeQueuePlaylist({
-                                playlistId,
-                                play: true
-                            })}
+                            queuePlaylist={() =>
+                                queuePlaylist({
+                                    playlistId
+                                })
+                            }
+                            launchPlaylist={() =>
+                                queuePlaylist({
+                                    playlistId,
+                                    play: true
+                                })
+                            }
                             {...(channelId
                                 ? {}
                                 : {
@@ -64,7 +69,9 @@ class Playlists extends Component {
                         />
                     );
                 }}
-                loadMoreItems={loadContent}
+                loadMoreItems={() =>
+                    getPlaylists(channelId ? { channelId } : { mine: true })
+                }
             />
         );
     }
@@ -75,20 +82,12 @@ const mapStateToProps = ({ playlists: { items, totalResults } }) => ({
     totalResults
 });
 
-const mapDispatchToProps = (dispatch, { channelId }) => ({
-    loadContent: () =>
-        dispatch(
-            getPlaylists({
-                ...(channelId ? { channelId } : { mine: true })
-            })
-        ),
-
-    makeQueuePlaylist: (data) => () => dispatch(queuePlaylist(data)),
-
-    removePlaylist: (data) => dispatch(removePlaylist(data)),
-
-    clearItems: () => dispatch({ type: 'playlists/CLEAR_ITEMS' })
-});
+const mapDispatchToProps = {
+    getPlaylists,
+    queuePlaylist,
+    removePlaylist,
+    clearPlaylists
+};
 
 export default connect(
     mapStateToProps,

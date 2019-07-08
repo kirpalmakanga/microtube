@@ -27,10 +27,7 @@
 
     [data-state-fullscreen='enabled'] & {
         top: 0;
-
-        @media screen and (min-width: 480px) {
-            bottom: 0;
-        }
+        bottom: 0;
     }
 
     .placeholder {

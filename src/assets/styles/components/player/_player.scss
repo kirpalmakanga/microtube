@@ -37,6 +37,7 @@
         transform: translateY(100%);
     }
 
+    [data-state-show-queue='enabled'] &__inner,
     [data-state-fullscreen='enabled'] &:hover &__inner {
         transform: translateY(0);
     }

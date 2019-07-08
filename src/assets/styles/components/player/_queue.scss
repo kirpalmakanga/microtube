@@ -23,14 +23,6 @@
         transform: translate(0);
     }
 
-    [data-state-fullscreen='enabled'] & {
-        bottom: 0;
-
-        @media screen and (min-width: 480px) {
-            bottom: 0;
-        }
-    }
-
     &__header {
         background-color: $brand-primary;
         height: 56px;

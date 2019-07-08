@@ -422,6 +422,7 @@ class Player extends Component {
                 className="player__container"
                 ref={getPlayerContainer}
                 data-state-fullscreen={isFullScreen ? 'enabled' : 'disabled'}
+                data-state-show-queue={showQueue ? 'enabled' : 'disabled'}
             >
                 <Screen
                     className="screen shadow--2dp"

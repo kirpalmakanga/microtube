@@ -29,7 +29,7 @@ class Card extends PureComponent {
                     onClick={onClick}
                     aria-label={title}
                 >
-                    <div className="card__thumb">
+                    <div className="card__thumbnail">
                         {thumbnails ? (
                             <Img
                                 src={getThumbnails(thumbnails, 'medium')}
@@ -39,12 +39,14 @@ class Card extends PureComponent {
                         ) : null}
 
                         {badge ? (
-                            <span className="card__thumb-badge">{badge}</span>
+                            <span className="card__thumbnail-badge">
+                                {badge}
+                            </span>
                         ) : null}
                     </div>
 
                     <div className="card__text">
-                        <h2 className="card__text-title">{title}</h2>
+                        <h2 className="card__title">{title}</h2>
                         {subTitles.length
                             ? subTitles.map(
                                   ({ text, className = '', to }, index) =>
@@ -52,7 +54,7 @@ class Card extends PureComponent {
                                           <Link
                                               key={index}
                                               className={[
-                                                  'card__text-subtitle',
+                                                  'card__subtitle',
                                                   className
                                               ].join(' ')}
                                               onClick={stopPropagation()}
@@ -64,7 +66,7 @@ class Card extends PureComponent {
                                           <div
                                               key={index}
                                               className={[
-                                                  'card__text-subtitle',
+                                                  'card__subtitle',
                                                   className
                                               ].join(' ')}
                                           >

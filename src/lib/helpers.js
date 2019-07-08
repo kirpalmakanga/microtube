@@ -2,8 +2,14 @@ import { format } from 'date-fns';
 
 export const preventDefault = (e) => e.preventDefault();
 
+export const stopPropagation = (func) => (e) => {
+    e.stopPropagation();
+    func && func(e);
+};
+
 export const getThumbnails = (thumbnails, size = 'default') => {
     const { url = '' } = thumbnails[size] || {};
+
     return url.replace('http:', 'https:');
 };
 
@@ -130,11 +136,6 @@ export const pick = (obj = {}, whitelist = []) =>
 export const delay = (t) => new Promise((resolve) => setTimeout(resolve, t));
 
 export const splitLines = (str) => str.match(/[^\r\n]+/g) || [];
-
-export const stopPropagation = (func) => (e) => {
-    e.stopPropagation();
-    func && func(e);
-};
 
 export const chunk = (array = [], size) => {
     const chunks = [];

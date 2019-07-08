@@ -54,7 +54,7 @@ class Playlist extends Component {
                     return (
                         <VideoCard
                             {...data}
-                            onClick={() => playItem(data)}
+                            playItem={() => playItem(data)}
                             queueItem={() => queueItem(data)}
                             removeItem={() =>
                                 removePlaylistItem({ ...data, playlistId })

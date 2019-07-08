@@ -65,11 +65,13 @@ class VideoCard extends PureComponent {
                 </CardContent>
 
                 <CardButtons>
-                    <Button
-                        title={`Remove video ${title}`}
-                        onClick={removeItem}
-                        icon="delete"
-                    />
+                    {removeItem ? (
+                        <Button
+                            title={`Remove video ${title}`}
+                            onClick={removeItem}
+                            icon="delete"
+                        />
+                    ) : null}
 
                     <Button
                         title="Manage playlists"

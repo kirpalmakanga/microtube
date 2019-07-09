@@ -24,6 +24,7 @@ export const parseDuration = (PT = '') => {
     const matches = PT.match(
         /P(?:(\d*)Y)?(?:(\d*)M)?(?:(\d*)W)?(?:(\d*)D)?T?(?:(\d*)H)?(?:(\d*)M)?(?:(\d*)S)?/i
     );
+
     const parts = [
         {
             // years
@@ -64,10 +65,11 @@ export const parseDuration = (PT = '') => {
 
     let durationInSec = 0;
 
-    for (let i = 0; i < parts.length; i++) {
-        if (typeof matches[parts[i].pos] !== 'undefined') {
-            durationInSec +=
-                parseInt(matches[parts[i].pos]) * parts[i].multiplier;
+    for (let part of parts) {
+        const { pos, multiplier } = part;
+
+        if (matches[pos]) {
+            durationInSec += parseInt(matches[pos]) * multiplier;
         }
     }
 
@@ -98,18 +100,6 @@ export const formatTime = (t) => {
     return units.map((t) => ('0' + t).slice(-2)).join(':');
 };
 
-export const flatten = (arr) =>
-    arr.reduce((flat, next) => flat.concat(next), []);
-
-export const parseURLSearchParams = (search) => {
-    const params = new URLSearchParams(search);
-
-    return [...params.entries()].reduce(
-        (obj, [key, value]) => ({ ...obj, [key]: value }),
-        {}
-    );
-};
-
 export const isMobile =
     navigator.userAgent.match(/Android/i) ||
     navigator.userAgent.match(/webOS/i) ||
@@ -124,6 +114,40 @@ export const parseID = (url) => {
     return undefined !== url[2] ? url[2].split(/[^0-9a-z_\-]/i)[0] : url[0];
 };
 
+export const delay = (t) => new Promise((resolve) => setTimeout(resolve, t));
+
+export const splitLines = (str) => str.match(/[^\r\n]+/g) || [];
+
+export const chunk = (array = [], size) => {
+    const chunks = [];
+
+    let index = 0;
+
+    while (index < array.length) {
+        chunks.push(array.slice(index, size + index));
+
+        index += size;
+    }
+
+    return chunks;
+};
+
+export const throttle = (fn, delay) => {
+    let lastCall = 0;
+
+    return (...args) => {
+        const now = new Date().getTime();
+
+        if (now - lastCall < delay) {
+            return;
+        }
+
+        lastCall = now;
+
+        return fn(...args);
+    };
+};
+
 export const pick = (obj = {}, whitelist = []) =>
     Object.keys(obj).reduce(
         (newObj, key) => ({
@@ -132,32 +156,6 @@ export const pick = (obj = {}, whitelist = []) =>
         }),
         {}
     );
-
-export const delay = (t) => new Promise((resolve) => setTimeout(resolve, t));
-
-export const splitLines = (str) => str.match(/[^\r\n]+/g) || [];
-
-export const chunk = (array = [], size) => {
-    const chunks = [];
-    let index = 0;
-    while (index < array.length) {
-        chunks.push(array.slice(index, size + index));
-        index += size;
-    }
-    return chunks;
-};
-
-export const throttle = (fn, delay) => {
-    let lastCall = 0;
-    return (...args) => {
-        const now = new Date().getTime();
-        if (now - lastCall < delay) {
-            return;
-        }
-        lastCall = now;
-        return fn(...args);
-    };
-};
 
 export const omit = (obj, blacklist = []) => {
     const result = {};

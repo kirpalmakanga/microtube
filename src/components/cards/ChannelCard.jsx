@@ -1,42 +1,59 @@
 import React, { PureComponent } from 'react';
-import Card from './Card';
+
+import { getThumbnails } from '../../lib/helpers';
+
+import CardContainer from './CardContainer';
+import CardContent from './CardContent';
+import CardContentInner from './CardContentInner';
+import CardThumbnail from './CardThumbnail';
+import CardButtons from './CardButtons';
+import Button from './CardButton';
+import Title from './CardTitle';
 
 class SubscriptionCard extends PureComponent {
     render() {
         const {
-            id,
             title,
             thumbnails,
             isUnsubscribed,
             totalItemCount,
+            goToChannel,
             unsubscribe,
             subscribe
         } = this.props;
 
-        const buttons = [
-            isUnsubscribed
-                ? {
-                      title: 'Subscribe',
-                      icon: 'check',
-                      onClick: subscribe
-                  }
-                : {
-                      title: 'Queue playlist',
-                      icon: 'cancel',
-                      onClick: unsubscribe
-                  }
-        ];
-
         return (
-            <Card
-                href={`/channel/${id}`}
-                title={title}
-                thumbnails={thumbnails}
-                badge={`${totalItemCount} video${
-                    totalItemCount > 1 ? 's' : ''
-                }`}
-                buttons={buttons}
-            />
+            <CardContainer>
+                <CardContent onClick={goToChannel}>
+                    <CardThumbnail
+                        src={getThumbnails(thumbnails, 'medium')}
+                        altText={title}
+                        badgeText={`${totalItemCount} video${
+                            totalItemCount > 1 ? 's' : ''
+                        }`}
+                    />
+
+                    <CardContentInner>
+                        <Title>{title}</Title>
+                    </CardContentInner>
+                </CardContent>
+
+                <CardButtons>
+                    {isUnsubscribed ? (
+                        <Button
+                            title="Subscribe"
+                            icon="check"
+                            onClick={subscribe}
+                        />
+                    ) : (
+                        <Button
+                            title="Queue playlist"
+                            icon="cancel"
+                            onClick={unsubscribe}
+                        />
+                    )}
+                </CardButtons>
+            </CardContainer>
         );
     }
 }

@@ -45,7 +45,7 @@ class ChannelVideos extends Component {
                     return (
                         <VideoCard
                             {...data}
-                            onClick={() => playItem(data)}
+                            playItem={() => playItem(data)}
                             queueItem={() => queueItem(data)}
                             editPlaylistItem={() => editPlaylistItem(data)}
                         />

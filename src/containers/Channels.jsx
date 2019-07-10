@@ -19,7 +19,8 @@ class Subscriptions extends Component {
             totalResults,
             getSubscriptions,
             subscribeToChannel,
-            unsubscribeFromChannel
+            unsubscribeFromChannel,
+            history
         } = this.props;
 
         return totalResults === 0 ? (
@@ -38,6 +39,7 @@ class Subscriptions extends Component {
                     return (
                         <ChannelCard
                             {...data}
+                            goToChannel={() => history.push(`/channel/${id}`)}
                             subscribe={() => subscribeToChannel(id)}
                             unsubscribe={() =>
                                 unsubscribeFromChannel(subscriptionId, title)

@@ -26,7 +26,8 @@ class Playlists extends Component {
                 totalResults,
                 getPlaylists,
                 queuePlaylist,
-                removePlaylist
+                removePlaylist,
+                history
             }
         } = this;
 
@@ -49,6 +50,9 @@ class Playlists extends Component {
                     return (
                         <PlaylistCard
                             {...data}
+                            goToPlaylist={() =>
+                                history.push(`/playlist/${playlistId}`)
+                            }
                             queuePlaylist={() =>
                                 queuePlaylist({
                                     playlistId

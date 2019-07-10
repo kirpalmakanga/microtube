@@ -67,7 +67,7 @@ class List extends Component {
         }
     }, 10);
 
-    _renderRow = ({ data, index, style }) => {
+    _renderRow = ({ data, index, style, }) => {
         const {
             props: { renderItem },
             _renderLoader

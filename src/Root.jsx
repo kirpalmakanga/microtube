@@ -4,9 +4,15 @@ import React, { Component } from 'react';
 import { withRouter, Switch, Route } from 'react-router-dom';
 
 import { connect } from 'react-redux';
-import { loadAPI, loadAuth, listenAuth, getSignedInUser } from './api/youtube';
+import { loadAPI, loadAuth, listenAuth } from './api/youtube';
 
-import { queueVideos, queuePlaylist } from './actions/youtube';
+import {
+    queueVideos,
+    queuePlaylist,
+    closeScreen,
+    getUserData,
+    listenAuthChange
+} from './actions/youtube';
 
 import Header from './layout/Header';
 
@@ -23,7 +29,7 @@ class Root extends Component {
 
     initApp = async () => {
         const {
-            signIn,
+            getUserData,
             listenAuthChange,
             queueVideos,
             queuePlaylist
@@ -33,7 +39,7 @@ class Root extends Component {
 
         await loadAuth();
 
-        signIn();
+        getUserData();
 
         listenAuthChange();
 
@@ -89,29 +95,13 @@ class Root extends Component {
 
 const mapStateToProps = ({ app: { isLoading } }) => ({ isLoading });
 
-const mapDispatchToProps = (dispatch) => ({
-    closeScreen: () =>
-        dispatch((_, getState) => {
-            const {
-                player: { showScreen }
-            } = getState();
-
-            showScreen && dispatch({ type: 'player/CLOSE_SCREEN' });
-        }),
-
-    listenAuthChange: () =>
-        listenAuth((data) => dispatch({ type: 'auth/SIGN_IN', data })),
-
-    signIn: () => {
-        const data = getSignedInUser();
-
-        dispatch({ type: 'auth/SIGN_IN', data });
-    },
-
-    queueVideos: (ids) => dispatch(queueVideos(ids)),
-
-    queuePlaylist: (data) => dispatch(queuePlaylist(data))
-});
+const mapDispatchToProps = {
+    queueVideos,
+    queuePlaylist,
+    listenAuthChange,
+    getUserData,
+    closeScreen
+};
 
 export default withRouter(
     connect(

@@ -54,55 +54,40 @@ export const loadAuth = () => {
     return GoogleAuth;
 };
 
-export const signIn = async () => {
-    const auth = getAuthInstance();
-
-    const data = await auth.signIn();
-
-    const { w3: { Paa: picture = '', ig = '', ofa = '' } = {} } = data;
-
-    const userName = ig || ofa;
-
-    return {
-        user: { picture, userName },
-        isSignedIn: true
-    };
-};
-
-export const signOut = async () => {
-    const auth = getAuthInstance();
-
-    return auth.signOut();
-};
-
 export const getSignedInUser = () => {
     const GoogleAuth = getAuthInstance();
 
     const isSignedIn = GoogleAuth.isSignedIn.get();
 
     const {
-        w3: { Paa: picture = '', ig = '', ofa = '' } = {}
+        w3: { Eea: id, Paa: picture = '', ig = '', ofa = '', ...user } = {}
     } = GoogleAuth.currentUser.get();
 
-    const userName = ig || ofa;
+    console.log('user', user);
+
+    const name = ig || ofa;
 
     return {
         isSignedIn,
         user: {
+            id,
             picture,
-            userName
+            name
         }
     };
 };
 
+export const signIn = async () => {
+    await getAuthInstance().signIn();
+
+    return getSignedInUser();
+};
+
+export const signOut = () => getAuthInstance().signOut();
+
 export const listenAuth = (callback) =>
     getAuthInstance().isSignedIn.listen(
-        (isSignedIn) =>
-            isSignedIn &&
-            callback({
-                user: getSignedInUser(),
-                isSignedIn
-            })
+        (isSignedIn) => isSignedIn && callback(getSignedInUser())
     );
 
 function createResource(properties) {

@@ -42,12 +42,14 @@ export const clearPlaylists = () => (dispatch) =>
     dispatch({ type: 'playlists/CLEAR_ITEMS' });
 
 export function removePlaylist({ title, playlistId }) {
-    return (dispatch) => {
+    return (dispatch) =>
         dispatch(
-            prompt({
-                promptText: `Remove ${title} ?`,
-                confirmText: 'Remove',
-                callback: () =>
+            prompt(
+                {
+                    promptText: `Remove ${title} ?`,
+                    confirmText: 'Remove'
+                },
+                () => {
                     catchErrors(
                         async () => {
                             await api.removePlaylist(playlistId);
@@ -68,10 +70,10 @@ export function removePlaylist({ title, playlistId }) {
                                 notify({ message: 'Error deleting playlist.' })
                             );
                         }
-                    )
-            })
+                    );
+                }
+            )
         );
-    };
 }
 
 export function getPlaylistTitle(playlistId) {
@@ -116,25 +118,29 @@ export const clearPlaylistItems = () => (dispatch) =>
     dispatch({ type: 'playlist/CLEAR_ITEMS' });
 
 export function removePlaylistItem({ title, playlistId, playlistItemId }) {
-    return async (dispatch) => {
+    return async (dispatch) =>
         dispatch(
-            prompt({
-                promptText: `Remove "${title}" ?`,
-                confirmText: 'Remove',
-                callback: () => {
-                    dispatch({
-                        type: 'playlist/REMOVE_ITEM',
-                        data: { playlistItemId, playlistId }
-                    });
-
-                    dispatch(
-                        notify({
-                            message: `Removed ${title}.`
-                        })
-                    );
-
+            prompt(
+                {
+                    promptText: `Remove "${title}" ?`,
+                    confirmText: 'Remove'
+                },
+                () => {
                     catchErrors(
-                        () => api.removePlaylistItem(playlistItemId),
+                        () => {
+                            dispatch({
+                                type: 'playlist/REMOVE_ITEM',
+                                data: { playlistItemId, playlistId }
+                            });
+
+                            dispatch(
+                                notify({
+                                    message: `Removed ${title}.`
+                                })
+                            );
+
+                            return api.removePlaylistItem(playlistItemId);
+                        },
                         () =>
                             dispatch(
                                 notify({
@@ -143,9 +149,8 @@ export function removePlaylistItem({ title, playlistId, playlistItemId }) {
                             )
                     );
                 }
-            })
+            )
         );
-    };
 }
 
 export function addPlaylistItem({ playlistId, videoId }) {
@@ -173,11 +178,13 @@ export function addPlaylistItem({ playlistId, videoId }) {
 export function editPlaylistItem({ id: videoId }) {
     return (dispatch) =>
         dispatch(
-            prompt({
-                mode: 'playlist',
-                promptText: `Add to playlist`,
-                confirmText: 'Done',
-                callback: ({
+            prompt(
+                {
+                    mode: 'playlist',
+                    promptText: `Add to playlist`,
+                    confirmText: 'Done'
+                },
+                ({
                     newPlaylistTitle,
                     playlistTitle,
                     privacyStatus,
@@ -217,15 +224,18 @@ export function editPlaylistItem({ id: videoId }) {
                             )
                     );
                 }
-            })
+            )
         );
 }
+
+export const queueItems = (items) => (dispatch) =>
+    dispatch({ type: 'player/QUEUE_PUSH', items });
 
 export const queueItem = (data) => (dispatch) =>
     dispatch({ type: 'player/QUEUE_PUSH', items: [data] });
 
 export const playItem = (data) => (dispatch) => {
-    dispatch({ type: 'player/QUEUE_PUSH', items: [data] });
+    dispatch(queueItem(data));
     dispatch({
         type: 'player/SET_ACTIVE_QUEUE_ITEM'
     });
@@ -245,7 +255,7 @@ export function queuePlaylist({ playlistId, play }) {
                 pageToken
             });
 
-            dispatch({ type: 'player/QUEUE_PUSH', items });
+            dispatch(queueItems(items));
 
             if (play && !pageToken && items.length) {
                 dispatch({
@@ -297,7 +307,7 @@ export const queueVideos = (ids = []) => (dispatch) =>
         async () => {
             const items = await api.getVideosFromIds(ids);
 
-            dispatch({ type: 'player/QUEUE_PUSH', items });
+            dispatch(queueItems(items));
         },
         () => dispatch(notify({ message: 'Error queuing videos.' }))
     );
@@ -339,17 +349,21 @@ export const unsubscribeFromChannel = (subscriptionId, channelTitle) => async (
     dispatch
 ) =>
     dispatch(
-        prompt({
-            promptText: `Unsubscribe from ${channelTitle}`,
-            confirmText: 'Done',
-            callback: () => {
-                dispatch({
-                    type: 'subscriptions/UNSUBSCRIBE',
-                    data: { subscriptionId }
-                });
-
+        prompt(
+            {
+                promptText: `Unsubscribe from ${channelTitle}`,
+                confirmText: 'Done'
+            },
+            () => {
                 catchErrors(
-                    () => api.unsubscribeFromChannel(subscriptionId),
+                    () => {
+                        dispatch({
+                            type: 'subscriptions/UNSUBSCRIBE',
+                            data: { subscriptionId }
+                        });
+
+                        return api.unsubscribeFromChannel(subscriptionId);
+                    },
                     () =>
                         dispatch(
                             notify({
@@ -358,7 +372,7 @@ export const unsubscribeFromChannel = (subscriptionId, channelTitle) => async (
                         )
                 );
             }
-        })
+        )
     );
 
 export const getChannel = (channelId) => async (dispatch) =>
@@ -396,12 +410,18 @@ export const clearChannelVideos = () => (dispatch) =>
     dispatch({ type: 'channel/CLEAR_ITEMS' });
 
 /* Auth */
+export const getUserData = () => (dispatch) => {
+    const data = api.getSignedInUser();
+
+    dispatch({ type: 'auth/UPDATE_DATA', data });
+};
+
 export const signIn = () => async (dispatch) =>
     catchErrors(
         async () => {
             const data = await api.signIn();
 
-            dispatch({ type: 'auth/SIGN_IN', data });
+            dispatch({ type: 'auth/UPDATE_DATA', data });
         },
         () => dispatch(notify({ message: 'Error signing in user.' }))
     );
@@ -415,3 +435,14 @@ export const signOut = () => async (dispatch) =>
         },
         () => dispatch(notify({ message: 'Error signing out user.' }))
     );
+
+export const listenAuthChange = () => (dispatch) =>
+    api.listenAuth((data) => dispatch({ type: 'auth/UPDATE_DATA', data }));
+
+export const closeScreen = () => (dispatch, getState) => {
+    const {
+        player: { showScreen }
+    } = getState();
+
+    showScreen && dispatch({ type: 'player/CLOSE_SCREEN' });
+};

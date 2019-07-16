@@ -8,9 +8,7 @@ export const closePrompt = () => async (dispatch) => {
     dispatch({ type: 'prompt/RESET' });
 };
 
-export const prompt = ({ callback = async () => {}, ...config } = {}) => (
-    dispatch
-) =>
+export const prompt = (config = {}, callback = async () => {}) => (dispatch) =>
     dispatch({
         type: 'prompt/OPEN',
         data: {

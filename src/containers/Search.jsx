@@ -64,6 +64,7 @@ class Search extends Component {
             ) : (
                 <List
                     items={items}
+                    itemKey={(index, data) => data[index].id}
                     loadMoreItems={() => searchVideos({ query })}
                     renderItem={({ data }) => (
                         <VideoCard

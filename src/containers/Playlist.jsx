@@ -50,14 +50,21 @@ class Playlist extends Component {
         ) : (
             <List
                 items={items}
+                itemKey={(index, data) => data[index].id}
                 renderItem={({ data }) => {
+                    const { title, playlistItemId } = data;
+
                     return (
                         <VideoCard
                             {...data}
                             playItem={() => playItem(data)}
                             queueItem={() => queueItem(data)}
                             removeItem={() =>
-                                removePlaylistItem({ ...data, playlistId })
+                                removePlaylistItem(
+                                    playlistItemId,
+                                    playlistId,
+                                    title
+                                )
                             }
                             editPlaylistItem={() => editPlaylistItem(data)}
                         />

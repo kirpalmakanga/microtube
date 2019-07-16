@@ -10,6 +10,7 @@ const noop = () => {};
 
 class List extends Component {
     static defaultProps = {
+        className: '',
         items: [],
         itemKey: noop,
         itemSize: null,
@@ -67,7 +68,7 @@ class List extends Component {
         }
     }, 10);
 
-    _renderRow = ({ data, index, style, }) => {
+    _renderRow = ({ data, index, style }) => {
         const {
             props: { renderItem },
             _renderLoader
@@ -89,7 +90,7 @@ class List extends Component {
     );
 
     _getItemKey = () => {
-        const { itemKey = noop } = this.props;
+        const { itemKey } = this.props;
 
         return (index, data) => (data[index] ? itemKey(index, data) : index);
     };
@@ -110,7 +111,7 @@ class List extends Component {
 
     render() {
         const {
-            props: { className = '', items },
+            props: { className, items },
             state: { isLoadingMoreItems },
             _renderLoader,
             _handleScroll,

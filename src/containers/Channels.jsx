@@ -32,6 +32,7 @@ class Subscriptions extends Component {
             <List
                 className="channels"
                 items={items}
+                itemKey={(index, data) => data[index].id}
                 loadMoreItems={getSubscriptions}
                 renderItem={({ data }) => {
                     const { id, title, subscriptionId } = data;

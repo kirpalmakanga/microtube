@@ -44,18 +44,12 @@ export default createReducer(initialState, {
     'player/REMOVE_QUEUE_ITEM': (
         { queue: currentQueue, currentIndex, ...state },
         { data: index }
-    ) => {
-        const queue = currentQueue.filter((_, i) => i !== index);
-
-        return {
-            ...state,
-            queue,
-            currentIndex:
-                index === currentIndex
-                    ? initialState.currentIndex
-                    : currentIndex
-        };
-    },
+    ) => ({
+        ...state,
+        queue: currentQueue.filter((_, i) => i !== index),
+        currentIndex:
+            index === currentIndex ? initialState.currentIndex : currentIndex
+    }),
 
     'player/CLEAR_QUEUE': (state) => ({
         ...state,

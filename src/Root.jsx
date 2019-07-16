@@ -1,10 +1,9 @@
 import './assets/styles/app.scss';
 
 import React, { Component } from 'react';
-import { withRouter, Switch, Route } from 'react-router-dom';
 
 import { connect } from 'react-redux';
-import { loadAPI, loadAuth, listenAuth } from './api/youtube';
+import { loadAPI, loadAuth } from './api/youtube';
 
 import {
     queueVideos,
@@ -103,9 +102,7 @@ const mapDispatchToProps = {
     closeScreen
 };
 
-export default withRouter(
-    connect(
-        mapStateToProps,
-        mapDispatchToProps
-    )(Root)
-);
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Root);

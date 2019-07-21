@@ -15,7 +15,7 @@
         "react-fastclick": "^3.0.2",
         "react-helmet": "^5.2.0",
         "react-redux": "^5.1.1",
-        "react-router-dom": "^4.3.1",
+        "react-router-dom": "^5.0.1",
         "react-transition-group": "^2.6.0",
         "react-virtualized-auto-sizer": "^1.0.2",
         "react-visibility-sensor": "^5.0.2",

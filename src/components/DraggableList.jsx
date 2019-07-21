@@ -79,9 +79,10 @@ class DraggableList extends Component {
         return (
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable">
-                    {({ innerRef }) => (
+                    {({ innerRef, placeholder }) => (
                         <div className={className} ref={getContainer(innerRef)}>
                             {items.length ? items.map(renderItem) : null}
+                            {placeholder}
                         </div>
                     )}
                 </Droppable>

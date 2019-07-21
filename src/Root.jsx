@@ -38,7 +38,7 @@ class Root extends Component {
 
         await loadAuth();
 
-        getUserData();
+        await getUserData();
 
         listenAuthChange();
 

@@ -6,9 +6,14 @@ import QueueItem from './QueueItem';
 
 import DraggableList from '../DraggableList';
 
-import { editPlaylistItem } from '../../actions/youtube';
+import {
+    setQueue,
+    setActiveQueueItem,
+    removeQueueItem,
+    editPlaylistItem
+} from '../../actions/youtube';
 
-import { pick, stopPropagation } from '../../lib/helpers';
+import { pick } from '../../lib/helpers';
 
 class Queue extends Component {
     render() {
@@ -16,13 +21,13 @@ class Queue extends Component {
             props: {
                 items,
                 showQueue,
-                setQueue,
                 isPlaying,
                 isBuffering,
                 togglePlay,
-                makeSetActiveItem,
-                makeRemoveItem,
-                makeEditPlaylistItem
+                setQueue,
+                setActiveQueueItem,
+                removeQueueItem,
+                editPlaylistItem
             }
         } = this;
 
@@ -48,10 +53,12 @@ class Queue extends Component {
                                     : 'play'
                             }
                             onClick={
-                                active ? togglePlay : makeSetActiveItem(index)
+                                active
+                                    ? togglePlay
+                                    : () => setActiveQueueItem(index)
                             }
-                            onClickRemove={makeRemoveItem(index)}
-                            editPlaylistItem={makeEditPlaylistItem(data)}
+                            onClickRemove={() => removeQueueItem(index)}
+                            editPlaylistItem={() => editPlaylistItem(data)}
                         />
                     )}
                     onReorderItems={setQueue}
@@ -66,21 +73,12 @@ const mapStateToProps = ({ player: { queue: items, showQueue } }) => ({
     showQueue
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    setQueue: (data) => dispatch({ type: 'player/UPDATE_QUEUE', data }),
-
-    makeSetActiveItem: (index) => () => {
-        dispatch({
-            type: 'player/SET_ACTIVE_QUEUE_ITEM',
-            data: { index }
-        });
-    },
-
-    makeRemoveItem: (index) => () =>
-        dispatch({ type: 'player/REMOVE_QUEUE_ITEM', data: index }),
-
-    makeEditPlaylistItem: (data) => () => dispatch(editPlaylistItem(data))
-});
+const mapDispatchToProps = {
+    setQueue,
+    setActiveQueueItem,
+    removeQueueItem,
+    editPlaylistItem
+};
 
 export default connect(
     mapStateToProps,

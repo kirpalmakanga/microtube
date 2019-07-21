@@ -5,7 +5,7 @@ import rootReducer from './reducers';
 
 import { saveState, loadState } from '../lib/localStorage';
 
-import { pick, throttle } from '../lib/helpers';
+import { pick, omit, throttle } from '../lib/helpers';
 
 const composeEnhancers =
     typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -20,10 +20,14 @@ export default function configureStore() {
 
     store.subscribe(
         throttle(() => {
-            const { auth, player, search } = store.getState();
+            const {
+                auth: { user },
+                player,
+                search
+            } = store.getState();
 
             saveState({
-                auth,
+                auth: { user: omit(user, ['id']) },
                 player,
                 search: pick(search, ['query', 'forMine'])
             });

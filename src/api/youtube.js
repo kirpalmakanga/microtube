@@ -59,16 +59,23 @@ export const getSignedInUser = () => {
 
     const isSignedIn = GoogleAuth.isSignedIn.get();
 
-    const {
-        w3: { Eea: id, Paa: picture = '', ig = '', ofa = '', ...user } = {}
-    } = GoogleAuth.currentUser.get();
+    const currentUser = GoogleAuth.currentUser.get();
 
-    console.log('user', user);
+    const {
+        w3: { Eea: id = '', Paa: picture = '', ig = '', ofa = '' } = {}
+    } = currentUser;
 
     const name = ig || ofa;
 
+    const {
+        id_token: idToken = '',
+        access_token: accessToken = ''
+    } = isSignedIn ? currentUser.getAuthResponse(true) : {};
+
     return {
         isSignedIn,
+        idToken,
+        accessToken,
         user: {
             id,
             picture,

@@ -1,5 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+
+import {
+    setActiveQueueItem,
+    saveVolume,
+    saveCurrentTime,
+    toggleQueue,
+    toggleScreen
+} from '../../actions/youtube';
+
 import { isMobile, throttle } from '../../lib/helpers';
 
 import {
@@ -580,42 +589,13 @@ class Player extends Component {
 
 const mapStateToProps = ({ player }) => ({ player });
 
-const mapDispatchToProps = (dispatch) => ({
-    setActiveQueueItem: (index) =>
-        dispatch({
-            type: 'player/SET_ACTIVE_QUEUE_ITEM',
-            data: { index }
-        }),
-
-    saveVolume: (volume) =>
-        dispatch({ type: 'player/SET_VOLUME', data: volume }),
-
-    saveCurrentTime: (t) =>
-        dispatch({ type: 'player/SET_CURRENT_TIME', data: t }),
-
-    toggleQueue: () => {
-        dispatch((_, getState) => {
-            const {
-                player: { showQueue }
-            } = getState();
-
-            dispatch({
-                type: showQueue ? 'player/CLOSE_QUEUE' : 'player/OPEN_QUEUE'
-            });
-        });
-    },
-    toggleScreen: () => {
-        dispatch((_, getState) => {
-            const {
-                player: { showScreen }
-            } = getState();
-
-            dispatch({
-                type: showScreen ? 'player/CLOSE_SCREEN' : 'player/OPEN_SCREEN'
-            });
-        });
-    }
-});
+const mapDispatchToProps = {
+    setActiveQueueItem,
+    saveVolume,
+    saveCurrentTime,
+    toggleQueue,
+    toggleScreen
+};
 
 export default connect(
     mapStateToProps,

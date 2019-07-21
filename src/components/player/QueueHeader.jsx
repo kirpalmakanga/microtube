@@ -3,18 +3,15 @@ import { connect } from 'react-redux';
 
 import Button from '../Button';
 
-import { queueVideos } from '../../actions/youtube';
-import { prompt } from '../../actions/prompt';
-
-import { parseID, splitLines, chunk } from '../../lib/helpers';
+import { clearQueue, toggleQueue, importVideos } from '../../actions/youtube';
 
 class QueueHeader extends PureComponent {
     render() {
         const {
-            player,
-            closeQueue,
-            promptAddVideo,
-            promptClearQueue
+            queueItemsCount,
+            clearQueue,
+            toggleQueue,
+            importVideos
         } = this.props;
 
         return (
@@ -23,27 +20,27 @@ class QueueHeader extends PureComponent {
                     <Button
                         className="navigation__link layout__back-button icon-button"
                         title="Close queue"
-                        onClick={closeQueue}
+                        onClick={toggleQueue}
                         icon="chevron-down"
                     />
 
                     <span className="layout__title">
                         <span className="layout__title-inner">
-                            {`Queue (${player.queue.length} Items)`}
+                            {`Queue (${queueItemsCount} Items)`}
                         </span>
                     </span>
 
                     <nav className="navigation">
                         <Button
                             className="navigation__link icon-button"
-                            onClick={promptAddVideo}
-                            title="Add video"
+                            onClick={importVideos}
+                            title="Import videos"
                             icon="add"
                         />
 
                         <Button
                             className="navigation__link icon-button"
-                            onClick={promptClearQueue}
+                            onClick={clearQueue}
                             title="Clear queue"
                             icon="clear"
                         />
@@ -54,44 +51,15 @@ class QueueHeader extends PureComponent {
     }
 }
 
-const mapStateToProps = ({ player }) => ({ player });
-
-const mapDispatchToProps = (dispatch) => ({
-    closeQueue: () => dispatch({ type: 'player/CLOSE_QUEUE' }),
-
-    promptAddVideo: () =>
-        dispatch(
-            prompt({
-                promptText: 'Import videos',
-                confirmText: 'Import',
-                form: true,
-                callback: async (text) => {
-                    const ids = splitLines(text);
-
-                    if (!ids.length) {
-                        return;
-                    }
-
-                    const chunks = chunk(ids, 50);
-
-                    for (let i = 0; i < chunks.length; i++) {
-                        const chunk = chunks[i];
-
-                        await dispatch(queueVideos(chunk.map(parseID)));
-                    }
-                }
-            })
-        ),
-
-    promptClearQueue: () =>
-        dispatch(
-            prompt({
-                promptText: 'Clear the queue ?',
-                confirmText: 'Clear',
-                callback: () => dispatch({ type: 'player/CLEAR_QUEUE' })
-            })
-        )
+const mapStateToProps = ({ player: { queue } }) => ({
+    queueItemsCount: queue.length
 });
+
+const mapDispatchToProps = {
+    clearQueue,
+    toggleQueue,
+    importVideos
+};
 
 export default connect(
     mapStateToProps,

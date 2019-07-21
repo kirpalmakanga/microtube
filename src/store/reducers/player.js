@@ -17,6 +17,12 @@ const setActiveItem = (index) => (item, i) => ({
 
 const isActiveItem = (item) => item.active;
 
+const extractQueueItemData = ({ id, title, duration }) => ({
+    id,
+    title,
+    duration
+});
+
 export default createReducer(initialState, {
     'player/OPEN_SCREEN': (state) => ({
         ...state,
@@ -35,10 +41,13 @@ export default createReducer(initialState, {
 
     'player/CLOSE_QUEUE': (state) => ({ ...state, showQueue: false }),
 
-    'player/QUEUE_PUSH': (state, { items }) => ({
+    'player/QUEUE_PUSH': (
+        { queue, showQueue, newQueueItems, ...state },
+        { items = [] }
+    ) => ({
         ...state,
-        queue: [...state.queue, ...items],
-        newQueueItems: (state.newQueueItems += items.length)
+        queue: [...queue, ...items.map(extractQueueItemData)],
+        newQueueItems: !showQueue ? newQueueItems + items.length : 0
     }),
 
     'player/REMOVE_QUEUE_ITEM': (
@@ -51,15 +60,20 @@ export default createReducer(initialState, {
             index === currentIndex ? initialState.currentIndex : currentIndex
     }),
 
-    'player/CLEAR_QUEUE': (state) => ({
+    'player/CLEAR_QUEUE': ({ queue, ...state }) => ({
         ...state,
-        queue: state.queue.filter(isActiveItem)
+        queue: queue.filter(isActiveItem)
     }),
 
-    'player/UPDATE_QUEUE': (state, { data: queue }) => ({ ...state, queue }),
+    'player/UPDATE_QUEUE': (state, { data: { queue = [] } = {} }) => ({
+        ...state,
+        queue
+    }),
 
-    'player/SET_ACTIVE_QUEUE_ITEM': (state, { data: { index } = {} }) => {
-        const { queue } = state;
+    'player/SET_ACTIVE_QUEUE_ITEM': (
+        { queue, ...state },
+        { data: { index } = {} }
+    ) => {
         const currentIndex = !isNaN(index) ? index : queue.length - 1;
 
         return {

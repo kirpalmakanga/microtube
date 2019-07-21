@@ -1,6 +1,7 @@
 import * as api from '../api/youtube';
+import * as database from '../api/firebase';
 
-import { delay, catchErrors } from '../lib/helpers';
+import { delay, catchErrors, parseID, splitLines, chunk } from '../lib/helpers';
 
 import { prompt } from './prompt';
 
@@ -18,6 +19,68 @@ const notify = ({ message }) => async (dispatch, getState) => {
     }
 };
 
+/* Auth */
+export const getUserData = () => async (dispatch) => {
+    const data = api.getSignedInUser();
+
+    const { isSignedIn, idToken, accessToken } = data;
+
+    if (!isSignedIn) {
+        return;
+    }
+
+    const {
+        user: { uid }
+    } = await database.signIn(idToken, accessToken);
+
+    const { queue = [] } = (await database.get(`users/${uid}`)) || {};
+
+    data.user.id = uid;
+
+    dispatch({ type: 'auth/UPDATE_DATA', data });
+
+    if (queue.length) {
+        dispatch({
+            type: 'player/UPDATE_QUEUE',
+            data: { queue }
+        });
+    }
+};
+
+export const signIn = () => async (dispatch) =>
+    catchErrors(
+        async () => {
+            await api.signIn();
+
+            return dispatch(getUserData());
+        },
+        () => dispatch(notify({ message: 'Error signing in user.' }))
+    );
+
+export const signOut = () => async (dispatch) =>
+    catchErrors(
+        async () => {
+            await api.signOut();
+
+            await database.signOut();
+
+            dispatch({ type: 'auth/SIGN_OUT' });
+        },
+        () => dispatch(notify({ message: 'Error signing out user.' }))
+    );
+
+export const listenAuthChange = () => (dispatch) =>
+    api.listenAuth(() => dispatch(getUserData()));
+
+export const closeScreen = () => (dispatch, getState) => {
+    const {
+        player: { showScreen }
+    } = getState();
+
+    showScreen && dispatch({ type: 'player/CLOSE_SCREEN' });
+};
+
+/* Playlists */
 export function getPlaylists(config) {
     return async (dispatch, getState) =>
         catchErrors(
@@ -228,17 +291,96 @@ export function editPlaylistItem({ id: videoId }) {
         );
 }
 
-export const queueItems = (items) => (dispatch) =>
+/* Player */
+const saveQueue = () => async (_, getState) => {
+    const {
+        auth: {
+            isSignedIn,
+            user: { id: userId }
+        },
+        player: { queue }
+    } = getState();
+
+    if (isSignedIn) {
+        database.set(`users/${userId}`, { queue });
+    }
+};
+
+export const saveVolume = (data) => (dispatch) =>
+    dispatch({ type: 'player/SET_VOLUME', data });
+
+export const saveCurrentTime = (data) => (dispatch) =>
+    dispatch({ type: 'player/SET_CURRENT_TIME', data });
+
+export const toggleQueue = () => (dispatch, getState) => {
+    const {
+        player: { showQueue }
+    } = getState();
+
+    dispatch({
+        type: showQueue ? 'player/CLOSE_QUEUE' : 'player/OPEN_QUEUE'
+    });
+};
+
+export const toggleScreen = () => (dispatch, getState) => {
+    const {
+        player: { showScreen }
+    } = getState();
+
+    dispatch({
+        type: showScreen ? 'player/CLOSE_SCREEN' : 'player/OPEN_SCREEN'
+    });
+};
+
+export const queueItems = (items) => (dispatch) => {
     dispatch({ type: 'player/QUEUE_PUSH', items });
+
+    dispatch(saveQueue());
+};
 
 export const queueItem = (data) => (dispatch) =>
     dispatch({ type: 'player/QUEUE_PUSH', items: [data] });
 
+export const setQueue = (queue) => (dispatch) => {
+    dispatch({ type: 'player/UPDATE_QUEUE', data: { queue } });
+
+    dispatch(saveQueue());
+};
+
+export const removeQueueItem = (index) => (dispatch) => {
+    dispatch({ type: 'player/REMOVE_QUEUE_ITEM', data: index });
+
+    dispatch(saveQueue());
+};
+
+export const clearQueue = () => (dispatch) =>
+    dispatch(
+        prompt(
+            {
+                promptText: 'Clear the queue ?',
+                confirmText: 'Clear'
+            },
+            () => {
+                dispatch({ type: 'player/CLEAR_QUEUE' });
+
+                dispatch(saveQueue());
+            }
+        )
+    );
+
+export const setActiveQueueItem = (index) => (dispatch) => {
+    dispatch({
+        type: 'player/SET_ACTIVE_QUEUE_ITEM',
+        data: { index }
+    });
+
+    dispatch(saveQueue());
+};
+
 export const playItem = (data) => (dispatch) => {
     dispatch(queueItem(data));
-    dispatch({
-        type: 'player/SET_ACTIVE_QUEUE_ITEM'
-    });
+
+    dispatch(setActiveQueueItem());
 };
 
 export function queuePlaylist({ playlistId, play }) {
@@ -246,8 +388,6 @@ export function queuePlaylist({ playlistId, play }) {
         const {
             player: { queue }
         } = getState();
-
-        const newIndex = queue.length;
 
         const getItems = async (pageToken) => {
             const { items, nextPageToken } = await api.getPlaylistItems({
@@ -258,10 +398,9 @@ export function queuePlaylist({ playlistId, play }) {
             dispatch(queueItems(items));
 
             if (play && !pageToken && items.length) {
-                dispatch({
-                    type: 'player/SET_ACTIVE_QUEUE_ITEM',
-                    data: { index: newIndex }
-                });
+                const index = queue.length;
+
+                dispatch(setActiveQueueItem(newIndex));
             }
 
             if (nextPageToken) {
@@ -275,6 +414,43 @@ export function queuePlaylist({ playlistId, play }) {
     };
 }
 
+export const queueVideos = (ids = []) => (dispatch) =>
+    catchErrors(
+        async () => {
+            const items = await api.getVideosFromIds(ids);
+
+            dispatch(queueItems(items));
+        },
+        () => dispatch(notify({ message: 'Error queuing videos.' }))
+    );
+
+export const importVideos = () => (dispatch) =>
+    dispatch(
+        prompt(
+            {
+                promptText: 'Import videos',
+                confirmText: 'Import',
+                form: true
+            },
+            async (text) => {
+                const lines = splitLines(text).filter(Boolean);
+
+                if (!lines.length) {
+                    return;
+                }
+
+                const videoIds = [...new Set(lines.map(parseID))];
+
+                const chunks = chunk(videoIds, 50);
+
+                for (const ids of chunks) {
+                    await dispatch(queueVideos(ids));
+                }
+            }
+        )
+    );
+
+/* Search */
 export function searchVideos(config) {
     return (dispatch, getState) =>
         catchErrors(
@@ -301,16 +477,6 @@ export function searchVideos(config) {
 
 export const clearSearch = () => (dispatch) =>
     dispatch({ type: 'search/RESET' });
-
-export const queueVideos = (ids = []) => (dispatch) =>
-    catchErrors(
-        async () => {
-            const items = await api.getVideosFromIds(ids);
-
-            dispatch(queueItems(items));
-        },
-        () => dispatch(notify({ message: 'Error queuing videos.' }))
-    );
 
 /* Channels */
 export const getSubscriptions = (channelId) => (dispatch, getState) =>
@@ -408,41 +574,3 @@ export const getChannelVideos = ({ channelId }) => async (dispatch, getState) =>
 
 export const clearChannelVideos = () => (dispatch) =>
     dispatch({ type: 'channel/CLEAR_ITEMS' });
-
-/* Auth */
-export const getUserData = () => (dispatch) => {
-    const data = api.getSignedInUser();
-
-    dispatch({ type: 'auth/UPDATE_DATA', data });
-};
-
-export const signIn = () => async (dispatch) =>
-    catchErrors(
-        async () => {
-            const data = await api.signIn();
-
-            dispatch({ type: 'auth/UPDATE_DATA', data });
-        },
-        () => dispatch(notify({ message: 'Error signing in user.' }))
-    );
-
-export const signOut = () => async (dispatch) =>
-    catchErrors(
-        async () => {
-            await api.signOut();
-
-            dispatch({ type: 'auth/SIGN_OUT' });
-        },
-        () => dispatch(notify({ message: 'Error signing out user.' }))
-    );
-
-export const listenAuthChange = () => (dispatch) =>
-    api.listenAuth((data) => dispatch({ type: 'auth/UPDATE_DATA', data }));
-
-export const closeScreen = () => (dispatch, getState) => {
-    const {
-        player: { showScreen }
-    } = getState();
-
-    showScreen && dispatch({ type: 'player/CLOSE_SCREEN' });
-};

@@ -52,7 +52,7 @@ class Playlist extends Component {
                 items={items}
                 itemKey={(index, data) => data[index].id}
                 renderItem={({ data }) => {
-                    const { title, playlistItemId } = data;
+                    const { id, title, playlistItemId } = data;
 
                     return (
                         <VideoCard
@@ -66,11 +66,11 @@ class Playlist extends Component {
                                     title
                                 )
                             }
-                            editPlaylistItem={() => editPlaylistItem(data)}
+                            editPlaylistItem={() => editPlaylistItem(id)}
                         />
                     );
                 }}
-                loadMoreItems={() => getPlaylistItems({ playlistId })}
+                loadMoreItems={() => getPlaylistItems(playlistId)}
             />
         );
     }

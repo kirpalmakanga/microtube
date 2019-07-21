@@ -47,7 +47,7 @@ class ChannelVideos extends Component {
                             {...data}
                             playItem={() => playItem(data)}
                             queueItem={() => queueItem(data)}
-                            editPlaylistItem={() => editPlaylistItem(data)}
+                            editPlaylistItem={() => editPlaylistItem(data.id)}
                         />
                     );
                 }}

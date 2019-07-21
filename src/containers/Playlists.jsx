@@ -53,22 +53,15 @@ class Playlists extends Component {
                             goToPlaylist={() =>
                                 history.push(`/playlist/${playlistId}`)
                             }
-                            queuePlaylist={() =>
-                                queuePlaylist({
-                                    playlistId
-                                })
-                            }
+                            queuePlaylist={() => queuePlaylist(playlistId)}
                             launchPlaylist={() =>
-                                queuePlaylist({
-                                    playlistId,
-                                    play: true
-                                })
+                                queuePlaylist(playlistId, true)
                             }
                             {...(channelId
                                 ? {}
                                 : {
                                       removePlaylist: () =>
-                                          removePlaylist({ title, playlistId })
+                                          removePlaylist(playlistId, title)
                                   })}
                         />
                     );

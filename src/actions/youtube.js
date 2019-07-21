@@ -104,7 +104,7 @@ export function getPlaylists(config) {
 export const clearPlaylists = () => (dispatch) =>
     dispatch({ type: 'playlists/CLEAR_ITEMS' });
 
-export function removePlaylist({ title, playlistId }) {
+export function removePlaylist(playlistId, title) {
     return (dispatch) =>
         dispatch(
             prompt(
@@ -150,7 +150,7 @@ export function getPlaylistTitle(playlistId) {
     };
 }
 
-export function getPlaylistItems(config) {
+export function getPlaylistItems(playlistId) {
     return (dispatch, getState) =>
         catchErrors(
             async () => {
@@ -163,7 +163,7 @@ export function getPlaylistItems(config) {
                 }
 
                 const data = await api.getPlaylistItems({
-                    ...config,
+                    playlistId,
                     pageToken
                 });
 
@@ -238,7 +238,7 @@ export function addPlaylistItem({ playlistId, videoId }) {
         );
 }
 
-export function editPlaylistItem({ id: videoId }) {
+export function editPlaylistItem(videoId) {
     return (dispatch) =>
         dispatch(
             prompt(
@@ -383,7 +383,7 @@ export const playItem = (data) => (dispatch) => {
     dispatch(setActiveQueueItem());
 };
 
-export function queuePlaylist({ playlistId, play }) {
+export function queuePlaylist(playlistId, play) {
     return (dispatch, getState) => {
         const {
             player: { queue }
@@ -400,7 +400,7 @@ export function queuePlaylist({ playlistId, play }) {
             if (play && !pageToken && items.length) {
                 const index = queue.length;
 
-                dispatch(setActiveQueueItem(newIndex));
+                dispatch(setActiveQueueItem(index));
             }
 
             if (nextPageToken) {

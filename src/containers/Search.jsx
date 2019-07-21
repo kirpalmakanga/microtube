@@ -71,7 +71,7 @@ class Search extends Component {
                             {...data}
                             onClick={() => playItem(data)}
                             queueItem={() => queueItem(data)}
-                            editPlaylistItem={() => editPlaylistItem(data)}
+                            editPlaylistItem={() => editPlaylistItem(data.id)}
                         />
                     )}
                 />

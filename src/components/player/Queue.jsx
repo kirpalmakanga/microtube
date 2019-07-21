@@ -58,7 +58,7 @@ class Queue extends Component {
                                     : () => setActiveQueueItem(index)
                             }
                             onClickRemove={() => removeQueueItem(index)}
-                            editPlaylistItem={() => editPlaylistItem(data)}
+                            editPlaylistItem={() => editPlaylistItem(data.id)}
                         />
                     )}
                     onReorderItems={setQueue}

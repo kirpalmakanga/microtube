@@ -26,3 +26,6 @@ export const get = async (path) => {
 };
 
 export const set = (path, data) => getRef(path).set(data);
+
+export const listen = (path, callback = () => {}) =>
+    getRef(path).on('value', (snapshot) => callback(snapshot.val()));

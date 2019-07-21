@@ -5,6 +5,8 @@ import { delay, catchErrors, parseID, splitLines, chunk } from '../lib/helpers';
 
 import { prompt } from './prompt';
 
+const __DEV__ = process.env.NODE_ENV === 'development';
+
 const notify = ({ message }) => async (dispatch, getState) => {
     dispatch({ type: 'notifications/OPEN', data: message });
 
@@ -33,7 +35,8 @@ export const getUserData = () => async (dispatch) => {
         user: { uid }
     } = await database.signIn(idToken, accessToken);
 
-    const { queue = [] } = (await database.get(`users/${uid}`)) || {};
+    const { queue = [] } =
+        (await database.get(`users/${__DEV__ ? uid : 'dev'}`)) || {};
 
     data.user.id = uid;
 
@@ -302,7 +305,25 @@ const saveQueue = () => async (_, getState) => {
     } = getState();
 
     if (isSignedIn) {
-        database.set(`users/${userId}`, { queue });
+        database.set(`users/${__DEV__ ? userId : 'dev'}`, { queue });
+    }
+};
+
+const listenQueueUpdate = () => async (_, getState) => {
+    const {
+        auth: {
+            isSignedIn,
+            user: { id: userId }
+        }
+    } = getState();
+
+    if (isSignedIn) {
+        database.listen(`users/${__DEV__ ? userId : 'dev'}/queue`, (items) =>
+            dispatch({
+                type: 'player/UPDATE_QUEUE',
+                data: { queue: items || [] }
+            })
+        );
     }
 };
 

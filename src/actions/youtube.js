@@ -40,7 +40,10 @@ export const getUserData = () => async (dispatch) => {
 
     data.user.id = uid;
 
-    dispatch({ type: 'auth/UPDATE_DATA', data });
+    dispatch({
+        type: 'auth/UPDATE_DATA',
+        data
+    });
 
     if (queue.length) {
         dispatch({
@@ -53,9 +56,16 @@ export const getUserData = () => async (dispatch) => {
 export const signIn = () => async (dispatch) =>
     catchErrors(
         async () => {
+            dispatch({ type: 'auth/UPDATE_DATA', data: { isSigningIn: true } });
+
             await api.signIn();
 
-            return dispatch(getUserData());
+            await dispatch(getUserData());
+
+            dispatch({
+                type: 'auth/UPDATE_DATA',
+                data: { isSigningIn: false }
+            });
         },
         () => dispatch(notify({ message: 'Error signing in user.' }))
     );
@@ -71,9 +81,6 @@ export const signOut = () => async (dispatch) =>
         },
         () => dispatch(notify({ message: 'Error signing out user.' }))
     );
-
-export const listenAuthChange = () => (dispatch) =>
-    api.listenAuth(() => dispatch(getUserData()));
 
 export const closeScreen = () => (dispatch, getState) => {
     const {

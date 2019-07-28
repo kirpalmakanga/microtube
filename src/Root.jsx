@@ -9,8 +9,7 @@ import {
     queueVideos,
     queuePlaylist,
     closeScreen,
-    getUserData,
-    listenAuthChange
+    getUserData
 } from './actions/youtube';
 
 import Header from './layout/Header';
@@ -27,20 +26,13 @@ class Root extends Component {
     state = { apiLoaded: false };
 
     initApp = async () => {
-        const {
-            getUserData,
-            listenAuthChange,
-            queueVideos,
-            queuePlaylist
-        } = this.props;
+        const { getUserData, queueVideos, queuePlaylist } = this.props;
 
         await loadAPI();
 
         await loadAuth();
 
         await getUserData();
-
-        listenAuthChange();
 
         this.setState({ apiLoaded: true });
 
@@ -97,7 +89,6 @@ const mapStateToProps = ({ app: { isLoading } }) => ({ isLoading });
 const mapDispatchToProps = {
     queueVideos,
     queuePlaylist,
-    listenAuthChange,
     getUserData,
     closeScreen
 };

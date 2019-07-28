@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { signIn } from '../api/youtube';
+import { signIn } from '../actions/youtube';
 
 import Button from '../components/Button';
 import Placeholder from '../components/Placeholder';
 
 class Login extends Component {
     render() {
+        const { signIn } = this.props;
         return (
             <Placeholder
                 icon="lock"
@@ -23,4 +24,11 @@ class Login extends Component {
     }
 }
 
-export default Login;
+const mapDispatchToProps = {
+    signIn
+};
+
+export default connect(
+    () => ({}),
+    mapDispatchToProps
+)(Login);

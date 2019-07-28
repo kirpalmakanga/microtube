@@ -3,11 +3,17 @@ import { connect } from 'react-redux';
 
 import { Route, Redirect } from 'react-router-dom';
 
+import Loader from './components/Loader';
 import Login from './containers/Login';
 
 class AuthRoute extends Component {
     render() {
-        const { isSignedIn, component: Container, ...props } = this.props;
+        const {
+            isSignedIn,
+            isSigningIn,
+            component: Container,
+            ...props
+        } = this.props;
 
         return (
             <Route
@@ -15,6 +21,8 @@ class AuthRoute extends Component {
                 render={(componentProps) =>
                     isSignedIn ? (
                         <Container {...componentProps} />
+                    ) : isSigningIn ? (
+                        <Loader isActive={true} />
                     ) : (
                         <Login {...componentProps} />
                     )
@@ -24,6 +32,9 @@ class AuthRoute extends Component {
     }
 }
 
-const mapStateToProps = ({ auth: { isSignedIn } }) => ({ isSignedIn });
+const mapStateToProps = ({ auth: { isSignedIn, isSigningIn } }) => ({
+    isSignedIn,
+    isSigningIn
+});
 
 export default connect(mapStateToProps)(AuthRoute);

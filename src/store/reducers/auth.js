@@ -6,7 +6,8 @@ const initialState = {
         name: '',
         picture: ''
     },
-    isSignedIn: false
+    isSignedIn: false,
+    isSigningIn: false
 };
 
 export default createReducer(initialState, {

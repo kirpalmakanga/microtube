@@ -107,14 +107,14 @@ export const signOut = () => getAuthInstance().signOut();
 
 function removeEmptyParams(params = {}) {
     for (const p in params) {
-        if (!params[p] || typeof params[p] === 'undefined') {
+        if (!params[p]) {
             delete params[p];
         }
     }
     return params;
 }
 
-const request = async (method, path, params, body) => {
+const request = async (method = '', path = '', params = {}, body) => {
     const { client } = window.gapi;
 
     const config = {

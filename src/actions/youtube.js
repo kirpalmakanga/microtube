@@ -1,7 +1,14 @@
 import * as api from '../api/youtube';
 import * as database from '../api/firebase';
 
-import { delay, catchErrors, parseID, splitLines, chunk } from '../lib/helpers';
+import {
+    delay,
+    catchErrors,
+    parseID,
+    splitLines,
+    chunk,
+    throttle
+} from '../lib/helpers';
 
 import { prompt } from './prompt';
 
@@ -35,8 +42,8 @@ export const getUserData = () => async (dispatch) => {
         user: { uid }
     } = await database.signIn(idToken, accessToken);
 
-    const { queue = [] } =
-        (await database.get(`users/${__DEV__ ? uid : 'dev'}`)) || {};
+    // const { queue = [] } =
+    //     (await database.get(`users/${__DEV__ ? uid : 'dev'}`)) || {};
 
     data.user.id = uid;
 
@@ -45,12 +52,18 @@ export const getUserData = () => async (dispatch) => {
         data
     });
 
-    if (queue.length) {
-        dispatch({
-            type: 'player/UPDATE_QUEUE',
-            data: { queue }
-        });
-    }
+    dispatch(listenForQueueUpdate());
+
+    // if (queue.length) {
+    //     dispatch({
+    //         type: 'player/UPDATE_QUEUE',
+    //         data: { queue }
+    //     });
+    // }
+};
+
+const afterSigningIn = () => async (dispatch) => {
+    dispatch(listenForQueueUpdate());
 };
 
 export const signIn = () => async (dispatch) =>
@@ -316,7 +329,7 @@ const saveQueue = () => async (_, getState) => {
     }
 };
 
-const listenQueueUpdate = () => async (_, getState) => {
+const listenForQueueUpdate = () => (dispatch, getState) => {
     const {
         auth: {
             isSignedIn,
@@ -325,11 +338,14 @@ const listenQueueUpdate = () => async (_, getState) => {
     } = getState();
 
     if (isSignedIn) {
-        database.listen(`users/${__DEV__ ? userId : 'dev'}/queue`, (items) =>
-            dispatch({
-                type: 'player/UPDATE_QUEUE',
-                data: { queue: items || [] }
-            })
+        database.listen(
+            `users/${__DEV__ ? userId : 'dev'}/queue`,
+            (queue = []) => {
+                dispatch({
+                    type: 'player/UPDATE_QUEUE',
+                    data: { queue }
+                });
+            }
         );
     }
 };
@@ -366,8 +382,7 @@ export const queueItems = (items) => (dispatch) => {
     dispatch(saveQueue());
 };
 
-export const queueItem = (data) => (dispatch) =>
-    dispatch({ type: 'player/QUEUE_PUSH', items: [data] });
+export const queueItem = (data) => (dispatch) => dispatch(queueItems([data]));
 
 export const setQueue = (queue) => (dispatch) => {
     dispatch({ type: 'player/UPDATE_QUEUE', data: { queue } });

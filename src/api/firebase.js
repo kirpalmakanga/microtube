@@ -4,6 +4,8 @@ import 'firebase/database';
 
 import { FIREBASE_CONFIG } from '../config/api';
 
+import { throttle } from '../lib/helpers';
+
 firebase.initializeApp(FIREBASE_CONFIG);
 
 const getRef = (path) => firebase.database().ref(path);
@@ -28,4 +30,7 @@ export const get = async (path) => {
 export const set = (path, data) => getRef(path).set(data);
 
 export const listen = (path, callback = () => {}) =>
-    getRef(path).on('value', (snapshot) => callback(snapshot.val()));
+    getRef(path).on(
+        'value',
+        throttle((snapshot) => callback(snapshot.val() || undefined), 200)
+    );

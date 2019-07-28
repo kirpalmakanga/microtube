@@ -132,7 +132,7 @@ export const chunk = (array = [], size) => {
     return chunks;
 };
 
-export const throttle = (fn, delay) => {
+export const throttle = (fn, delay = 50) => {
     let lastCall = 0;
 
     return (...args) => {

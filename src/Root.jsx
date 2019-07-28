@@ -68,10 +68,10 @@ class Root extends Component {
                         <main className="layout__content">{children}</main>
 
                         <Notifications />
+
+                        <Player />
                     </>
                 ) : null}
-
-                <Player />
 
                 <Prompt />
 

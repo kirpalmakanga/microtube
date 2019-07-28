@@ -190,7 +190,7 @@ export function getPlaylistItems(playlistId) {
 export const clearPlaylistItems = () => (dispatch) =>
     dispatch({ type: 'playlist/CLEAR_ITEMS' });
 
-export function removePlaylistItem({ title, playlistId, playlistItemId }) {
+export function removePlaylistItem(playlistItemId, playlistId, title) {
     return async (dispatch) =>
         dispatch(
             prompt(

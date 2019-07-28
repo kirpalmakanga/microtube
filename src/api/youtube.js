@@ -1,8 +1,21 @@
 import { API_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SCOPE } from '../config/api';
 import { parseVideoData, parsePlaylistData, parseChannelData } from './parsers';
 import { pick } from '../lib/helpers';
+import { Url } from 'url';
 
 const ITEMS_PER_REQUEST = 50;
+
+const createUrl = (uri, params = {}) => {
+    const url = new URL();
+
+    if (Object.keys(params).length) {
+        for ([key, value] of Object.entries(params)) {
+            url.searchParams.append(key, value);
+        }
+    }
+
+    return url.toString();
+};
 
 function loadScript(src) {
     return new Promise((resolve, reject) => {
@@ -92,68 +105,24 @@ export const signIn = async () => {
 
 export const signOut = () => getAuthInstance().signOut();
 
-export const listenAuth = (callback) =>
-    getAuthInstance().isSignedIn.listen(
-        (isSignedIn) => isSignedIn && callback(getSignedInUser())
-    );
-
-function createResource(properties) {
-    var resource = {};
-    var normalizedProps = properties;
-
-    for (let p in properties) {
-        var value = properties[p];
-        if (p && p.substr(-2, 2) == '[]') {
-            const adjustedName = p.replace('[]', '');
-            if (value) {
-                normalizedProps[adjustedName] = value.split(',');
-            }
-            delete normalizedProps[p];
-        }
-    }
-
-    for (const p in normalizedProps) {
-        // Leave properties that don't have values out of inserted resource.
-        if (normalizedProps.hasOwnProperty(p) && normalizedProps[p]) {
-            const propArray = p.split('.');
-            let ref = resource;
-
-            for (let pa = 0; pa < propArray.length; pa++) {
-                const key = propArray[pa];
-
-                if (pa === propArray.length - 1) {
-                    ref[key] = normalizedProps[p];
-                } else {
-                    ref = ref[key] = ref[key] || {};
-                }
-            }
-        }
-    }
-
-    return resource;
-}
-
-function removeEmptyParams(params) {
+function removeEmptyParams(params = {}) {
     for (const p in params) {
-        if (!params[p] || params[p] == 'undefined') {
+        if (!params[p] || typeof params[p] === 'undefined') {
             delete params[p];
         }
     }
     return params;
 }
 
-const request = async (method, path, params, properties) => {
+const request = async (method, path, params, body) => {
     const { client } = window.gapi;
 
     const config = {
         method,
         path: `/youtube/v3/${path}`,
-        params: removeEmptyParams(params)
+        params: removeEmptyParams(params),
+        ...(body ? { body } : {})
     };
-
-    if (properties) {
-        config.body = createResource(properties);
-    }
 
     const { result } = await client.request(config);
 
@@ -267,8 +236,12 @@ export async function createPlaylist({ title, privacyStatus }) {
             part: 'snippet,status'
         },
         {
-            'snippet.title': title,
-            'status.privacyStatus': privacyStatus
+            snippet: {
+                title
+            },
+            status: {
+                privacyStatus
+            }
         }
     );
 }
@@ -336,9 +309,13 @@ export async function addPlaylistItem(playlistId, videoId) {
         'playlistItems',
         { part: 'snippet' },
         {
-            'snippet.playlistId': playlistId,
-            'snippet.resourceId.kind': 'youtube#video',
-            'snippet.resourceId.videoId': videoId
+            snippet: {
+                playlistId,
+                resourceId: {
+                    kind: 'youtube#video',
+                    videoId
+                }
+            }
         }
     );
 }
@@ -462,8 +439,12 @@ export async function subscribeToChannel(channelId) {
         'subscriptions',
         { part: 'snippet' },
         {
-            'snippet.resourceId.kind': 'youtube#channel',
-            'snippet.resourceId.channelId': channelId
+            snippet: {
+                resourceId: {
+                    kind: 'youtube#channel',
+                    channelId
+                }
+            }
         }
     );
 }

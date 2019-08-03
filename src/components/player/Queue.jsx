@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import QueueHeader from './QueueHeader';
 import QueueItem from './QueueItem';
 
+import Placeholder from '../Placeholder';
 import DraggableList from '../DraggableList';
 
 import {
@@ -33,31 +34,35 @@ const Queue = ({
         >
             <QueueHeader />
 
-            <DraggableList
-                className="queue__items"
-                items={items}
-                renderItem={({ active, ...data }, index) => (
-                    <QueueItem
-                        {...pick(data, ['title', 'duration'])}
-                        isActive={active}
-                        icon={
-                            active && isBuffering
-                                ? 'loading'
-                                : active && isPlaying
-                                ? 'pause'
-                                : 'play'
-                        }
-                        onClick={
-                            active
-                                ? togglePlay
-                                : () => setActiveQueueItem(index)
-                        }
-                        onClickRemove={() => removeQueueItem(index)}
-                        editPlaylistItem={() => editPlaylistItem(data.id)}
-                    />
-                )}
-                onReorderItems={setQueue}
-            />
+            {items.length ? (
+                <DraggableList
+                    className="queue__items"
+                    items={items}
+                    renderItem={({ active, ...data }, index) => (
+                        <QueueItem
+                            {...pick(data, ['title', 'duration'])}
+                            isActive={active}
+                            icon={
+                                active && isBuffering
+                                    ? 'loading'
+                                    : active && isPlaying
+                                    ? 'pause'
+                                    : 'play'
+                            }
+                            onClick={
+                                active
+                                    ? togglePlay
+                                    : () => setActiveQueueItem(index)
+                            }
+                            onClickRemove={() => removeQueueItem(index)}
+                            editPlaylistItem={() => editPlaylistItem(data.id)}
+                        />
+                    )}
+                    onReorderItems={setQueue}
+                />
+            ) : (
+                <Placeholder icon="empty" text="No videos in queue." />
+            )}
         </section>
     );
 };

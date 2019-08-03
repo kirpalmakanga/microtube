@@ -18,7 +18,7 @@ const AuthRoute = ({
             isSignedIn ? (
                 <Container {...componentProps} />
             ) : isSigningIn ? (
-                <Loader isActive={true} />
+                <Loader isActive />
             ) : (
                 <Login {...componentProps} />
             )

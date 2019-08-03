@@ -102,7 +102,7 @@ class List extends Component {
             return itemSize;
         }
 
-        return containerHeight / (isMobile ? 3 : 6);
+        return containerHeight / (isMobile() ? 3 : 6);
     };
 
     componentDidMount() {

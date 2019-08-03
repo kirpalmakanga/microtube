@@ -61,12 +61,6 @@ export const getAuthInstance = () => {
     return auth2.init(params);
 };
 
-export const loadAuth = () => {
-    const GoogleAuth = getAuthInstance();
-
-    return GoogleAuth;
-};
-
 export const getSignedInUser = () => {
     const GoogleAuth = getAuthInstance();
 

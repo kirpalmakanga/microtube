@@ -493,7 +493,7 @@ class Player extends Component {
                                 data-state-disabled={disableControls}
                             />
 
-                            {!isMobile ? (
+                            {!isMobile() ? (
                                 <div
                                     className="player__controls-volume"
                                     onWheel={handleWheelVolume}

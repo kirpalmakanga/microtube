@@ -3,7 +3,7 @@ import './assets/styles/app.scss';
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
-import { loadAPI, loadAuth } from './api/youtube';
+import { loadAPI, getAuthInstance as loadAuth } from './api/youtube';
 
 import {
     queueVideos,
@@ -11,6 +11,8 @@ import {
     closeScreen,
     getUserData
 } from './actions/youtube';
+
+import { isMobile } from './lib/helpers';
 
 import Header from './layout/Header';
 
@@ -56,7 +58,7 @@ class Root extends Component {
         } = this;
 
         return (
-            <div className="layout">
+            <div className={`layout ${isMobile() ? 'mobile' : ''}`}>
                 <Head />
 
                 <Sprite />

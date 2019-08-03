@@ -11,12 +11,8 @@ class Head extends Component {
             location: { pathname },
             channelTitle,
             playlistTitle,
-            currentVideo: {
-                id: videoId,
-                title: currentVideoTitle,
-                currentTime,
-                duration
-            }
+            currentTime,
+            currentVideo: { id: videoId, title: currentVideoTitle, duration }
         } = this.props;
 
         let title = 'MicroTube';
@@ -53,13 +49,12 @@ const mapStateToProps = ({
     player: { queue, currentTime }
 }) => {
     const currentVideo = queue.find(({ active }) => active) || {};
+
     return {
         playlistTitle,
         channelTitle,
-        currentVideo: {
-            ...currentVideo,
-            currentTime
-        }
+        currentTime,
+        currentVideo
     };
 };
 export default withRouter(connect(mapStateToProps)(Head));

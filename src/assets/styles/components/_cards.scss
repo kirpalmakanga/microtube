@@ -5,11 +5,9 @@
     width: 100%;
     position: relative;
 
-    @media screen and (min-width: 480px) {
-        &:active,
-        &:hover {
-            background-color: lighten($black, 60%);
-        }
+    .layout:not(.mobile) &:active,
+    .layout:not(.mobile) &:hover {
+        background-color: lighten($black, 60%);
     }
 
     &__thumbnail {
@@ -39,11 +37,6 @@
             max-width: 100%;
             height: 100%;
             width: auto;
-
-            // width: 100px;
-            // @media screen and (min-width: 480px) {
-            //     width: 200px;
-            // }
         }
 
         .image {

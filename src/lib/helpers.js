@@ -100,14 +100,19 @@ export const formatTime = (t) => {
     return units.map((t) => ('0' + t).slice(-2)).join(':');
 };
 
-export const isMobile =
-    navigator.userAgent.match(/Android/i) ||
-    navigator.userAgent.match(/webOS/i) ||
-    navigator.userAgent.match(/iPhone/i) ||
-    navigator.userAgent.match(/iPad/i) ||
-    navigator.userAgent.match(/iPod/i) ||
-    navigator.userAgent.match(/BlackBerry/i) ||
-    navigator.userAgent.match(/Windows Phone/i);
+export const isMobile = () => {
+    const { userAgent = '' } = navigator;
+
+    return (
+        userAgent.match(/Android/i) ||
+        userAgent.match(/webOS/i) ||
+        userAgent.match(/iPhone/i) ||
+        userAgent.match(/iPad/i) ||
+        userAgent.match(/iPod/i) ||
+        userAgent.match(/BlackBerry/i) ||
+        userAgent.match(/Windows Phone/i)
+    );
+};
 
 export const parseID = (url) => {
     url = url.split(/(vi\/|v%3D|v=|\/v\/|youtu\.be\/|\/embed\/)/);

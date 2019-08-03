@@ -1,3 +1,5 @@
-export default function getThumbnail(thumbnails, size = 'default') {
-  return thumbnails[size].url.replace('http:', 'https:')
+export default function getThumbnail(thumbnails = {}, size = 'default') {
+    const { url = '' } = thumbnails[size] || {};
+
+    return url.replace('http:', 'https:');
 }

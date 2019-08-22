@@ -22,7 +22,7 @@ const Routes = () => (
 
         <AuthRoute exact path="/subscriptions" component={Channels} />
 
-        <Route path="/search/:query?" component={Search} />
+        <AuthRoute path="/search/:query?" component={Search} />
 
         <Route path="/channel/:channelId" component={Channel} />
 

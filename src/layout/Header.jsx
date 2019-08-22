@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Switch, Route, withRouter } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 
 import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';
@@ -13,14 +13,9 @@ class Header extends Component {
         return (
             <header className="layout__header shadow--2dp" onClick={onClick}>
                 <Switch>
-                    <Route
-                        path="/search/:query?"
-                        component={(props) => <SearchHeader {...props} />}
-                    />
-                    <Route
-                        path="*"
-                        component={(props) => <DefaultHeader {...props} />}
-                    />
+                    <Route path="/search/:query?" component={SearchHeader} />
+
+                    <Route path="*" component={DefaultHeader} />
                 </Switch>
             </header>
         );

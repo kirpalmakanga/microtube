@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link, withRouter } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import SearchForm from '../components/SearchForm';
 import Icon from '../components/Icon';
 
 import DropDown from '../components/DropDown';
+
+import { setSearchTarget } from '../actions/youtube.js';
 
 class SearchHeader extends Component {
     handleFormSubmit = (query) => {
@@ -15,9 +17,9 @@ class SearchHeader extends Component {
     };
 
     handleDropDownSelect = (value) => {
-        const { setSearchMode } = this.props;
+        const { setSearchTarget } = this.props;
 
-        setSearchMode(parseInt(value));
+        setSearchTarget(parseInt(value));
     };
 
     render() {
@@ -70,15 +72,9 @@ const mapStateToProps = (
     query
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    setSearchMode: (forMine) =>
-        dispatch({
-            type: 'search/SET_TARGET',
-            data: {
-                forMine
-            }
-        })
-});
+const mapDispatchToProps = {
+    setSearchTarget
+};
 
 export default connect(
     mapStateToProps,

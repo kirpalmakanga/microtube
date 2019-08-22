@@ -3,8 +3,6 @@ import Icon from './Icon';
 
 import { stopPropagation } from '../lib/helpers.js';
 
-const noop = () => {};
-
 class DropDown extends PureComponent {
     state = { isOpen: false };
 

@@ -28,18 +28,9 @@ class DefaultHeader extends Component {
         return title;
     };
 
-    handleAuth = () => {
-        const { isSignedIn, signUserIn, signUserOut } = this.props;
-
-        if (!isSignedIn) {
-            return signUserIn();
-        }
-        signUserOut();
-    };
-
     render() {
         const {
-            props: { isSignedIn, avatar, route },
+            props: { isSignedIn, signIn, signOut, avatar, route },
             getTitle
         } = this;
 
@@ -62,16 +53,16 @@ class DefaultHeader extends Component {
                 </span>
 
                 <nav className="navigation">
-                    <Link
-                        className="navigation__link icon-button"
-                        aria-label="Open search"
-                        to="/search"
-                    >
-                        <Icon name="search" />
-                    </Link>
-
                     {isSignedIn ? (
                         <>
+                            <Link
+                                className="navigation__link icon-button"
+                                aria-label="Open search"
+                                to="/search"
+                            >
+                                <Icon name="search" />
+                            </Link>
+
                             <Link
                                 className="navigation__link icon-button"
                                 aria-label="Playlists"
@@ -79,6 +70,7 @@ class DefaultHeader extends Component {
                             >
                                 <Icon name="folder" />
                             </Link>
+
                             <Link
                                 className="navigation__link icon-button"
                                 to="/subscriptions"
@@ -91,7 +83,7 @@ class DefaultHeader extends Component {
 
                     <Button
                         className="navigation__link icon-button"
-                        onClick={this.handleAuth}
+                        onClick={isSignedIn ? signOut : signIn}
                         title={isSignedIn ? 'Log out' : 'Log in'}
                         icon="account"
                     >
@@ -121,11 +113,10 @@ const mapStateToProps = (
     route
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    signUserIn: (data) => dispatch(signIn(data)),
-
-    signUserOut: () => dispatch(signOut())
-});
+const mapDispatchToProps = {
+    signIn,
+    signOut
+};
 
 export default connect(
     mapStateToProps,

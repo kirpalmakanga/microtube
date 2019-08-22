@@ -518,6 +518,14 @@ export function searchVideos(config) {
         );
 }
 
+export const setSearchTarget = (forMine) => (dispatch) =>
+    dispatch({
+        type: 'search/SET_TARGET',
+        data: {
+            forMine
+        }
+    });
+
 export const clearSearch = () => (dispatch) =>
     dispatch({ type: 'search/RESET' });
 

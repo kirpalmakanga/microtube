@@ -324,52 +324,36 @@ class Player extends Component {
     };
 
     bindKeyboard = () => {
-        if (this.__keyboardListener) {
+        if (this.__keyboardHandler) {
             return;
         }
 
-        this.__keyboardListener = ({ key }) => {
-            switch (key) {
-                case 'ArrowLeft':
-                    this.goToVideo(false);
-                    break;
+        const callbacks = {
+            ArrowLeft: () => this.goToVideo(false),
 
-                case 'ArrowRight':
-                    this.goToVideo(true);
-                    break;
+            ArrowRight: () => this.goToVideo(true),
 
-                case 'm':
-                    this.toggleMute();
-                    break;
+            f: this.toggleFullScreen,
 
-                case 'f':
-                    this.toggleFullScreen();
-                    break;
+            m: this.toggleMute,
 
-                case 'q':
-                    this.props.toggleQueue();
-                    break;
+            q: this.props.toggleQueue,
 
-                case 'f':
-                    this.toggleFullScreen();
-                    break;
+            s: this.props.toggleScreen,
 
-                case 's':
-                    this.props.toggleScreen();
-                    break;
-
-                case ' ':
-                    this.togglePlay();
-                    break;
-            }
+            ' ': this.togglePlay
         };
 
-        document.addEventListener('keypress', this.__keyboardListener);
+        this.__keyboardHandler = ({ key, repeat }) =>
+            !repeat && typeof callbacks[key] === 'function' && callbacks[key]();
+
+        document.addEventListener('keydown', this.__keyboardHandler);
     };
 
     unbindKeyboard = () => {
-        document.removeEventListener('keypress', this.__keyboardListener);
-        this.__keyboardListener = null;
+        document.removeEventListener('keydown', this.__keyboardHandler);
+
+        this.__keyboardHandler = null;
     };
 
     handleFullScreenChange = (isFullScreen) => this.setState({ isFullScreen });

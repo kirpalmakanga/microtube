@@ -20,16 +20,11 @@ export default function configureStore() {
 
     store.subscribe(
         throttle(() => {
-            const {
-                auth: { user },
-                player,
-                search
-            } = store.getState();
+            const { player, search } = store.getState();
 
             saveState({
-                auth: { user: omit(user, ['id']) },
-                player,
-                search: pick(search, ['query', 'forMine'])
+                player: omit(player, ['newQueueItems']),
+                search: pick(search, ['forMine'])
             });
         }, 500)
     );

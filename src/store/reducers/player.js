@@ -47,7 +47,8 @@ export default createReducer(initialState, {
     ) => ({
         ...state,
         queue: [...queue, ...items.map(extractQueueItemData)],
-        newQueueItems: !showQueue ? newQueueItems + items.length : 0
+        newQueueItems: !showQueue ? newQueueItems + items.length : 0,
+        showQueue
     }),
 
     'player/REMOVE_QUEUE_ITEM': (

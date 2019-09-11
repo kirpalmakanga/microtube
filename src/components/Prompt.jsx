@@ -71,6 +71,7 @@ class ImportVideoForm extends Component {
                         onChange={handleChange}
                         autoFocus
                         placeholder="URLs/IDs..."
+                        rows="10"
                     />
                 </div>
             </form>

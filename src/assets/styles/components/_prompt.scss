@@ -25,7 +25,6 @@
     -webkit-tap-highlight-color: transparent;
     color: $black;
     .textfield__input {
-        @extend .add-bottom;
         color: $black;
         padding: 20px;
         resize: vertical;

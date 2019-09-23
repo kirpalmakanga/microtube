@@ -41,6 +41,7 @@ class ChannelVideos extends Component {
             <List
                 items={items}
                 loadMoreItems={() => getChannelVideos({ channelId })}
+                itemKey={(index, data) => data[index].id}
                 renderItem={({ data }) => {
                     return (
                         <VideoCard

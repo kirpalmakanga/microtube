@@ -1,7 +1,7 @@
 .queue {
     overflow: hidden;
     background-color: lighten($brand-primary, 20%);
-    @include transition();
+    @include transition(transform);
     position: fixed;
     top: 0;
     left: 0;
@@ -34,7 +34,7 @@
         flex: 1;
     }
 
-    &__items > div[data-react-beautiful-dnd-draggable='0'],
+    &__items > div[data-react-beautiful-dnd-draggable],
     &__item {
         height: 50px;
     }

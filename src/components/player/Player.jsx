@@ -408,7 +408,7 @@ class Player extends Component {
             isPlayerReady
         } = this;
 
-        const disableControls = !isPlayerReady() || !videoId;
+        const disableControls = !isPlayerReady();
 
         return (
             <div

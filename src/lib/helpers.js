@@ -183,9 +183,7 @@ export const catchErrors = async (
         await fn();
     } catch (error) {
         onError(error);
-
-        throw error;
     } finally {
-        await anyway();
+        return anyway();
     }
 };

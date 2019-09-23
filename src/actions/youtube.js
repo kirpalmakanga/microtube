@@ -73,14 +73,18 @@ export const signIn = () => async (dispatch) =>
 
             await api.signIn();
 
-            await dispatch(getUserData());
+            const data = await dispatch(getUserData());
 
+            console.log(data);
+        },
+        ({ error }) =>
+            error !== 'popup_closed_by_user' &&
+            dispatch(notify({ message: 'Error signing in user.' })),
+        () =>
             dispatch({
                 type: 'auth/UPDATE_DATA',
                 data: { isSigningIn: false }
-            });
-        },
-        () => dispatch(notify({ message: 'Error signing in user.' }))
+            })
     );
 
 export const signOut = () => async (dispatch) =>

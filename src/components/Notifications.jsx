@@ -11,7 +11,7 @@ class Notifications extends Component {
         } = this.props;
 
         return (
-            <TranslateY in={isActive} className="notification">
+            <TranslateY in={isActive} className="notification shadow--2dp">
                 <div className="notification__content">
                     <div className="notification__text">{message || ''}</div>
                     <button

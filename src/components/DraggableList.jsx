@@ -36,7 +36,10 @@ class DraggableList extends Component {
     };
 
     renderItem = (props, index) => {
-        const { renderItem } = this.props;
+        const {
+            props: { renderItem },
+            container
+        } = this;
 
         return (
             <Draggable
@@ -51,7 +54,7 @@ class DraggableList extends Component {
                         partialVisibility={true}
                         scrollCheck={true}
                         scrollThrottle={100}
-                        containment={this.container}
+                        containment={container}
                     >
                         {({ isVisible }) => (
                             <div
@@ -76,18 +79,18 @@ class DraggableList extends Component {
             renderItem
         } = this;
 
-        return (
+        return items.length ? (
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="droppable">
                     {({ innerRef, placeholder }) => (
                         <div className={className} ref={getContainer(innerRef)}>
-                            {items.length ? items.map(renderItem) : null}
+                            {items.map(renderItem)}
                             {placeholder}
                         </div>
                     )}
                 </Droppable>
             </DragDropContext>
-        );
+        ) : null;
     }
 }
 

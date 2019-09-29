@@ -1,21 +1,8 @@
 import { API_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SCOPE } from '../config/api';
 import { parseVideoData, parsePlaylistData, parseChannelData } from './parsers';
 import { pick } from '../lib/helpers';
-import { Url } from 'url';
 
 const ITEMS_PER_REQUEST = 50;
-
-const createUrl = (uri, params = {}) => {
-    const url = new URL();
-
-    if (Object.keys(params).length) {
-        for ([key, value] of Object.entries(params)) {
-            url.searchParams.append(key, value);
-        }
-    }
-
-    return url.toString();
-};
 
 function loadScript(src) {
     return new Promise((resolve, reject) => {

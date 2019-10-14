@@ -42,9 +42,6 @@ export const getUserData = () => async (dispatch) => {
         user: { uid }
     } = await database.signIn(idToken, accessToken);
 
-    // const { queue = [] } =
-    //     (await database.get(`users/${__DEV__ ? uid : 'dev'}`)) || {};
-
     data.user.id = uid;
 
     dispatch({
@@ -52,17 +49,6 @@ export const getUserData = () => async (dispatch) => {
         data
     });
 
-    dispatch(listenForQueueUpdate());
-
-    // if (queue.length) {
-    //     dispatch({
-    //         type: 'player/UPDATE_QUEUE',
-    //         data: { queue }
-    //     });
-    // }
-};
-
-const afterSigningIn = () => async (dispatch) => {
     dispatch(listenForQueueUpdate());
 };
 
@@ -73,9 +59,7 @@ export const signIn = () => async (dispatch) =>
 
             await api.signIn();
 
-            const data = await dispatch(getUserData());
-
-            console.log(data);
+            await dispatch(getUserData());
         },
         ({ error }) =>
             error !== 'popup_closed_by_user' &&

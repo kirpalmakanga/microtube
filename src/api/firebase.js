@@ -16,7 +16,7 @@ export const signIn = (idToken, accessToken) => {
         accessToken
     );
 
-    return firebase.auth().signInAndRetrieveDataWithCredential(credential);
+    return firebase.auth().signInWithCredential(credential);
 };
 
 export const signOut = () => firebase.auth().signOut();

@@ -52,14 +52,20 @@ export default createReducer(initialState, {
     }),
 
     'player/REMOVE_QUEUE_ITEM': (
-        { queue: currentQueue, currentIndex, ...state },
-        { data: index }
-    ) => ({
-        ...state,
-        queue: currentQueue.filter((_, i) => i !== index),
-        currentIndex:
-            index === currentIndex ? initialState.currentIndex : currentIndex
-    }),
+        { queue, currentIndex, ...state },
+        { data: { videoId } = {} }
+    ) => {
+        const index = queue.findIndex(({ id }) => id === videoId);
+
+        return {
+            ...state,
+            queue: queue.filter((_, i) => i !== index),
+            currentIndex:
+                index === currentIndex
+                    ? initialState.currentIndex
+                    : currentIndex
+        };
+    },
 
     'player/CLEAR_QUEUE': ({ queue, ...state }) => ({
         ...state,
@@ -73,8 +79,10 @@ export default createReducer(initialState, {
 
     'player/SET_ACTIVE_QUEUE_ITEM': (
         { queue, ...state },
-        { data: { index } = {} }
+        { data: { videoId } = {} }
     ) => {
+        const index = queue.findIndex(({ id }) => id === videoId);
+
         const currentIndex = !isNaN(index) ? index : queue.length - 1;
 
         return {

@@ -8,8 +8,7 @@ const QueueItem = ({
     title,
     duration,
     isActive,
-    onClickRemove,
-    editPlaylistItem,
+    onClickMenu,
     icon,
     ...props
 }) => (
@@ -22,9 +21,7 @@ const QueueItem = ({
     >
         <div className="queue__item-button icon-button">
             <Icon
-                className={['icon', icon === 'loading' ? 'rotating' : ''].join(
-                    ' '
-                )}
+                className={icon === 'loading' ? 'rotating' : ''}
                 name={icon}
             />
         </div>
@@ -35,16 +32,9 @@ const QueueItem = ({
 
         <button
             className="queue__item-button icon-button"
-            onClick={stopPropagation(editPlaylistItem)}
+            onClick={stopPropagation(onClickMenu)}
         >
-            <Icon className="icon" name="playlist-add" />
-        </button>
-
-        <button
-            className="queue__item-button icon-button"
-            onClick={stopPropagation(onClickRemove)}
-        >
-            <Icon className="icon" name="close" />
+            <Icon name="more" />
         </button>
     </div>
 );

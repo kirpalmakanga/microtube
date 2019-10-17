@@ -378,8 +378,8 @@ export const setQueue = (queue) => (dispatch) => {
     dispatch(saveQueue());
 };
 
-export const removeQueueItem = (index) => (dispatch) => {
-    dispatch({ type: 'player/REMOVE_QUEUE_ITEM', data: index });
+export const removeQueueItem = (videoId) => (dispatch) => {
+    dispatch({ type: 'player/REMOVE_QUEUE_ITEM', data: { videoId } });
 
     dispatch(saveQueue());
 };
@@ -399,10 +399,10 @@ export const clearQueue = () => (dispatch) =>
         )
     );
 
-export const setActiveQueueItem = (index) => (dispatch) => {
+export const setActiveQueueItem = (videoId) => (dispatch) => {
     dispatch({
         type: 'player/SET_ACTIVE_QUEUE_ITEM',
-        data: { index }
+        data: { videoId }
     });
 
     dispatch(saveQueue());

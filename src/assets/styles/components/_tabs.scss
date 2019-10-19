@@ -9,13 +9,13 @@
         text-align: center;
         position: relative;
         a {
+            font-family: $font-primary;
             @include transition();
             background-color: $brand-primary;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 18px;
-            font-weight: 700;
             color: $white;
             height: 50px;
             text-decoration: none;

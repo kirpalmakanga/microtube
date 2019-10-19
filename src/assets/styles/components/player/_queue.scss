@@ -15,8 +15,11 @@
     }
 
     &[data-state='hidden'] {
-        transform: translateY(100%);
-        visibility: hidden;
+        transform: translateY(calc(100% + 100px));
+
+        @media screen and (min-width: 480px) {
+            transform: translateY(calc(100% + 50px));
+        }
     }
 
     &[data-state='visible'] {
@@ -109,50 +112,5 @@
     &__item--active,
     &__item--active:hover {
         background-color: lighten($brand-primary, 40%);
-    }
-
-    &__menu {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: rgba($brand-primary, 0.5);
-        display: flex;
-        align-items: flex-end;
-        cursor: pointer;
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-
-            li {
-                display: flex;
-                &:not(:last-child) {
-                    border-bottom: 2px solid lighten($brand-primary, 20%);
-                }
-            }
-        }
-
-        &-item {
-            display: flex;
-            align-items: center;
-            flex: 1;
-            background-color: $white;
-            color: $brand-primary;
-            border: none;
-            padding: 15px;
-            font-family: $font-primary;
-            font-size: 16px;
-            cursor: pointer;
-
-            .icon {
-                height: 24px;
-                width: 24px;
-                margin-right: 15px;
-            }
-        }
     }
 }

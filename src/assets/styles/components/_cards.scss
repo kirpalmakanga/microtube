@@ -82,7 +82,7 @@
     }
 
     &__subtitle {
-        font-size: 14px;
+        font-size: 10px;
         line-height: 1em;
         margin: 0;
         text-decoration: none;
@@ -92,9 +92,13 @@
         }
 
         &.author {
-            font-size: 15px;
-            line-height: 14px;
+            font-size: 11px;
+            line-height: 10px;
             opacity: 0.9;
+            @media screen and (min-width: 480px) {
+                font-size: 16px;
+                line-height: 15px;
+            }
         }
 
         &.nb-videos,

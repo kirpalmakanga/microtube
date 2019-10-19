@@ -8,6 +8,7 @@ import QueueHeader from './QueueHeader';
 import QueueItem from './QueueItem';
 
 import DraggableList from '../DraggableList';
+import Placeholder from '../Placeholder';
 
 import Fade from '../animations/Fade';
 
@@ -62,34 +63,34 @@ class Queue extends Component {
             >
                 <QueueHeader />
 
-                {/* {items.length ? ( */}
-                <DraggableList
-                    className="queue__items"
-                    items={items}
-                    renderItem={({ active, id, ...data }) => (
-                        <QueueItem
-                            {...data}
-                            isActive={active}
-                            icon={
-                                active && isBuffering
-                                    ? 'loading'
-                                    : active && isPlaying
-                                    ? 'pause'
-                                    : 'play'
-                            }
-                            onClick={
-                                active
-                                    ? togglePlay
-                                    : () => setActiveQueueItem(id)
-                            }
-                            onClickMenu={() => openMenu(id)}
-                        />
-                    )}
-                    onReorderItems={setQueue}
-                />
-                {/* ) : (
+                {items.length ? (
+                    <DraggableList
+                        className="queue__items"
+                        items={items}
+                        renderItem={({ active, id, ...data }, index) => (
+                            <QueueItem
+                                {...data}
+                                isActive={active}
+                                icon={
+                                    active && isBuffering
+                                        ? 'loading'
+                                        : active && isPlaying
+                                        ? 'pause'
+                                        : 'play'
+                                }
+                                onClick={
+                                    active
+                                        ? togglePlay
+                                        : () => setActiveQueueItem(index)
+                                }
+                                onClickMenu={() => openMenu(id)}
+                            />
+                        )}
+                        onReorderItems={setQueue}
+                    />
+                ) : (
                     <Placeholder icon="empty" text="No videos in queue." />
-                )} */}
+                )}
 
                 <Fade in={isMenuOpen}>
                     <Menu onClick={closeMenu}>

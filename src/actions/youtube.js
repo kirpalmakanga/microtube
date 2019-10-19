@@ -399,10 +399,10 @@ export const clearQueue = () => (dispatch) =>
         )
     );
 
-export const setActiveQueueItem = (videoId) => (dispatch) => {
+export const setActiveQueueItem = (index) => (dispatch) => {
     dispatch({
         type: 'player/SET_ACTIVE_QUEUE_ITEM',
-        data: { videoId }
+        data: { index }
     });
 
     dispatch(saveQueue());

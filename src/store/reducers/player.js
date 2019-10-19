@@ -79,10 +79,8 @@ export default createReducer(initialState, {
 
     'player/SET_ACTIVE_QUEUE_ITEM': (
         { queue, ...state },
-        { data: { videoId } = {} }
+        { data: { index } = {} }
     ) => {
-        const index = queue.findIndex(({ id }) => id === videoId);
-
         const currentIndex = !isNaN(index) ? index : queue.length - 1;
 
         return {

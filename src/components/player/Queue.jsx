@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import Menu from '../menu/Menu';
+import MenuItem from '../menu/MenuItem';
+
 import QueueHeader from './QueueHeader';
 import QueueItem from './QueueItem';
-import QueueMenu from './QueueMenu';
 
-import Placeholder from '../Placeholder';
 import DraggableList from '../DraggableList';
-import Icon from '../Icon';
 
 import Fade from '../animations/Fade';
 
@@ -24,6 +24,18 @@ class Queue extends Component {
     openMenu = (videoId) => this.setState({ isMenuOpen: true, videoId });
 
     closeMenu = () => this.setState({ isMenuOpen: false, videoId: '' });
+
+    componentDidUpdate() {
+        const {
+            props: { showQueue },
+            state: { isMenuOpen },
+            closeMenu
+        } = this;
+
+        if (!showQueue && isMenuOpen) {
+            closeMenu();
+        }
+    }
 
     render() {
         const {
@@ -50,41 +62,48 @@ class Queue extends Component {
             >
                 <QueueHeader />
 
-                {items.length ? (
-                    <DraggableList
-                        className="queue__items"
-                        items={items}
-                        renderItem={({ active, id, ...data }) => (
-                            <QueueItem
-                                {...data}
-                                isActive={active}
-                                icon={
-                                    active && isBuffering
-                                        ? 'loading'
-                                        : active && isPlaying
-                                        ? 'pause'
-                                        : 'play'
-                                }
-                                onClick={
-                                    active
-                                        ? togglePlay
-                                        : () => setActiveQueueItem(id)
-                                }
-                                onClickMenu={() => openMenu(id)}
-                            />
-                        )}
-                        onReorderItems={setQueue}
-                    />
-                ) : (
+                {/* {items.length ? ( */}
+                <DraggableList
+                    className="queue__items"
+                    items={items}
+                    renderItem={({ active, id, ...data }) => (
+                        <QueueItem
+                            {...data}
+                            isActive={active}
+                            icon={
+                                active && isBuffering
+                                    ? 'loading'
+                                    : active && isPlaying
+                                    ? 'pause'
+                                    : 'play'
+                            }
+                            onClick={
+                                active
+                                    ? togglePlay
+                                    : () => setActiveQueueItem(id)
+                            }
+                            onClickMenu={() => openMenu(id)}
+                        />
+                    )}
+                    onReorderItems={setQueue}
+                />
+                {/* ) : (
                     <Placeholder icon="empty" text="No videos in queue." />
-                )}
+                )} */}
 
                 <Fade in={isMenuOpen}>
-                    <QueueMenu
-                        onClickOverlay={closeMenu}
-                        onClickAdd={() => editPlaylistItem(videoId)}
-                        onClickRemove={() => removeQueueItem(videoId)}
-                    />
+                    <Menu onClick={closeMenu}>
+                        <MenuItem
+                            title="Add to playlist"
+                            icon="playlist-add"
+                            onClick={() => editPlaylistItem(videoId)}
+                        />
+                        <MenuItem
+                            title="Remove from queue"
+                            icon="delete"
+                            onClick={() => removeQueueItem(videoId)}
+                        />
+                    </Menu>
                 </Fade>
             </section>
         );

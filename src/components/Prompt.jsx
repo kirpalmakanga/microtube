@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { getPlaylists } from '../actions/youtube';
+import { closePrompt } from '../actions/prompt';
 
 import Fade from './animations/Fade';
 
@@ -12,7 +13,7 @@ import DropDown from './DropDown';
 
 import List from './List';
 
-import { delay, stopPropagation } from '../lib/helpers';
+import { stopPropagation, preventDefault } from '../lib/helpers';
 
 class ImportVideoForm extends Component {
     state = {
@@ -24,22 +25,20 @@ class ImportVideoForm extends Component {
             data: { ...data, [name]: value }
         }));
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-
+    handleSubmit = preventDefault(() => {
         const {
             data: { text }
         } = this.state;
 
         this.props.onSubmit(text);
-    };
+    });
 
     getInputRef = (el) => (this.input = el);
 
     componentDidMount() {
         this.input.focus();
 
-        this.__keyPressHandler = (e) => e.stopPropagation();
+        this.__keyPressHandler = stopPropagation();
         this.input.addEventListener('keypress', this.__keyPressHandler);
     }
 
@@ -94,15 +93,14 @@ class NewPlayListForm extends Component {
         this.setValue(name, value)
     );
 
-    handleSubmit = (e) => {
-        e.preventDefault();
+    handleSubmit = preventDefault(() => {
         this.props.onSubmit(this.state);
-    };
+    });
 
     getInputRef = (el) => (this.input = el);
 
     componentDidMount() {
-        this.__keyPressHandler = (e) => e.stopPropagation();
+        this.__keyPressHandler = stopPropagation();
         this.input.addEventListener('keypress', this.__keyPressHandler);
     }
 
@@ -273,17 +271,7 @@ const mapStateToProps = ({ prompt, playlists: { items, nextPageToken } }) => ({
     playlists: { items, nextPageToken }
 });
 
-const mapDispatchToProps = (dispatch) => ({
-    getPlaylists: (data) => dispatch(getPlaylists(data)),
-
-    closePrompt: async () => {
-        dispatch({ type: 'prompt/CLOSE' });
-
-        await delay(200);
-
-        dispatch({ type: 'prompt/RESET' });
-    }
-});
+const mapDispatchToProps = { getPlaylists, closePrompt };
 
 export default connect(
     mapStateToProps,

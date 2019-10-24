@@ -412,13 +412,13 @@ class Player extends Component {
 
         return (
             <div
-                className="player__container"
+                className="player__container shadow--2dp"
                 ref={getPlayerContainer}
                 data-state-fullscreen={isFullScreen ? 'enabled' : 'disabled'}
                 data-state-show-queue={showQueue ? 'enabled' : 'disabled'}
             >
                 <Screen
-                    className="screen shadow--2dp"
+                    className="screen"
                     videoId={videoId}
                     onReady={onYoutubeIframeReady}
                     onEnd={goToVideo}

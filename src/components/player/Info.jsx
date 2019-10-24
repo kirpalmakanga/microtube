@@ -30,7 +30,7 @@ class Info extends PureComponent {
                     type="range"
                     min="0"
                     max={parseInt(duration)}
-                    onWheel={preventDefault}
+                    onWheel={preventDefault()}
                     onChange={({ target: { value } }) => seekTime(value)}
                 />
             </div>

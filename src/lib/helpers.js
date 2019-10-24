@@ -1,6 +1,10 @@
 import { format } from 'date-fns';
 
-export const preventDefault = (e) => e.preventDefault();
+export const preventDefault = (func = () => {}) => (e) => {
+    e.preventDefault();
+
+    func && func(e);
+};
 
 export const stopPropagation = (func) => (e) => {
     e.stopPropagation();

@@ -1,3 +1,9 @@
+button {
+    &:focus {
+        outline: none;
+    }
+}
+
 .button {
     @include transition();
     background-color: $black;
@@ -12,10 +18,6 @@
 
     &:hover {
         background-color: lighten($black, 5%);
-    }
-
-    &:focus {
-        outline: none;
     }
 }
 .button--close {

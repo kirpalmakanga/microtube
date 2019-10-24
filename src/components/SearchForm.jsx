@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import { stopPropagation, preventDefault } from '../lib/helpers';
+
 class Form extends Component {
     constructor(props) {
         super(props);
@@ -16,7 +18,7 @@ class Form extends Component {
     componentDidMount() {
         this.input.focus();
 
-        this.__keyPressHandler = (e) => e.stopPropagation();
+        this.__keyPressHandler = stopPropagation();
         this.input.addEventListener('keypress', this.__keyPressHandler);
     }
 
@@ -28,19 +30,15 @@ class Form extends Component {
 
     handleInput = ({ target: { value: input } }) => this.setState({ input });
 
-    handleFocus = (e) => {
-        e.preventDefault();
-        e.target.parentNode.classList.add('is-focused');
-    };
+    handleFocus = preventDefault(({ target: { parentNode } }) => {
+        parentNode.classList.add('is-focused');
+    });
 
-    handleBlur = (e) => {
-        e.preventDefault();
-        e.target.parentNode.classList.remove('is-focused');
-    };
+    handleBlur = preventDefault(({ target: { parentNode } }) => {
+        parentNode.classList.remove('is-focused');
+    });
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-
+    handleSubmit = preventDefault(() => {
         const {
             state: { input },
             props: { query }
@@ -49,7 +47,7 @@ class Form extends Component {
         const newQuery = input.trim();
 
         newQuery && newQuery !== query && this.props.onSubmit(newQuery);
-    };
+    });
 
     render() {
         const {
@@ -67,6 +65,7 @@ class Form extends Component {
                     <label className="sr-only" labelfor="search">
                         Search
                     </label>
+
                     <input
                         aria-label="Search"
                         ref={getInputRef}

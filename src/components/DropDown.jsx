@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import Icon from './Icon';
 
-import { stopPropagation } from '../lib/helpers.js';
+import { stopPropagation, preventDefault } from '../lib/helpers.js';
 
 class DropDown extends PureComponent {
     state = { isOpen: false };
@@ -10,18 +10,17 @@ class DropDown extends PureComponent {
 
     toggleOptions = () => this.setState(({ isOpen }) => ({ isOpen: !isOpen }));
 
-    handleOptionClick = (value) => (e) => {
-        const {
-            props: { onSelect },
-            closeOptions
-        } = this;
+    handleOptionClick = (value) =>
+        preventDefault(() => {
+            const {
+                props: { onSelect },
+                closeOptions
+            } = this;
 
-        e.preventDefault();
+            closeOptions();
 
-        closeOptions();
-
-        onSelect(value);
-    };
+            onSelect(value);
+        });
 
     render() {
         const {

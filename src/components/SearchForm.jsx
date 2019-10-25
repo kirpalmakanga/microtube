@@ -18,12 +18,12 @@ class Form extends Component {
     componentDidMount() {
         this.input.focus();
 
-        this.__keyPressHandler = stopPropagation();
-        this.input.addEventListener('keypress', this.__keyPressHandler);
+        this.__keyDownHandler = stopPropagation();
+        this.input.addEventListener('keydown', this.__keyDownHandler);
     }
 
     componentWillUnmount() {
-        this.input.removeEventListener('keypress', this.__keyPressHandler);
+        this.input.removeEventListener('keydown', this.__keyDownHandler);
     }
 
     getInputRef = (el) => (this.input = el);

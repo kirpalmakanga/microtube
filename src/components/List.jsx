@@ -51,6 +51,10 @@ class List extends Component {
 
         await loadMoreItems();
 
+        if (this._isUnmounting) {
+            return;
+        }
+
         this.setState({ isLoadingMoreItems: false });
     };
 
@@ -107,6 +111,10 @@ class List extends Component {
 
     componentDidMount() {
         this._loadMoreItems();
+    }
+
+    componentWillUnmount() {
+        this._isUnmounting = true;
     }
 
     render() {

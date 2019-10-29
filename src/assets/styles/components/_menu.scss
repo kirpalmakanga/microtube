@@ -24,6 +24,7 @@
     }
 
     &__item {
+        @include transition(background-color);
         display: flex;
         align-items: center;
         flex: 1;
@@ -39,6 +40,10 @@
             height: 24px;
             width: 24px;
             margin-right: 15px;
+        }
+
+        &:hover {
+            background-color: darken($white, 5%);
         }
     }
 }

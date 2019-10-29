@@ -16,15 +16,13 @@ class PlaylistCard extends PureComponent {
             title,
             thumbnails,
             itemCount,
-            goToPlaylist,
-            queuePlaylist,
-            launchPlaylist,
-            removePlaylist
+            onClick,
+            onClickMenu
         } = this.props;
 
         return (
             <CardContainer>
-                <CardContent onClick={goToPlaylist}>
+                <CardContent onClick={onClick}>
                     <CardThumbnail
                         src={getThumbnails(thumbnails, 'medium')}
                         altText={title}
@@ -39,15 +37,15 @@ class PlaylistCard extends PureComponent {
                 </CardContent>
 
                 <CardButtons>
-                    {removePlaylist ? (
-                        <Button
-                            title={`Remove playlist ${title}`}
-                            onClick={removePlaylist}
-                            icon="delete"
-                        />
-                    ) : null}
-
+                    {/* {removePlaylist ? ( */}
                     <Button
+                        title="Open playlist menu"
+                        icon="more"
+                        onClick={onClickMenu}
+                    />
+                    {/* ) : null} */}
+
+                    {/* <Button
                         title="Queue playlist"
                         onClick={queuePlaylist}
                         icon="queue"
@@ -57,7 +55,7 @@ class PlaylistCard extends PureComponent {
                         title="Queue and play playlist"
                         onClick={launchPlaylist}
                         icon="playlist-play"
-                    />
+                    /> */}
                 </CardButtons>
             </CardContainer>
         );

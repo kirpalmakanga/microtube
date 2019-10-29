@@ -63,37 +63,37 @@ class Queue extends Component {
             >
                 <QueueHeader />
 
-                {items.length ? (
-                    <DraggableList
-                        className="queue__items"
-                        items={items}
-                        renderItem={({ active, id, ...data }, index) => (
-                            <QueueItem
-                                {...data}
-                                isActive={active}
-                                icon={
-                                    active && isBuffering
-                                        ? 'loading'
-                                        : active && isPlaying
-                                        ? 'pause'
-                                        : 'play'
-                                }
-                                onClick={
-                                    active
-                                        ? togglePlay
-                                        : () => setActiveQueueItem(index)
-                                }
-                                onClickMenu={() => openMenu(id)}
-                            />
-                        )}
-                        onReorderItems={setQueue}
-                    />
-                ) : (
-                    <Placeholder icon="empty" text="No videos in queue." />
-                )}
+                <div className="queue__content">
+                    {items.length ? (
+                        <DraggableList
+                            className="queue__items"
+                            items={items}
+                            renderItem={({ active, id, ...data }, index) => (
+                                <QueueItem
+                                    {...data}
+                                    isActive={active}
+                                    icon={
+                                        active && isBuffering
+                                            ? 'loading'
+                                            : active && isPlaying
+                                            ? 'pause'
+                                            : 'play'
+                                    }
+                                    onClick={
+                                        active
+                                            ? togglePlay
+                                            : () => setActiveQueueItem(index)
+                                    }
+                                    onClickMenu={() => openMenu(id)}
+                                />
+                            )}
+                            onReorderItems={setQueue}
+                        />
+                    ) : (
+                        <Placeholder icon="empty" text="No videos in queue." />
+                    )}
 
-                <Fade in={isMenuOpen}>
-                    <Menu onClick={closeMenu}>
+                    <Menu isVisible={isMenuOpen} onClick={closeMenu}>
                         <MenuItem
                             title="Add to playlist"
                             icon="playlist-add"
@@ -105,7 +105,7 @@ class Queue extends Component {
                             onClick={() => removeQueueItem(videoId)}
                         />
                     </Menu>
-                </Fade>
+                </div>
             </section>
         );
     }

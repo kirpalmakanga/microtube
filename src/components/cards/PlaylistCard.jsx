@@ -37,25 +37,11 @@ class PlaylistCard extends PureComponent {
                 </CardContent>
 
                 <CardButtons>
-                    {/* {removePlaylist ? ( */}
                     <Button
                         title="Open playlist menu"
                         icon="more"
                         onClick={onClickMenu}
                     />
-                    {/* ) : null} */}
-
-                    {/* <Button
-                        title="Queue playlist"
-                        onClick={queuePlaylist}
-                        icon="queue"
-                    />
-
-                    <Button
-                        title="Queue and play playlist"
-                        onClick={launchPlaylist}
-                        icon="playlist-play"
-                    /> */}
                 </CardButtons>
             </CardContainer>
         );

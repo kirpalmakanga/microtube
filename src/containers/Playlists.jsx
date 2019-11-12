@@ -23,7 +23,7 @@ class Playlists extends Component {
         this.props.clearPlaylists();
     }
 
-    openMenu = (playlistId, playlistTitle) => () =>
+    openMenu = (playlistId, playlistTitle) =>
         this.setState({ isMenuOpen: true, playlistId, playlistTitle });
 
     closeMenu = () => this.setState({ isMenuOpen: false, playlistId: '' });
@@ -68,7 +68,9 @@ class Playlists extends Component {
                                     onClick={() =>
                                         history.push(`/playlist/${playlistId}`)
                                     }
-                                    onClickMenu={openMenu(playlistId, title)}
+                                    onClickMenu={() =>
+                                        openMenu(playlistId, title)
+                                    }
                                 />
                             );
                         }}
@@ -120,7 +122,4 @@ const mapDispatchToProps = {
     clearPlaylists
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Playlists);
+export default connect(mapStateToProps, mapDispatchToProps)(Playlists);

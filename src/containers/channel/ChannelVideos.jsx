@@ -14,7 +14,16 @@ import List from '../../components/List';
 import Placeholder from '../../components/Placeholder';
 import VideoCard from '../../components/cards/VideoCard';
 
+import Menu from '../../components/menu/Menu';
+import MenuItem from '../../components/menu/MenuItem';
+
 class ChannelVideos extends Component {
+    state = { isMenuOpen: false, videoData: {} };
+
+    openMenu = (videoData) => this.setState({ isMenuOpen: true, videoData });
+
+    closeMenu = () => this.setState({ isMenuOpen: false, videoData: {} });
+
     componentWillUnmount() {
         this.props.clearChannelVideos();
     }
@@ -29,30 +38,50 @@ class ChannelVideos extends Component {
                 queueItem,
                 playItem,
                 editPlaylistItem
-            }
+            },
+            state: { isMenuOpen, videoData },
+            openMenu,
+            closeMenu
         } = this;
 
-        return totalResults === 0 ? (
-            <Placeholder
-                icon="empty"
-                text="This channel hasn't uploaded videos."
-            />
-        ) : (
-            <List
-                items={items}
-                loadMoreItems={() => getChannelVideos({ channelId })}
-                itemKey={(index, data) => data[index].id}
-                renderItem={({ data }) => {
-                    return (
-                        <VideoCard
-                            {...data}
-                            playItem={() => playItem(data)}
-                            queueItem={() => queueItem(data)}
-                            editPlaylistItem={() => editPlaylistItem(data.id)}
-                        />
-                    );
-                }}
-            />
+        const { id: videoId, title: videoTitle } = videoData;
+
+        return (
+            <>
+                {totalResults === 0 ? (
+                    <Placeholder
+                        icon="empty"
+                        text="This channel hasn't uploaded videos."
+                    />
+                ) : (
+                    <List
+                        items={items}
+                        loadMoreItems={() => getChannelVideos({ channelId })}
+                        itemKey={(index, data) => data[index].id}
+                        renderItem={({ data }) => (
+                            <VideoCard
+                                {...data}
+                                onClick={() => playItem(data)}
+                                onClickMenu={() => openMenu(data)}
+                            />
+                        )}
+                    />
+                )}
+
+                <Menu isVisible={isMenuOpen} onClick={closeMenu}>
+                    <MenuItem
+                        title={`Add ${videoTitle} to queue`}
+                        icon="queue"
+                        onClick={() => queueItem(videoData)}
+                    />
+
+                    <MenuItem
+                        title={`Add ${videoTitle} to playlist`}
+                        icon="playlist-add"
+                        onClick={() => editPlaylistItem(videoId)}
+                    />
+                </Menu>
+            </>
         );
     }
 }
@@ -79,7 +108,4 @@ const mapDispatchToProps = {
     playItem
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ChannelVideos);
+export default connect(mapStateToProps, mapDispatchToProps)(ChannelVideos);

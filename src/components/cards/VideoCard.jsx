@@ -27,15 +27,13 @@ class VideoCard extends PureComponent {
             duration,
             channelId,
             channelTitle,
-            playItem,
-            queueItem,
-            removeItem,
-            editPlaylistItem
+            onClick,
+            onClickMenu
         } = this.props;
 
         return (
             <CardContainer>
-                <CardContent onClick={playItem}>
+                <CardContent onClick={onClick}>
                     <CardThumbnail
                         src={getThumbnails(thumbnails, 'medium')}
                         altText={title}
@@ -65,7 +63,12 @@ class VideoCard extends PureComponent {
                 </CardContent>
 
                 <CardButtons>
-                    {removeItem ? (
+                    <Button
+                        title="Open video menu"
+                        icon="more"
+                        onClick={onClickMenu}
+                    />
+                    {/* {removeItem ? (
                         <Button
                             title={`Remove video ${title}`}
                             onClick={removeItem}
@@ -83,7 +86,7 @@ class VideoCard extends PureComponent {
                         title={`Queue video ${title}`}
                         onClick={queueItem}
                         icon="queue"
-                    />
+                    /> */}
                 </CardButtons>
             </CardContainer>
         );

@@ -144,7 +144,4 @@ const mapStateToProps = (
 
 const mapDispatchToProps = { getChannel, clearChannelData };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Channel);
+export default connect(mapStateToProps, mapDispatchToProps)(Channel);

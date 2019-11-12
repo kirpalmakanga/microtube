@@ -82,19 +82,19 @@ class Playlist extends Component {
 
                 <Menu isVisible={isMenuOpen} onClick={closeMenu}>
                     <MenuItem
-                        title={`Add ${videoTitle} to queue`}
+                        title={`Add "${videoTitle}" to queue`}
                         icon="queue"
                         onClick={() => queueItem(videoData)}
                     />
 
                     <MenuItem
-                        title={`Add ${videoTitle} to playlist`}
+                        title={`Add "${videoTitle}" to playlist`}
                         icon="playlist-add"
                         onClick={() => editPlaylistItem(videoId)}
                     />
 
                     <MenuItem
-                        title={`Remove ${videoTitle} from playlist`}
+                        title={`Remove "${videoTitle}" from playlist`}
                         icon="delete"
                         onClick={() =>
                             removePlaylistItem(

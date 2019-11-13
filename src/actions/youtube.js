@@ -313,7 +313,7 @@ const saveQueue = () => async (_, getState) => {
     } = getState();
 
     if (isSignedIn) {
-        database.set(`users/${__DEV__ ? userId : 'dev'}`, { queue });
+        database.set(`users/${__DEV__ ? 'dev' : userId}`, { queue });
     }
 };
 
@@ -327,8 +327,9 @@ const listenForQueueUpdate = () => (dispatch, getState) => {
 
     if (isSignedIn) {
         database.listen(
-            `users/${__DEV__ ? userId : 'dev'}/queue`,
+            `users/${__DEV__ ? 'dev' : userId}/queue`,
             (queue = []) => {
+                console.log('HEY!');
                 dispatch({
                     type: 'player/UPDATE_QUEUE',
                     data: { queue }

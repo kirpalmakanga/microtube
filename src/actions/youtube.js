@@ -328,13 +328,11 @@ const listenForQueueUpdate = () => (dispatch, getState) => {
     if (isSignedIn) {
         database.listen(
             `users/${__DEV__ ? 'dev' : userId}/queue`,
-            (queue = []) => {
-                console.log('HEY!');
+            (queue = []) =>
                 dispatch({
                     type: 'player/UPDATE_QUEUE',
                     data: { queue }
-                });
-            }
+                })
         );
     }
 };

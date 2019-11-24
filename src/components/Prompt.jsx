@@ -173,6 +173,7 @@ class PlaylistManager extends Component {
                 <div className="playlist-menu__items">
                     <List
                         items={items}
+                        itemKey={(index, data) => data[index].id}
                         loadMoreItems={loadContent}
                         renderItem={renderOption}
                         itemSize={54}

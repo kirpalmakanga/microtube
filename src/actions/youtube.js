@@ -1,14 +1,7 @@
 import * as api from '../api/youtube';
 import * as database from '../api/firebase';
 
-import {
-    delay,
-    catchErrors,
-    parseID,
-    splitLines,
-    chunk,
-    throttle
-} from '../lib/helpers';
+import { delay, catchErrors, parseID, splitLines, chunk } from '../lib/helpers';
 
 import { prompt } from './prompt';
 
@@ -114,6 +107,14 @@ export function getPlaylists(config) {
 
 export const clearPlaylists = () => (dispatch) =>
     dispatch({ type: 'playlists/CLEAR_ITEMS' });
+
+export const createPlaylist = (params) => async (dispatch) => {
+    const data = await api.createPlaylist(params);
+
+    dispatch({ type: 'playlists/ADD_ITEM', data });
+
+    return data;
+};
 
 export function removePlaylist(playlistId, title) {
     return (dispatch) =>
@@ -231,16 +232,20 @@ export function addPlaylistItem({ playlistId, videoId }) {
     return (dispatch) =>
         catchErrors(
             async () => {
-                await api.addPlaylistItem(playlistId, videoId);
+                const { thumbnails } = await api.addPlaylistItem(
+                    playlistId,
+                    videoId
+                );
 
                 dispatch({
                     type: 'playlists/UPDATE_ITEM',
                     data: {
-                        playlistId
+                        playlistId,
+                        thumbnails
                     }
                 });
             },
-            () => () =>
+            () =>
                 dispatch(
                     notify({
                         message: 'Error deleting playlist item.'
@@ -258,25 +263,18 @@ export function editPlaylistItem(videoId) {
                     promptText: `Add to playlist`,
                     confirmText: 'Done'
                 },
-                ({
-                    newPlaylistTitle,
-                    playlistTitle,
-                    privacyStatus,
-                    playlistId
-                }) => {
+                ({ title, privacyStatus, playlistId }) => {
                     catchErrors(
                         async () => {
-                            if (newPlaylistTitle) {
-                                const { id } = await api.createPlaylist({
-                                    title: newPlaylistTitle,
-                                    privacyStatus
-                                });
+                            if (!playlistId) {
+                                const { id } = await dispatch(
+                                    createPlaylist({
+                                        title,
+                                        privacyStatus
+                                    })
+                                );
 
                                 playlistId = id;
-                            }
-
-                            if (!playlistId) {
-                                return;
                             }
 
                             await dispatch(
@@ -285,8 +283,7 @@ export function editPlaylistItem(videoId) {
 
                             dispatch(
                                 notify({
-                                    message: `Added to playlist "${newPlaylistTitle ||
-                                        playlistTitle}."`
+                                    message: `Added to playlist "${title}."`
                                 })
                             );
                         },

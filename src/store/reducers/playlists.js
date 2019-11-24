@@ -12,11 +12,11 @@ const matchPlaylistId = (playlistId) => ({ id }) => id === playlistId;
 const findPlaylistIndex = (playlistId = '', items = []) =>
     items.findIndex(matchPlaylistId(playlistId));
 
-const updateItem = (playlistId = '', items = [], callback = () => {}) => {
+const updateItem = (playlistId = '', items = [], update = () => {}) => {
     const index = findPlaylistIndex(playlistId, items);
 
     if (index > -1) {
-        callback(items[index]);
+        items[index] = update(items[index]);
     }
 };
 
@@ -32,10 +32,23 @@ export default createReducer(initialState, {
         totalResults
     }),
 
-    'playlists/UPDATE_ITEM': (state, { data: { playlistId } }) => {
+    'playlists/ADD_ITEM': ({ items, ...state }, { data }) => ({
+        ...state,
+        items: [data, ...items]
+    }),
+
+    'playlists/UPDATE_ITEM': (
+        state,
+        { data: { playlistId, thumbnails: newThumbnails, ...data } }
+    ) => {
         const items = [...state.items];
 
-        updateItem(playlistId, items, (item) => item.itemCount++);
+        updateItem(playlistId, items, ({ itemCount, thumbnails, ...item }) => ({
+            ...item,
+            ...data,
+            thumbnails: thumbnails || newThumbnails,
+            itemCount: itemCount + 1
+        }));
 
         return { ...state, items };
     },
@@ -48,7 +61,10 @@ export default createReducer(initialState, {
     'playlist/REMOVE_ITEM': (state, { data: { playlistId } }) => {
         const items = [...state.items];
 
-        updateItem(playlistId, items, (item) => item.itemCount++);
+        updateItem(playlistId, items, ({ itemCount, ...item }) => ({
+            ...item,
+            itemCount: itemCount || itemCount - 1
+        }));
 
         return { ...state, items };
     },

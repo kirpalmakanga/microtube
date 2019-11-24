@@ -79,7 +79,7 @@ class ImportVideoForm extends Component {
 }
 
 class NewPlayListForm extends Component {
-    state = { newPlaylistTitle: '', privacyStatus: 'public' };
+    state = { title: '', privacyStatus: 'public' };
 
     privacyOptions = [
         { label: 'Public', value: 'public' },
@@ -110,7 +110,7 @@ class NewPlayListForm extends Component {
 
     render() {
         const {
-            state: { newPlaylistTitle, privacyStatus },
+            state: { title, privacyStatus },
             getInputRef,
             privacyOptions,
             setValue,
@@ -123,8 +123,8 @@ class NewPlayListForm extends Component {
                 <input
                     ref={getInputRef}
                     className="playlist-menu__item-text"
-                    name="newPlaylistTitle"
-                    value={newPlaylistTitle}
+                    name="title"
+                    value={title}
                     placeholder="Playlist title"
                     onChange={handleInput}
                 />
@@ -143,19 +143,17 @@ class NewPlayListForm extends Component {
 
 class PlaylistManager extends Component {
     onCreatePlaylist = (data = {}) =>
-        data.newPlaylistTitle && this.props.onClickItem(data);
+        data.title && this.props.onClickItem(data);
 
     makeOnClickItem = (data) => () => this.props.onClickItem(data);
 
-    renderOption = ({
-        data: { id: playlistId, title: playlistTitle, itemCount }
-    }) => (
+    renderOption = ({ data: { id: playlistId, title, itemCount } }) => (
         <button
             className="playlist-menu__item"
             key={playlistId}
-            onClick={this.makeOnClickItem({ playlistId, playlistTitle })}
+            onClick={this.makeOnClickItem({ playlistId, title })}
         >
-            <span className="playlist-menu__item-text">{playlistTitle}</span>
+            <span className="playlist-menu__item-text">{title}</span>
 
             <span className="playlist-menu__item-count">{itemCount}</span>
         </button>
@@ -273,7 +271,4 @@ const mapStateToProps = ({ prompt, playlists: { items, nextPageToken } }) => ({
 
 const mapDispatchToProps = { getPlaylists, closePrompt };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Prompt);
+export default connect(mapStateToProps, mapDispatchToProps)(Prompt);

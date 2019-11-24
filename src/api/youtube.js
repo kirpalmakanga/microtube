@@ -157,9 +157,7 @@ export async function getVideosFromIds(ids) {
         maxResults: ITEMS_PER_REQUEST
     });
 
-    const videos = items.map(parseVideoData);
-
-    return videos;
+    return items.map(parseVideoData);
 }
 
 /* Playlists */
@@ -210,7 +208,7 @@ export async function getAllPlaylists({ mine = false } = {}) {
 }
 
 export async function createPlaylist({ title, privacyStatus }) {
-    return request(
+    const data = await request(
         'POST',
         'playlists',
         {
@@ -225,6 +223,8 @@ export async function createPlaylist({ title, privacyStatus }) {
             }
         }
     );
+
+    return parsePlaylistData(data);
 }
 
 export async function removePlaylist(id) {
@@ -285,7 +285,7 @@ export async function getPlaylistItems({ pageToken = '', playlistId }) {
 }
 
 export async function addPlaylistItem(playlistId, videoId) {
-    return request(
+    const data = await request(
         'POST',
         'playlistItems',
         { part: 'snippet' },
@@ -299,6 +299,8 @@ export async function addPlaylistItem(playlistId, videoId) {
             }
         }
     );
+
+    return parseVideoData(data);
 }
 
 export async function removePlaylistItem(id) {

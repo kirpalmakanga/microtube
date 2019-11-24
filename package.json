@@ -19,7 +19,6 @@
         "react-transition-group": "2.9.0",
         "react-virtualized-auto-sizer": "1.0.2",
         "react-visibility-sensor": "5.1.1",
-        "react-waypoint": "8.0.3",
         "react-window": "1.8.5",
         "redux": "3.7.2",
         "redux-thunk": "2.3.0",
@@ -28,8 +27,10 @@
     },
     "devDependencies": {
         "@poi/plugin-pwa": "12.0.3",
+        "@poi/plugin-typescript": "12.2.1",
         "node-sass": "4.13.0",
         "poi": "12.7.3",
-        "sass-loader": "6.0.7"
+        "sass-loader": "6.0.7",
+        "typescript": "3.7.2"
     }
 }

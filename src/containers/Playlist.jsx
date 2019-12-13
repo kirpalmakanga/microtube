@@ -18,14 +18,9 @@ import VideoCard from '../components/cards/VideoCard';
 
 import Menu from '../components/menu/Menu';
 import MenuItem from '../components/menu/MenuItem';
+import MenuWrapper from '../components/menu/MenuWrapper';
 
 class Playlist extends Component {
-    state = { isMenuOpen: false, videoData: {} };
-
-    openMenu = (videoData) => this.setState({ isMenuOpen: true, videoData });
-
-    closeMenu = () => this.setState({ isMenuOpen: false, videoData: {} });
-
     componentDidMount() {
         this.props.getPlaylistTitle(this.props.playlistId);
     }
@@ -53,59 +48,58 @@ class Playlist extends Component {
                 queueItem,
                 removePlaylistItem,
                 editPlaylistItem
-            },
-            state: { isMenuOpen, videoData },
-            openMenu,
-            closeMenu
+            }
         } = this;
 
-        const { id: videoId, title: videoTitle, playlistItemId } = videoData;
-
         return (
-            <>
-                {totalResults === 0 ? (
-                    <Placeholder icon="empty" text="This playlist is empty." />
-                ) : (
-                    <List
-                        items={items}
-                        itemKey={(index, data) => data[index].id}
-                        renderItem={({ data }) => (
-                            <VideoCard
-                                {...data}
-                                onClick={() => playItem(data)}
-                                onClickMenu={() => openMenu(data)}
-                            />
-                        )}
-                        loadMoreItems={() => getPlaylistItems(playlistId)}
-                    />
-                )}
+            <MenuWrapper
+                menuItems={[
+                    {
+                        title: `Add to queue`,
+                        icon: 'queue',
+                        onClick: queueItem
+                    },
 
-                <Menu isVisible={isMenuOpen} onClick={closeMenu}>
-                    <MenuItem
-                        title={`Add "${videoTitle}" to queue`}
-                        icon="queue"
-                        onClick={() => queueItem(videoData)}
-                    />
+                    {
+                        title: `Add to playlist`,
+                        icon: 'playlist-add',
+                        onClick: ({ id }) => editPlaylistItem(id)
+                    },
 
-                    <MenuItem
-                        title={`Add "${videoTitle}" to playlist`}
-                        icon="playlist-add"
-                        onClick={() => editPlaylistItem(videoId)}
-                    />
-
-                    <MenuItem
-                        title={`Remove "${videoTitle}" from playlist`}
-                        icon="delete"
-                        onClick={() =>
+                    {
+                        title: `Remove from playlist`,
+                        icon: 'delete',
+                        onClick: ({ playlistItemId, playlistId, title }) =>
                             removePlaylistItem(
                                 playlistItemId,
                                 playlistId,
-                                videoTitle
+                                title
                             )
-                        }
-                    />
-                </Menu>
-            </>
+                    }
+                ]}
+            >
+                {(openMenu) =>
+                    totalResults === 0 ? (
+                        <Placeholder
+                            icon="empty"
+                            text="This playlist is empty."
+                        />
+                    ) : (
+                        <List
+                            items={items}
+                            itemKey={(index, data) => data[index].id}
+                            renderItem={({ data }) => (
+                                <VideoCard
+                                    {...data}
+                                    onClick={() => playItem(data)}
+                                    onClickMenu={() => openMenu(data)}
+                                />
+                            )}
+                            loadMoreItems={() => getPlaylistItems(playlistId)}
+                        />
+                    )
+                }
+            </MenuWrapper>
         );
     }
 }

@@ -7,7 +7,7 @@ class MenuItem extends PureComponent {
 
         return (
             <button className="menu__item" type="button" onClick={onClick}>
-                <Icon name={icon} />
+                {icon ? <Icon name={icon} /> : null}
 
                 <span>{title}</span>
             </button>

@@ -6,7 +6,8 @@
     right: 0;
     background-color: rgba($brand-primary, 0.5);
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+    justify-content: flex-end;
     cursor: pointer;
 
     ul {
@@ -17,10 +18,17 @@
 
         li {
             display: flex;
-            &:not(:last-child) {
-                border-bottom: 2px solid lighten($brand-primary, 20%);
-            }
+            border-top: 2px solid lighten($brand-primary, 20%);
         }
+    }
+
+    &__header {
+        cursor: default;
+        font-family: $font-primary;
+        background-color: $white;
+        color: $brand-primary;
+        font-size: 16px;
+        padding: 15px;
     }
 
     &__item {

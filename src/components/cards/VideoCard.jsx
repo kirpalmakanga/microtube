@@ -68,25 +68,6 @@ class VideoCard extends PureComponent {
                         icon="more"
                         onClick={onClickMenu}
                     />
-                    {/* {removeItem ? (
-                        <Button
-                            title={`Remove video ${title}`}
-                            onClick={removeItem}
-                            icon="delete"
-                        />
-                    ) : null}
-
-                    <Button
-                        title="Manage playlists"
-                        onClick={editPlaylistItem}
-                        icon="playlist-add"
-                    />
-
-                    <Button
-                        title={`Queue video ${title}`}
-                        onClick={queueItem}
-                        icon="queue"
-                    /> */}
                 </CardButtons>
             </CardContainer>
         );

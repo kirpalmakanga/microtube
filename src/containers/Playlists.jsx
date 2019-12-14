@@ -39,21 +39,20 @@ class Playlists extends Component {
                     {
                         title: 'Queue playlist',
                         icon: 'queue',
-                        onClick: ({ playlistId }) => queuePlaylist(playlistId)
+                        onClick: ({ id }) => queuePlaylist(id)
                     },
                     {
                         title: 'Launch playlist',
                         icon: 'playlist-play',
-                        onClick: ({ playlistId }) =>
-                            queuePlaylist(playlistId, true)
+                        onClick: ({ id }) => queuePlaylist(id, true)
                     },
                     ...(!channelId
                         ? [
                               {
                                   title: 'Remove playlist',
                                   icon: 'delete',
-                                  onClick: ({ playlistId, playlistTitle }) =>
-                                      removePlaylist(playlistId, playlistTitle)
+                                  onClick: ({ id, title }) =>
+                                      removePlaylist(id, title)
                               }
                           ]
                         : [])
@@ -74,24 +73,16 @@ class Playlists extends Component {
                             items={items}
                             itemKey={(index, data) => data[index].id}
                             renderItem={({ data }) => {
-                                const {
-                                    id: playlistId,
-                                    title: playlistTitle
-                                } = data;
+                                const { id, title } = data;
 
                                 return (
                                     <PlaylistCard
                                         {...data}
                                         onClick={() =>
-                                            history.push(
-                                                `/playlist/${playlistId}`
-                                            )
+                                            history.push(`/playlist/${id}`)
                                         }
                                         onClickMenu={() =>
-                                            openMenu({
-                                                playlistId,
-                                                playlistTitle
-                                            })
+                                            openMenu({ id, title }, title)
                                         }
                                     />
                                 );

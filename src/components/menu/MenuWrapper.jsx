@@ -4,16 +4,17 @@ import Menu from './Menu';
 import MenuItem from './MenuItem';
 
 class MenuWrapper extends PureComponent {
-    state = { isMenuOpen: false, menuData: {} };
+    state = { isMenuOpen: false, menuTitle: '', menuData: {} };
 
-    openMenu = (menuData = {}) => this.setState({ isMenuOpen: true, menuData });
+    openMenu = (menuData = {}, menuTitle = '') =>
+        this.setState({ isMenuOpen: true, menuTitle, menuData });
 
     closeMenu = () => this.setState({ isMenuOpen: false, menuData: {} });
 
     render() {
         const {
             props: { menuItems = [], children = () => {} },
-            state: { isMenuOpen, menuData },
+            state: { isMenuOpen, menuData, menuTitle },
             openMenu,
             closeMenu
         } = this;
@@ -22,7 +23,11 @@ class MenuWrapper extends PureComponent {
             <>
                 {children(openMenu)}
 
-                <Menu isVisible={isMenuOpen} onClick={closeMenu}>
+                <Menu
+                    isVisible={isMenuOpen}
+                    onClick={closeMenu}
+                    title={menuTitle}
+                >
                     {menuItems.map(({ title, icon, onClick } = {}, i) => (
                         <MenuItem
                             key={i}

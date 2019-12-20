@@ -61,24 +61,24 @@ class Search extends Component {
         } = this;
 
         return query && mountGrid ? (
-            <MenuWrapper
-                menuItems={[
-                    {
-                        title: `Add to queue`,
-                        icon: 'queue',
-                        onClick: queueItem
-                    },
-                    {
-                        title: `Add to playlist`,
-                        icon: 'playlist-add',
-                        onClick: ({ id }) => editPlaylistItem(id)
-                    }
-                ]}
-            >
-                {(openMenu) =>
-                    totalResults === 0 ? (
-                        <Placeholder icon="empty" text="No results found." />
-                    ) : (
+            totalResults === 0 ? (
+                <Placeholder icon="empty" text="No results found." />
+            ) : (
+                <MenuWrapper
+                    menuItems={[
+                        {
+                            title: `Add to queue`,
+                            icon: 'queue',
+                            onClick: queueItem
+                        },
+                        {
+                            title: `Add to playlist`,
+                            icon: 'playlist-add',
+                            onClick: ({ id }) => editPlaylistItem(id)
+                        }
+                    ]}
+                >
+                    {(openMenu) => (
                         <List
                             items={items}
                             itemKey={(index, data) => data[index].id}
@@ -93,9 +93,9 @@ class Search extends Component {
                                 />
                             )}
                         />
-                    )
-                }
-            </MenuWrapper>
+                    )}
+                </MenuWrapper>
+            )
         ) : null;
     }
 }

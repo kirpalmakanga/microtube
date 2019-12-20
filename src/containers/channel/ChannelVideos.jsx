@@ -14,16 +14,9 @@ import List from '../../components/List';
 import Placeholder from '../../components/Placeholder';
 import VideoCard from '../../components/cards/VideoCard';
 
-import Menu from '../../components/menu/Menu';
-import MenuItem from '../../components/menu/MenuItem';
+import MenuWrapper from '../../components/menu/MenuWrapper';
 
 class ChannelVideos extends Component {
-    state = { isMenuOpen: false, videoData: {} };
-
-    openMenu = (videoData) => this.setState({ isMenuOpen: true, videoData });
-
-    closeMenu = () => this.setState({ isMenuOpen: false, videoData: {} });
-
     componentWillUnmount() {
         this.props.clearChannelVideos();
     }
@@ -38,22 +31,31 @@ class ChannelVideos extends Component {
                 queueItem,
                 playItem,
                 editPlaylistItem
-            },
-            state: { isMenuOpen, videoData },
-            openMenu,
-            closeMenu
+            }
         } = this;
 
-        const { id: videoId, title: videoTitle } = videoData;
+        return totalResults === 0 ? (
+            <Placeholder
+                icon="empty"
+                text="This channel hasn't uploaded videos."
+            />
+        ) : (
+            <MenuWrapper
+                menuItems={[
+                    {
+                        title: `Add to queue`,
+                        icon: 'queue',
+                        onClick: queueItem
+                    },
 
-        return (
-            <>
-                {totalResults === 0 ? (
-                    <Placeholder
-                        icon="empty"
-                        text="This channel hasn't uploaded videos."
-                    />
-                ) : (
+                    {
+                        title: `Add to playlist`,
+                        icon: 'playlist-add',
+                        onClick: ({ id }) => editPlaylistItem(id)
+                    }
+                ]}
+            >
+                {(openMenu) => (
                     <List
                         items={items}
                         loadMoreItems={() => getChannelVideos({ channelId })}
@@ -67,21 +69,7 @@ class ChannelVideos extends Component {
                         )}
                     />
                 )}
-
-                <Menu isVisible={isMenuOpen} onClick={closeMenu}>
-                    <MenuItem
-                        title={`Add "${videoTitle}" to queue`}
-                        icon="queue"
-                        onClick={() => queueItem(videoData)}
-                    />
-
-                    <MenuItem
-                        title={`Add "${videoTitle}" to playlist`}
-                        icon="playlist-add"
-                        onClick={() => editPlaylistItem(videoId)}
-                    />
-                </Menu>
-            </>
+            </MenuWrapper>
         );
     }
 }

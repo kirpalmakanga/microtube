@@ -15,9 +15,6 @@ import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 
 import VideoCard from '../components/cards/VideoCard';
-
-import Menu from '../components/menu/Menu';
-import MenuItem from '../components/menu/MenuItem';
 import MenuWrapper from '../components/menu/MenuWrapper';
 
 class Playlist extends Component {
@@ -51,7 +48,9 @@ class Playlist extends Component {
             }
         } = this;
 
-        return (
+        return totalResults === 0 ? (
+            <Placeholder icon="empty" text="This playlist is empty." />
+        ) : (
             <MenuWrapper
                 menuItems={[
                     {
@@ -78,27 +77,20 @@ class Playlist extends Component {
                     }
                 ]}
             >
-                {(openMenu) =>
-                    totalResults === 0 ? (
-                        <Placeholder
-                            icon="empty"
-                            text="This playlist is empty."
-                        />
-                    ) : (
-                        <List
-                            items={items}
-                            itemKey={(index, data) => data[index].id}
-                            renderItem={({ data }) => (
-                                <VideoCard
-                                    {...data}
-                                    onClick={() => playItem(data)}
-                                    onClickMenu={() => openMenu(data)}
-                                />
-                            )}
-                            loadMoreItems={() => getPlaylistItems(playlistId)}
-                        />
-                    )
-                }
+                {(openMenu) => (
+                    <List
+                        items={items}
+                        itemKey={(index, data) => data[index].id}
+                        renderItem={({ data }) => (
+                            <VideoCard
+                                {...data}
+                                onClick={() => playItem(data)}
+                                onClickMenu={() => openMenu(data)}
+                            />
+                        )}
+                        loadMoreItems={() => getPlaylistItems(playlistId)}
+                    />
+                )}
             </MenuWrapper>
         );
     }

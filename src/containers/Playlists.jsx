@@ -33,7 +33,16 @@ class Playlists extends Component {
             }
         } = this;
 
-        return (
+        return totalResults === 0 ? (
+            <Placeholder
+                icon="empty"
+                text={
+                    channelId
+                        ? "This channel doesn't have playlists."
+                        : "You haven't created playlists yet."
+                }
+            />
+        ) : (
             <MenuWrapper
                 menuItems={[
                     {
@@ -58,43 +67,32 @@ class Playlists extends Component {
                         : [])
                 ]}
             >
-                {(openMenu) =>
-                    totalResults === 0 ? (
-                        <Placeholder
-                            icon="empty"
-                            text={
-                                channelId
-                                    ? "This channel doesn't have playlists."
-                                    : "You haven't created playlists yet."
-                            }
-                        />
-                    ) : (
-                        <List
-                            items={items}
-                            itemKey={(index, data) => data[index].id}
-                            renderItem={({ data }) => {
-                                const { id, title } = data;
+                {(openMenu) => (
+                    <List
+                        items={items}
+                        itemKey={(index, data) => data[index].id}
+                        renderItem={({ data }) => {
+                            const { id, title } = data;
 
-                                return (
-                                    <PlaylistCard
-                                        {...data}
-                                        onClick={() =>
-                                            history.push(`/playlist/${id}`)
-                                        }
-                                        onClickMenu={() =>
-                                            openMenu({ id, title }, title)
-                                        }
-                                    />
-                                );
-                            }}
-                            loadMoreItems={() =>
-                                getPlaylists(
-                                    channelId ? { channelId } : { mine: true }
-                                )
-                            }
-                        />
-                    )
-                }
+                            return (
+                                <PlaylistCard
+                                    {...data}
+                                    onClick={() =>
+                                        history.push(`/playlist/${id}`)
+                                    }
+                                    onClickMenu={() =>
+                                        openMenu({ id, title }, title)
+                                    }
+                                />
+                            );
+                        }}
+                        loadMoreItems={() =>
+                            getPlaylists(
+                                channelId ? { channelId } : { mine: true }
+                            )
+                        }
+                    />
+                )}
             </MenuWrapper>
         );
     }

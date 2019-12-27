@@ -5,7 +5,8 @@ import {
     formatDate,
     formatTime,
     getThumbnails,
-    stopPropagation
+    stopPropagation,
+    preventDefault
 } from '../../lib/helpers';
 
 import CardContainer from './CardContainer';
@@ -32,7 +33,7 @@ class VideoCard extends PureComponent {
         } = this.props;
 
         return (
-            <CardContainer>
+            <CardContainer onContextMenu={preventDefault(onClickMenu)}>
                 <CardContent onClick={onClick}>
                     <CardThumbnail
                         src={getThumbnails(thumbnails, 'medium')}

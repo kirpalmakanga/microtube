@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 
-import { getThumbnails } from '../../lib/helpers';
+import { getThumbnails, preventDefault } from '../../lib/helpers';
 
 import CardContainer from './CardContainer';
 import CardContent from './CardContent';
@@ -21,7 +21,7 @@ class PlaylistCard extends PureComponent {
         } = this.props;
 
         return (
-            <CardContainer>
+            <CardContainer onContextMenu={preventDefault(onClickMenu)}>
                 <CardContent onClick={onClick}>
                     <CardThumbnail
                         src={getThumbnails(thumbnails, 'medium')}

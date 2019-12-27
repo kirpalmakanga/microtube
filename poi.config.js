@@ -10,6 +10,10 @@ module.exports = {
         {
             resolve: '@poi/plugin-pwa',
             options: {}
+        },
+        {
+            resolve: '@poi/plugin-typescript',
+            options: {}
         }
     ]
 };

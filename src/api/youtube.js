@@ -141,7 +141,7 @@ export async function searchVideos({ query, forMine, pageToken }) {
     };
 }
 
-export async function getVideo(urlOrId) {
+export async function getVideo(urlOrId = '') {
     const { items } = await request('GET', 'videos', {
         id: parseID(urlOrId),
         part: 'contentDetails, snippet, status'
@@ -150,7 +150,7 @@ export async function getVideo(urlOrId) {
     return parseVideoData(items[0]);
 }
 
-export async function getVideosFromIds(ids) {
+export async function getVideosFromIds(ids = []) {
     const { items } = await request('GET', 'videos', {
         part: 'contentDetails, snippet, status',
         id: ids.join(', '),
@@ -165,7 +165,8 @@ export async function getVideosFromIds(ids) {
 export async function getPlaylists({
     pageToken = '',
     mine = false,
-    channelId = ''
+    channelId = '',
+    ids = []
 } = {}) {
     const {
         items,
@@ -174,6 +175,7 @@ export async function getPlaylists({
     } = await request('GET', 'playlists', {
         pageToken,
         mine,
+        id: ids.join(', '),
         channelId,
         part: 'snippet, contentDetails, status',
         maxResults: ITEMS_PER_REQUEST

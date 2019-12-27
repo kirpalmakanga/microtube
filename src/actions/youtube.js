@@ -232,25 +232,28 @@ export function addPlaylistItem({ playlistId, videoId }) {
     return (dispatch) =>
         catchErrors(
             async () => {
-                const { thumbnails } = await api.addPlaylistItem(
-                    playlistId,
-                    videoId
-                );
+                await api.addPlaylistItem(playlistId, videoId);
+
+                const {
+                    items: [data]
+                } = await api.getPlaylists({ ids: [playlistId] });
+
+                if (!data) {
+                    return;
+                }
 
                 dispatch({
                     type: 'playlists/UPDATE_ITEM',
-                    data: {
-                        playlistId,
-                        thumbnails
-                    }
+                    data
                 });
             },
-            () =>
+            () => {
                 dispatch(
                     notify({
-                        message: 'Error deleting playlist item.'
+                        message: 'Error adding playlist item.'
                     })
-                )
+                );
+            }
         );
 }
 

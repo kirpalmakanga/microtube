@@ -37,17 +37,12 @@ export default createReducer(initialState, {
         items: [data, ...items]
     }),
 
-    'playlists/UPDATE_ITEM': (
-        state,
-        { data: { playlistId, thumbnails: newThumbnails, ...data } }
-    ) => {
+    'playlists/UPDATE_ITEM': (state, { data: { id, ...data } }) => {
         const items = [...state.items];
 
-        updateItem(playlistId, items, ({ itemCount, thumbnails, ...item }) => ({
+        updateItem(id, items, (item) => ({
             ...item,
-            ...data,
-            thumbnails: thumbnails || newThumbnails,
-            itemCount: itemCount + 1
+            ...data
         }));
 
         return { ...state, items };

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { connect } from 'react-redux';
 import TranslateY from './animations/TranslateY';
 import { delay } from '../lib/helpers';

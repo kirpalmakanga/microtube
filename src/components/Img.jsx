@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import Fade from './animations/Fade';
 
 class Img extends Component {

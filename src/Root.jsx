@@ -1,6 +1,6 @@
 import './assets/styles/app.scss';
 
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 import { connect } from 'react-redux';
 import { loadAPI, getAuthInstance as loadAuth } from './api/youtube';
@@ -95,7 +95,4 @@ const mapDispatchToProps = {
     closeScreen
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Root);
+export default connect(mapStateToProps, mapDispatchToProps)(Root);

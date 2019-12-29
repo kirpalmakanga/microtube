@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 
 class Progress extends PureComponent {
   formatPercent = progress => parseFloat(progress * 100 - 100).toFixed(2);

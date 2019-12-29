@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import Fade from './animations/Fade';
 import Icon from './Icon';
 

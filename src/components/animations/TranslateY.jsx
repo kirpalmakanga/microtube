@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import Transition from 'react-transition-group/Transition';
 
 const duration = 300;

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import { PureComponent } from 'react';
 import Icon from './Icon';
 
 import { stopPropagation, preventDefault } from '../lib/helpers.js';

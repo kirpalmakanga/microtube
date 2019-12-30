@@ -40,7 +40,7 @@ class Img extends Component {
                 img.onerror = reject;
             });
         } catch (e) {
-            console.error(e);
+            this.hasError = true;
         } finally {
             if (this.unmounting) {
                 return;

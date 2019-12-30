@@ -6,8 +6,13 @@ import MenuItem from './MenuItem';
 class MenuWrapper extends PureComponent {
     state = { isMenuOpen: false, menuTitle: '', menuData: {} };
 
-    openMenu = (menuData = {}, menuTitle = '') =>
+    openMenu = (menuData = {}, menuTitle = '') => {
+        if (this.state.isMenuOpen) {
+            return;
+        }
+
         this.setState({ isMenuOpen: true, menuTitle, menuData });
+    };
 
     closeMenu = () => this.setState({ isMenuOpen: false, menuData: {} });
 

@@ -12,7 +12,7 @@ import {
     getUserData
 } from './actions/youtube';
 
-import { isMobile } from './lib/helpers';
+import { preventDefault, isMobile } from './lib/helpers';
 
 import Header from './layout/Header';
 
@@ -58,7 +58,10 @@ class Root extends Component {
         } = this;
 
         return (
-            <div className={`layout ${isMobile() ? 'mobile' : ''}`}>
+            <div
+                className={`layout ${isMobile() ? 'mobile' : ''}`}
+                onContextMenu={preventDefault()}
+            >
                 <Head />
 
                 <Sprite />

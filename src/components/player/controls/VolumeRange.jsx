@@ -1,8 +1,18 @@
 import { PureComponent } from 'react';
+import { preventDefault } from '../../../lib/helpers';
 
 class VolumeRange extends PureComponent {
+    handleUpdate = preventDefault(({ target: { value } }) => {
+        const { onChange } = this.props;
+
+        onChange(value);
+    });
+
     render() {
-        const { value, onChange } = this.props;
+        const {
+            props: { value },
+            handleUpdate
+        } = this;
 
         return (
             <div className="player__controls-volume-range">
@@ -11,7 +21,7 @@ class VolumeRange extends PureComponent {
                     min="0"
                     max="100"
                     value={value}
-                    onChange={onChange}
+                    onChange={handleUpdate}
                 />
             </div>
         );

@@ -131,78 +131,85 @@ class Player extends Component {
     };
 
     handleWheelVolume = ({ deltaY }) => {
-        const { volume } = this.state;
-        let newVolume, inRange;
-
         if (!this.isPlayerReady()) {
             return;
         }
 
-        newVolume = deltaY < 0 ? volume + 5 : volume - 5;
-        inRange = newVolume >= 0 && newVolume <= 100;
+        const { volume } = this.state;
+        const newVolume = deltaY < 0 ? volume + 5 : volume - 5;
+        const inRange = newVolume >= 0 && newVolume <= 100;
 
         if (inRange) {
             this.setVolume(newVolume);
         }
     };
 
-    seekTime = throttle((value) => {
+    seekTime = (value) => {
         if (!this.isPlayerReady()) {
             return;
         }
 
         let {
-            currentVideo: { duration },
-            youtube
-        } = this.state;
+            state: {
+                currentVideo: { duration },
+                isPlaying,
+                youtube
+            },
+            clearWatchers,
+            updateTime,
+            togglePlay
+        } = this;
 
         let t = duration * (value / duration);
 
-        this.clearWatchers();
+        clearWatchers();
 
         youtube.seekTo(t);
 
-        this.updateTime(t);
-    }, 200);
+        updateTime(t);
 
-    watchTime() {
+        setTimeout(() => {
+            if (!isPlaying) {
+                togglePlay();
+            }
+        });
+    };
+
+    watchTime = () => {
         const { youtube } = this.state;
 
         this.updateTime();
 
-        const timeWatcher = setInterval(() => {
+        this.timeWatcher = setInterval(() => {
             this.updateTime();
 
             if (youtube.getCurrentTime() === youtube.getDuration()) {
-                clearInterval(timeWatcher);
+                clearInterval(this.timeWatcher);
             }
         }, 250);
+    };
 
-        this.timeWatcher = timeWatcher;
-    }
-
-    watchLoading() {
-        const loadingWatcher = setInterval(async () => {
-            const loaded = await this.updateLoading();
-
-            if (loaded === 1) {
-                clearInterval(loadingWatcher);
-            }
-        }, 500);
-
+    watchLoading = () => {
         this.updateLoading();
 
-        this.loadingWatcher = loadingWatcher;
-    }
+        this.loadingWatcher = setInterval(() => {
+            const loaded = this.updateLoading();
 
-    updateLoading = () =>
-        new Promise((resolve) => {
-            const { youtube } = this.state;
+            if (loaded === 1) {
+                clearInterval(this.loadingWatcher);
+            }
+        }, 500);
+    };
 
-            const loaded = youtube.getVideoLoadedFraction();
+    updateLoading = () => {
+        const { youtube } = this.state;
 
-            this.setState({ loaded }, () => resolve(loaded));
-        });
+        const loaded = youtube.getVideoLoadedFraction();
+
+        this.setState({ loaded });
+
+        return loaded;
+    };
 
     toggleMute = () => {
         const { isMuted, youtube } = this.state;
@@ -234,11 +241,12 @@ class Player extends Component {
         youtube.playVideo();
     };
 
-    clearWatchers() {
+    clearWatchers = () => {
         const { timeWatcher, loadingWatcher } = this;
+
         clearInterval(timeWatcher);
         clearInterval(loadingWatcher);
-    }
+    };
 
     goToVideo = (next = true) => {
         const {
@@ -308,9 +316,11 @@ class Player extends Component {
                 break;
 
             case BUFFERING:
+                const { isPlaying, currentTime } = this.state;
+
                 this.clearWatchers();
 
-                if (this.state.isPlaying) {
+                if (isPlaying && currentTime > 0) {
                     this.setState({ isBuffering: true });
                 }
 
@@ -447,7 +457,7 @@ class Player extends Component {
                                 onClick={() => goToVideo(false)}
                                 icon="skip-previous"
                                 ariaLabel="Go to previous video"
-                                data-state-disabled={disableControls}
+                                disabled={disableControls}
                             />
 
                             <Button
@@ -466,7 +476,7 @@ class Player extends Component {
                                 ariaLabel={
                                     isPlaying ? 'Pause video' : 'Play video'
                                 }
-                                data-state-disabled={disableControls}
+                                disabled={disableControls}
                             />
 
                             <Button
@@ -474,7 +484,7 @@ class Player extends Component {
                                 onClick={() => goToVideo(true)}
                                 icon="skip-next"
                                 ariaLabel="Go to next video"
-                                data-state-disabled={disableControls}
+                                disabled={disableControls}
                             />
 
                             {!isMobile() ? (
@@ -496,26 +506,25 @@ class Player extends Component {
                                                 : 'volume-off'
                                         }
                                         ariaLabel={isMuted ? 'Unmute' : 'Mute'}
-                                        data-state-disabled={disableControls}
+                                        disabled={disableControls}
                                     />
                                     <VolumeRange
                                         value={volume}
-                                        onChange={({ target }) =>
-                                            setVolume(target.value)
-                                        }
+                                        onChange={setVolume}
                                     />
                                 </div>
                             ) : null}
                         </div>
+
                         <Info
-                            {...{
-                                title,
-                                currentTime,
-                                duration,
-                                loaded,
-                                seekTime
-                            }}
+                            title={title}
+                            currentTime={currentTime}
+                            duration={duration}
+                            loaded={loaded}
+                            onStartSeeking={isPlaying ? togglePlay : () => {}}
+                            onEndSeeking={seekTime}
                         />
+
                         <div className="player__controls">
                             <Button
                                 className={[
@@ -581,7 +590,4 @@ const mapDispatchToProps = {
     toggleScreen
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Player);
+export default connect(mapStateToProps, mapDispatchToProps)(Player);

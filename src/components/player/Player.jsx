@@ -9,7 +9,7 @@ import {
     toggleScreen
 } from '../../actions/youtube';
 
-import { isMobile, throttle } from '../../lib/helpers';
+import { isMobile } from '../../lib/helpers';
 
 import {
     enableFullScreen,

@@ -1,7 +1,6 @@
 import { PureComponent } from 'react';
 
 import YoutubePlayer from '../YoutubePlayer';
-import Icon from '../Icon';
 import Placeholder from '../Placeholder';
 
 const playerOptions = {

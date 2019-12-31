@@ -1,5 +1,3 @@
-import { Component } from 'react';
-
 import Icon from '../Icon';
 
 import { formatTime, stopPropagation } from '../../lib/helpers';

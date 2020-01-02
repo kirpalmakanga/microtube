@@ -85,7 +85,7 @@ class Playlist extends Component {
                             <VideoCard
                                 {...data}
                                 onClick={() => playItem(data)}
-                                onClickMenu={() => openMenu(data)}
+                                onClickMenu={() => openMenu(data, data.title)}
                             />
                         )}
                         loadMoreItems={() => getPlaylistItems(playlistId)}

@@ -16,6 +16,7 @@ const QueueItem = ({
             isActive ? 'queue__item--active' : ''
         ].join(' ')}
         {...props}
+        onContextMenu={onClickMenu}
     >
         <div className="queue__item-button icon-button">
             <Icon

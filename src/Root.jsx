@@ -53,7 +53,7 @@ class Root extends Component {
 
     render() {
         const {
-            props: { isLoading, closeScreen, children },
+            props: { closeScreen, children },
             state: { apiLoaded }
         } = this;
 
@@ -80,16 +80,11 @@ class Root extends Component {
 
                 <Prompt />
 
-                <Loader
-                    isActive={!apiLoaded || isLoading}
-                    style={isLoading ? { opacity: 0.5 } : {}}
-                />
+                <Loader isActive={!apiLoaded} />
             </div>
         );
     }
 }
-
-const mapStateToProps = ({ app: { isLoading } }) => ({ isLoading });
 
 const mapDispatchToProps = {
     queueVideos,
@@ -98,4 +93,4 @@ const mapDispatchToProps = {
     closeScreen
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Root);
+export default connect(() => {}, mapDispatchToProps)(Root);

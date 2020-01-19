@@ -36,14 +36,6 @@ class Player extends Component {
     constructor(props) {
         super(props);
 
-        const currentVideo = props.player.queue.find(
-            ({ active }) => active
-        ) || {
-            title: 'No video.',
-            videoId: null,
-            duration: 0
-        };
-
         this.state = {
             isPlaying: false,
             isBuffering: false,
@@ -55,51 +47,29 @@ class Player extends Component {
             volume: 100,
             loaded: 0,
             currentTime: 0,
-            youtube: null,
-            autoplay: 0,
-            timeWatcher: null,
-            loadingWatcher: null,
-            currentIndex: null,
-            currentVideo
+            youtube: null
         };
-    }
-
-    componentDidUpdate() {
-        this.setCurrentVideo();
     }
 
     getPlayerContainer = (el) => (this._container = el);
 
-    setCurrentVideo() {
+    getCurrentVideo = () => {
         const {
-            currentVideo: { videoId: currentVideoId }
-        } = this.state;
-        const {
-            player: { queue }
-        } = this.props;
+            props: { queue, currentIndex }
+        } = this;
 
-        const { title = 'No video.', id: videoId = null, duration = 0 } =
-            queue.find(({ active }) => active) || {};
-
-        videoId !== currentVideoId &&
-            this.setState({
-                currentVideo: { title, videoId, duration },
-                ...(videoId === null
-                    ? {
-                          currentTime: 0,
-                          loaded: 0
-                      }
-                    : {})
-            });
-    }
+        return (
+            queue[currentIndex] || { title: 'No video.', id: '', duration: 0 }
+        );
+    };
 
     isPlayerReady = () => {
         const {
-            youtube,
-            currentVideo: { videoId }
-        } = this.state;
+            state: { youtube },
+            props: { queue, currentIndex }
+        } = this;
 
-        return !!youtube && videoId;
+        return !!youtube && queue[currentIndex];
     };
 
     updateTime = (t) => {
@@ -149,18 +119,17 @@ class Player extends Component {
             return;
         }
 
-        let {
-            state: {
-                currentVideo: { duration },
-                isPlaying,
-                youtube
-            },
+        const {
+            state: { isPlaying, youtube },
+            getCurrentVideo,
             clearWatchers,
             updateTime,
             togglePlay
         } = this;
 
-        let t = duration * (value / duration);
+        const { duration } = getCurrentVideo();
+
+        const t = duration * (value / duration);
 
         clearWatchers();
 
@@ -249,16 +218,11 @@ class Player extends Component {
     };
 
     goToVideo = (next = true) => {
-        const {
-            player: { queue },
-            setActiveQueueItem
-        } = this.props;
-
-        const currentIndex = queue.findIndex((v) => v.active) || 0;
+        const { queue, currentIndex, setActiveQueueItem } = this.props;
 
         const newIndex = currentIndex + (next ? 1 : -1);
 
-        if (newIndex < 0 || newIndex > queue.length - 1) {
+        if (!queue[newIndex]) {
             return;
         }
 
@@ -282,7 +246,7 @@ class Player extends Component {
         youtube.pauseVideo();
 
         this.setState({ youtube }, () => {
-            const { volume, currentTime } = this.props.player;
+            const { volume, currentTime } = this.props;
 
             if (currentTime) {
                 youtube.seekTo(currentTime);
@@ -391,7 +355,9 @@ class Player extends Component {
     render() {
         const {
             props: {
-                player: { showQueue, showScreen, newQueueItems },
+                showQueue,
+                showScreen,
+                newQueueItems,
                 toggleQueue,
                 toggleScreen
             },
@@ -401,11 +367,11 @@ class Player extends Component {
                 isMuted,
                 isFullScreen,
                 volume,
-                currentVideo: { videoId, title, duration },
                 loaded,
                 currentTime
             },
             getPlayerContainer,
+            getCurrentVideo,
             handleWheelVolume,
             setVolume,
             seekTime,
@@ -417,6 +383,8 @@ class Player extends Component {
             onYoutubeIframeStateChange,
             isPlayerReady
         } = this;
+
+        const { id: videoId, title, duration } = getCurrentVideo();
 
         const disableControls = !isPlayerReady();
 
@@ -444,12 +412,7 @@ class Player extends Component {
                     togglePlay={togglePlay}
                 />
 
-                <div
-                    className={[
-                        'player',
-                        !isFullScreen ? 'shadow--2dp' : ''
-                    ].join(' ')}
-                >
+                <div className="player shadow--2dp">
                     <div className="player__inner shadow--2dp">
                         <div className="player__controls">
                             <Button
@@ -580,7 +543,7 @@ class Player extends Component {
     }
 }
 
-const mapStateToProps = ({ player }) => ({ player });
+const mapStateToProps = ({ player }) => ({ ...player });
 
 const mapDispatchToProps = {
     setActiveQueueItem,

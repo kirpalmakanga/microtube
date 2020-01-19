@@ -21,6 +21,7 @@ class Queue extends Component {
         const {
             props: {
                 items,
+                currentIndex,
                 showQueue,
                 isPlaying,
                 isBuffering,
@@ -59,33 +60,38 @@ class Queue extends Component {
                                 <DraggableList
                                     className="queue__items"
                                     items={items}
-                                    renderItem={(
-                                        { active, ...data },
-                                        index
-                                    ) => (
-                                        <QueueItem
-                                            {...data}
-                                            isActive={active}
-                                            icon={
-                                                active && isBuffering
-                                                    ? 'loading'
-                                                    : active && isPlaying
-                                                    ? 'pause'
-                                                    : 'play'
-                                            }
-                                            onClick={
-                                                active
-                                                    ? togglePlay
-                                                    : () =>
-                                                          setActiveQueueItem(
-                                                              index
-                                                          )
-                                            }
-                                            onClickMenu={() =>
-                                                openMenu(data, data.title)
-                                            }
-                                        />
-                                    )}
+                                    renderItem={(data, index) => {
+                                        const isActive = index === currentIndex;
+
+                                        let icon = 'play';
+
+                                        if (isActive && isBuffering) {
+                                            icon = 'loading';
+                                        }
+
+                                        if (isActive && isPlaying) {
+                                            icon = 'pause';
+                                        }
+
+                                        return (
+                                            <QueueItem
+                                                {...data}
+                                                isActive={isActive}
+                                                icon={icon}
+                                                onClick={
+                                                    isActive
+                                                        ? togglePlay
+                                                        : () =>
+                                                              setActiveQueueItem(
+                                                                  index
+                                                              )
+                                                }
+                                                onClickMenu={() =>
+                                                    openMenu(data, data.title)
+                                                }
+                                            />
+                                        );
+                                    }}
                                     onReorderItems={setQueue}
                                 />
                             )}
@@ -99,8 +105,11 @@ class Queue extends Component {
     }
 }
 
-const mapStateToProps = ({ player: { queue: items, showQueue } }) => ({
+const mapStateToProps = ({
+    player: { queue: items, currentIndex, showQueue }
+}) => ({
     items,
+    currentIndex,
     showQueue
 });
 

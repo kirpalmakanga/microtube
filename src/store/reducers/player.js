@@ -2,7 +2,7 @@ import { createReducer } from '../helpers.js';
 
 const initialState = {
     queue: [],
-    currentIndex: -1,
+    currentIndex: 0,
     showQueue: false,
     showScreen: false,
     volume: 100,
@@ -10,12 +10,7 @@ const initialState = {
     currentTime: 0
 };
 
-const setActiveItem = (index) => (item, i) => ({
-    ...item,
-    active: i === index ? true : false
-});
-
-const isActiveItem = (item) => item.active;
+const isActiveItem = (currentIndex) => (_, index) => index === currentIndex;
 
 const extractQueueItemData = ({ id, title, duration }) => ({
     id,
@@ -67,9 +62,10 @@ export default createReducer(initialState, {
         };
     },
 
-    'player/CLEAR_QUEUE': ({ queue, ...state }) => ({
+    'player/CLEAR_QUEUE': ({ queue, currentIndex, ...state }) => ({
         ...state,
-        queue: queue.filter(isActiveItem)
+        queue: queue.filter(isActiveItem(currentIndex)),
+        currentIndex: initialState.currentIndex
     }),
 
     'player/UPDATE_QUEUE': (state, { data: { queue = [] } = {} }) => ({
@@ -77,15 +73,11 @@ export default createReducer(initialState, {
         queue
     }),
 
-    'player/SET_ACTIVE_QUEUE_ITEM': (
-        { queue, ...state },
-        { data: { index } = {} }
-    ) => {
+    'player/SET_ACTIVE_QUEUE_ITEM': (state, { data: { index } = {} }) => {
         const currentIndex = !isNaN(index) ? index : queue.length - 1;
 
         return {
             ...state,
-            queue: queue.map(setActiveItem(currentIndex)),
             currentIndex
         };
     },

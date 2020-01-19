@@ -157,14 +157,21 @@ export const throttle = (fn, delay = 50) => {
     };
 };
 
-export const pick = (obj = {}, whitelist = []) =>
-    Object.keys(obj).reduce(
-        (newObj, key) => ({
-            ...newObj,
-            ...(whitelist.includes(key) ? { [key]: obj[key] } : {})
-        }),
-        {}
-    );
+export const pick = (obj = {}, whitelist = []) => {
+    if (!whitelist.length) {
+        return obj;
+    }
+
+    const result = {};
+
+    for (const key of whitelist) {
+        if (obj[key]) {
+            result[key] = obj[key];
+        }
+    }
+
+    return result;
+};
 
 export const omit = (obj, blacklist = []) => {
     const result = {};

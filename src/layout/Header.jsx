@@ -1,5 +1,8 @@
 import { Component } from 'react';
+import { connect } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
+
+import { closeScreen } from '../actions/youtube';
 
 import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';
@@ -7,11 +10,14 @@ import SearchHeader from './SearchHeader';
 class Header extends Component {
     render() {
         const {
-            props: { onClick }
+            props: { closeScreen }
         } = this;
 
         return (
-            <header className="layout__header shadow--2dp" onClick={onClick}>
+            <header
+                className="layout__header shadow--2dp"
+                onClick={closeScreen}
+            >
                 <Switch>
                     <Route path="/search/:query?" component={SearchHeader} />
 
@@ -22,4 +28,8 @@ class Header extends Component {
     }
 }
 
-export default Header;
+const mapDispatchToProps = {
+    closeScreen
+};
+
+export default connect(() => {}, mapDispatchToProps)(Header);

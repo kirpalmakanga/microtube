@@ -5,12 +5,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 import { loadAPI, getAuthInstance as loadAuth } from './api/youtube';
 
-import {
-    queueVideos,
-    queuePlaylist,
-    closeScreen,
-    getUserData
-} from './actions/youtube';
+import { queueVideos, queuePlaylist, getUserData } from './actions/youtube';
 
 import { preventDefault, isMobile } from './lib/helpers';
 
@@ -53,7 +48,7 @@ class Root extends Component {
 
     render() {
         const {
-            props: { closeScreen, children },
+            props: { children },
             state: { apiLoaded }
         } = this;
 
@@ -68,7 +63,7 @@ class Root extends Component {
 
                 {apiLoaded ? (
                     <>
-                        <Header onClick={closeScreen} />
+                        <Header />
 
                         <main className="layout__content">{children}</main>
 
@@ -89,8 +84,7 @@ class Root extends Component {
 const mapDispatchToProps = {
     queueVideos,
     queuePlaylist,
-    getUserData,
-    closeScreen
+    getUserData
 };
 
 export default connect(() => {}, mapDispatchToProps)(Root);

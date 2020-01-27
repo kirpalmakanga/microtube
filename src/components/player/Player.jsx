@@ -74,10 +74,10 @@ class Player extends Component {
     isPlayerReady = () => {
         const {
             state: { youtube },
-            props: { queue, currentIndex }
+            props: { queue, video, currentIndex }
         } = this;
 
-        return !!youtube && queue[currentIndex];
+        return !!youtube && (video.id || queue[currentIndex]);
     };
 
     updateTime = (t) => {

@@ -23,7 +23,7 @@ export default function configureStore() {
             const { player, search } = store.getState();
 
             saveState({
-                player: omit(player, ['newQueueItems']),
+                player: omit(player, ['newQueueItems', 'video']),
                 search: pick(search, ['forMine'])
             });
         }, 500)

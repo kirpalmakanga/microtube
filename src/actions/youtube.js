@@ -1,7 +1,13 @@
 import * as api from '../api/youtube';
 import * as database from '../api/firebase';
 
-import { delay, catchErrors, parseID, splitLines, chunk } from '../lib/helpers';
+import {
+    delay,
+    catchErrors,
+    parseVideoId,
+    splitLines,
+    chunk
+} from '../lib/helpers';
 
 import { prompt } from './prompt';
 
@@ -83,6 +89,25 @@ export const closeScreen = () => (dispatch, getState) => {
 
     showScreen && dispatch({ type: 'player/CLOSE_SCREEN' });
 };
+
+/* Videos */
+export function getVideo(videoId) {
+    return async (dispatch) =>
+        catchErrors(
+            async () => {
+                dispatch(clearVideo());
+
+                const video = await api.getVideo(videoId);
+
+                dispatch({ type: 'player/SET_VIDEO', data: { video } });
+            },
+            () => dispatch(notify({ message: 'Error fetching video.' }))
+        );
+}
+
+export function clearVideo() {
+    return (dispatch) => dispatch({ type: 'player/CLEAR_VIDEO' });
+}
 
 /* Playlists */
 export function getPlaylists(config) {
@@ -469,7 +494,7 @@ export const importVideos = () => (dispatch) =>
                     return;
                 }
 
-                const videoIds = [...new Set(lines.map(parseID))];
+                const videoIds = [...new Set(lines.map(parseVideoId))];
 
                 const chunks = chunk(videoIds, 50);
 

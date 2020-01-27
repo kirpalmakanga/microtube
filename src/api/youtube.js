@@ -1,6 +1,6 @@
 import { API_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SCOPE } from '../config/api';
 import { parseVideoData, parsePlaylistData, parseChannelData } from './parsers';
-import { pick } from '../lib/helpers';
+import { parseVideoId, pick } from '../lib/helpers';
 
 const ITEMS_PER_REQUEST = 50;
 
@@ -143,7 +143,7 @@ export async function searchVideos({ query, forMine, pageToken }) {
 
 export async function getVideo(urlOrId = '') {
     const { items } = await request('GET', 'videos', {
-        id: parseID(urlOrId),
+        id: parseVideoId(urlOrId),
         part: 'contentDetails, snippet, status'
     });
 

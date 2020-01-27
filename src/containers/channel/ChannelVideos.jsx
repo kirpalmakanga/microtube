@@ -30,7 +30,8 @@ class ChannelVideos extends Component {
                 getChannelVideos,
                 queueItem,
                 playItem,
-                editPlaylistItem
+                editPlaylistItem,
+                history
             }
         } = this;
 
@@ -63,7 +64,9 @@ class ChannelVideos extends Component {
                         renderItem={({ data }) => (
                             <VideoCard
                                 {...data}
-                                onClick={() => playItem(data)}
+                                onClick={() =>
+                                    history.push(`/video/${data.id}`)
+                                }
                                 onClickMenu={() => openMenu(data)}
                             />
                         )}

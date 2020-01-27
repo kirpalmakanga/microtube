@@ -30,7 +30,7 @@ class DefaultHeader extends Component {
 
     render() {
         const {
-            props: { isSignedIn, signIn, signOut, avatar, route },
+            props: { isSignedIn, signIn, signOut, avatar, route, history },
             getTitle
         } = this;
 
@@ -39,13 +39,14 @@ class DefaultHeader extends Component {
         return (
             <div className="layout__header-row">
                 {route !== '/' && route !== '/login' ? (
-                    <Link
+                    <button
+                        onClick={() => history.goBack()}
                         className="layout__back-button icon-button"
                         to="/"
                         aria-label="Go to homepage"
                     >
                         <Icon name="back" />
-                    </Link>
+                    </button>
                 ) : null}
 
                 <span className="layout__title">
@@ -118,7 +119,4 @@ const mapDispatchToProps = {
     signOut
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(DefaultHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(DefaultHeader);

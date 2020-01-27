@@ -7,7 +7,8 @@ const initialState = {
     showScreen: false,
     volume: 100,
     newQueueItems: 0,
-    currentTime: 0
+    currentTime: 0,
+    video: { title: 'No video.', id: '', duration: 0 }
 };
 
 const isActiveItem = (currentIndex) => (_, index) => index === currentIndex;
@@ -74,13 +75,20 @@ export default createReducer(initialState, {
     }),
 
     'player/SET_ACTIVE_QUEUE_ITEM': (state, { data: { index } = {} }) => {
-        const currentIndex = !isNaN(index) ? index : queue.length - 1;
+        const currentIndex = !isNaN(index) ? index : state.queue.length - 1;
 
         return {
             ...state,
             currentIndex
         };
     },
+
+    'player/SET_VIDEO': (state, { data: { video } = {} }) => ({
+        ...state,
+        video
+    }),
+
+    'player/CLEAR_VIDEO': (state) => ({ ...state, video: initialState.video }),
 
     'player/SET_VOLUME': (state, { data }) => ({ ...state, volume: data }),
 

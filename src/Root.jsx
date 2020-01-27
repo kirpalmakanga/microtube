@@ -87,4 +87,4 @@ const mapDispatchToProps = {
     getUserData
 };
 
-export default connect(() => {}, mapDispatchToProps)(Root);
+export default connect(() => ({}), mapDispatchToProps)(Root);

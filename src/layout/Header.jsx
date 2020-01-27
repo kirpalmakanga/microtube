@@ -32,4 +32,4 @@ const mapDispatchToProps = {
     closeScreen
 };
 
-export default connect(() => {}, mapDispatchToProps)(Header);
+export default connect(() => ({}), mapDispatchToProps)(Header);

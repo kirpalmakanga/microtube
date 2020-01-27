@@ -55,11 +55,19 @@ class Player extends Component {
 
     getCurrentVideo = () => {
         const {
-            props: { queue, currentIndex }
+            props: { queue, video, currentIndex }
         } = this;
 
+        if (video.id) {
+            return video;
+        }
+
         return (
-            queue[currentIndex] || { title: 'No video.', id: '', duration: 0 }
+            queue[currentIndex] || {
+                title: 'No video.',
+                id: '',
+                duration: 0
+            }
         );
     };
 
@@ -218,7 +226,11 @@ class Player extends Component {
     };
 
     goToVideo = (next = true) => {
-        const { queue, currentIndex, setActiveQueueItem } = this.props;
+        const { queue, video, currentIndex, setActiveQueueItem } = this.props;
+
+        if (!!video.id) {
+            return;
+        }
 
         const newIndex = currentIndex + (next ? 1 : -1);
 
@@ -355,6 +367,7 @@ class Player extends Component {
     render() {
         const {
             props: {
+                video,
                 showQueue,
                 showScreen,
                 newQueueItems,
@@ -384,6 +397,8 @@ class Player extends Component {
             isPlayerReady
         } = this;
 
+        const isSingleVideo = !!video.id;
+
         const { id: videoId, title, duration } = getCurrentVideo();
 
         const disableControls = !isPlayerReady();
@@ -402,7 +417,9 @@ class Player extends Component {
                     onEnd={goToVideo}
                     onStateChange={onYoutubeIframeStateChange}
                     data-state={
-                        showScreen || isFullScreen ? 'visible' : 'hidden'
+                        isSingleVideo || showScreen || isFullScreen
+                            ? 'visible'
+                            : 'hidden'
                     }
                 />
 
@@ -415,13 +432,15 @@ class Player extends Component {
                 <div className="player shadow--2dp">
                     <div className="player__inner shadow--2dp">
                         <div className="player__controls">
-                            <Button
-                                className="player__controls-button icon-button"
-                                onClick={() => goToVideo(false)}
-                                icon="skip-previous"
-                                ariaLabel="Go to previous video"
-                                disabled={disableControls}
-                            />
+                            {!isSingleVideo ? (
+                                <Button
+                                    className="player__controls-button icon-button"
+                                    onClick={() => goToVideo(false)}
+                                    icon="skip-previous"
+                                    ariaLabel="Go to previous video"
+                                    disabled={disableControls}
+                                />
+                            ) : null}
 
                             <Button
                                 className="player__controls-button icon-button"
@@ -442,13 +461,15 @@ class Player extends Component {
                                 disabled={disableControls}
                             />
 
-                            <Button
-                                className="player__controls-button icon-button"
-                                onClick={() => goToVideo(true)}
-                                icon="skip-next"
-                                ariaLabel="Go to next video"
-                                disabled={disableControls}
-                            />
+                            {!isSingleVideo ? (
+                                <Button
+                                    className="player__controls-button icon-button"
+                                    onClick={() => goToVideo(true)}
+                                    icon="skip-next"
+                                    ariaLabel="Go to next video"
+                                    disabled={disableControls}
+                                />
+                            ) : null}
 
                             {!isMobile() ? (
                                 <div
@@ -489,23 +510,25 @@ class Player extends Component {
                         />
 
                         <div className="player__controls">
-                            <Button
-                                className={[
-                                    'player__controls-button badge icon-button',
-                                    showQueue ? 'is-active' : '',
-                                    newQueueItems && !showQueue
-                                        ? 'badge--active'
-                                        : ''
-                                ].join(' ')}
-                                onClick={() => toggleQueue(showQueue)}
-                                badge={newQueueItems}
-                                icon="list"
-                                ariaLabel={
-                                    showQueue ? 'Close queue' : 'Open queue'
-                                }
-                            />
+                            {!isSingleVideo ? (
+                                <Button
+                                    className={[
+                                        'player__controls-button badge icon-button',
+                                        showQueue ? 'is-active' : '',
+                                        newQueueItems && !showQueue
+                                            ? 'badge--active'
+                                            : ''
+                                    ].join(' ')}
+                                    onClick={() => toggleQueue(showQueue)}
+                                    badge={newQueueItems}
+                                    icon="list"
+                                    ariaLabel={
+                                        showQueue ? 'Close queue' : 'Open queue'
+                                    }
+                                />
+                            ) : null}
 
-                            {!isFullScreen ? (
+                            {!isSingleVideo && !isFullScreen ? (
                                 <Button
                                     className={[
                                         'player__controls-button icon-button',

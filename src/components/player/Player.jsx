@@ -470,7 +470,18 @@ class Player extends Component {
                                     disabled={disableControls}
                                 />
                             ) : null}
+                        </div>
 
+                        <Info
+                            title={title}
+                            currentTime={currentTime}
+                            duration={duration}
+                            loaded={loaded}
+                            onStartSeeking={isPlaying ? togglePlay : () => {}}
+                            onEndSeeking={seekTime}
+                        />
+
+                        <div className="player__controls">
                             {!isMobile() ? (
                                 <div
                                     className="player__controls-volume"
@@ -498,18 +509,7 @@ class Player extends Component {
                                     />
                                 </div>
                             ) : null}
-                        </div>
 
-                        <Info
-                            title={title}
-                            currentTime={currentTime}
-                            duration={duration}
-                            loaded={loaded}
-                            onStartSeeking={isPlaying ? togglePlay : () => {}}
-                            onEndSeeking={seekTime}
-                        />
-
-                        <div className="player__controls">
                             {!isSingleVideo ? (
                                 <Button
                                     className={[

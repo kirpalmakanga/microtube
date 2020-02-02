@@ -9,9 +9,11 @@ import {
     chunk
 } from '../lib/helpers';
 
+import { __DEV__ } from '../config/app';
+
 import { prompt } from './prompt';
 
-const __DEV__ = process.env.NODE_ENV === 'development';
+import { connectToSocket } from './app';
 
 const notify = ({ message }) => async (dispatch, getState) => {
     dispatch({ type: 'notifications/OPEN', data: message });
@@ -49,6 +51,8 @@ export const getUserData = () => async (dispatch) => {
     });
 
     dispatch(listenForQueueUpdate());
+
+    dispatch(connectToSocket());
 };
 
 export const signIn = () => async (dispatch) =>

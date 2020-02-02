@@ -3,9 +3,8 @@ import './assets/styles/app.scss';
 import { Component } from 'react';
 
 import { connect } from 'react-redux';
-import { loadAPI, getAuthInstance as loadAuth } from './api/youtube';
 
-import { queueVideos, queuePlaylist, getUserData } from './actions/youtube';
+import { initializeApp } from './actions/app';
 
 import { preventDefault, isMobile } from './lib/helpers';
 
@@ -22,28 +21,16 @@ import Notifications from './components/Notifications';
 class Root extends Component {
     state = { apiLoaded: false };
 
-    initApp = async () => {
-        const { getUserData, queueVideos, queuePlaylist } = this.props;
+    init = async () => {
+        const { initializeApp } = this.props;
 
-        await loadAPI();
-
-        await loadAuth();
-
-        await getUserData();
+        await initializeApp();
 
         this.setState({ apiLoaded: true });
-
-        if (!window.queueVideos) {
-            window.queueVideos = queueVideos;
-        }
-
-        if (!window.queuePlaylist) {
-            window.queuePlaylist = queuePlaylist;
-        }
     };
 
     componentDidMount() {
-        this.initApp();
+        this.init();
     }
 
     render() {
@@ -70,10 +57,10 @@ class Root extends Component {
                         <Notifications />
 
                         <Player />
+
+                        <Prompt />
                     </>
                 ) : null}
-
-                <Prompt />
 
                 <Loader isActive={!apiLoaded} />
             </div>
@@ -82,9 +69,7 @@ class Root extends Component {
 }
 
 const mapDispatchToProps = {
-    queueVideos,
-    queuePlaylist,
-    getUserData
+    initializeApp
 };
 
 export default connect(() => ({}), mapDispatchToProps)(Root);

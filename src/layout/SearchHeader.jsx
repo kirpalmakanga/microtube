@@ -7,7 +7,7 @@ import Icon from '../components/Icon';
 
 import DropDown from '../components/DropDown';
 
-import { setSearchTarget } from '../actions/youtube.js';
+import { setSearchTarget } from '../actions/youtube';
 
 class SearchHeader extends Component {
     handleFormSubmit = (query) => {
@@ -76,7 +76,4 @@ const mapDispatchToProps = {
     setSearchTarget
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(SearchHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchHeader);

@@ -2,13 +2,11 @@ import io from 'socket.io-client';
 import { SOCKET_URL } from '../config/app';
 import { uuidv4 } from '../lib/helpers';
 
-import { loadAPI, getAuthInstance as loadAuth } from '../api/youtube.js';
+import { loadAPI, getAuthInstance as loadAuth } from '../api/youtube';
 
 import { queueVideos, queuePlaylist, getUserData } from './youtube';
 
 let socket = io(SOCKET_URL);
-
-console.log(navigator);
 
 export const initializeApp = () => async (dispatch) => {
     await loadAPI();
@@ -75,7 +73,7 @@ export const setDevice = () => (dispatch, getState) => {
 
         dispatch({
             type: 'app/SET_DEVICE_ID',
-            data: { deviceId, deviceName }
+            data: { deviceId }
         });
     }
 
@@ -100,16 +98,14 @@ export const disconnectDevice = () => (_, getState) => {
     socket.emit('device:delete', deviceId);
 };
 
-export const setActiveDevice = (id) => (dispatch, getState) => {
+export const setActiveDevice = (id) => (_, getState) => {
     const {
-        app: { deviceId }
+        app: { devices }
     } = getState();
 
-    if (deviceId === id) {
-        dispatch({
-            type: 'app/SET_ACTIVE_DEVICE'
-        });
-    }
+    const { deviceId } = devices.find(({ isMaster }) => isMaster) || {};
 
-    socket.emit('device:active', id);
+    if (id !== deviceId) {
+        socket.emit('device:active', id);
+    }
 };

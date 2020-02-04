@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { setActiveDevice } from '../../actions/app';
+
 import {
     setActiveQueueItem,
     saveVolume,
@@ -367,6 +369,9 @@ class Player extends Component {
     render() {
         const {
             props: {
+                devices,
+                currentDevice,
+                setActiveDevice,
                 video,
                 showQueue,
                 showScreen,
@@ -403,6 +408,8 @@ class Player extends Component {
 
         const disableControls = !isPlayerReady();
 
+        const { isMaster } = currentDevice;
+
         return (
             <div
                 className="player__container shadow--2dp"
@@ -410,18 +417,20 @@ class Player extends Component {
                 data-state-fullscreen={isFullScreen ? 'enabled' : 'disabled'}
                 data-state-show-queue={showQueue ? 'enabled' : 'disabled'}
             >
-                <Screen
-                    className="screen"
-                    videoId={videoId}
-                    onReady={onYoutubeIframeReady}
-                    onEnd={goToVideo}
-                    onStateChange={onYoutubeIframeStateChange}
-                    data-state={
-                        isSingleVideo || showScreen || isFullScreen
-                            ? 'visible'
-                            : 'hidden'
-                    }
-                />
+                {isMaster ? (
+                    <Screen
+                        className="screen"
+                        videoId={videoId}
+                        onReady={onYoutubeIframeReady}
+                        onEnd={goToVideo}
+                        onStateChange={onYoutubeIframeStateChange}
+                        data-state={
+                            isSingleVideo || showScreen || isFullScreen
+                                ? 'visible'
+                                : 'hidden'
+                        }
+                    />
+                ) : null}
 
                 <Queue
                     isPlaying={isPlaying}
@@ -503,6 +512,7 @@ class Player extends Component {
                                         ariaLabel={isMuted ? 'Unmute' : 'Mute'}
                                         disabled={disableControls}
                                     />
+
                                     <VolumeRange
                                         value={volume}
                                         onChange={setVolume}
@@ -526,6 +536,68 @@ class Player extends Component {
                                         showQueue ? 'Close queue' : 'Open queue'
                                     }
                                 />
+                            ) : null}
+
+                            {devices.length ? (
+                                <div className="player__controls-devices">
+                                    <Button
+                                        className="player__controls-button icon-button"
+                                        icon="devices"
+                                        ariaLabel="Devices"
+                                    />
+
+                                    <ul className="player__controls-devices-list">
+                                        <li
+                                            className="device"
+                                            onClick={() =>
+                                                setActiveDevice(
+                                                    currentDevice.deviceId
+                                                )
+                                            }
+                                        >
+                                            <span className="device__desc">
+                                                Current device
+                                            </span>
+                                            <span className="device__name">
+                                                {`${currentDevice.deviceName} ${
+                                                    isMaster ? '(active)' : ''
+                                                }`}
+                                            </span>
+                                        </li>
+
+                                        {devices.map(
+                                            (
+                                                {
+                                                    deviceId,
+                                                    deviceName,
+                                                    isMaster
+                                                },
+                                                index
+                                            ) => (
+                                                <li
+                                                    key={index}
+                                                    className="device"
+                                                    onClick={() =>
+                                                        setActiveDevice(
+                                                            deviceId
+                                                        )
+                                                    }
+                                                >
+                                                    <span className="device__desc">
+                                                        Browser
+                                                    </span>
+                                                    <span className="device__name">
+                                                        {`${deviceName} ${
+                                                            isMaster
+                                                                ? '(active)'
+                                                                : ''
+                                                        }`}
+                                                    </span>
+                                                </li>
+                                            )
+                                        )}
+                                    </ul>
+                                </div>
                             ) : null}
 
                             {!isSingleVideo && !isFullScreen ? (
@@ -566,9 +638,16 @@ class Player extends Component {
     }
 }
 
-const mapStateToProps = ({ player }) => ({ ...player });
+const mapStateToProps = ({ app: { devices, deviceId }, player }) => {
+    return {
+        ...player,
+        devices: devices.filter(({ deviceId: id }) => id !== deviceId),
+        currentDevice: devices.find(({ deviceId: id }) => id === deviceId) || {}
+    };
+};
 
 const mapDispatchToProps = {
+    setActiveDevice,
     setActiveQueueItem,
     saveVolume,
     saveCurrentTime,

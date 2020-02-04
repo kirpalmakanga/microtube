@@ -8,10 +8,6 @@ import Routes from './Routes';
 
 import configureStore from './store/configureStore';
 
-if (process.env.NODE_ENV === 'production') {
-    require('./pwa');
-}
-
 (() => {
     const appContainer = document.querySelector('#app');
     const store = configureStore();

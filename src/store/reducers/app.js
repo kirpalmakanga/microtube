@@ -1,11 +1,9 @@
-import { createReducer } from '../helpers.js';
+import { createReducer } from '../helpers';
 
 const initialState = {
     isLoading: false,
     devices: [],
-    deviceId: '',
-    deviceName: '',
-    isMaster: false
+    deviceId: ''
 };
 
 export default createReducer(initialState, {
@@ -18,8 +16,7 @@ export default createReducer(initialState, {
 
     'app/SYNC_DEVICES': (state, { data: { devices } }) => ({
         ...state,
-        devices,
-        ...(devices.length === 1 ? { isMaster: true } : {})
+        devices
     }),
 
     'app/ADD_DEVICE': ({ devices, ...state }, { data: { id } }) => ({
@@ -33,10 +30,5 @@ export default createReducer(initialState, {
     ) => ({
         ...state,
         devices: devices.filter((id) => id === deletedId)
-    }),
-
-    'app/SET_ACTIVE_DEVICE': (state) => ({
-        ...state,
-        isMaster: true
     })
 });

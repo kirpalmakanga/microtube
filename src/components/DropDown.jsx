@@ -1,7 +1,7 @@
 import { PureComponent } from 'react';
 import Icon from './Icon';
 
-import { stopPropagation, preventDefault } from '../lib/helpers.js';
+import { stopPropagation, preventDefault } from '../lib/helpers';
 
 class DropDown extends PureComponent {
     state = { isOpen: false };

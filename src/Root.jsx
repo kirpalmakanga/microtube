@@ -8,6 +8,8 @@ import { initializeApp } from './actions/app';
 
 import { preventDefault, isMobile } from './lib/helpers';
 
+import { __DEV__ } from './config/app';
+
 import Header from './layout/Header';
 
 import Head from './components/Head';
@@ -42,7 +44,7 @@ class Root extends Component {
         return (
             <div
                 className={`layout ${isMobile() ? 'mobile' : ''}`}
-                onContextMenu={preventDefault()}
+                onContextMenu={__DEV__ ? () => {} : preventDefault()}
             >
                 <Head />
 

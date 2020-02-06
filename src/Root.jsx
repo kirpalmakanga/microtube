@@ -6,6 +6,10 @@ import { connect } from 'react-redux';
 
 import { initializeApp } from './actions/app';
 
+import { getUserData } from './actions/auth';
+
+import { enableImportMethods } from './actions/youtube';
+
 import { preventDefault, isMobile } from './lib/helpers';
 
 import { __DEV__ } from './config/app';
@@ -24,9 +28,13 @@ class Root extends Component {
     state = { apiLoaded: false };
 
     init = async () => {
-        const { initializeApp } = this.props;
+        const { initializeApp, getUserData, enableImportMethods } = this.props;
 
         await initializeApp();
+
+        await getUserData();
+
+        enableImportMethods();
 
         this.setState({ apiLoaded: true });
     };
@@ -71,7 +79,9 @@ class Root extends Component {
 }
 
 const mapDispatchToProps = {
-    initializeApp
+    initializeApp,
+    getUserData,
+    enableImportMethods
 };
 
 export default connect(() => ({}), mapDispatchToProps)(Root);

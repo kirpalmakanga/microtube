@@ -6,7 +6,8 @@ import { setActiveDevice } from '../../actions/app';
 import {
     setActiveQueueItem,
     saveVolume,
-    saveCurrentTime,
+    publishCurrentTime,
+    publishLoadedFraction,
     toggleQueue,
     toggleScreen
 } from '../../actions/youtube';
@@ -76,20 +77,31 @@ class Player extends Component {
     isPlayerReady = () => {
         const {
             state: { youtube },
-            props: { queue, video, currentIndex }
+            props: {
+                queue,
+                video: { id },
+                currentIndex
+            }
         } = this;
 
-        return !!youtube && (video.id || queue[currentIndex]);
+        return !!youtube && (id || queue[currentIndex]);
     };
 
     updateTime = (t) => {
-        const currentTime = t || this.state.youtube.getCurrentTime();
+        const {
+            state: { youtube },
+            props: {
+                currentDevice: { isMaster },
+                publishCurrentTime
+            }
+        } = this;
 
-        this.setState({
-            currentTime
-        });
+        const currentTime = t || youtube.getCurrentTime();
 
-        this.props.saveCurrentTime(currentTime);
+        if (isMaster) {
+            console.log('publishTime');
+            publishCurrentTime(currentTime);
+        }
     };
 
     setVolume = (volume) => {
@@ -181,11 +193,21 @@ class Player extends Component {
     };
 
     updateLoading = () => {
-        const { youtube } = this.state;
+        const {
+            state: { youtube },
+            props: {
+                currentDevice: { isMaster },
+                publishLoadedFraction
+            }
+        } = this;
 
         const loaded = youtube.getVideoLoadedFraction();
 
-        this.setState({ loaded });
+        // this.setState({ loaded });
+
+        if (isMaster) {
+            publishLoadedFraction(loaded);
+        }
 
         return loaded;
     };
@@ -377,17 +399,11 @@ class Player extends Component {
                 showScreen,
                 newQueueItems,
                 toggleQueue,
-                toggleScreen
+                toggleScreen,
+                currentTime,
+                loaded
             },
-            state: {
-                isPlaying,
-                isBuffering,
-                isMuted,
-                isFullScreen,
-                volume,
-                loaded,
-                currentTime
-            },
+            state: { isPlaying, isBuffering, isMuted, isFullScreen, volume },
             getPlayerContainer,
             getCurrentVideo,
             handleWheelVolume,
@@ -650,7 +666,8 @@ const mapDispatchToProps = {
     setActiveDevice,
     setActiveQueueItem,
     saveVolume,
-    saveCurrentTime,
+    publishCurrentTime,
+    publishLoadedFraction,
     toggleQueue,
     toggleScreen
 };

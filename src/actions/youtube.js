@@ -12,8 +12,7 @@ import {
 import { __DEV__ } from '../config/app';
 
 import { prompt } from './prompt';
-
-import { connectToSocket } from './app';
+import { listen, publish } from '../api/socket';
 
 const notify = ({ message }) => async (dispatch, getState) => {
     dispatch({ type: 'notifications/OPEN', data: message });
@@ -29,71 +28,15 @@ const notify = ({ message }) => async (dispatch, getState) => {
     }
 };
 
-/* Auth */
-export const getUserData = () => async (dispatch) => {
-    const data = api.getSignedInUser();
-
-    const { isSignedIn, idToken, accessToken } = data;
-
-    if (!isSignedIn) {
-        return;
+export const enableImportMethods = () => (dispatch) => {
+    if (!window.queueVideos) {
+        window.queueVideos = (ids = []) => dispatch(queueVideos(ids));
     }
 
-    const {
-        user: { uid }
-    } = await database.signIn(idToken, accessToken);
-
-    data.user.id = uid;
-
-    dispatch({
-        type: 'auth/UPDATE_DATA',
-        data
-    });
-
-    dispatch(listenForQueueUpdate());
-
-    dispatch(connectToSocket());
+    if (!window.queuePlaylist) {
+        window.queuePlaylist = (id) => dispatch(queuePlaylist(id));
+    }
 };
-
-export const signIn = () => async (dispatch) =>
-    catchErrors(
-        async () => {
-            dispatch({ type: 'auth/UPDATE_DATA', data: { isSigningIn: true } });
-
-            await api.signIn();
-
-            await dispatch(getUserData());
-        },
-        ({ error }) =>
-            error !== 'popup_closed_by_user' &&
-            dispatch(notify({ message: 'Error signing in user.' })),
-        () =>
-            dispatch({
-                type: 'auth/UPDATE_DATA',
-                data: { isSigningIn: false }
-            })
-    );
-
-export const signOut = () => async (dispatch) =>
-    catchErrors(
-        async () => {
-            await api.signOut();
-
-            await database.signOut();
-
-            dispatch({ type: 'auth/SIGN_OUT' });
-        },
-        () => dispatch(notify({ message: 'Error signing out user.' }))
-    );
-
-export const closeScreen = () => (dispatch, getState) => {
-    const {
-        player: { showScreen }
-    } = getState();
-
-    showScreen && dispatch({ type: 'player/CLOSE_SCREEN' });
-};
-
 /* Videos */
 export function getVideo(videoId) {
     return async (dispatch) =>
@@ -338,15 +281,18 @@ const saveQueue = () => async (_, getState) => {
             isSignedIn,
             user: { id: userId }
         },
-        player: { queue }
+        player: { queue, currentIndex }
     } = getState();
 
     if (isSignedIn) {
-        database.set(`users/${__DEV__ ? 'dev' : userId}`, { queue });
+        database.set(`users/${__DEV__ ? 'dev' : userId}`, {
+            queue,
+            currentIndex
+        });
     }
 };
 
-const listenForQueueUpdate = () => (dispatch, getState) => {
+export const listenForQueueUpdate = () => (dispatch, getState) => {
     const {
         auth: {
             isSignedIn,
@@ -356,12 +302,18 @@ const listenForQueueUpdate = () => (dispatch, getState) => {
 
     if (isSignedIn) {
         database.listen(
-            `users/${__DEV__ ? 'dev' : userId}/queue`,
-            (queue = []) =>
+            `users/${__DEV__ ? 'dev' : userId}`,
+            ({ queue = [], currentIndex = 0 }) => {
                 dispatch({
                     type: 'player/UPDATE_QUEUE',
                     data: { queue }
-                })
+                });
+
+                dispatch({
+                    type: 'player/SET_ACTIVE_QUEUE_ITEM',
+                    data: { index: currentIndex }
+                });
+            }
         );
     }
 };
@@ -369,8 +321,33 @@ const listenForQueueUpdate = () => (dispatch, getState) => {
 export const saveVolume = (data) => (dispatch) =>
     dispatch({ type: 'player/SET_VOLUME', data });
 
-export const saveCurrentTime = (data) => (dispatch) =>
+export const listenCurrentTime = () => (dispatch) => {
+    listen('player:current-time', (t) =>
+        dispatch({ type: 'player/SET_CURRENT_TIME', data: parseInt(t) })
+    );
+};
+
+export const publishCurrentTime = (data) => (dispatch) => {
     dispatch({ type: 'player/SET_CURRENT_TIME', data });
+
+    publish('player:current-time', data);
+};
+
+export const listenLoadedFraction = () => (dispatch) => {
+    listen('player:loaded-fraction', (t) => {
+        console.log('loaded ?', t);
+        dispatch({
+            type: 'player/SET_LOADED',
+            data: { loaded: parseFloat(t) }
+        });
+    });
+};
+
+export const publishLoadedFraction = (loaded) => (dispatch) => {
+    dispatch({ type: 'player/SET_LOADED', data: { loaded } });
+
+    publish('player:loaded-fraction', loaded);
+};
 
 export const toggleQueue = () => (dispatch, getState) => {
     const {
@@ -390,6 +367,14 @@ export const toggleScreen = () => (dispatch, getState) => {
     dispatch({
         type: showScreen ? 'player/CLOSE_SCREEN' : 'player/OPEN_SCREEN'
     });
+};
+
+export const closeScreen = () => (dispatch, getState) => {
+    const {
+        player: { showScreen }
+    } = getState();
+
+    showScreen && dispatch({ type: 'player/CLOSE_SCREEN' });
 };
 
 export const queueItems = (items) => (dispatch) => {

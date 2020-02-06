@@ -1,7 +1,14 @@
 import * as api from '../api/youtube';
 import * as database from '../api/firebase';
 
-import { connectToSocket } from './app';
+import { connectDevice } from './app';
+import {
+    listenForQueueUpdate,
+    listenCurrentTime,
+    listenLoadedFraction
+} from './youtube';
+
+import { catchErrors } from '../lib/helpers';
 
 export const getUserData = () => async (dispatch) => {
     const data = api.getSignedInUser();
@@ -25,7 +32,11 @@ export const getUserData = () => async (dispatch) => {
 
     dispatch(listenForQueueUpdate());
 
-    dispatch(connectToSocket());
+    dispatch(connectDevice());
+
+    dispatch(listenCurrentTime());
+
+    dispatch(listenLoadedFraction());
 };
 
 export const signIn = () => async (dispatch) =>
@@ -58,11 +69,3 @@ export const signOut = () => async (dispatch) =>
         },
         () => dispatch(notify({ message: 'Error signing out user.' }))
     );
-
-export const closeScreen = () => (dispatch, getState) => {
-    const {
-        player: { showScreen }
-    } = getState();
-
-    showScreen && dispatch({ type: 'player/CLOSE_SCREEN' });
-};

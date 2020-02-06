@@ -8,6 +8,7 @@ const initialState = {
     volume: 100,
     newQueueItems: 0,
     currentTime: 0,
+    loaded: 0,
     video: { title: 'No video.', id: '', duration: 0 }
 };
 
@@ -95,5 +96,10 @@ export default createReducer(initialState, {
     'player/SET_CURRENT_TIME': (state, { data }) => ({
         ...state,
         currentTime: data
+    }),
+
+    'player/SET_LOADED': (state, { data: { loaded = 0 } = {} }) => ({
+        ...state,
+        loaded
     })
 });

@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { signIn } from '../actions/youtube';
+import { signIn } from '../actions/auth';
 
 import Button from '../components/Button';
 import Placeholder from '../components/Placeholder';
@@ -28,7 +28,4 @@ const mapDispatchToProps = {
     signIn
 };
 
-export default connect(
-    () => ({}),
-    mapDispatchToProps
-)(Login);
+export default connect(() => ({}), mapDispatchToProps)(Login);

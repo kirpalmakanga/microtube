@@ -1,32 +1,12 @@
 import * as api from '../api/youtube';
 import * as database from '../api/firebase';
+import { listen, publish } from '../api/socket';
 
-import {
-    delay,
-    catchErrors,
-    parseVideoId,
-    splitLines,
-    chunk
-} from '../lib/helpers';
+import { catchErrors, parseVideoId, splitLines, chunk } from '../lib/helpers';
 
 import { __DEV__ } from '../config/app';
 
-import { prompt } from './prompt';
-import { listen, publish } from '../api/socket';
-
-const notify = ({ message }) => async (dispatch, getState) => {
-    dispatch({ type: 'notifications/OPEN', data: message });
-
-    await delay(4000);
-
-    if (getState().notifications.message) {
-        dispatch({ type: 'notifications/CLOSE' });
-
-        await delay(300);
-
-        dispatch({ type: 'notifications/CLEAR_MESSAGE' });
-    }
-};
+import { notify, prompt } from './app';
 
 export const enableImportMethods = () => (dispatch) => {
     if (!window.queueVideos) {

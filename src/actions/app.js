@@ -1,8 +1,14 @@
-import { uuidv4 } from '../lib/helpers';
+import { uuidv4, delay } from '../lib/helpers';
 
 import { loadAPI, getAuthInstance as loadAuth } from '../api/youtube';
 
 import { listen, publish } from '../api/socket';
+
+export const initializeApp = () => async (dispatch) => {
+    await loadAPI();
+
+    await loadAuth();
+};
 
 export const subscribeToSync = () => (dispatch) =>
     listen('devices:sync', (devices) =>
@@ -50,12 +56,6 @@ export const connectDevice = () => (dispatch, getState) => {
     });
 };
 
-export const initializeApp = () => async (dispatch) => {
-    await loadAPI();
-
-    await loadAuth();
-};
-
 export const setDevice = () => (dispatch, getState) => {
     let {
         app: { deviceId }
@@ -73,4 +73,51 @@ export const setDevice = () => (dispatch, getState) => {
     }
 
     publish('device:add', { deviceId, deviceName });
+};
+
+export const notify = ({ message }) => async (dispatch, getState) => {
+    dispatch({ type: 'notifications/OPEN', data: message });
+
+    await delay(4000);
+
+    const {
+        notifications: { message: storedMessage }
+    } = getState();
+
+    if (storedMessage) {
+        dispatch({ type: 'notifications/CLOSE' });
+
+        await delay(300);
+
+        dispatch({ type: 'notifications/CLEAR_MESSAGE' });
+    }
+};
+
+export const closeNotification = () => async (dispatch) => {
+    dispatch({ type: 'notifications/CLOSE' });
+
+    await delay(300);
+
+    dispatch({ type: 'notifications/CLEAR_MESSAGE' });
+};
+
+export const prompt = (config = {}, callback = async () => {}) => (dispatch) =>
+    dispatch({
+        type: 'prompt/OPEN',
+        data: {
+            ...config,
+            callback: async (data) => {
+                await callback(data);
+
+                dispatch(closePrompt());
+            }
+        }
+    });
+
+export const closePrompt = () => async (dispatch) => {
+    dispatch({ type: 'prompt/CLOSE' });
+
+    await delay(300);
+
+    dispatch({ type: 'prompt/RESET' });
 };

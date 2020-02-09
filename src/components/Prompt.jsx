@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { getPlaylists } from '../actions/youtube';
-import { closePrompt } from '../actions/prompt';
+import { closePrompt } from '../actions/app';
 
 import Fade from './animations/Fade';
 

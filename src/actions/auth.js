@@ -1,7 +1,7 @@
 import * as api from '../api/youtube';
 import * as database from '../api/firebase';
 
-import { connectDevice } from './app';
+import { notify, connectDevice } from './app';
 import {
     listenForQueueUpdate,
     listenCurrentTime,

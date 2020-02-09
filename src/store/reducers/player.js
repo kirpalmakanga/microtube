@@ -91,7 +91,10 @@ export default createReducer(initialState, {
 
     'player/CLEAR_VIDEO': (state) => ({ ...state, video: initialState.video }),
 
-    'player/SET_VOLUME': (state, { data }) => ({ ...state, volume: data }),
+    'player/SET_VOLUME': (state, { data: { volume } }) => ({
+        ...state,
+        volume
+    }),
 
     'player/SET_CURRENT_TIME': (state, { data }) => ({
         ...state,

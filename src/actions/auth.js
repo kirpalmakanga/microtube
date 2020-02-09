@@ -5,7 +5,8 @@ import { notify, connectDevice } from './app';
 import {
     listenForQueueUpdate,
     listenCurrentTime,
-    listenLoadedFraction
+    listenLoadedFraction,
+    listenVolume
 } from './youtube';
 
 import { catchErrors } from '../lib/helpers';
@@ -37,6 +38,8 @@ export const getUserData = () => async (dispatch) => {
     dispatch(listenCurrentTime());
 
     dispatch(listenLoadedFraction());
+
+    dispatch(listenVolume());
 };
 
 export const signIn = () => async (dispatch) =>

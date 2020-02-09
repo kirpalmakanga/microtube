@@ -298,14 +298,13 @@ export const listenForQueueUpdate = () => (dispatch, getState) => {
     }
 };
 
-export const saveVolume = (data) => (dispatch) =>
-    dispatch({ type: 'player/SET_VOLUME', data });
+export const saveVolume = (volume) => (dispatch) =>
+    dispatch({ type: 'player/SET_VOLUME', data: { volume } });
 
-export const listenCurrentTime = () => (dispatch) => {
-    listen('player:current-time', (t) =>
-        dispatch({ type: 'player/SET_CURRENT_TIME', data: parseInt(t) })
+export const listenCurrentTime = () => (dispatch) =>
+    listen('player:current-time', (time) =>
+        dispatch({ type: 'player/SET_CURRENT_TIME', data: parseInt(tile) })
     );
-};
 
 export const publishCurrentTime = (data) => (dispatch) => {
     dispatch({ type: 'player/SET_CURRENT_TIME', data });
@@ -313,20 +312,32 @@ export const publishCurrentTime = (data) => (dispatch) => {
     publish('player:current-time', data);
 };
 
-export const listenLoadedFraction = () => (dispatch) => {
-    listen('player:loaded-fraction', (t) => {
-        console.log('loaded ?', t);
+export const listenLoadedFraction = () => (dispatch) =>
+    listen('player:loaded-fraction', (loaded) =>
         dispatch({
             type: 'player/SET_LOADED',
-            data: { loaded: parseFloat(t) }
-        });
-    });
-};
+            data: { loaded: parseFloat(loaded) }
+        })
+    );
 
 export const publishLoadedFraction = (loaded) => (dispatch) => {
     dispatch({ type: 'player/SET_LOADED', data: { loaded } });
 
     publish('player:loaded-fraction', loaded);
+};
+
+export const listenVolume = () => (dispatch) =>
+    listen('player:volume', (volume) =>
+        dispatch({
+            type: 'player/SET_VOLUME',
+            data: { volume: parseFloat(volume) }
+        })
+    );
+
+export const publishVolume = (volume) => (dispatch) => {
+    dispatch({ type: 'player/SET_VOLUME', data: { volume } });
+
+    publish('player:volume', volume);
 };
 
 export const toggleQueue = () => (dispatch, getState) => {

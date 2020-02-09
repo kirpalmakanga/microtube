@@ -5,9 +5,9 @@ import { setActiveDevice } from '../../actions/app';
 
 import {
     setActiveQueueItem,
-    saveVolume,
     publishCurrentTime,
     publishLoadedFraction,
+    publishVolume,
     toggleQueue,
     toggleScreen
 } from '../../actions/youtube';
@@ -44,9 +44,8 @@ class Player extends Component {
             isBuffering: false,
             isMuted: false,
             isFullScreen: false,
-            showQueue: false,
-            showScreen: false,
             showVolume: false,
+            showDevices: false,
             volume: 100,
             loaded: 0,
             currentTime: 0,
@@ -99,7 +98,6 @@ class Player extends Component {
         const currentTime = t || youtube.getCurrentTime();
 
         if (isMaster) {
-            console.log('publishTime');
             publishCurrentTime(currentTime);
         }
     };
@@ -115,11 +113,11 @@ class Player extends Component {
             youtube.unMute();
         }
 
-        const { saveVolume } = this.props;
+        const { publishVolume } = this.props;
 
         youtube.setVolume(volume);
 
-        this.setState({ volume }, () => saveVolume(volume));
+        publishVolume(volume);
     };
 
     handleWheelVolume = ({ deltaY }) => {
@@ -127,7 +125,7 @@ class Player extends Component {
             return;
         }
 
-        const { volume } = this.state;
+        const { volume } = this.props;
         const newVolume = deltaY < 0 ? volume + 5 : volume - 5;
         const inRange = newVolume >= 0 && newVolume <= 100;
 
@@ -240,6 +238,12 @@ class Player extends Component {
         }
 
         youtube.playVideo();
+    };
+
+    toggleDevices = () => {
+        const { showDevices } = this.state;
+
+        this.setState({ showDevices: !showDevices });
     };
 
     clearWatchers = () => {
@@ -401,9 +405,16 @@ class Player extends Component {
                 toggleQueue,
                 toggleScreen,
                 currentTime,
-                loaded
+                loaded,
+                volume
             },
-            state: { isPlaying, isBuffering, isMuted, isFullScreen, volume },
+            state: {
+                isPlaying,
+                isBuffering,
+                isMuted,
+                isFullScreen,
+                showDevices
+            },
             getPlayerContainer,
             getCurrentVideo,
             handleWheelVolume,
@@ -412,6 +423,7 @@ class Player extends Component {
             toggleFullScreen,
             toggleMute,
             togglePlay,
+            toggleDevices,
             goToVideo,
             onYoutubeIframeReady,
             onYoutubeIframeStateChange,
@@ -557,12 +569,21 @@ class Player extends Component {
                             {devices.length ? (
                                 <div className="player__controls-devices">
                                     <Button
-                                        className="player__controls-button icon-button"
+                                        className={[
+                                            'player__controls-button icon-button',
+                                            showDevices ? 'is-active' : ''
+                                        ].join(' ')}
                                         icon="devices"
                                         ariaLabel="Devices"
+                                        onClick={toggleDevices}
                                     />
 
-                                    <ul className="player__controls-devices-list">
+                                    <ul
+                                        className="player__controls-devices-list"
+                                        data-state={
+                                            showDevices ? 'open' : 'closed'
+                                        }
+                                    >
                                         <li
                                             className="device"
                                             onClick={() =>
@@ -665,9 +686,10 @@ const mapStateToProps = ({ app: { devices, deviceId }, player }) => {
 const mapDispatchToProps = {
     setActiveDevice,
     setActiveQueueItem,
-    saveVolume,
+
     publishCurrentTime,
     publishLoadedFraction,
+    publishVolume,
     toggleQueue,
     toggleScreen
 };

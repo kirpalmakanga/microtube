@@ -173,7 +173,7 @@ export const pick = (obj = {}, whitelist = []) => {
     return result;
 };
 
-export const omit = (obj, blacklist = []) => {
+export const omit = (obj = {}, blacklist = []) => {
     const result = {};
 
     for (const key in obj) {

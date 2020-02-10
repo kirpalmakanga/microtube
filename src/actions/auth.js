@@ -2,12 +2,7 @@ import * as api from '../api/youtube';
 import * as database from '../api/firebase';
 
 import { notify, connectDevice } from './app';
-import {
-    listenForQueueUpdate,
-    listenCurrentTime,
-    listenLoadedFraction,
-    listenVolume
-} from './youtube';
+import { listenForQueueUpdate } from './youtube';
 
 import { catchErrors } from '../lib/helpers';
 
@@ -34,12 +29,6 @@ export const getUserData = () => async (dispatch) => {
     dispatch(listenForQueueUpdate());
 
     dispatch(connectDevice());
-
-    dispatch(listenCurrentTime());
-
-    dispatch(listenLoadedFraction());
-
-    dispatch(listenVolume());
 };
 
 export const signIn = () => async (dispatch) =>

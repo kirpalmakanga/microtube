@@ -26,7 +26,7 @@ export function getVideo(videoId) {
 
                 const video = await api.getVideo(videoId);
 
-                dispatch({ type: 'player/SET_VIDEO', data: { video } });
+                dispatch({ type: 'player/UPDATE_DATA', data: { video } });
             },
             () => dispatch(notify({ message: 'Error fetching video.' }))
         );
@@ -285,7 +285,7 @@ export const listenForQueueUpdate = () => (dispatch, getState) => {
             `users/${__DEV__ ? 'dev' : userId}`,
             ({ queue = [], currentIndex = 0 }) => {
                 dispatch({
-                    type: 'player/UPDATE_QUEUE',
+                    type: 'player/UPDATE_DATA',
                     data: { queue }
                 });
 
@@ -298,55 +298,17 @@ export const listenForQueueUpdate = () => (dispatch, getState) => {
     }
 };
 
-export const saveVolume = (volume) => (dispatch) =>
-    dispatch({ type: 'player/SET_VOLUME', data: { volume } });
-
-export const listenCurrentTime = () => (dispatch) =>
-    listen('player:current-time', (time) =>
-        dispatch({ type: 'player/SET_CURRENT_TIME', data: parseInt(tile) })
-    );
-
-export const publishCurrentTime = (data) => (dispatch) => {
-    dispatch({ type: 'player/SET_CURRENT_TIME', data });
-
-    publish('player:current-time', data);
-};
-
-export const listenLoadedFraction = () => (dispatch) =>
-    listen('player:loaded-fraction', (loaded) =>
-        dispatch({
-            type: 'player/SET_LOADED',
-            data: { loaded: parseFloat(loaded) }
-        })
-    );
-
-export const publishLoadedFraction = (loaded) => (dispatch) => {
-    dispatch({ type: 'player/SET_LOADED', data: { loaded } });
-
-    publish('player:loaded-fraction', loaded);
-};
-
-export const listenVolume = () => (dispatch) =>
-    listen('player:volume', (volume) =>
-        dispatch({
-            type: 'player/SET_VOLUME',
-            data: { volume: parseFloat(volume) }
-        })
-    );
-
-export const publishVolume = (volume) => (dispatch) => {
-    dispatch({ type: 'player/SET_VOLUME', data: { volume } });
-
-    publish('player:volume', volume);
-};
-
 export const toggleQueue = () => (dispatch, getState) => {
     const {
         player: { showQueue }
     } = getState();
 
     dispatch({
-        type: showQueue ? 'player/CLOSE_QUEUE' : 'player/OPEN_QUEUE'
+        type: 'player/UPDATE_DATA',
+        data: {
+            showQueue: !showQueue,
+            ...(!showQueue ? { showScreen: false, newQueueItems: 0 } : {})
+        }
     });
 };
 
@@ -356,7 +318,11 @@ export const toggleScreen = () => (dispatch, getState) => {
     } = getState();
 
     dispatch({
-        type: showScreen ? 'player/CLOSE_SCREEN' : 'player/OPEN_SCREEN'
+        type: 'player/UPDATE_DATA',
+        data: {
+            showScreen: !showScreen,
+            ...(!showScreen ? { showQueue: false } : {})
+        }
     });
 };
 
@@ -365,11 +331,13 @@ export const closeScreen = () => (dispatch, getState) => {
         player: { showScreen }
     } = getState();
 
-    showScreen && dispatch({ type: 'player/CLOSE_SCREEN' });
+    if (showScreen) {
+        dispatch({ type: 'player/UPDATE_DATA', data: { showScreen: false } });
+    }
 };
 
 export const queueItems = (items) => (dispatch) => {
-    dispatch({ type: 'player/QUEUE_PUSH', items });
+    dispatch({ type: 'player/ADD_QUEUE_ITEMS', items });
 
     dispatch(saveQueue());
 };
@@ -377,7 +345,7 @@ export const queueItems = (items) => (dispatch) => {
 export const queueItem = (data) => (dispatch) => dispatch(queueItems([data]));
 
 export const setQueue = (queue) => (dispatch) => {
-    dispatch({ type: 'player/UPDATE_QUEUE', data: { queue } });
+    dispatch({ type: 'player/UPDATE_DATA', data: { queue } });
 
     dispatch(saveQueue());
 };

@@ -4,13 +4,13 @@ import { loadAPI, getAuthInstance as loadAuth } from '../api/youtube';
 
 import { listen, publish } from '../api/socket';
 
-export const initializeApp = () => async (dispatch) => {
+export const initializeApp = () => async () => {
     await loadAPI();
 
     await loadAuth();
 };
 
-export const subscribeToSync = () => (dispatch) =>
+export const listenDevicesSync = () => (dispatch) =>
     listen('devices:sync', (devices) =>
         dispatch({
             type: 'app/SYNC_DEVICES',
@@ -52,7 +52,7 @@ export const connectDevice = () => (dispatch, getState) => {
 
         dispatch(setDevice());
 
-        dispatch(subscribeToSync());
+        dispatch(listenDevicesSync());
     });
 };
 

@@ -1,18 +1,17 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { listen, publish } from '../../api/socket';
+
 import { setActiveDevice } from '../../actions/app';
 
 import {
     setActiveQueueItem,
-    publishCurrentTime,
-    publishLoadedFraction,
-    publishVolume,
     toggleQueue,
     toggleScreen
 } from '../../actions/youtube';
 
-import { isMobile } from '../../lib/helpers';
+import { isMobile, omit } from '../../lib/helpers';
 
 import {
     enableFullScreen,
@@ -53,6 +52,18 @@ class Player extends Component {
         };
     }
 
+    updateState = (data) => {
+        this.setState(data);
+
+        const {
+            currentDevice: { isMaster }
+        } = this.props;
+
+        if (isMaster) {
+            publish('player:sync', data);
+        }
+    };
+
     getPlayerContainer = (el) => (this._container = el);
 
     getCurrentVideo = () => {
@@ -89,17 +100,12 @@ class Player extends Component {
     updateTime = (t) => {
         const {
             state: { youtube },
-            props: {
-                currentDevice: { isMaster },
-                publishCurrentTime
-            }
+            updateState
         } = this;
 
         const currentTime = t || youtube.getCurrentTime();
 
-        if (isMaster) {
-            publishCurrentTime(currentTime);
-        }
+        updateState({ currentTime });
     };
 
     setVolume = (volume) => {
@@ -107,17 +113,17 @@ class Player extends Component {
             return;
         }
 
-        const { youtube } = this.state;
+        const {
+            state: { youtube },
+            updateState
+        } = this;
 
         if (volume > 0) {
             youtube.unMute();
         }
-
-        const { publishVolume } = this.props;
-
         youtube.setVolume(volume);
 
-        publishVolume(volume);
+        updateState({ volume });
     };
 
     handleWheelVolume = ({ deltaY }) => {
@@ -125,7 +131,7 @@ class Player extends Component {
             return;
         }
 
-        const { volume } = this.props;
+        const { volume } = this.state;
         const newVolume = deltaY < 0 ? volume + 5 : volume - 5;
         const inRange = newVolume >= 0 && newVolume <= 100;
 
@@ -193,25 +199,21 @@ class Player extends Component {
     updateLoading = () => {
         const {
             state: { youtube },
-            props: {
-                currentDevice: { isMaster },
-                publishLoadedFraction
-            }
+            updateState
         } = this;
 
         const loaded = youtube.getVideoLoadedFraction();
 
-        // this.setState({ loaded });
-
-        if (isMaster) {
-            publishLoadedFraction(loaded);
-        }
+        updateState({ loaded });
 
         return loaded;
     };
 
     toggleMute = () => {
-        const { isMuted, youtube } = this.state;
+        const {
+            state: { isMuted, youtube },
+            updateState
+        } = this;
 
         if (!this.isPlayerReady()) {
             return;
@@ -223,7 +225,7 @@ class Player extends Component {
             youtube.mute();
         }
 
-        this.setState({ isMuted: !isMuted });
+        updateState({ isMuted: !isMuted });
     };
 
     togglePlay = () => {
@@ -254,7 +256,10 @@ class Player extends Component {
     };
 
     goToVideo = (next = true) => {
-        const { queue, video, currentIndex, setActiveQueueItem } = this.props;
+        const {
+            props: { queue, video, currentIndex, setActiveQueueItem },
+            updateState
+        } = this;
 
         if (!!video.id) {
             return;
@@ -268,7 +273,7 @@ class Player extends Component {
 
         this.clearWatchers();
 
-        this.setState({
+        updateState({
             currentTime: 0,
             loaded: 0
         });
@@ -301,22 +306,24 @@ class Player extends Component {
     };
 
     onYoutubeIframeStateChange = ({ data }) => {
+        const { updateState } = this;
         switch (data) {
             case UNSTARTED:
             case ENDED:
-                this.setState({ isPlaying: false });
+                updateState({ isPlaying: false });
                 break;
 
             case PLAYING:
-                this.setState({ isPlaying: true, isBuffering: false }, () => {
-                    this.watchTime();
-                    this.watchLoading();
-                });
+                updateState({ isPlaying: true, isBuffering: false });
+
+                this.watchTime();
+                this.watchLoading();
                 break;
 
             case PAUSED:
                 this.clearWatchers();
-                this.setState({ isPlaying: false });
+
+                updateState({ isPlaying: false });
                 break;
 
             case BUFFERING:
@@ -325,7 +332,7 @@ class Player extends Component {
                 this.clearWatchers();
 
                 if (isPlaying && currentTime > 0) {
-                    this.setState({ isBuffering: true });
+                    updateState({ isBuffering: true });
                 }
 
                 this.setPlaybackQuality();
@@ -386,8 +393,12 @@ class Player extends Component {
 
     componentDidMount() {
         listenFullScreenChange(this._container, this.handleFullScreenChange);
+
+        listen('player:sync', (data) => this.setState(data));
+
         this.bindKeyboard();
     }
+
     componentWillUnmount() {
         this.unbindKeyboard();
     }
@@ -403,12 +414,12 @@ class Player extends Component {
                 showScreen,
                 newQueueItems,
                 toggleQueue,
-                toggleScreen,
-                currentTime,
-                loaded,
-                volume
+                toggleScreen
             },
             state: {
+                currentTime,
+                loaded,
+                volume,
                 isPlaying,
                 isBuffering,
                 isMuted,
@@ -426,15 +437,12 @@ class Player extends Component {
             toggleDevices,
             goToVideo,
             onYoutubeIframeReady,
-            onYoutubeIframeStateChange,
-            isPlayerReady
+            onYoutubeIframeStateChange
         } = this;
 
         const isSingleVideo = !!video.id;
 
         const { id: videoId, title, duration } = getCurrentVideo();
-
-        const disableControls = !isPlayerReady();
 
         const { isMaster } = currentDevice;
 
@@ -475,7 +483,6 @@ class Player extends Component {
                                     onClick={() => goToVideo(false)}
                                     icon="skip-previous"
                                     ariaLabel="Go to previous video"
-                                    disabled={disableControls}
                                 />
                             ) : null}
 
@@ -495,7 +502,6 @@ class Player extends Component {
                                 ariaLabel={
                                     isPlaying ? 'Pause video' : 'Play video'
                                 }
-                                disabled={disableControls}
                             />
 
                             {!isSingleVideo ? (
@@ -504,7 +510,6 @@ class Player extends Component {
                                     onClick={() => goToVideo(true)}
                                     icon="skip-next"
                                     ariaLabel="Go to next video"
-                                    disabled={disableControls}
                                 />
                             ) : null}
                         </div>
@@ -523,7 +528,6 @@ class Player extends Component {
                                 <div
                                     className="player__controls-volume"
                                     onWheel={handleWheelVolume}
-                                    data-state-disabled={disableControls}
                                 >
                                     <Button
                                         className="player__controls-button icon-button"
@@ -538,7 +542,6 @@ class Player extends Component {
                                                 : 'volume-off'
                                         }
                                         ariaLabel={isMuted ? 'Unmute' : 'Mute'}
-                                        disabled={disableControls}
                                     />
 
                                     <VolumeRange
@@ -686,10 +689,6 @@ const mapStateToProps = ({ app: { devices, deviceId }, player }) => {
 const mapDispatchToProps = {
     setActiveDevice,
     setActiveQueueItem,
-
-    publishCurrentTime,
-    publishLoadedFraction,
-    publishVolume,
     toggleQueue,
     toggleScreen
 };

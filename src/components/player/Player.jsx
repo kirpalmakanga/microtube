@@ -156,7 +156,6 @@ class Player extends Component {
             props: {
                 currentDevice: { isMaster }
             },
-            state: { isPlaying, youtube },
             updateTime,
             togglePlay
         } = this;
@@ -173,6 +172,8 @@ class Player extends Component {
         if (!this.isPlayerReady()) {
             return;
         }
+
+        const { isPlaying, youtube } = this.state;
 
         youtube.seekTo(t);
 

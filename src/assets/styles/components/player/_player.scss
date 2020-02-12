@@ -132,7 +132,7 @@
                 flex: initial;
             }
 
-            &[data-state-disabled='false']:hover &-range {
+            &:hover &-range {
                 opacity: 1;
                 visibility: visible;
             }

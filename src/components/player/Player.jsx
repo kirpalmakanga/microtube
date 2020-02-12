@@ -53,15 +53,18 @@ class Player extends Component {
     }
 
     updateState = (data) => {
-        this.setState(data);
-
         const {
             currentDevice: { isMaster }
         } = this.props;
 
         if (isMaster) {
-            publish('player:sync', data);
+            publish('player:sync', {
+                action: 'update-state',
+                data
+            });
         }
+
+        this.setState(data);
     };
 
     getPlayerContainer = (el) => (this._container = el);
@@ -109,14 +112,26 @@ class Player extends Component {
     };
 
     setVolume = (volume) => {
-        if (!this.isPlayerReady()) {
-            return;
-        }
-
         const {
+            props: {
+                currentDevice: { isMaster }
+            },
             state: { youtube },
             updateState
         } = this;
+
+        if (!isMaster) {
+            publish('player:sync', {
+                action: 'set-volume',
+                data: { volume }
+            });
+
+            return;
+        }
+
+        if (!this.isPlayerReady()) {
+            return;
+        }
 
         if (volume > 0) {
             youtube.unMute();
@@ -127,10 +142,6 @@ class Player extends Component {
     };
 
     handleWheelVolume = ({ deltaY }) => {
-        if (!this.isPlayerReady()) {
-            return;
-        }
-
         const { volume } = this.state;
         const newVolume = deltaY < 0 ? volume + 5 : volume - 5;
         const inRange = newVolume >= 0 && newVolume <= 100;
@@ -140,24 +151,28 @@ class Player extends Component {
         }
     };
 
-    seekTime = (value) => {
-        if (!this.isPlayerReady()) {
-            return;
-        }
-
+    seekTime = (t) => {
         const {
+            props: {
+                currentDevice: { isMaster }
+            },
             state: { isPlaying, youtube },
-            getCurrentVideo,
-            clearWatchers,
             updateTime,
             togglePlay
         } = this;
 
-        const { duration } = getCurrentVideo();
+        if (!isMaster) {
+            publish('player:sync', {
+                action: 'seek-time',
+                data: { currentTime: t }
+            });
 
-        const t = duration * (value / duration);
+            return;
+        }
 
-        clearWatchers();
+        if (!this.isPlayerReady()) {
+            return;
+        }
 
         youtube.seekTo(t);
 
@@ -168,32 +183,6 @@ class Player extends Component {
                 togglePlay();
             }
         });
-    };
-
-    watchTime = () => {
-        const { youtube } = this.state;
-
-        this.updateTime();
-
-        this.timeWatcher = setInterval(() => {
-            this.updateTime();
-
-            if (youtube.getCurrentTime() === youtube.getDuration()) {
-                clearInterval(this.timeWatcher);
-            }
-        }, 250);
-    };
-
-    watchLoading = () => {
-        this.updateLoading();
-
-        this.loadingWatcher = setInterval(() => {
-            const loaded = this.updateLoading();
-
-            if (loaded === 1) {
-                clearInterval(this.loadingWatcher);
-            }
-        }, 500);
     };
 
     updateLoading = () => {
@@ -211,9 +200,20 @@ class Player extends Component {
 
     toggleMute = () => {
         const {
+            props: {
+                currentDevice: { isMaster }
+            },
             state: { isMuted, youtube },
             updateState
         } = this;
+
+        if (!isMaster) {
+            publish('player:sync', {
+                action: 'toggle-mute'
+            });
+
+            return;
+        }
 
         if (!this.isPlayerReady()) {
             return;
@@ -229,9 +229,23 @@ class Player extends Component {
     };
 
     togglePlay = () => {
-        const { isPlaying, youtube } = this.state;
+        const {
+            props: {
+                currentDevice: { isMaster }
+            },
+            state: { isPlaying, youtube },
+            isPlayerReady
+        } = this;
 
-        if (!this.isPlayerReady()) {
+        if (!isMaster) {
+            publish('player:sync', {
+                action: 'toggle-play'
+            });
+
+            return;
+        }
+
+        if (!isPlayerReady()) {
             return;
         }
 
@@ -271,8 +285,6 @@ class Player extends Component {
             return;
         }
 
-        this.clearWatchers();
-
         updateState({
             currentTime: 0,
             loaded: 0
@@ -287,21 +299,57 @@ class Player extends Component {
         youtube.setPlaybackQuality(value);
     };
 
+    watchTime = () => {
+        const { youtube } = this.state;
+
+        if (this.timeWatcher) {
+            return;
+        }
+
+        this.updateTime();
+
+        this.timeWatcher = setInterval(() => {
+            this.updateTime();
+
+            if (youtube.getCurrentTime() === youtube.getDuration()) {
+                clearInterval(this.timeWatcher);
+            }
+        }, 250);
+    };
+
+    watchLoading = () => {
+        if (this.loadingWatcher) {
+            return;
+        }
+
+        this.updateLoading();
+
+        this.loadingWatcher = setInterval(() => {
+            const loaded = this.updateLoading();
+
+            if (loaded === 1) {
+                clearInterval(this.loadingWatcher);
+            }
+        }, 500);
+    };
+
     onYoutubeIframeReady = ({ target: youtube }) => {
         youtube.pauseVideo();
 
         this.setState({ youtube }, () => {
-            const { volume, currentTime } = this.props;
+            // const { volume, currentTime } = this.props;
 
-            if (currentTime) {
-                youtube.seekTo(currentTime);
+            // if (currentTime) {
+            //     youtube.seekTo(currentTime);
 
-                this.updateTime();
-            }
+            //     this.updateTime();
+            // }
+            this.watchTime();
+            this.watchLoading();
 
             this.setPlaybackQuality();
 
-            this.setVolume(volume);
+            // this.setVolume(volume);
         });
     };
 
@@ -311,35 +359,33 @@ class Player extends Component {
             case UNSTARTED:
             case ENDED:
                 updateState({ isPlaying: false });
+
                 break;
 
             case PLAYING:
                 updateState({ isPlaying: true, isBuffering: false });
 
-                this.watchTime();
-                this.watchLoading();
                 break;
 
             case PAUSED:
-                this.clearWatchers();
-
                 updateState({ isPlaying: false });
+
                 break;
 
             case BUFFERING:
                 const { isPlaying, currentTime } = this.state;
-
-                this.clearWatchers();
 
                 if (isPlaying && currentTime > 0) {
                     updateState({ isBuffering: true });
                 }
 
                 this.setPlaybackQuality();
+
                 break;
 
             case CUED:
                 this.togglePlay();
+
                 break;
         }
     };
@@ -392,9 +438,17 @@ class Player extends Component {
     };
 
     componentDidMount() {
-        listenFullScreenChange(this._container, this.handleFullScreenChange);
+        const actions = {
+            'toggle-play': this.togglePlay,
+            'toggle-mute': this.toggleMute,
+            'set-volume': ({ volume }) => this.setVolume(volume),
+            'seek-time': ({ currentTime }) => this.seekTime(currentTime),
+            'update-state': (state) => this.setState(state)
+        };
 
-        listen('player:sync', (data) => this.setState(data));
+        listen('player:sync', ({ action, data } = {}) => actions[action](data));
+
+        listenFullScreenChange(this._container, this.handleFullScreenChange);
 
         this.bindKeyboard();
     }

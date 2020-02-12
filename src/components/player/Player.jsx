@@ -300,21 +300,13 @@ class Player extends Component {
     };
 
     watchTime = () => {
-        const { youtube } = this.state;
-
         if (this.timeWatcher) {
             return;
         }
 
         this.updateTime();
 
-        this.timeWatcher = setInterval(() => {
-            this.updateTime();
-
-            if (youtube.getCurrentTime() === youtube.getDuration()) {
-                clearInterval(this.timeWatcher);
-            }
-        }, 250);
+        this.timeWatcher = setInterval(() => this.updateTime(), 250);
     };
 
     watchLoading = () => {
@@ -324,32 +316,17 @@ class Player extends Component {
 
         this.updateLoading();
 
-        this.loadingWatcher = setInterval(() => {
-            const loaded = this.updateLoading();
-
-            if (loaded === 1) {
-                clearInterval(this.loadingWatcher);
-            }
-        }, 500);
+        this.loadingWatcher = setInterval(() => this.updateLoading(), 500);
     };
 
     onYoutubeIframeReady = ({ target: youtube }) => {
         youtube.pauseVideo();
 
         this.setState({ youtube }, () => {
-            // const { volume, currentTime } = this.props;
-
-            // if (currentTime) {
-            //     youtube.seekTo(currentTime);
-
-            //     this.updateTime();
-            // }
             this.watchTime();
             this.watchLoading();
 
             this.setPlaybackQuality();
-
-            // this.setVolume(volume);
         });
     };
 

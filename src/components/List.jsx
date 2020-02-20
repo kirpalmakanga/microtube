@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { FixedSizeList } from 'react-window';
-import { throttle, isMobile } from '../lib/helpers.js';
+import { throttle, isMobile } from '../lib/helpers';
 
 import Fade from '../components/animations/Fade';
 import Icon from '../components/Icon';

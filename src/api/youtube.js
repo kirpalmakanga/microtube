@@ -55,11 +55,21 @@ export const getSignedInUser = () => {
 
     const currentUser = GoogleAuth.currentUser.get();
 
-    const {
-        w3: { Eea: id = '', Paa: picture = '', ig = '', ofa = '' } = {}
-    } = currentUser;
+    let user = {
+        id: '',
+        name: '',
+        picture: ''
+    };
 
-    const name = ig || ofa;
+    if (isSignedIn) {
+        const userProfile = currentUser.getBasicProfile();
+
+        user = {
+            id: userProfile.getId(),
+            name: userProfile.getName(),
+            picture: userProfile.getImageUrl()
+        };
+    }
 
     const {
         id_token: idToken = '',
@@ -70,11 +80,7 @@ export const getSignedInUser = () => {
         isSignedIn,
         idToken,
         accessToken,
-        user: {
-            id,
-            picture,
-            name
-        }
+        user
     };
 };
 

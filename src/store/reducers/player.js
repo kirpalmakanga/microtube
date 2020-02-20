@@ -1,4 +1,4 @@
-import { createReducer } from '../helpers.js';
+import { createReducer } from '../helpers';
 
 const initialState = {
     queue: [],
@@ -8,6 +8,7 @@ const initialState = {
     volume: 100,
     newQueueItems: 0,
     currentTime: 0,
+    loaded: 0,
     video: { title: 'No video.', id: '', duration: 0 }
 };
 
@@ -20,24 +21,12 @@ const extractQueueItemData = ({ id, title, duration }) => ({
 });
 
 export default createReducer(initialState, {
-    'player/OPEN_SCREEN': (state) => ({
+    'player/UPDATE_DATA': (state, { data = {} }) => ({
         ...state,
-        showScreen: true,
-        showQueue: false
+        ...data
     }),
 
-    'player/CLOSE_SCREEN': (state) => ({ ...state, showScreen: false }),
-
-    'player/OPEN_QUEUE': (state) => ({
-        ...state,
-        showQueue: true,
-        showScreen: false,
-        newQueueItems: 0
-    }),
-
-    'player/CLOSE_QUEUE': (state) => ({ ...state, showQueue: false }),
-
-    'player/QUEUE_PUSH': (
+    'player/ADD_QUEUE_ITEMS': (
         { queue, showQueue, newQueueItems, ...state },
         { items = [] }
     ) => ({
@@ -63,17 +52,6 @@ export default createReducer(initialState, {
         };
     },
 
-    'player/CLEAR_QUEUE': ({ queue, currentIndex, ...state }) => ({
-        ...state,
-        queue: queue.filter(isActiveItem(currentIndex)),
-        currentIndex: initialState.currentIndex
-    }),
-
-    'player/UPDATE_QUEUE': (state, { data: { queue = [] } = {} }) => ({
-        ...state,
-        queue
-    }),
-
     'player/SET_ACTIVE_QUEUE_ITEM': (state, { data: { index } = {} }) => {
         const currentIndex = !isNaN(index) ? index : state.queue.length - 1;
 
@@ -83,17 +61,11 @@ export default createReducer(initialState, {
         };
     },
 
-    'player/SET_VIDEO': (state, { data: { video } = {} }) => ({
+    'player/CLEAR_QUEUE': ({ queue, currentIndex, ...state }) => ({
         ...state,
-        video
+        queue: queue.filter(isActiveItem(currentIndex)),
+        currentIndex: initialState.currentIndex
     }),
 
-    'player/CLEAR_VIDEO': (state) => ({ ...state, video: initialState.video }),
-
-    'player/SET_VOLUME': (state, { data }) => ({ ...state, volume: data }),
-
-    'player/SET_CURRENT_TIME': (state, { data }) => ({
-        ...state,
-        currentTime: data
-    })
+    'player/CLEAR_VIDEO': (state) => ({ ...state, video: initialState.video })
 });

@@ -1,19 +1,19 @@
 module.exports = {
-    entry: './src/index.js',
+    entry: ['src/registerServiceWorker', 'src/index'],
     output: {
         html: {
             title: 'Microtube'
         }
     },
-    devServer: { port: 8080 },
+    devServer: {
+        port: 8080
+    },
     plugins: [
         {
-            resolve: '@poi/plugin-pwa',
-            options: {}
+            resolve: '@poi/plugin-pwa'
         },
         {
-            resolve: '@poi/plugin-typescript',
-            options: {}
+            resolve: '@poi/plugin-typescript'
         }
     ]
 };

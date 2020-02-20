@@ -1,95 +1,22 @@
 import * as api from '../api/youtube';
 import * as database from '../api/firebase';
+import { listen, publish } from '../api/socket';
 
-import {
-    delay,
-    catchErrors,
-    parseVideoId,
-    splitLines,
-    chunk
-} from '../lib/helpers';
+import { catchErrors, parseVideoId, splitLines, chunk } from '../lib/helpers';
 
-import { prompt } from './prompt';
+import { __DEV__ } from '../config/app';
 
-const __DEV__ = process.env.NODE_ENV === 'development';
+import { notify, prompt } from './app';
 
-const notify = ({ message }) => async (dispatch, getState) => {
-    dispatch({ type: 'notifications/OPEN', data: message });
-
-    await delay(4000);
-
-    if (getState().notifications.message) {
-        dispatch({ type: 'notifications/CLOSE' });
-
-        await delay(300);
-
-        dispatch({ type: 'notifications/CLEAR_MESSAGE' });
-    }
-};
-
-/* Auth */
-export const getUserData = () => async (dispatch) => {
-    const data = api.getSignedInUser();
-
-    const { isSignedIn, idToken, accessToken } = data;
-
-    if (!isSignedIn) {
-        return;
+export const enableImportMethods = () => (dispatch) => {
+    if (!window.queueVideos) {
+        window.queueVideos = (ids = []) => dispatch(queueVideos(ids));
     }
 
-    const {
-        user: { uid }
-    } = await database.signIn(idToken, accessToken);
-
-    data.user.id = uid;
-
-    dispatch({
-        type: 'auth/UPDATE_DATA',
-        data
-    });
-
-    dispatch(listenForQueueUpdate());
+    if (!window.queuePlaylist) {
+        window.queuePlaylist = (id) => dispatch(queuePlaylist(id));
+    }
 };
-
-export const signIn = () => async (dispatch) =>
-    catchErrors(
-        async () => {
-            dispatch({ type: 'auth/UPDATE_DATA', data: { isSigningIn: true } });
-
-            await api.signIn();
-
-            await dispatch(getUserData());
-        },
-        ({ error }) =>
-            error !== 'popup_closed_by_user' &&
-            dispatch(notify({ message: 'Error signing in user.' })),
-        () =>
-            dispatch({
-                type: 'auth/UPDATE_DATA',
-                data: { isSigningIn: false }
-            })
-    );
-
-export const signOut = () => async (dispatch) =>
-    catchErrors(
-        async () => {
-            await api.signOut();
-
-            await database.signOut();
-
-            dispatch({ type: 'auth/SIGN_OUT' });
-        },
-        () => dispatch(notify({ message: 'Error signing out user.' }))
-    );
-
-export const closeScreen = () => (dispatch, getState) => {
-    const {
-        player: { showScreen }
-    } = getState();
-
-    showScreen && dispatch({ type: 'player/CLOSE_SCREEN' });
-};
-
 /* Videos */
 export function getVideo(videoId) {
     return async (dispatch) =>
@@ -99,7 +26,7 @@ export function getVideo(videoId) {
 
                 const video = await api.getVideo(videoId);
 
-                dispatch({ type: 'player/SET_VIDEO', data: { video } });
+                dispatch({ type: 'player/UPDATE_DATA', data: { video } });
             },
             () => dispatch(notify({ message: 'Error fetching video.' }))
         );
@@ -334,15 +261,18 @@ const saveQueue = () => async (_, getState) => {
             isSignedIn,
             user: { id: userId }
         },
-        player: { queue }
+        player: { queue, currentIndex }
     } = getState();
 
     if (isSignedIn) {
-        database.set(`users/${__DEV__ ? 'dev' : userId}`, { queue });
+        database.set(`users/${__DEV__ ? 'dev' : userId}`, {
+            queue,
+            currentIndex
+        });
     }
 };
 
-const listenForQueueUpdate = () => (dispatch, getState) => {
+export const listenForQueueUpdate = () => (dispatch, getState) => {
     const {
         auth: {
             isSignedIn,
@@ -352,21 +282,21 @@ const listenForQueueUpdate = () => (dispatch, getState) => {
 
     if (isSignedIn) {
         database.listen(
-            `users/${__DEV__ ? 'dev' : userId}/queue`,
-            (queue = []) =>
+            `users/${__DEV__ ? 'dev' : userId}`,
+            ({ queue = [], currentIndex = 0 }) => {
                 dispatch({
-                    type: 'player/UPDATE_QUEUE',
+                    type: 'player/UPDATE_DATA',
                     data: { queue }
-                })
+                });
+
+                dispatch({
+                    type: 'player/SET_ACTIVE_QUEUE_ITEM',
+                    data: { index: currentIndex }
+                });
+            }
         );
     }
 };
-
-export const saveVolume = (data) => (dispatch) =>
-    dispatch({ type: 'player/SET_VOLUME', data });
-
-export const saveCurrentTime = (data) => (dispatch) =>
-    dispatch({ type: 'player/SET_CURRENT_TIME', data });
 
 export const toggleQueue = () => (dispatch, getState) => {
     const {
@@ -374,7 +304,11 @@ export const toggleQueue = () => (dispatch, getState) => {
     } = getState();
 
     dispatch({
-        type: showQueue ? 'player/CLOSE_QUEUE' : 'player/OPEN_QUEUE'
+        type: 'player/UPDATE_DATA',
+        data: {
+            showQueue: !showQueue,
+            ...(!showQueue ? { showScreen: false, newQueueItems: 0 } : {})
+        }
     });
 };
 
@@ -384,12 +318,26 @@ export const toggleScreen = () => (dispatch, getState) => {
     } = getState();
 
     dispatch({
-        type: showScreen ? 'player/CLOSE_SCREEN' : 'player/OPEN_SCREEN'
+        type: 'player/UPDATE_DATA',
+        data: {
+            showScreen: !showScreen,
+            ...(!showScreen ? { showQueue: false } : {})
+        }
     });
 };
 
+export const closeScreen = () => (dispatch, getState) => {
+    const {
+        player: { showScreen }
+    } = getState();
+
+    if (showScreen) {
+        dispatch({ type: 'player/UPDATE_DATA', data: { showScreen: false } });
+    }
+};
+
 export const queueItems = (items) => (dispatch) => {
-    dispatch({ type: 'player/QUEUE_PUSH', items });
+    dispatch({ type: 'player/ADD_QUEUE_ITEMS', items });
 
     dispatch(saveQueue());
 };
@@ -397,7 +345,7 @@ export const queueItems = (items) => (dispatch) => {
 export const queueItem = (data) => (dispatch) => dispatch(queueItems([data]));
 
 export const setQueue = (queue) => (dispatch) => {
-    dispatch({ type: 'player/UPDATE_QUEUE', data: { queue } });
+    dispatch({ type: 'player/UPDATE_DATA', data: { queue } });
 
     dispatch(saveQueue());
 };

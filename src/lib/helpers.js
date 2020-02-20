@@ -173,7 +173,7 @@ export const pick = (obj = {}, whitelist = []) => {
     return result;
 };
 
-export const omit = (obj, blacklist = []) => {
+export const omit = (obj = {}, blacklist = []) => {
     const result = {};
 
     for (const key in obj) {
@@ -199,3 +199,11 @@ export const catchErrors = async (
         return anyway();
     }
 };
+
+export const uuidv4 = () =>
+    ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+        (
+            c ^
+            (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+        ).toString(16)
+    );

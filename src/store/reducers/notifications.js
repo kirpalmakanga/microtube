@@ -1,4 +1,4 @@
-import { createReducer } from '../helpers.js';
+import { createReducer } from '../helpers';
 
 const initialState = {
     message: '',

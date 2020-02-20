@@ -424,7 +424,13 @@ class Player extends Component {
             'update-state': (state) => this.setState(state)
         };
 
-        listen('player:sync', ({ action, data } = {}) => actions[action](data));
+        listen('player:sync', ({ action, data = {} } = {}) => {
+            const handler = actions[action];
+
+            if (handler) {
+                handler(data);
+            }
+        });
 
         listenFullScreenChange(this._container, this.handleFullScreenChange);
 
@@ -714,7 +720,9 @@ const mapStateToProps = ({ app: { devices, deviceId }, player }) => {
     return {
         ...player,
         devices: devices.filter(({ deviceId: id }) => id !== deviceId),
-        currentDevice: devices.find(({ deviceId: id }) => id === deviceId) || {}
+        currentDevice: devices.find(({ deviceId: id }) => id === deviceId) || {
+            isMaster: true
+        }
     };
 };
 

@@ -30,5 +30,10 @@ export default createReducer(initialState, {
     ) => ({
         ...state,
         devices: devices.filter((id) => id === deletedId)
+    }),
+
+    'app/CLEAR_DEVICES': (state) => ({
+        ...state,
+        devices: initialState.devices
     })
 });

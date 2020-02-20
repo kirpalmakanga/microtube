@@ -45,6 +45,7 @@ class Player extends Component {
             isFullScreen: false,
             showVolume: false,
             showDevices: false,
+            showScreen: false,
             volume: 100,
             loaded: 0,
             currentTime: 0,
@@ -403,6 +404,17 @@ class Player extends Component {
 
     handleFullScreenChange = (isFullScreen) => this.setState({ isFullScreen });
 
+    toggleScreen = () => {
+        this.updateState({ showScreen: !this.state.showScreen });
+
+        publish('player:sync', {
+            action: 'update-state',
+            data: { showScreen: !this.state.showScreen }
+        });
+
+        this.props.toggleScreen();
+    };
+
     toggleFullScreen = () => {
         const {
             state: { isFullScreen },
@@ -414,6 +426,19 @@ class Player extends Component {
         }
         exitFullScreen();
     };
+
+    componentDidUpdate({ showScreen: prevShowScreen }) {
+        const {
+            props: {
+                currentDevice: { isMaster },
+                showScreen
+            }
+        } = this;
+
+        if (isMaster && showScreen !== prevShowScreen) {
+            this.setState({ showScreen });
+        }
+    }
 
     componentDidMount() {
         const actions = {
@@ -449,10 +474,8 @@ class Player extends Component {
                 setActiveDevice,
                 video,
                 showQueue,
-                showScreen,
                 newQueueItems,
-                toggleQueue,
-                toggleScreen
+                toggleQueue
             },
             state: {
                 currentTime,
@@ -462,7 +485,8 @@ class Player extends Component {
                 isBuffering,
                 isMuted,
                 isFullScreen,
-                showDevices
+                showDevices,
+                showScreen
             },
             getPlayerContainer,
             getCurrentVideo,
@@ -473,6 +497,7 @@ class Player extends Component {
             toggleMute,
             togglePlay,
             toggleDevices,
+            toggleScreen,
             goToVideo,
             onYoutubeIframeReady,
             onYoutubeIframeStateChange
@@ -684,7 +709,7 @@ class Player extends Component {
                                         'player__controls-button icon-button',
                                         showScreen ? 'is-active' : ''
                                     ].join(' ')}
-                                    onClick={() => toggleScreen(showScreen)}
+                                    onClick={toggleScreen}
                                     icon="screen"
                                     ariaLabel={
                                         showScreen

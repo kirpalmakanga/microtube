@@ -632,7 +632,7 @@ class Player extends Component {
                                 />
                             ) : null}
 
-                            {devices.length ? (
+                            {!isSingleVideo && devices.length ? (
                                 <div className="player__controls-devices">
                                     <Button
                                         className={[

@@ -118,7 +118,7 @@ export const isMobile = () => {
     );
 };
 
-export const parseID = (url) => {
+export const parseVideoId = (url) => {
     url = url.split(/(vi\/|v%3D|v=|\/v\/|youtu\.be\/|\/embed\/)/);
     return undefined !== url[2] ? url[2].split(/[^0-9a-z_\-]/i)[0] : url[0];
 };
@@ -157,16 +157,23 @@ export const throttle = (fn, delay = 50) => {
     };
 };
 
-export const pick = (obj = {}, whitelist = []) =>
-    Object.keys(obj).reduce(
-        (newObj, key) => ({
-            ...newObj,
-            ...(whitelist.includes(key) ? { [key]: obj[key] } : {})
-        }),
-        {}
-    );
+export const pick = (obj = {}, whitelist = []) => {
+    if (!whitelist.length) {
+        return obj;
+    }
 
-export const omit = (obj, blacklist = []) => {
+    const result = {};
+
+    for (const key of whitelist) {
+        if (obj[key]) {
+            result[key] = obj[key];
+        }
+    }
+
+    return result;
+};
+
+export const omit = (obj = {}, blacklist = []) => {
     const result = {};
 
     for (const key in obj) {
@@ -186,8 +193,17 @@ export const catchErrors = async (
     try {
         await fn();
     } catch (error) {
+        console.error(error);
         onError(error);
     } finally {
         return anyway();
     }
 };
+
+export const uuidv4 = () =>
+    ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
+        (
+            c ^
+            (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+        ).toString(16)
+    );

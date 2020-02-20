@@ -1,7 +1,7 @@
 import { PureComponent } from 'react';
 import Icon from '../../Icon';
 
-import { preventDefault } from '../../../lib/helpers.js';
+import { preventDefault } from '../../../lib/helpers';
 
 class Button extends PureComponent {
     render() {
@@ -10,7 +10,7 @@ class Button extends PureComponent {
             iconTransitionClass = '',
             badge,
             ariaLabel,
-            onClick,
+            onClick = () => {},
             ...props
         } = this.props;
 

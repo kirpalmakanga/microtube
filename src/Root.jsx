@@ -3,16 +3,16 @@ import './assets/styles/app.scss';
 import { Component } from 'react';
 
 import { connect } from 'react-redux';
-import { loadAPI, getAuthInstance as loadAuth } from './api/youtube';
 
-import {
-    queueVideos,
-    queuePlaylist,
-    closeScreen,
-    getUserData
-} from './actions/youtube';
+import { initializeApp } from './actions/app';
+
+import { getUserData } from './actions/auth';
+
+import { enableImportMethods } from './actions/youtube';
 
 import { preventDefault, isMobile } from './lib/helpers';
+
+import { __DEV__ } from './config/app';
 
 import Header from './layout/Header';
 
@@ -27,40 +27,32 @@ import Notifications from './components/Notifications';
 class Root extends Component {
     state = { apiLoaded: false };
 
-    initApp = async () => {
-        const { getUserData, queueVideos, queuePlaylist } = this.props;
+    init = async () => {
+        const { initializeApp, getUserData, enableImportMethods } = this.props;
 
-        await loadAPI();
-
-        await loadAuth();
+        await initializeApp();
 
         await getUserData();
 
+        enableImportMethods();
+
         this.setState({ apiLoaded: true });
-
-        if (!window.queueVideos) {
-            window.queueVideos = queueVideos;
-        }
-
-        if (!window.queuePlaylist) {
-            window.queuePlaylist = queuePlaylist;
-        }
     };
 
     componentDidMount() {
-        this.initApp();
+        this.init();
     }
 
     render() {
         const {
-            props: { isLoading, closeScreen, children },
+            props: { children },
             state: { apiLoaded }
         } = this;
 
         return (
             <div
                 className={`layout ${isMobile() ? 'mobile' : ''}`}
-                onContextMenu={preventDefault()}
+                onContextMenu={__DEV__ ? () => {} : preventDefault()}
             >
                 <Head />
 
@@ -68,34 +60,28 @@ class Root extends Component {
 
                 {apiLoaded ? (
                     <>
-                        <Header onClick={closeScreen} />
+                        <Header />
 
                         <main className="layout__content">{children}</main>
 
                         <Notifications />
 
                         <Player />
+
+                        <Prompt />
                     </>
                 ) : null}
 
-                <Prompt />
-
-                <Loader
-                    isActive={!apiLoaded || isLoading}
-                    style={isLoading ? { opacity: 0.5 } : {}}
-                />
+                <Loader isActive={!apiLoaded} />
             </div>
         );
     }
 }
 
-const mapStateToProps = ({ app: { isLoading } }) => ({ isLoading });
-
 const mapDispatchToProps = {
-    queueVideos,
-    queuePlaylist,
+    initializeApp,
     getUserData,
-    closeScreen
+    enableImportMethods
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Root);
+export default connect(() => ({}), mapDispatchToProps)(Root);

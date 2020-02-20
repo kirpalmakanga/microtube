@@ -1,5 +1,3 @@
-import React from 'react';
-
 const CardTitle = ({ children, className, ...props }) => (
     <h3 className={['card__subtitle', className].join(' ')} {...props}>
         {children}

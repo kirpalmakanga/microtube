@@ -55,7 +55,8 @@ class Search extends Component {
                 searchVideos,
                 playItem,
                 queueItem,
-                editPlaylistItem
+                editPlaylistItem,
+                history
             },
             state: { mountGrid }
         } = this;
@@ -86,7 +87,9 @@ class Search extends Component {
                             renderItem={({ data }) => (
                                 <VideoCard
                                     {...data}
-                                    onClick={() => playItem(data)}
+                                    onClick={() =>
+                                        history.push(`/video/${data.id}`)
+                                    }
                                     onClickMenu={() =>
                                         openMenu(data, data.title)
                                     }

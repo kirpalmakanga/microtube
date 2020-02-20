@@ -1,5 +1,5 @@
 import { omit } from '../../lib/helpers';
-import { createReducer } from '../helpers.js';
+import { createReducer } from '../helpers';
 
 const initialState = {
     channelTitle: '',

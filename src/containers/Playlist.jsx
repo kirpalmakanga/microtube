@@ -41,10 +41,10 @@ class Playlist extends Component {
                 items,
                 totalResults,
                 getPlaylistItems,
-                playItem,
                 queueItem,
                 removePlaylistItem,
-                editPlaylistItem
+                editPlaylistItem,
+                history
             }
         } = this;
 
@@ -54,19 +54,19 @@ class Playlist extends Component {
             <MenuWrapper
                 menuItems={[
                     {
-                        title: `Add to queue`,
+                        title: 'Add to queue',
                         icon: 'queue',
                         onClick: queueItem
                     },
 
                     {
-                        title: `Add to playlist`,
+                        title: 'Add to playlist',
                         icon: 'playlist-add',
                         onClick: ({ id }) => editPlaylistItem(id)
                     },
 
                     {
-                        title: `Remove from playlist`,
+                        title: 'Remove from playlist',
                         icon: 'delete',
                         onClick: ({ playlistItemId, playlistId, title }) =>
                             removePlaylistItem(
@@ -84,8 +84,10 @@ class Playlist extends Component {
                         renderItem={({ data }) => (
                             <VideoCard
                                 {...data}
-                                onClick={() => playItem(data)}
-                                onClickMenu={() => openMenu(data)}
+                                onClick={() =>
+                                    history.push(`/video/${data.id}`)
+                                }
+                                onClickMenu={() => openMenu(data, data.title)}
                             />
                         )}
                         loadMoreItems={() => getPlaylistItems(playlistId)}
@@ -117,8 +119,7 @@ const mapDispatchToProps = {
     clearPlaylistItems,
     editPlaylistItem,
     removePlaylistItem,
-    queueItem,
-    playItem
+    queueItem
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Playlist);

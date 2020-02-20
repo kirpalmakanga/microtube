@@ -1,6 +1,6 @@
 import { API_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SCOPE } from '../config/api';
 import { parseVideoData, parsePlaylistData, parseChannelData } from './parsers';
-import { pick } from '../lib/helpers';
+import { parseVideoId, pick } from '../lib/helpers';
 
 const ITEMS_PER_REQUEST = 50;
 
@@ -55,11 +55,21 @@ export const getSignedInUser = () => {
 
     const currentUser = GoogleAuth.currentUser.get();
 
-    const {
-        w3: { Eea: id = '', Paa: picture = '', ig = '', ofa = '' } = {}
-    } = currentUser;
+    let user = {
+        id: '',
+        name: '',
+        picture: ''
+    };
 
-    const name = ig || ofa;
+    if (isSignedIn) {
+        const userProfile = currentUser.getBasicProfile();
+
+        user = {
+            id: userProfile.getId(),
+            name: userProfile.getName(),
+            picture: userProfile.getImageUrl()
+        };
+    }
 
     const {
         id_token: idToken = '',
@@ -70,11 +80,7 @@ export const getSignedInUser = () => {
         isSignedIn,
         idToken,
         accessToken,
-        user: {
-            id,
-            picture,
-            name
-        }
+        user
     };
 };
 
@@ -143,7 +149,7 @@ export async function searchVideos({ query, forMine, pageToken }) {
 
 export async function getVideo(urlOrId = '') {
     const { items } = await request('GET', 'videos', {
-        id: parseID(urlOrId),
+        id: parseVideoId(urlOrId),
         part: 'contentDetails, snippet, status'
     });
 

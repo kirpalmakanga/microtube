@@ -1,5 +1,3 @@
-import { Component } from 'react';
-
 import Icon from '../Icon';
 
 import { formatTime, stopPropagation } from '../../lib/helpers';
@@ -18,6 +16,7 @@ const QueueItem = ({
             isActive ? 'queue__item--active' : ''
         ].join(' ')}
         {...props}
+        onContextMenu={onClickMenu}
     >
         <div className="queue__item-button icon-button">
             <Icon

@@ -10,6 +10,25 @@ export const initializeApp = () => async () => {
     await loadAuth();
 };
 
+export const setDevice = () => (dispatch, getState) => {
+    let {
+        app: { deviceId }
+    } = getState();
+
+    let deviceName = navigator.appCodeName;
+
+    if (!deviceId) {
+        deviceId = uuidv4();
+
+        dispatch({
+            type: 'app/SET_DEVICE_ID',
+            data: { deviceId }
+        });
+    }
+
+    publish('device:add', { deviceId, deviceName });
+};
+
 export const listenDevicesSync = () => (dispatch) =>
     listen('devices:sync', (devices) =>
         dispatch({
@@ -50,29 +69,16 @@ export const connectDevice = () => (dispatch, getState) => {
 
         publish('room', userId);
 
+        listen('disconnect', () =>
+            dispatch({
+                type: 'app/CLEAR_DEVICES'
+            })
+        );
+
         dispatch(setDevice());
 
         dispatch(listenDevicesSync());
     });
-};
-
-export const setDevice = () => (dispatch, getState) => {
-    let {
-        app: { deviceId }
-    } = getState();
-
-    let deviceName = navigator.appCodeName;
-
-    if (!deviceId) {
-        deviceId = uuidv4();
-
-        dispatch({
-            type: 'app/SET_DEVICE_ID',
-            data: { deviceId }
-        });
-    }
-
-    publish('device:add', { deviceId, deviceName });
 };
 
 export const notify = ({ message }) => async (dispatch, getState) => {

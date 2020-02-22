@@ -6,7 +6,6 @@ import {
     getPlaylistItems,
     clearPlaylistItems,
     queueItem,
-    playItem,
     removePlaylistItem,
     editPlaylistItem
 } from '../actions/youtube';

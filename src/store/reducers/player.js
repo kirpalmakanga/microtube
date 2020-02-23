@@ -61,9 +61,14 @@ export default createReducer(initialState, {
         };
     },
 
-    'player/CLEAR_QUEUE': ({ queue, currentIndex, ...state }) => ({
+    'player/CLEAR_QUEUE': (
+        { queue, currentIndex, ...state },
+        { data: { clearAll = false } = {} }
+    ) => ({
         ...state,
-        queue: queue.filter(isActiveItem(currentIndex)),
+        queue: clearAll
+            ? initialState.queue
+            : queue.filter(isActiveItem(currentIndex)),
         currentIndex: initialState.currentIndex
     }),
 

@@ -57,6 +57,8 @@ export const signOut = () => async (dispatch) =>
 
             await database.signOut();
 
+            dispatch({ type: 'player/CLEAR_QUEUE', data: { clearAll: true } });
+
             dispatch({ type: 'auth/SIGN_OUT' });
         },
         () => dispatch(notify({ message: 'Error signing out user.' }))

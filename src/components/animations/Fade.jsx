@@ -1,7 +1,7 @@
 import { PureComponent } from 'react';
 import Transition from 'react-transition-group/Transition';
 
-const duration = 300;
+const duration = 150;
 
 const defaultStyle = {
     transition: `opacity ${duration}ms ease-in-out`,
@@ -18,7 +18,7 @@ class Fade extends PureComponent {
         const {
             in: inProp,
             children,
-            duration = 200,
+            duration = 150,
             mountOnEnter = true,
             unmountOnExit = true,
             ...props

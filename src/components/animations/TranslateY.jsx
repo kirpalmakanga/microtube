@@ -1,7 +1,7 @@
 import { PureComponent } from 'react';
 import Transition from 'react-transition-group/Transition';
 
-const duration = 300;
+const duration = 150;
 
 const defaultStyle = {
     transition: `transform ${duration}ms ease-in-out`,

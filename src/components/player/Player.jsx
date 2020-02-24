@@ -8,7 +8,8 @@ import { setActiveDevice } from '../../actions/app';
 import {
     setActiveQueueItem,
     toggleQueue,
-    toggleScreen
+    toggleScreen,
+    editPlaylistItem
 } from '../../actions/youtube';
 
 import { isMobile, omit } from '../../lib/helpers';
@@ -302,23 +303,27 @@ class Player extends Component {
     };
 
     watchTime = () => {
-        if (this.timeWatcher) {
+        const { updateTime, timeWatcher } = this;
+
+        if (timeWatcher) {
             return;
         }
 
-        this.updateTime();
+        updateTime();
 
-        this.timeWatcher = setInterval(() => this.updateTime(), 250);
+        this.timeWatcher = setInterval(updateTime, 250);
     };
 
     watchLoading = () => {
-        if (this.loadingWatcher) {
+        const { updateLoading, loadingWatcher } = this;
+
+        if (loadingWatcher) {
             return;
         }
 
-        this.updateLoading();
+        updateLoading();
 
-        this.loadingWatcher = setInterval(() => this.updateLoading(), 500);
+        this.loadingWatcher = setInterval(updateLoading, 500);
     };
 
     onYoutubeIframeReady = ({ target: youtube }) => {
@@ -475,7 +480,8 @@ class Player extends Component {
                 video,
                 showQueue,
                 newQueueItems,
-                toggleQueue
+                toggleQueue,
+                editPlaylistItem
             },
             state: {
                 currentTime,
@@ -719,6 +725,15 @@ class Player extends Component {
                                 />
                             ) : null}
 
+                            {isSingleVideo ? (
+                                <Button
+                                    className="player__controls-button icon-button"
+                                    onClick={() => editPlaylistItem(videoId)}
+                                    icon="playlist-add"
+                                    ariaLabel="Add to playlist"
+                                ></Button>
+                            ) : null}
+
                             <Button
                                 className="player__controls-button icon-button"
                                 onClick={toggleFullScreen}
@@ -754,6 +769,7 @@ const mapStateToProps = ({ app: { devices, deviceId }, player }) => {
 const mapDispatchToProps = {
     setActiveDevice,
     setActiveQueueItem,
+    editPlaylistItem,
     toggleQueue,
     toggleScreen
 };

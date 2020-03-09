@@ -73,7 +73,7 @@ class Player extends Component {
 
     getCurrentVideo = () => {
         const {
-            props: { queue, video, currentIndex }
+            props: { queue, video, currentId }
         } = this;
 
         if (video.id) {
@@ -81,7 +81,7 @@ class Player extends Component {
         }
 
         return (
-            queue[currentIndex] || {
+            queue.find(({ id }) => id === currentId) || {
                 title: 'No video.',
                 id: '',
                 duration: 0
@@ -95,11 +95,11 @@ class Player extends Component {
             props: {
                 queue,
                 video: { id },
-                currentIndex
+                currentId
             }
         } = this;
 
-        return !!youtube && (id || queue[currentIndex]);
+        return !!youtube && (id || queue.find(({ id }) => id === currentId));
     };
 
     updateTime = (t) => {
@@ -274,7 +274,7 @@ class Player extends Component {
 
     goToVideo = (next = true) => {
         const {
-            props: { queue, video, currentIndex, setActiveQueueItem },
+            props: { queue, video, currentId, setActiveQueueItem },
             updateState
         } = this;
 
@@ -282,18 +282,22 @@ class Player extends Component {
             return;
         }
 
+        const currentIndex = queue.findIndex(({ id }) => id === currentId);
+
         const newIndex = currentIndex + (next ? 1 : -1);
 
         if (!queue[newIndex]) {
             return;
         }
 
+        const { id } = queue[newIndex];
+
         updateState({
             currentTime: 0,
             loaded: 0
         });
 
-        setActiveQueueItem(newIndex);
+        setActiveQueueItem(id);
     };
 
     setPlaybackQuality = (value = 'hd1080') => {

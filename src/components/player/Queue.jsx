@@ -21,7 +21,7 @@ class Queue extends Component {
         const {
             props: {
                 items,
-                currentIndex,
+                currentId,
                 showQueue,
                 isPlaying,
                 isBuffering,
@@ -60,8 +60,9 @@ class Queue extends Component {
                                 <DraggableList
                                     className="queue__items"
                                     items={items}
-                                    renderItem={(data, index) => {
-                                        const isActive = index === currentIndex;
+                                    renderItem={(data) => {
+                                        const { id } = data;
+                                        const isActive = id === currentId;
 
                                         let icon = 'play';
 
@@ -83,7 +84,7 @@ class Queue extends Component {
                                                         ? togglePlay
                                                         : () =>
                                                               setActiveQueueItem(
-                                                                  index
+                                                                  id
                                                               )
                                                 }
                                                 onClickMenu={() =>
@@ -106,10 +107,10 @@ class Queue extends Component {
 }
 
 const mapStateToProps = ({
-    player: { queue: items, currentIndex, showQueue }
+    player: { queue: items, currentId, showQueue }
 }) => ({
     items,
-    currentIndex,
+    currentId,
     showQueue
 });
 

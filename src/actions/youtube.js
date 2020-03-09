@@ -260,13 +260,13 @@ const saveQueue = () => async (_, getState) => {
             isSignedIn,
             user: { id: userId }
         },
-        player: { queue, currentIndex }
+        player: { queue, currentId }
     } = getState();
 
     if (isSignedIn) {
         database.set(`users/${__DEV__ ? 'dev' : userId}`, {
             queue,
-            currentIndex
+            currentId
         });
     }
 };
@@ -282,17 +282,11 @@ export const listenForQueueUpdate = () => (dispatch, getState) => {
     if (isSignedIn) {
         database.listen(
             `users/${__DEV__ ? 'dev' : userId}`,
-            ({ queue = [], currentIndex = 0 }) => {
+            ({ queue = [], currentId = '' } = {}) =>
                 dispatch({
                     type: 'player/UPDATE_DATA',
-                    data: { queue }
-                });
-
-                dispatch({
-                    type: 'player/SET_ACTIVE_QUEUE_ITEM',
-                    data: { index: currentIndex }
-                });
-            }
+                    data: { queue, currentId }
+                })
         );
     }
 };
@@ -335,10 +329,20 @@ export const closeScreen = () => (dispatch, getState) => {
     }
 };
 
-export const queueItems = (items) => (dispatch) => {
-    dispatch({ type: 'player/ADD_QUEUE_ITEMS', items });
+export const queueItems = (newItems = []) => (dispatch, getState) => {
+    const {
+        player: { queue }
+    } = getState();
+
+    const items = newItems.filter(
+        ({ id }) => !queue.find(({ id: queueItemId }) => queueItemId === id)
+    );
+
+    dispatch({ type: 'player/ADD_QUEUE_ITEMS', data: { items } });
 
     dispatch(saveQueue());
+
+    return items;
 };
 
 export const queueItem = (data) => (dispatch) => dispatch(queueItems([data]));
@@ -370,10 +374,10 @@ export const clearQueue = () => (dispatch) =>
         )
     );
 
-export const setActiveQueueItem = (index) => (dispatch) => {
+export const setActiveQueueItem = (currentId) => (dispatch) => {
     dispatch({
-        type: 'player/SET_ACTIVE_QUEUE_ITEM',
-        data: { index }
+        type: 'player/UPDATE_DATA',
+        data: { currentId }
     });
 
     dispatch(saveQueue());
@@ -382,7 +386,7 @@ export const setActiveQueueItem = (index) => (dispatch) => {
 export const playItem = (data) => (dispatch) => {
     dispatch(queueItem(data));
 
-    dispatch(setActiveQueueItem());
+    dispatch(setActiveQueueItem(data.id));
 };
 
 export function queuePlaylist(playlistId, play) {
@@ -397,12 +401,12 @@ export function queuePlaylist(playlistId, play) {
                 pageToken
             });
 
-            dispatch(queueItems(items));
+            const newItems = dispatch(queueItems(items));
 
-            if (play && !pageToken && items.length) {
-                const index = queue.length;
+            if (play && !pageToken && newItems.length) {
+                const [{ id }] = newItems;
 
-                dispatch(setActiveQueueItem(index));
+                dispatch(setActiveQueueItem(id));
             }
 
             if (nextPageToken) {

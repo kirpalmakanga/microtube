@@ -13,7 +13,7 @@ const initialState = {
 export default createReducer(initialState, {
     'auth/UPDATE_DATA': (
         { user: currentUser, ...state },
-        { data: { user = {}, ...data } }
+        { user = {}, ...data }
     ) => ({ ...state, ...data, user: { ...currentUser, ...user } }),
 
     'auth/SIGN_OUT': () => initialState

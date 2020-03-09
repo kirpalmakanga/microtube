@@ -7,27 +7,24 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    'app/SET_LOADER': (state, { data: isLoading }) => ({ ...state, isLoading }),
+    'app/SET_LOADER': (state, { isLoading }) => ({ ...state, isLoading }),
 
-    'app/SET_DEVICE_ID': (state, { data: { deviceId } }) => ({
+    'app/SET_DEVICE_ID': (state, { deviceId }) => ({
         ...state,
         deviceId
     }),
 
-    'app/SYNC_DEVICES': (state, { data: { devices } }) => ({
+    'app/SYNC_DEVICES': (state, { devices }) => ({
         ...state,
         devices
     }),
 
-    'app/ADD_DEVICE': ({ devices, ...state }, { data: { id } }) => ({
+    'app/ADD_DEVICE': ({ devices, ...state }, { id }) => ({
         ...state,
         devices: [...devices, id]
     }),
 
-    'app/REMOVE_DEVICE': (
-        { devices, ...state },
-        { data: { id: deletedId } }
-    ) => ({
+    'app/REMOVE_DEVICE': ({ devices, ...state }, { id: deletedId }) => ({
         ...state,
         devices: devices.filter((id) => id === deletedId)
     }),

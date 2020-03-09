@@ -12,7 +12,7 @@ const initialState = {
 export default createReducer(initialState, {
     'prompt/RESET': () => initialState,
 
-    'prompt/OPEN': (state, { data }) => ({
+    'prompt/OPEN': (state, data) => ({
         ...state,
         ...data,
         isVisible: true

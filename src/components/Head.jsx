@@ -46,9 +46,11 @@ class Head extends Component {
 const mapStateToProps = ({
     playlistItems: { playlistTitle },
     channel: { channelTitle },
-    player: { queue, video, currentIndex, currentTime }
+    player: { queue, video, currentId, currentTime }
 }) => {
-    const currentVideo = video.id ? video : queue[currentIndex] || {};
+    const currentVideo = video.id
+        ? video
+        : queue.find(({ id }) => id === currentId) || {};
 
     return {
         playlistTitle,

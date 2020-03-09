@@ -6,7 +6,7 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    'notifications/OPEN': (state, { data: message }) => ({
+    'notifications/OPEN': (state, { message }) => ({
         ...state,
         message,
         isActive: true

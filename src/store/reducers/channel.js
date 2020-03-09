@@ -16,11 +16,11 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    'channel/UPDATE_DATA': (state, { data }) => ({ ...state, ...data }),
+    'channel/UPDATE_DATA': (state, data) => ({ ...state, ...data }),
 
     'channel/UPDATE_ITEMS': (
         { items, ...state },
-        { data: { items: newItems, nextPageToken = '', totalResults } }
+        { items: newItems, nextPageToken = '', totalResults }
     ) => ({
         ...state,
         items: [...items, ...newItems],

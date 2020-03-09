@@ -6,8 +6,7 @@ import {
     clearChannelVideos,
     queueItem,
     playItem,
-    editPlaylistItem,
-    removePlaylistItem
+    editPlaylistItem
 } from '../../actions/youtube';
 
 import List from '../../components/List';
@@ -94,7 +93,6 @@ const mapDispatchToProps = {
     getChannelVideos,
     clearChannelVideos,
     editPlaylistItem,
-    removePlaylistItem,
     queueItem,
     playItem
 };

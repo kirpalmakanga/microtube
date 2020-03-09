@@ -82,7 +82,7 @@ export const connectDevice = () => (dispatch, getState) => {
 };
 
 export const notify = ({ message }) => async (dispatch, getState) => {
-    dispatch({ type: 'notifications/OPEN', data: message });
+    dispatch({ type: 'notifications/OPEN', data: { message } });
 
     await delay(4000);
 

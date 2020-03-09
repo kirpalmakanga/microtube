@@ -10,14 +10,14 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    'search/SET_TARGET': (state, { data: { forMine } }) => ({
+    'search/SET_TARGET': (state, { forMine }) => ({
         ...state,
         forMine
     }),
 
     'search/UPDATE_ITEMS': (
         { items, ...state },
-        { data: { items: newItems, nextPageToken = '', totalResults } }
+        { items: newItems, nextPageToken = '', totalResults }
     ) => ({
         ...state,
         items: [...items, ...newItems],

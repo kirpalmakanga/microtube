@@ -10,7 +10,7 @@ const initialState = {
 export default createReducer(initialState, {
     'subscriptions/UPDATE_ITEMS': (
         { items, ...state },
-        { data: { items: newItems, nextPageToken = '', totalResults } }
+        { items: newItems, nextPageToken = '', totalResults }
     ) => ({
         ...state,
         items: [...items, ...newItems],
@@ -19,7 +19,7 @@ export default createReducer(initialState, {
         totalResults
     }),
 
-    'subscriptions/SUBSCRIBE': (state, { data: { channelId } }) => {
+    'subscriptions/SUBSCRIBE': (state, { channelId }) => {
         const items = [...state.items];
 
         const index = items.findIndex(({ id }) => id === channelId);
@@ -33,7 +33,7 @@ export default createReducer(initialState, {
         return { ...state };
     },
 
-    'subscriptions/UNSUBSCRIBE': (state, { data: { subscriptionId } }) => {
+    'subscriptions/UNSUBSCRIBE': (state, { subscriptionId }) => {
         const items = [...state.items];
 
         const index = items.findIndex(

@@ -8,7 +8,8 @@ import { setActiveDevice } from '../../actions/app';
 import {
     setActiveQueueItem,
     toggleQueue,
-    toggleScreen
+    toggleScreen,
+    editPlaylistItem
 } from '../../actions/youtube';
 
 import { isMobile, omit } from '../../lib/helpers';
@@ -72,7 +73,7 @@ class Player extends Component {
 
     getCurrentVideo = () => {
         const {
-            props: { queue, video, currentIndex }
+            props: { queue, video, currentId }
         } = this;
 
         if (video.id) {
@@ -80,7 +81,7 @@ class Player extends Component {
         }
 
         return (
-            queue[currentIndex] || {
+            queue.find(({ id }) => id === currentId) || {
                 title: 'No video.',
                 id: '',
                 duration: 0
@@ -94,11 +95,11 @@ class Player extends Component {
             props: {
                 queue,
                 video: { id },
-                currentIndex
+                currentId
             }
         } = this;
 
-        return !!youtube && (id || queue[currentIndex]);
+        return !!youtube && (id || queue.find(({ id }) => id === currentId));
     };
 
     updateTime = (t) => {
@@ -273,7 +274,7 @@ class Player extends Component {
 
     goToVideo = (next = true) => {
         const {
-            props: { queue, video, currentIndex, setActiveQueueItem },
+            props: { queue, video, currentId, setActiveQueueItem },
             updateState
         } = this;
 
@@ -281,18 +282,22 @@ class Player extends Component {
             return;
         }
 
+        const currentIndex = queue.findIndex(({ id }) => id === currentId);
+
         const newIndex = currentIndex + (next ? 1 : -1);
 
         if (!queue[newIndex]) {
             return;
         }
 
+        const { id } = queue[newIndex];
+
         updateState({
             currentTime: 0,
             loaded: 0
         });
 
-        setActiveQueueItem(newIndex);
+        setActiveQueueItem(id);
     };
 
     setPlaybackQuality = (value = 'hd1080') => {
@@ -302,23 +307,27 @@ class Player extends Component {
     };
 
     watchTime = () => {
-        if (this.timeWatcher) {
+        const { updateTime, timeWatcher } = this;
+
+        if (timeWatcher) {
             return;
         }
 
-        this.updateTime();
+        updateTime();
 
-        this.timeWatcher = setInterval(() => this.updateTime(), 250);
+        this.timeWatcher = setInterval(updateTime, 250);
     };
 
     watchLoading = () => {
-        if (this.loadingWatcher) {
+        const { updateLoading, loadingWatcher } = this;
+
+        if (loadingWatcher) {
             return;
         }
 
-        this.updateLoading();
+        updateLoading();
 
-        this.loadingWatcher = setInterval(() => this.updateLoading(), 500);
+        this.loadingWatcher = setInterval(updateLoading, 500);
     };
 
     onYoutubeIframeReady = ({ target: youtube }) => {
@@ -475,7 +484,8 @@ class Player extends Component {
                 video,
                 showQueue,
                 newQueueItems,
-                toggleQueue
+                toggleQueue,
+                editPlaylistItem
             },
             state: {
                 currentTime,
@@ -632,7 +642,7 @@ class Player extends Component {
                                 />
                             ) : null}
 
-                            {devices.length ? (
+                            {!isSingleVideo && devices.length ? (
                                 <div className="player__controls-devices">
                                     <Button
                                         className={[
@@ -719,6 +729,15 @@ class Player extends Component {
                                 />
                             ) : null}
 
+                            {isSingleVideo ? (
+                                <Button
+                                    className="player__controls-button icon-button"
+                                    onClick={() => editPlaylistItem(videoId)}
+                                    icon="playlist-add"
+                                    ariaLabel="Add to playlist"
+                                ></Button>
+                            ) : null}
+
                             <Button
                                 className="player__controls-button icon-button"
                                 onClick={toggleFullScreen}
@@ -754,6 +773,7 @@ const mapStateToProps = ({ app: { devices, deviceId }, player }) => {
 const mapDispatchToProps = {
     setActiveDevice,
     setActiveQueueItem,
+    editPlaylistItem,
     toggleQueue,
     toggleScreen
 };

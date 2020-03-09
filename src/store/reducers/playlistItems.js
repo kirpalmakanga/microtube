@@ -9,14 +9,14 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    'playlist/SET_TITLE': (state, { data: { playlistTitle } }) => ({
+    'playlist/SET_TITLE': (state, { playlistTitle }) => ({
         ...state,
         playlistTitle
     }),
 
     'playlist/UPDATE_ITEMS': (
         { items, ...state },
-        { data: { items: newItems, nextPageToken = '', totalResults } }
+        { items: newItems, nextPageToken = '', totalResults }
     ) => ({
         ...state,
         items: [...items, ...newItems],
@@ -25,7 +25,7 @@ export default createReducer(initialState, {
         totalResults
     }),
 
-    'playlist/REMOVE_ITEM': (state, { data: { playlistItemId } }) => {
+    'playlist/REMOVE_ITEM': (state, { playlistItemId }) => {
         const items = state.items.filter(
             (item) => item.playlistItemId !== playlistItemId
         );

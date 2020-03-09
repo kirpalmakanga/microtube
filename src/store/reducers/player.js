@@ -2,7 +2,7 @@ import { createReducer } from '../helpers';
 
 const initialState = {
     queue: [],
-    currentIndex: 0,
+    currentId: '',
     showQueue: false,
     showScreen: false,
     volume: 100,
@@ -12,16 +12,17 @@ const initialState = {
     video: { title: 'No video.', id: '', duration: 0 }
 };
 
-const isActiveItem = (currentIndex) => (_, index) => index === currentIndex;
+const isActiveItem = (videoId) => ({ id }) => id === videoId;
 
-const extractQueueItemData = ({ id, title, duration }) => ({
+const extractQueueItemData = ({ id, title, description, duration }) => ({
     id,
     title,
+    description,
     duration
 });
 
 export default createReducer(initialState, {
-    'player/UPDATE_DATA': (state, { data = {} }) => ({
+    'player/UPDATE_DATA': (state, data) => ({
         ...state,
         ...data
     }),
@@ -37,34 +38,25 @@ export default createReducer(initialState, {
     }),
 
     'player/REMOVE_QUEUE_ITEM': (
-        { queue, currentIndex, ...state },
-        { data: { videoId } = {} }
+        { queue, currentId, ...state },
+        { videoId }
     ) => {
-        const index = queue.findIndex(({ id }) => id === videoId);
-
         return {
             ...state,
-            queue: queue.filter((_, i) => i !== index),
-            currentIndex:
-                index === currentIndex
-                    ? initialState.currentIndex
-                    : currentIndex
+            queue: queue.filter(({ id }) => id !== videoId),
+            currentId: currentId === videoId ? '' : currentId
         };
     },
 
-    'player/SET_ACTIVE_QUEUE_ITEM': (state, { data: { index } = {} }) => {
-        const currentIndex = !isNaN(index) ? index : state.queue.length - 1;
-
-        return {
-            ...state,
-            currentIndex
-        };
-    },
-
-    'player/CLEAR_QUEUE': ({ queue, currentIndex, ...state }) => ({
+    'player/CLEAR_QUEUE': (
+        { queue, currentId, ...state },
+        { clearAll = false }
+    ) => ({
         ...state,
-        queue: queue.filter(isActiveItem(currentIndex)),
-        currentIndex: initialState.currentIndex
+        queue: clearAll
+            ? initialState.queue
+            : queue.filter(isActiveItem(currentId)),
+        currentId
     }),
 
     'player/CLEAR_VIDEO': (state) => ({ ...state, video: initialState.video })

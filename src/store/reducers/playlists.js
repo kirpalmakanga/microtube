@@ -23,7 +23,7 @@ const updateItem = (playlistId = '', items = [], update = () => {}) => {
 export default createReducer(initialState, {
     'playlists/UPDATE_ITEMS': (
         { items, ...state },
-        { data: { items: newItems, nextPageToken = '', totalResults } }
+        { items: newItems, nextPageToken = '', totalResults }
     ) => ({
         ...state,
         items: [...items, ...newItems],
@@ -32,12 +32,12 @@ export default createReducer(initialState, {
         totalResults
     }),
 
-    'playlists/ADD_ITEM': ({ items, ...state }, { data }) => ({
+    'playlists/ADD_ITEM': ({ items, ...state }, data) => ({
         ...state,
         items: [data, ...items]
     }),
 
-    'playlists/UPDATE_ITEM': (state, { data: { id, ...data } }) => {
+    'playlists/UPDATE_ITEM': (state, { id, ...data }) => {
         const items = [...state.items];
 
         updateItem(id, items, (item) => ({
@@ -48,12 +48,12 @@ export default createReducer(initialState, {
         return { ...state, items };
     },
 
-    'playlists/REMOVE_ITEM': (state, { data: { playlistId } }) => ({
+    'playlists/REMOVE_ITEM': (state, { playlistId }) => ({
         ...state,
         items: state.items.filter((item) => item.id !== playlistId)
     }),
 
-    'playlist/REMOVE_ITEM': (state, { data: { playlistId } }) => {
+    'playlist/REMOVE_ITEM': (state, { playlistId }) => {
         const items = [...state.items];
 
         updateItem(playlistId, items, ({ itemCount, ...item }) => ({

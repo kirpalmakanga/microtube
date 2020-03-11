@@ -45,7 +45,7 @@ class Root extends Component {
 
     render() {
         const {
-            props: { children },
+            props: { children, isSignedIn },
             state: { apiLoaded }
         } = this;
 
@@ -66,7 +66,7 @@ class Root extends Component {
 
                         <Notifications />
 
-                        <Player />
+                        {isSignedIn ? <Player /> : null}
 
                         <Prompt />
                     </>
@@ -84,4 +84,8 @@ const mapDispatchToProps = {
     enableImportMethods
 };
 
-export default connect(() => ({}), mapDispatchToProps)(Root);
+const mapStateToProps = ({ auth: { isSignedIn } }) => ({
+    isSignedIn
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Root);

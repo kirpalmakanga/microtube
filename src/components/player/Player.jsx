@@ -12,7 +12,7 @@ import {
     editPlaylistItem
 } from '../../actions/youtube';
 
-import { isMobile, omit } from '../../lib/helpers';
+import { isMobile } from '../../lib/helpers';
 
 import {
     enableFullScreen,
@@ -71,35 +71,15 @@ class Player extends Component {
 
     getPlayerContainer = (el) => (this._container = el);
 
-    getCurrentVideo = () => {
-        const {
-            props: { queue, video, currentId }
-        } = this;
-
-        if (video.id) {
-            return video;
-        }
-
-        return (
-            queue.find(({ id }) => id === currentId) || {
-                title: 'No video.',
-                id: '',
-                duration: 0
-            }
-        );
-    };
-
     isPlayerReady = () => {
         const {
             state: { youtube },
             props: {
-                queue,
-                video: { id },
-                currentId
+                video: { id }
             }
         } = this;
 
-        return !!youtube && (id || queue.find(({ id }) => id === currentId));
+        return !!youtube && id;
     };
 
     updateTime = (t) => {
@@ -274,23 +254,16 @@ class Player extends Component {
 
     goToVideo = (next = true) => {
         const {
-            props: { queue, video, currentId, setActiveQueueItem },
+            props: { queue, currentQueueIndex, setActiveQueueItem },
             updateState
         } = this;
 
-        if (!!video.id) {
+        const newIndex = currentQueueIndex + (next ? 1 : -1);
+        const { id } = queue[newIndex] || {};
+
+        if (!id) {
             return;
         }
-
-        const currentIndex = queue.findIndex(({ id }) => id === currentId);
-
-        const newIndex = currentIndex + (next ? 1 : -1);
-
-        if (!queue[newIndex]) {
-            return;
-        }
-
-        const { id } = queue[newIndex];
 
         updateState({
             currentTime: 0,
@@ -478,14 +451,15 @@ class Player extends Component {
     render() {
         const {
             props: {
-                devices,
-                currentDevice,
-                setActiveDevice,
-                video,
+                video: { id: videoId, title, duration },
+                isSingleVideo,
                 showQueue,
                 newQueueItems,
                 toggleQueue,
-                editPlaylistItem
+                editPlaylistItem,
+                devices,
+                currentDevice,
+                setActiveDevice
             },
             state: {
                 currentTime,
@@ -499,7 +473,6 @@ class Player extends Component {
                 showScreen
             },
             getPlayerContainer,
-            getCurrentVideo,
             handleWheelVolume,
             setVolume,
             seekTime,
@@ -512,10 +485,6 @@ class Player extends Component {
             onYoutubeIframeReady,
             onYoutubeIframeStateChange
         } = this;
-
-        const isSingleVideo = !!video.id;
-
-        const { id: videoId, title, duration } = getCurrentVideo();
 
         const { isMaster } = currentDevice;
 
@@ -531,7 +500,7 @@ class Player extends Component {
                         className="screen"
                         videoId={videoId}
                         onReady={onYoutubeIframeReady}
-                        onEnd={goToVideo}
+                        onEnd={!isSingleVideo ? goToVideo : () => {}}
                         onStateChange={onYoutubeIframeStateChange}
                         data-state={
                             isSingleVideo || showScreen || isFullScreen
@@ -760,9 +729,24 @@ class Player extends Component {
     }
 }
 
-const mapStateToProps = ({ app: { devices, deviceId }, player }) => {
+const mapStateToProps = ({
+    app: { devices, deviceId },
+    player: { video, queue, currentId, ...player }
+}) => {
+    const currentQueueIndex = queue.findIndex(({ id }) => id === currentId);
+
     return {
         ...player,
+        currentQueueIndex,
+        queue,
+        isSingleVideo: !!video.id,
+        video: video.id
+            ? video
+            : queue[currentQueueIndex] || {
+                  id: '',
+                  title: 'No video.',
+                  duration: 0
+              },
         devices: devices.filter(({ deviceId: id }) => id !== deviceId),
         currentDevice: devices.find(({ deviceId: id }) => id === deviceId) || {
             isMaster: true

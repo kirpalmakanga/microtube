@@ -28,11 +28,9 @@ import VolumeRange from './controls/VolumeRange';
 
 import Info from './Info';
 
-const PLAYING = 1;
+import Icon from '../Icon';
+
 const UNSTARTED = -1;
-const ENDED = 0;
-const PAUSED = 2;
-const BUFFERING = 3;
 const CUED = 5;
 
 class Player extends Component {
@@ -82,17 +80,6 @@ class Player extends Component {
         return !!youtube && id;
     };
 
-    updateTime = (t) => {
-        const {
-            state: { youtube },
-            updateState
-        } = this;
-
-        const currentTime = t || youtube.getCurrentTime();
-
-        updateState({ currentTime });
-    };
-
     setVolume = (volume) => {
         const {
             props: {
@@ -123,23 +110,13 @@ class Player extends Component {
         updateState({ volume });
     };
 
-    handleWheelVolume = ({ deltaY }) => {
-        const { volume } = this.state;
-        const newVolume = deltaY < 0 ? volume + 5 : volume - 5;
-        const inRange = newVolume >= 0 && newVolume <= 100;
-
-        if (inRange) {
-            this.setVolume(newVolume);
-        }
-    };
-
     seekTime = (t) => {
         const {
             props: {
                 currentDevice: { isMaster }
             },
-            updateTime,
-            togglePlay
+            togglePlay,
+            updateState
         } = this;
 
         if (!isMaster) {
@@ -159,7 +136,7 @@ class Player extends Component {
 
         youtube.seekTo(t);
 
-        updateTime(t);
+        updateState({ currentTime: t });
 
         setTimeout(() => {
             if (!isPlaying) {
@@ -245,13 +222,6 @@ class Player extends Component {
         this.setState({ showDevices: !showDevices });
     };
 
-    clearWatchers = () => {
-        const { timeWatcher, loadingWatcher } = this;
-
-        clearInterval(timeWatcher);
-        clearInterval(loadingWatcher);
-    };
-
     goToVideo = (next = true) => {
         const {
             props: { queue, currentQueueIndex, setActiveQueueItem },
@@ -277,78 +247,6 @@ class Player extends Component {
         const { youtube } = this.state;
 
         youtube.setPlaybackQuality(value);
-    };
-
-    watchTime = () => {
-        const { updateTime, timeWatcher } = this;
-
-        if (timeWatcher) {
-            return;
-        }
-
-        updateTime();
-
-        this.timeWatcher = setInterval(updateTime, 250);
-    };
-
-    watchLoading = () => {
-        const { updateLoading, loadingWatcher } = this;
-
-        if (loadingWatcher) {
-            return;
-        }
-
-        updateLoading();
-
-        this.loadingWatcher = setInterval(updateLoading, 500);
-    };
-
-    onYoutubeIframeReady = ({ target: youtube }) => {
-        youtube.pauseVideo();
-
-        this.setState({ youtube }, () => {
-            this.watchTime();
-            this.watchLoading();
-
-            this.setPlaybackQuality();
-        });
-    };
-
-    onYoutubeIframeStateChange = ({ data }) => {
-        const { updateState } = this;
-        switch (data) {
-            case UNSTARTED:
-            case ENDED:
-                updateState({ isPlaying: false });
-
-                break;
-
-            case PLAYING:
-                updateState({ isPlaying: true, isBuffering: false });
-
-                break;
-
-            case PAUSED:
-                updateState({ isPlaying: false });
-
-                break;
-
-            case BUFFERING:
-                const { isPlaying, currentTime } = this.state;
-
-                if (isPlaying && currentTime > 0) {
-                    updateState({ isBuffering: true });
-                }
-
-                this.setPlaybackQuality();
-
-                break;
-
-            case CUED:
-                this.togglePlay();
-
-                break;
-        }
     };
 
     bindKeyboard = () => {
@@ -384,8 +282,6 @@ class Player extends Component {
         this.__keyboardHandler = null;
     };
 
-    handleFullScreenChange = (isFullScreen) => this.setState({ isFullScreen });
-
     toggleScreen = () => {
         this.updateState({ showScreen: !this.state.showScreen });
 
@@ -407,6 +303,62 @@ class Player extends Component {
             return enableFullScreen(_container);
         }
         exitFullScreen();
+    };
+
+    handleYoutubeIframeReady = ({ target: youtube }) => {
+        youtube.pauseVideo();
+
+        this.setState({ youtube }, () => {
+            this.setPlaybackQuality();
+        });
+    };
+
+    handleYoutubeIframeStateChange = ({ data }) => {
+        const { updateState } = this;
+        switch (data) {
+            case UNSTARTED:
+                updateState({ isPlaying: false });
+
+                break;
+
+            case CUED:
+                this.togglePlay();
+
+                break;
+        }
+    };
+
+    handleTimeUpdate = (currentTime) => this.updateState({ currentTime });
+
+    handleLoadingUpdate = (loaded) => this.updateState({ loaded });
+
+    handlePlay = () =>
+        this.updateState({ isPlaying: true, isBuffering: false });
+
+    handlePause = () => this.updateState({ isPlaying: false });
+
+    handleBuffering = () => {
+        const { updateState, setPlaybackQuality } = this;
+
+        updateState({ isBuffering: true });
+
+        setPlaybackQuality();
+    };
+
+    handleFullScreenChange = (isFullScreen) => this.setState({ isFullScreen });
+
+    handleWheelVolume = ({ deltaY }) => {
+        const {
+            state: { volume },
+            setVolume
+        } = this;
+
+        const newVolume = deltaY < 0 ? volume + 5 : volume - 5;
+        const inRange = newVolume >= 0 && newVolume <= 100;
+
+        if (inRange) {
+            setVolume(newVolume);
+        }
     };
 
     componentDidUpdate({ showScreen: prevShowScreen }) {
@@ -474,6 +426,11 @@ class Player extends Component {
             },
             getPlayerContainer,
             handleWheelVolume,
+            handleTimeUpdate,
+            handleLoadingUpdate,
+            handleBuffering,
+            handlePlay,
+            handlePause,
             setVolume,
             seekTime,
             toggleFullScreen,
@@ -482,8 +439,8 @@ class Player extends Component {
             toggleDevices,
             toggleScreen,
             goToVideo,
-            onYoutubeIframeReady,
-            onYoutubeIframeStateChange
+            handleYoutubeIframeReady,
+            handleYoutubeIframeStateChange
         } = this;
 
         const { isMaster } = currentDevice;
@@ -499,9 +456,14 @@ class Player extends Component {
                     <Screen
                         className="screen"
                         videoId={videoId}
-                        onReady={onYoutubeIframeReady}
+                        onReady={handleYoutubeIframeReady}
                         onEnd={!isSingleVideo ? goToVideo : () => {}}
-                        onStateChange={onYoutubeIframeStateChange}
+                        onBuffering={handleBuffering}
+                        onPlay={handlePlay}
+                        onPause={handlePause}
+                        onStateChange={handleYoutubeIframeStateChange}
+                        onTimeUpdate={handleTimeUpdate}
+                        onLoadingUpdate={handleLoadingUpdate}
                         data-state={
                             isSingleVideo || showScreen || isFullScreen
                                 ? 'visible'
@@ -537,9 +499,6 @@ class Player extends Component {
                                         : isPlaying
                                         ? 'pause'
                                         : 'play'
-                                }
-                                iconTransitionClass={
-                                    isBuffering ? 'rotating' : ''
                                 }
                                 ariaLabel={
                                     isPlaying ? 'Pause video' : 'Play video'

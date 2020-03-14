@@ -6,8 +6,8 @@ import { preventDefault } from '../../../lib/helpers';
 class Button extends PureComponent {
     render() {
         const {
+            children,
             icon,
-            iconTransitionClass = '',
             badge,
             ariaLabel,
             onClick = () => {},
@@ -22,10 +22,7 @@ class Button extends PureComponent {
                 aria-label={ariaLabel}
                 data-badge={badge}
             >
-                <Icon
-                    className={['icon', iconTransitionClass].join(' ')}
-                    name={icon}
-                />
+                <Icon className="icon" name={icon} />
             </button>
         );
     }

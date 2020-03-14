@@ -15,7 +15,18 @@ const playerOptions = {
 
 class Screen extends PureComponent {
     render() {
-        const { videoId, onReady, onEnd, onStateChange, ...props } = this.props;
+        const {
+            videoId,
+            onReady,
+            onBuffering,
+            onPlay,
+            onPause,
+            onEnd,
+            onStateChange,
+            onTimeUpdate,
+            onLoadingUpdate,
+            ...props
+        } = this.props;
 
         return (
             <div {...props}>
@@ -24,6 +35,11 @@ class Screen extends PureComponent {
                     opts={playerOptions}
                     onReady={onReady}
                     onEnd={onEnd}
+                    onTimeUpdate={onTimeUpdate}
+                    onLoadingUpdate={onLoadingUpdate}
+                    onPlay={onPlay}
+                    onPause={onPause}
+                    onBuffering={onBuffering}
                     onStateChange={onStateChange}
                 />
                 {!videoId && <Placeholder icon="screen" text="No video." />}

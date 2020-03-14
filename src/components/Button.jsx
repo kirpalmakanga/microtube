@@ -4,7 +4,13 @@ import Icon from './Icon';
 
 class Button extends PureComponent {
     render() {
-        const { children, icon, type = 'button', title, ...props } = this.props;
+        const {
+            children,
+            icon = '',
+            type = 'button',
+            title = '',
+            ...props
+        } = this.props;
 
         return (
             <button type={type} aria-label={title} {...props}>

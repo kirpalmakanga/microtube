@@ -8,7 +8,6 @@ const initialState = {
     volume: 100,
     newQueueItems: 0,
     currentTime: 0,
-    loaded: 0,
     video: { title: 'No video.', id: '', duration: 0 }
 };
 

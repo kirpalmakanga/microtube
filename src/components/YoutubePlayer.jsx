@@ -17,8 +17,12 @@ function filterResetOptions(opts) {
     };
 }
 
+function videoIdHasChanged(prevProps, props) {
+    return prevProps.videoId !== props.videoId;
+}
+
 function shouldUpdateVideo(prevProps, props) {
-    if (prevProps.videoId !== props.videoId) {
+    if (videoIdHasChanged(prevProps, props)) {
         return true;
     }
 
@@ -44,9 +48,12 @@ class YouTube extends Component {
         opts: {},
         onReady: noop,
         onError: noop,
+        onBuffering: noop,
         onPlay: noop,
         onPause: noop,
         onEnd: noop,
+        onTimeUpdate: noop,
+        onLoadingUpdate: noop,
         onStateChange: noop,
         onPlaybackRateChange: noop,
         onPlaybackQualityChange: noop
@@ -84,9 +91,76 @@ class YouTube extends Component {
         if (shouldUpdateVideo(prevProps, this.props)) {
             this.updateVideo();
         }
+
+        if (videoIdHasChanged(prevProps, this.props)) {
+            this.props.onTimeUpdate(0);
+            this.props.onLoadingUpdate(0);
+        }
     }
 
-    componentWillUnmount = () => this.internalPlayer.destroy();
+    componentWillUnmount = () => {
+        this.clearWatchers();
+
+        this.internalPlayer.destroy();
+    };
+
+    handleIframeReady = (youtube) => {
+        this.watchTime();
+        this.watchLoading();
+
+        this.props.onReady(youtube);
+    };
+
+    updateTime = async () => {
+        const time = await this.internalPlayer.getCurrentTime();
+
+        if (time !== this.currentTime) {
+            this.currentTime = time;
+
+            this.props.onTimeUpdate(time);
+        }
+    };
+
+    watchTime = () => {
+        const { timeWatcher, updateTime } = this;
+
+        if (timeWatcher) {
+            return;
+        }
+
+        updateTime();
+
+        this.timeWatcher = setInterval(updateTime, 200);
+    };
+
+    updateLoading = async () => {
+        const loaded = await this.internalPlayer.getVideoLoadedFraction();
+
+        if (loaded !== this.loaded) {
+            this.loaded = loaded;
+
+            this.props.onLoadingUpdate(loaded);
+        }
+    };
+
+    watchLoading = () => {
+        const { loadingWatcher, updateLoading } = this;
+
+        if (loadingWatcher) {
+            return;
+        }
+
+        updateLoading();
+
+        this.loadingWatcher = setInterval(updateLoading, 500);
+    };
+
+    clearWatchers = () => {
+        const { timeWatcher, loadingWatcher } = this;
+
+        clearInterval(timeWatcher);
+        clearInterval(loadingWatcher);
+    };
 
     createPlayer = () => {
         if (typeof document === 'undefined') {
@@ -97,23 +171,26 @@ class YouTube extends Component {
             props: {
                 opts,
                 videoId,
-                onReady,
                 onError,
                 onStateChange,
                 onEnd,
+                onBuffering,
                 onPlay,
                 onPause,
                 onPlaybackRateChange,
                 onPlaybackQualityChange
             },
+            handleIframeReady,
             container
         } = this;
 
         const events = {
-            ready: onReady,
+            ready: handleIframeReady,
             error: onError,
             stateChange: (e) => {
                 onStateChange(e);
+
+                console.log('player.state', e.data);
 
                 switch (e.data) {
                     case YouTube.PlayerState.ENDED:
@@ -126,6 +203,10 @@ class YouTube extends Component {
 
                     case YouTube.PlayerState.PAUSED:
                         onPause(e);
+                        break;
+
+                    case YouTube.PlayerState.BUFFERING:
+                        onBuffering(e);
                         break;
 
                     default:

@@ -169,3 +169,10 @@ input {
         margin: 40px 0;
     }
 }
+
+.snackbar {
+    &--text,
+    &--button {
+        font-family: $font-primary;
+    }
+}

@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
 
         const showUpdateNotifier = () => {
             createSnackbar(pwaUpdateReadyMessage, {
-                position: 'right',
+                position: 'center',
                 timeout: 20000,
                 actions: [
                     {

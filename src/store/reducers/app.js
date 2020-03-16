@@ -19,16 +19,6 @@ export default createReducer(initialState, {
         devices
     }),
 
-    'app/ADD_DEVICE': ({ devices, ...state }, { id }) => ({
-        ...state,
-        devices: [...devices, id]
-    }),
-
-    'app/REMOVE_DEVICE': ({ devices, ...state }, { id: deletedId }) => ({
-        ...state,
-        devices: devices.filter((id) => id === deletedId)
-    }),
-
     'app/CLEAR_DEVICES': (state) => ({
         ...state,
         devices: initialState.devices

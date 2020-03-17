@@ -1,4 +1,4 @@
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import LazyComponent from './components/LazyComponent';
 
@@ -14,24 +14,26 @@ const Channels = LazyComponent(() => import('./containers/Channels'));
 const Channel = LazyComponent(() => import('./containers/channel'));
 const Video = LazyComponent(() => import('./containers/Video'));
 
-const Routes = () => (
-    <Switch>
-        <AuthRoute exact path="/" component={Playlists} />
+const Router = () => (
+    <Routes>
+        <AuthRoute path="/" element={<Playlists />} />
 
-        <AuthRoute path="/playlist/:playlistId" component={Playlist} />
+        <AuthRoute path="/playlist/:playlistId" element={<Playlist />} />
 
-        <AuthRoute exact path="/subscriptions" component={Channels} />
+        <AuthRoute path="/subscriptions" element={<Channels />} />
 
-        <AuthRoute path="/search/:query?" component={Search} />
+        <AuthRoute path="/search/" element={<Search />} />
 
-        <AuthRoute path="/channel/:channelId" component={Channel} />
+        <AuthRoute path="/search/:query" element={<Search />} />
 
-        <AuthRoute path="/video/:videoId" component={Video} />
+        <AuthRoute path="/channel/:channelId/*" element={<Channel />} />
 
-        <Route path="/login" component={Login} />
+        <AuthRoute path="/video/:videoId" element={<Video />} />
 
-        <Route path="*" component={NotFound} />
-    </Switch>
+        <Route path="/login" element={<Login />} />
+
+        <Route path="*" element={<NotFound />} />
+    </Routes>
 );
 
-export default Routes;
+export default Router;

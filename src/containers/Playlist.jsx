@@ -1,5 +1,6 @@
-import { Component } from 'react';
+import { Component, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import {
     getPlaylistTitle,
@@ -16,96 +17,70 @@ import Placeholder from '../components/Placeholder';
 import VideoCard from '../components/cards/VideoCard';
 import MenuWrapper from '../components/menu/MenuWrapper';
 
-class Playlist extends Component {
-    componentDidMount() {
-        this.props.getPlaylistTitle(this.props.playlistId);
-    }
+const Playlist = ({
+    items,
+    totalResults,
+    getPlaylistTitle,
+    getPlaylistItems,
+    queueItem,
+    removePlaylistItem,
+    editPlaylistItem
+}) => {
+    const navigate = useNavigate();
+    const { playlistId } = useParams();
 
-    componentWillUnmount() {
-        this.props.clearPlaylistItems();
-    }
+    useEffect(() => {
+        getPlaylistTitle(playlistId);
 
-    componentDidUpdate({ playlistId: previousPlaylistId }) {
-        const { playlistId, clearItems } = this.props;
+        return () => clearPlaylistItems;
+    }, [playlistId]);
 
-        if (playlistId !== previousPlaylistId) {
-            clearItems();
-        }
-    }
+    return totalResults === 0 ? (
+        <Placeholder icon="empty" text="This playlist is empty." />
+    ) : (
+        <MenuWrapper
+            menuItems={[
+                {
+                    title: 'Add to queue',
+                    icon: 'queue',
+                    onClick: queueItem
+                },
 
-    render() {
-        const {
-            props: {
-                playlistId,
-                items,
-                totalResults,
-                getPlaylistItems,
-                queueItem,
-                removePlaylistItem,
-                editPlaylistItem,
-                history
-            }
-        } = this;
+                {
+                    title: 'Add to playlist',
+                    icon: 'playlist-add',
+                    onClick: ({ id }) => editPlaylistItem(id)
+                },
 
-        return totalResults === 0 ? (
-            <Placeholder icon="empty" text="This playlist is empty." />
-        ) : (
-            <MenuWrapper
-                menuItems={[
-                    {
-                        title: 'Add to queue',
-                        icon: 'queue',
-                        onClick: queueItem
-                    },
+                {
+                    title: 'Remove from playlist',
+                    icon: 'delete',
+                    onClick: ({ playlistItemId, playlistId, title }) =>
+                        removePlaylistItem(playlistItemId, playlistId, title)
+                }
+            ]}
+        >
+            {(openMenu) => (
+                <List
+                    items={items}
+                    itemKey={(index, data) => data[index].id}
+                    renderItem={({ data }) => (
+                        <VideoCard
+                            {...data}
+                            onClick={() => navigate(`/video/${data.id}`)}
+                            onClickMenu={() => openMenu(data, data.title)}
+                        />
+                    )}
+                    loadMoreItems={() => getPlaylistItems(playlistId)}
+                />
+            )}
+        </MenuWrapper>
+    );
+};
 
-                    {
-                        title: 'Add to playlist',
-                        icon: 'playlist-add',
-                        onClick: ({ id }) => editPlaylistItem(id)
-                    },
-
-                    {
-                        title: 'Remove from playlist',
-                        icon: 'delete',
-                        onClick: ({ playlistItemId, playlistId, title }) =>
-                            removePlaylistItem(
-                                playlistItemId,
-                                playlistId,
-                                title
-                            )
-                    }
-                ]}
-            >
-                {(openMenu) => (
-                    <List
-                        items={items}
-                        itemKey={(index, data) => data[index].id}
-                        renderItem={({ data }) => (
-                            <VideoCard
-                                {...data}
-                                onClick={() =>
-                                    history.push(`/video/${data.id}`)
-                                }
-                                onClickMenu={() => openMenu(data, data.title)}
-                            />
-                        )}
-                        loadMoreItems={() => getPlaylistItems(playlistId)}
-                    />
-                )}
-            </MenuWrapper>
-        );
-    }
-}
-
-const mapStateToProps = (
-    { playlistItems: { playlistTitle, items, nextPageToken, totalResults } },
-    {
-        match: {
-            params: { playlistId }
-        }
-    }
-) => ({
-    playlistId,
+const mapStateToProps = ({
+    playlistItems: { playlistTitle, items, nextPageToken, totalResults }
+}) => ({
     playlistTitle,
     items,
     nextPageToken,

@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 import {
     getSubscriptions,
@@ -12,46 +13,44 @@ import Placeholder from '../components/Placeholder';
 
 import ChannelCard from '../components/cards/ChannelCard';
 
-class Subscriptions extends Component {
-    render() {
-        const {
-            items,
-            totalResults,
-            getSubscriptions,
-            subscribeToChannel,
-            unsubscribeFromChannel,
-            history
-        } = this.props;
+const Subscriptions = ({
+    items,
+    totalResults,
+    getSubscriptions,
+    subscribeToChannel,
+    unsubscribeFromChannel,
+    history
+}) => {
+    const navigate = useNavigate();
 
-        return totalResults === 0 ? (
-            <Placeholder
-                icon="empty"
-                text="You haven't subscribed to any channel yet."
-            />
-        ) : (
-            <List
-                className="channels"
-                items={items}
-                itemKey={(index, data) => data[index].id}
-                loadMoreItems={getSubscriptions}
-                renderItem={({ data }) => {
-                    const { id, title, subscriptionId } = data;
+    return totalResults === 0 ? (
+        <Placeholder
+            icon="empty"
+            text="You haven't subscribed to any channel yet."
+        />
+    ) : (
+        <List
+            className="channels"
+            items={items}
+            itemKey={(index, data) => data[index].id}
+            loadMoreItems={getSubscriptions}
+            renderItem={({ data }) => {
+                const { id, title, subscriptionId } = data;
 
-                    return (
-                        <ChannelCard
-                            {...data}
-                            goToChannel={() => history.push(`/channel/${id}`)}
-                            subscribe={() => subscribeToChannel(id)}
-                            unsubscribe={() =>
-                                unsubscribeFromChannel(subscriptionId, title)
-                            }
-                        />
-                    );
-                }}
-            />
-        );
-    }
-}
+                return (
+                    <ChannelCard
+                        {...data}
+                        goToChannel={() => navigate(`/channel/${id}`)}
+                        subscribe={() => subscribeToChannel(id)}
+                        unsubscribe={() =>
+                            unsubscribeFromChannel(subscriptionId, title)
+                        }
+                    />
+                );
+            }}
+        />
+    );
+};
 
 const mapStateToProps = ({ subscriptions: { items, totalResults } }) => ({
     items,
@@ -64,7 +63,4 @@ const mapDispatchToProps = {
     unsubscribeFromChannel
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(Subscriptions);
+export default connect(mapStateToProps, mapDispatchToProps)(Subscriptions);

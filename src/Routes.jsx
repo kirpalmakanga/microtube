@@ -8,9 +8,13 @@ import Playlists from './containers/Playlists';
 import Login from './containers/Login';
 import NotFound from './containers/NotFound';
 
+import ChannelVideos from './containers/channel/ChannelVideos';
+import ChannelAbout from './containers/channel/ChannelAbout';
+
 const Playlist = LazyComponent(() => import('./containers/Playlist'));
 const Search = LazyComponent(() => import('./containers/Search'));
 const Channels = LazyComponent(() => import('./containers/Channels'));
+
 const Channel = LazyComponent(() => import('./containers/channel'));
 const Video = LazyComponent(() => import('./containers/Video'));
 
@@ -26,7 +30,13 @@ const Router = () => (
 
         <AuthRoute path="/search/:query" element={<Search />} />
 
-        <AuthRoute path="/channel/:channelId/*" element={<Channel />} />
+        <AuthRoute path="/channel/:channelId/*" element={<Channel />}>
+            <Route path="" element={<ChannelVideos />} />
+
+            <Route path="playlists" element={<Playlists />} />
+
+            <Route path="about" element={<ChannelAbout />} />
+        </AuthRoute>
 
         <AuthRoute path="/video/:videoId" element={<Video />} />
 

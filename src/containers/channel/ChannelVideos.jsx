@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
     getChannelVideos,
     clearChannelVideos,
@@ -16,7 +16,6 @@ import VideoCard from '../../components/cards/VideoCard';
 import MenuWrapper from '../../components/menu/MenuWrapper';
 
 const ChannelVideos = ({
-    channelId,
     items,
     totalResults,
     getChannelVideos,
@@ -24,6 +23,7 @@ const ChannelVideos = ({
     editPlaylistItem,
     clearChannelVideos
 }) => {
+    const { channelId } = useParams();
     const navigate = useNavigate();
 
     useEffect(() => clearChannelVideos, []);

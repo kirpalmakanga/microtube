@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
     getPlaylists,
@@ -17,7 +17,6 @@ import PlaylistCard from '../components/cards/PlaylistCard';
 import MenuWrapper from '../components/menu/MenuWrapper';
 
 const Playlists = ({
-    channelId,
     items,
     totalResults,
     getPlaylists,
@@ -25,6 +24,7 @@ const Playlists = ({
     removePlaylist,
     clearPlaylists
 }) => {
+    const { channelId } = useParams();
     const navigate = useNavigate();
     useEffect(() => clearPlaylists, []);
 

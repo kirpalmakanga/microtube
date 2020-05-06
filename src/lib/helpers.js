@@ -157,6 +157,19 @@ export const throttle = (fn, delay = 50) => {
     };
 };
 
+export const debounce = (callback, delay) => {
+    let timer;
+
+    return function() {
+        const args = arguments;
+        const context = this;
+
+        clearTimeout(timer);
+
+        timer = setTimeout(() => callback.apply(context, args), delay);
+    };
+};
+
 export const pick = (obj = {}, whitelist = []) => {
     if (!whitelist.length) {
         return obj;

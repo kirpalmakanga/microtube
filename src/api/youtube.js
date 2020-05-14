@@ -181,7 +181,7 @@ export async function getPlaylists({
     } = await request('GET', 'playlists', {
         pageToken,
         mine,
-        id: ids.join(', '),
+        id: ids.join(','),
         channelId,
         part: 'snippet, contentDetails, status',
         maxResults: ITEMS_PER_REQUEST
@@ -320,7 +320,7 @@ export async function removePlaylistItem(id) {
 async function getChannelsFromIds(ids) {
     const { items } = await request('GET', 'channels', {
         part: 'snippet',
-        id: ids.join(', '),
+        id: ids.join(','),
         maxResults: ITEMS_PER_REQUEST
     });
 

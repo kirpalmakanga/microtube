@@ -16,11 +16,9 @@ const Video = ({ getVideo, clearVideo }) => {
     return null;
 };
 
-const mapStateToProps = () => ({});
-
 const mapDispatchToProps = {
     getVideo,
     clearVideo
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Video);
+export default connect(null, mapDispatchToProps)(Video);

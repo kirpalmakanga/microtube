@@ -5,22 +5,11 @@ import { Route } from 'react-router-dom';
 import Loader from './components/Loader';
 import Login from './containers/Login';
 
-const AuthRoute = ({
-    isSignedIn,
-    isSigningIn,
-    component: Container,
-    ...props
-}) => (
+const AuthRoute = ({ isSignedIn, isSigningIn, element, ...props }) => (
     <Route
         {...props}
-        render={(componentProps) =>
-            isSignedIn ? (
-                <Container {...componentProps} />
-            ) : isSigningIn ? (
-                <Loader isActive />
-            ) : (
-                <Login {...componentProps} />
-            )
+        element={
+            isSignedIn ? element : isSigningIn ? <Loader isActive /> : <Login />
         }
     />
 );

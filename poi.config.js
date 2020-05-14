@@ -14,6 +14,9 @@ module.exports = {
         },
         {
             resolve: '@poi/plugin-typescript'
+        },
+        {
+            resolve: '@poi/bundle-report'
         }
     ]
 };

@@ -190,8 +190,6 @@ class YouTube extends Component {
             stateChange: (e) => {
                 onStateChange(e);
 
-                console.log('player.state', e.data);
-
                 switch (e.data) {
                     case YouTube.PlayerState.ENDED:
                         onEnd(e);

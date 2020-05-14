@@ -159,7 +159,7 @@ export async function getVideo(urlOrId = '') {
 export async function getVideosFromIds(ids = []) {
     const { items } = await request('GET', 'videos', {
         part: 'contentDetails, snippet, status',
-        id: ids.join(', '),
+        id: ids.join(','),
         maxResults: ITEMS_PER_REQUEST
     });
 

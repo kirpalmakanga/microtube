@@ -1,4 +1,4 @@
-import { Component, useEffect } from 'react';
+import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 
@@ -22,6 +22,7 @@ const Playlist = ({
     totalResults,
     getPlaylistTitle,
     getPlaylistItems,
+    clearPlaylistItems,
     queueItem,
     removePlaylistItem,
     editPlaylistItem
@@ -32,7 +33,7 @@ const Playlist = ({
     useEffect(() => {
         getPlaylistTitle(playlistId);
 
-        return () => clearPlaylistItems;
+        return clearPlaylistItems;
     }, [playlistId]);
 
     return totalResults === 0 ? (

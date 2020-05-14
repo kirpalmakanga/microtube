@@ -28,8 +28,6 @@ import VolumeRange from './controls/VolumeRange';
 
 import Info from './Info';
 
-import Icon from '../Icon';
-
 const UNSTARTED = -1;
 const CUED = 5;
 
@@ -345,8 +343,6 @@ class Player extends Component {
         setPlaybackQuality();
     };
 
-    handleFullScreenChange = (isFullScreen) => this.setState({ isFullScreen });
-
     handleWheelVolume = ({ deltaY }) => {
         const {
             state: { volume },
@@ -359,6 +355,29 @@ class Player extends Component {
         if (inRange) {
             setVolume(newVolume);
         }
+    };
+
+    bindFullScreenChange = () =>
+        listenFullScreenChange(this._container, (isFullScreen) =>
+            this.setState({ isFullScreen })
+        );
+
+    bindDevicesSync = () => {
+        const actions = {
+            'toggle-play': this.togglePlay,
+            'toggle-mute': this.toggleMute,
+            'set-volume': ({ volume }) => this.setVolume(volume),
+            'seek-time': ({ currentTime }) => this.seekTime(currentTime),
+            'update-state': (state) => this.setState(state)
+        };
+
+        listen('player:sync', ({ action, data = {} } = {}) => {
+            const handler = actions[action];
+
+            if (handler) {
+                handler(data);
+            }
+        });
     };
 
     componentDidUpdate({ showScreen: prevShowScreen }) {
@@ -375,23 +394,9 @@ class Player extends Component {
     }
 
     componentDidMount() {
-        const actions = {
-            'toggle-play': this.togglePlay,
-            'toggle-mute': this.toggleMute,
-            'set-volume': ({ volume }) => this.setVolume(volume),
-            'seek-time': ({ currentTime }) => this.seekTime(currentTime),
-            'update-state': (state) => this.setState(state)
-        };
+        this.bindDevicesSync();
 
-        listen('player:sync', ({ action, data = {} } = {}) => {
-            const handler = actions[action];
-
-            if (handler) {
-                handler(data);
-            }
-        });
-
-        listenFullScreenChange(this._container, this.handleFullScreenChange);
+        this.bindFullScreenChange();
 
         this.bindKeyboard();
     }

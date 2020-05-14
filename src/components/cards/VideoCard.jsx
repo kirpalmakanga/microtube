@@ -57,7 +57,7 @@ class VideoCard extends PureComponent {
 
                         {publishedAt ? (
                             <Subtitle className="date">
-                                {formatDate(publishedAt, 'MMMM Do YYYY')}
+                                {formatDate(publishedAt, 'MMMM Do yyyy')}
                             </Subtitle>
                         ) : null}
                     </CardContentInner>

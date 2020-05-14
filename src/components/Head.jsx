@@ -7,8 +7,7 @@ import { formatTime } from '../lib/helpers';
 const Head = ({
     channelTitle,
     playlistTitle,
-    currentTime,
-    currentVideo: { id: videoId, title: currentVideoTitle, duration }
+    currentVideo: { id: videoId, title: currentVideoTitle }
 }) => {
     const { pathname } = useLocation();
 
@@ -27,9 +26,7 @@ const Head = ({
     }
 
     if (videoId) {
-        title = `Microtube | ${currentVideoTitle} - ${formatTime(
-            currentTime
-        )} / ${formatTime(duration)}`;
+        title = `Microtube | ${currentVideoTitle}`;
     }
 
     return <Helmet title={title} />;

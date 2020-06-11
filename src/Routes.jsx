@@ -1,4 +1,4 @@
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import LazyComponent from './components/LazyComponent';
 
@@ -8,30 +8,42 @@ import Playlists from './containers/Playlists';
 import Login from './containers/Login';
 import NotFound from './containers/NotFound';
 
+import ChannelVideos from './containers/channel/ChannelVideos';
+import ChannelAbout from './containers/channel/ChannelAbout';
+
 const Playlist = LazyComponent(() => import('./containers/Playlist'));
 const Search = LazyComponent(() => import('./containers/Search'));
 const Channels = LazyComponent(() => import('./containers/Channels'));
+
 const Channel = LazyComponent(() => import('./containers/channel'));
 const Video = LazyComponent(() => import('./containers/Video'));
 
-const Routes = () => (
-    <Switch>
-        <AuthRoute exact path="/" component={Playlists} />
+const Router = () => (
+    <Routes>
+        <AuthRoute path="/" element={<Playlists />} />
 
-        <AuthRoute path="/playlist/:playlistId" component={Playlist} />
+        <AuthRoute path="/playlist/:playlistId" element={<Playlist />} />
 
-        <AuthRoute exact path="/subscriptions" component={Channels} />
+        <AuthRoute path="/subscriptions" element={<Channels />} />
 
-        <AuthRoute path="/search/:query?" component={Search} />
+        <AuthRoute path="/search/" element={<Search />} />
 
-        <AuthRoute path="/channel/:channelId" component={Channel} />
+        <AuthRoute path="/search/:query" element={<Search />} />
 
-        <AuthRoute path="/video/:videoId" component={Video} />
+        <AuthRoute path="/channel/:channelId/*" element={<Channel />}>
+            <Route path="" element={<ChannelVideos />} />
 
-        <Route path="/login" component={Login} />
+            <Route path="playlists" element={<Playlists />} />
 
-        <Route path="*" component={NotFound} />
-    </Switch>
+            <Route path="about" element={<ChannelAbout />} />
+        </AuthRoute>
+
+        <AuthRoute path="/video/:videoId" element={<Video />} />
+
+        <Route path="/login" element={<Login />} />
+
+        <Route path="*" element={<NotFound />} />
+    </Routes>
 );
 
-export default Routes;
+export default Router;

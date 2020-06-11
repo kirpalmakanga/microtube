@@ -1,6 +1,5 @@
-import { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 
 import SearchForm from '../components/SearchForm';
 import Icon from '../components/Icon';
@@ -9,67 +8,47 @@ import DropDown from '../components/DropDown';
 
 import { setSearchTarget } from '../actions/youtube';
 
-class SearchHeader extends Component {
-    handleFormSubmit = (query) => {
-        const { history } = this.props;
+const SearchHeader = ({ isSignedIn, forMine, setSearchTarget }) => {
+    const navigate = useNavigate();
+    const { query } = useParams();
 
-        history.replace(`/search/${query}`);
-    };
+    const handleFormSubmit = (query) =>
+        navigate(`/search/${query}`, { replace: true });
 
-    handleDropDownSelect = (value) => {
-        const { setSearchTarget } = this.props;
+    const handleDropDownSelect = (value) => setSearchTarget(parseInt(value));
 
-        setSearchTarget(parseInt(value));
-    };
+    return (
+        <div className="layout__header-row">
+            <Link
+                className="layout__back-button icon-button"
+                to="/"
+                aria-label="Close search"
+                icon="back"
+            >
+                <Icon name="back" />
+            </Link>
 
-    render() {
-        const {
-            props: { isSignedIn, forMine, query },
-            handleFormSubmit,
-            handleDropDownSelect
-        } = this;
+            <SearchForm query={query} onSubmit={handleFormSubmit} />
 
-        return (
-            <div className="layout__header-row">
-                <Link
-                    className="layout__back-button icon-button"
-                    to="/"
-                    aria-label="Close search"
-                    icon="back"
-                >
-                    <Icon name="back" />
-                </Link>
+            {isSignedIn ? (
+                <nav className="navigation">
+                    <DropDown
+                        currentValue={forMine}
+                        options={[
+                            { label: 'All videos', value: 0 },
+                            { label: 'My Videos', value: 1 }
+                        ]}
+                        onSelect={handleDropDownSelect}
+                    />
+                </nav>
+            ) : null}
+        </div>
+    );
+};
 
-                <SearchForm query={query} onSubmit={handleFormSubmit} />
-
-                {isSignedIn ? (
-                    <nav className="navigation">
-                        <DropDown
-                            currentValue={forMine}
-                            options={[
-                                { label: 'All videos', value: 0 },
-                                { label: 'My Videos', value: 1 }
-                            ]}
-                            onSelect={handleDropDownSelect}
-                        />
-                    </nav>
-                ) : null}
-            </div>
-        );
-    }
-}
-
-const mapStateToProps = (
-    { auth: { isSignedIn }, search: { forMine } },
-    {
-        match: {
-            params: { query }
-        }
-    }
-) => ({
+const mapStateToProps = ({ auth: { isSignedIn }, search: { forMine } }) => ({
     isSignedIn,
-    forMine,
-    query
+    forMine
 });
 
 const mapDispatchToProps = {

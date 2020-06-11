@@ -1,47 +1,36 @@
-import { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 
 import { formatTime } from '../lib/helpers';
 
-class Head extends Component {
-    getTitle = () => {
-        const {
-            location: { pathname },
-            channelTitle,
-            playlistTitle,
-            currentTime,
-            currentVideo: { id: videoId, title: currentVideoTitle, duration }
-        } = this.props;
+const Head = ({
+    channelTitle,
+    playlistTitle,
+    currentVideo: { id: videoId, title: currentVideoTitle }
+}) => {
+    const { pathname } = useLocation();
 
-        let title = 'MicroTube';
+    let title = 'MicroTube';
 
-        if (pathname.includes('/subscriptions')) {
-            title = 'Subscriptions';
-        }
-
-        if (pathname.includes('/channel')) {
-            title = channelTitle;
-        }
-
-        if (pathname.includes('/playlist')) {
-            title = playlistTitle;
-        }
-
-        if (videoId) {
-            title = `Microtube | ${currentVideoTitle} - ${formatTime(
-                currentTime
-            )} / ${formatTime(duration)}`;
-        }
-
-        return title;
-    };
-
-    render() {
-        return <Helmet title={this.getTitle()} />;
+    if (pathname.includes('/subscriptions')) {
+        title = 'Subscriptions';
     }
-}
+
+    if (pathname.includes('/channel')) {
+        title = channelTitle;
+    }
+
+    if (pathname.includes('/playlist')) {
+        title = playlistTitle;
+    }
+
+    if (videoId) {
+        title = `Microtube | ${currentVideoTitle}`;
+    }
+
+    return <Helmet title={title} />;
+};
 
 const mapStateToProps = ({
     playlistItems: { playlistTitle },
@@ -59,4 +48,4 @@ const mapStateToProps = ({
         currentVideo
     };
 };
-export default withRouter(connect(mapStateToProps)(Head));
+export default connect(mapStateToProps)(Head);

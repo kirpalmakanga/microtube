@@ -40,12 +40,13 @@
     }
 
     &__items {
+        position: relative;
         overflow-x: hidden;
         overflow-y: scroll;
         flex: 1;
     }
 
-    &__items > div[data-react-beautiful-dnd-draggable],
+    &__items > [draggable],
     &__item {
         height: 50px;
     }

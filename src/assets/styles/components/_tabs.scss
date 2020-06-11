@@ -22,21 +22,9 @@
             &:focus {
                 outline: none;
             }
+            &.active,
             &:hover {
                 background-color: lighten($brand-primary, 20%);
-            }
-        }
-
-        &[data-state='active'] {
-            &:after {
-                content: '';
-                display: block;
-                position: absolute;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                height: 2px;
-                background-color: $white;
             }
         }
     }

@@ -1,5 +1,6 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import {
     searchVideos,
@@ -16,102 +17,74 @@ import Placeholder from '../components/Placeholder';
 
 import MenuWrapper from '../components/menu/MenuWrapper';
 
-class Search extends Component {
-    state = {
+const Search = ({
+    items,
+    totalResults,
+    forMine,
+    searchVideos,
+    queueItem,
+    editPlaylistItem,
+    clearSearch
+}) => {
+    const navigate = useNavigate();
+    const { query } = useParams();
+
+    const [{ mountGrid }, setState] = useState({
         mountGrid: true
+    });
+
+    const reloadQuery = () => {
+        setState({ mountGrid: false });
+
+        clearSearch();
+
+        setTimeout(() => setState({ mountGrid: true }));
     };
 
-    reloadQuery = () => {
-        const { clearSearch } = this.props;
+    useEffect(() => {
+        reloadQuery();
 
-        this.setState({ mountGrid: false }, () => {
-            clearSearch();
+        return clearSearch;
+    }, [query, forMine]);
 
-            this.setState({ mountGrid: true });
-        });
-    };
+    return query && mountGrid ? (
+        totalResults === 0 ? (
+            <Placeholder icon="empty" text="No results found." />
+        ) : (
+            <MenuWrapper
+                menuItems={[
+                    {
+                        title: `Add to queue`,
+                        icon: 'queue',
+                        onClick: queueItem
+                    },
+                    {
+                        title: `Add to playlist`,
+                        icon: 'playlist-add',
+                        onClick: ({ id }) => editPlaylistItem(id)
+                    }
+                ]}
+            >
+                {(openMenu) => (
+                    <List
+                        items={items}
+                        itemKey={(index, data) => data[index].id}
+                        loadMoreItems={() => searchVideos({ query })}
+                        renderItem={({ data }) => (
+                            <VideoCard
+                                {...data}
+                                onClick={() => navigate(`/video/${data.id}`)}
+                                onClickMenu={() => openMenu(data, data.title)}
+                            />
+                        )}
+                    />
+                )}
+            </MenuWrapper>
+        )
+    ) : null;
+};
 
-    componentWillUnmount() {
-        this.props.clearSearch();
-    }
-
-    componentDidUpdate({ query, forMine }) {
-        const {
-            props: { query: newQuery, forMine: newForMine },
-            reloadQuery
-        } = this;
-
-        if (newQuery !== query || newForMine !== forMine) {
-            reloadQuery();
-        }
-    }
-
-    render() {
-        const {
-            props: {
-                query,
-                items,
-                totalResults,
-                searchVideos,
-                playItem,
-                queueItem,
-                editPlaylistItem,
-                history
-            },
-            state: { mountGrid }
-        } = this;
-
-        return query && mountGrid ? (
-            totalResults === 0 ? (
-                <Placeholder icon="empty" text="No results found." />
-            ) : (
-                <MenuWrapper
-                    menuItems={[
-                        {
-                            title: `Add to queue`,
-                            icon: 'queue',
-                            onClick: queueItem
-                        },
-                        {
-                            title: `Add to playlist`,
-                            icon: 'playlist-add',
-                            onClick: ({ id }) => editPlaylistItem(id)
-                        }
-                    ]}
-                >
-                    {(openMenu) => (
-                        <List
-                            items={items}
-                            itemKey={(index, data) => data[index].id}
-                            loadMoreItems={() => searchVideos({ query })}
-                            renderItem={({ data }) => (
-                                <VideoCard
-                                    {...data}
-                                    onClick={() =>
-                                        history.push(`/video/${data.id}`)
-                                    }
-                                    onClickMenu={() =>
-                                        openMenu(data, data.title)
-                                    }
-                                />
-                            )}
-                        />
-                    )}
-                </MenuWrapper>
-            )
-        ) : null;
-    }
-}
-
-const mapStateToProps = (
-    { search: { items, forMine, totalResults } },
-    {
-        match: {
-            params: { query = '' }
-        }
-    }
-) => ({
-    query,
+const mapStateToProps = ({ search: { items, forMine, totalResults } }) => ({
     forMine,
     items,
     totalResults

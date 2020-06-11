@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import { closeScreen } from '../actions/youtube';
 
@@ -18,11 +18,13 @@ class Header extends Component {
                 className="layout__header shadow--2dp"
                 onClick={closeScreen}
             >
-                <Switch>
-                    <Route path="/search/:query?" component={SearchHeader} />
+                <Routes>
+                    <Route path="*" element={<DefaultHeader />} />
 
-                    <Route path="*" component={DefaultHeader} />
-                </Switch>
+                    <Route path="/search/" element={<SearchHeader />} />
+
+                    <Route path="/search/:query" element={<SearchHeader />} />
+                </Routes>
             </header>
         );
     }

@@ -1,117 +1,107 @@
-import { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { signIn, signOut } from '../actions/auth';
 
 import Icon from '../components/Icon';
 import Button from '../components/Button';
 
-class DefaultHeader extends Component {
-    getTitle = () => {
-        const { route, channelTitle, playlistTitle } = this.props;
+const DefaultHeader = ({
+    isSignedIn,
+    signIn,
+    signOut,
+    avatar,
+    channelTitle,
+    playlistTitle
+}) => {
+    const navigate = useNavigate();
+    const { pathname } = useLocation();
 
-        let title = 'MicroTube';
+    let title = 'MicroTube';
 
-        if (route.startsWith('/subscriptions')) {
-            title = 'Subscriptions';
-        }
+    if (pathname.startsWith('/subscriptions')) {
+        title = 'Subscriptions';
+    }
 
-        if (route.includes('/channel')) {
-            title = channelTitle;
-        }
+    if (pathname.includes('/channel')) {
+        title = channelTitle;
+    }
 
-        if (route.startsWith('/playlist')) {
-            title = playlistTitle;
-        }
+    if (pathname.startsWith('/playlist')) {
+        title = playlistTitle;
+    }
 
-        return title;
-    };
+    return (
+        <div className="layout__header-row">
+            {pathname !== '/' && pathname !== '/login' ? (
+                <button
+                    onClick={() => navigate(-1)}
+                    className="layout__back-button icon-button"
+                    to="/"
+                    aria-label="Go to homepage"
+                >
+                    <Icon name="back" />
+                </button>
+            ) : null}
 
-    render() {
-        const {
-            props: { isSignedIn, signIn, signOut, avatar, route, history },
-            getTitle
-        } = this;
+            <span className="layout__title">
+                <span className="layout__title-inner">{title}</span>
+            </span>
 
-        const title = getTitle();
+            <nav className="navigation">
+                {isSignedIn ? (
+                    <>
+                        <Link
+                            className="navigation__link icon-button"
+                            aria-label="Open search"
+                            to="/search"
+                        >
+                            <Icon name="search" />
+                        </Link>
 
-        return (
-            <div className="layout__header-row">
-                {route !== '/' && route !== '/login' ? (
-                    <button
-                        onClick={() => history.goBack()}
-                        className="layout__back-button icon-button"
-                        to="/"
-                        aria-label="Go to homepage"
-                    >
-                        <Icon name="back" />
-                    </button>
+                        <Link
+                            className="navigation__link icon-button"
+                            aria-label="Playlists"
+                            to="/"
+                        >
+                            <Icon name="folder" />
+                        </Link>
+
+                        <Link
+                            className="navigation__link icon-button"
+                            to="/subscriptions"
+                            aria-label="Open subscriptions"
+                        >
+                            <Icon name="subscriptions" />
+                        </Link>
+                    </>
                 ) : null}
 
-                <span className="layout__title">
-                    <span className="layout__title-inner">{title}</span>
-                </span>
+                <Button
+                    className="navigation__link icon-button"
+                    onClick={isSignedIn ? signOut : signIn}
+                    title={isSignedIn ? 'Log out' : 'Log in'}
+                    icon="account"
+                >
+                    {avatar ? <img src={avatar} alt="avatar" /> : null}
+                </Button>
+            </nav>
+        </div>
+    );
+};
 
-                <nav className="navigation">
-                    {isSignedIn ? (
-                        <>
-                            <Link
-                                className="navigation__link icon-button"
-                                aria-label="Open search"
-                                to="/search"
-                            >
-                                <Icon name="search" />
-                            </Link>
-
-                            <Link
-                                className="navigation__link icon-button"
-                                aria-label="Playlists"
-                                to="/"
-                            >
-                                <Icon name="folder" />
-                            </Link>
-
-                            <Link
-                                className="navigation__link icon-button"
-                                to="/subscriptions"
-                                aria-label="Open subscriptions"
-                            >
-                                <Icon name="subscriptions" />
-                            </Link>
-                        </>
-                    ) : null}
-
-                    <Button
-                        className="navigation__link icon-button"
-                        onClick={isSignedIn ? signOut : signIn}
-                        title={isSignedIn ? 'Log out' : 'Log in'}
-                        icon="account"
-                    >
-                        {avatar ? <img src={avatar} alt="avatar" /> : null}
-                    </Button>
-                </nav>
-            </div>
-        );
-    }
-}
-
-const mapStateToProps = (
-    {
-        auth: {
-            isSignedIn,
-            user: { picture: avatar }
-        },
-        playlistItems: { playlistTitle },
-        channel: { channelTitle }
+const mapStateToProps = ({
+    auth: {
+        isSignedIn,
+        user: { picture: avatar }
     },
-    { location: { pathname: route } }
-) => ({
+    playlistItems: { playlistTitle },
+    channel: { channelTitle }
+}) => ({
     isSignedIn,
     avatar,
     playlistTitle,
-    channelTitle,
-    route
+    channelTitle
 });
 
 const mapDispatchToProps = {

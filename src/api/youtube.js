@@ -85,7 +85,9 @@ export const getSignedInUser = () => {
 };
 
 export const signIn = async () => {
-    await getAuthInstance().signIn();
+    await getAuthInstance().signIn({
+        prompt: 'select_account'
+    });
 
     return getSignedInUser();
 };

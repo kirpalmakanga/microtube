@@ -1,4 +1,3 @@
-import { Component } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,8 +17,7 @@ const Subscriptions = ({
     totalResults,
     getSubscriptions,
     subscribeToChannel,
-    unsubscribeFromChannel,
-    history
+    unsubscribeFromChannel
 }) => {
     const navigate = useNavigate();
 

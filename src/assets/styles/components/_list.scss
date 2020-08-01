@@ -5,7 +5,7 @@ $gutter: 16px;
         display: flex;
 
         &:not(:last-child) {
-            border-bottom: 2px solid lighten($brand-primary, 20%);
+            border-bottom: 1px solid $brand-primary;
         }
     }
 

@@ -6,10 +6,10 @@ button {
 
 .button {
     @include transition();
-    background-color: $black;
+    background-color: $brand-primary;
     border: none;
     padding: 10px 25px;
-    color: $white;
+    color: $brand-secondary;
     text-transform: uppercase;
     cursor: pointer;
     font-size: 14px;
@@ -17,15 +17,15 @@ button {
     border-radius: 2px;
 
     &:hover {
-        background-color: lighten($black, 5%);
+        background-color: lighten($brand-primary, 5%);
     }
 }
 .button--close {
-    background-color: lighten($black, 40%);
+    background-color: lighten($brand-primary, 40%);
 }
 
 .icon-button {
-    color: $white;
+    color: $brand-secondary;
     .icon {
         @include transition();
         transform-origin: 50% 50%;

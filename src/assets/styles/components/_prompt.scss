@@ -5,7 +5,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba($black, 0.7);
+    background-color: rgba($brand-primary, 0.7);
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -16,16 +16,16 @@
 
 .dialog {
     cursor: default;
-    background-color: $white;
+    background-color: $brand-secondary;
     position: relative;
     overflow: hidden;
     width: 100%;
     display: flex;
     flex-direction: column;
     -webkit-tap-highlight-color: transparent;
-    color: $black;
+    color: $brand-primary;
     .textfield__input {
-        color: $black;
+        color: $brand-primary;
         padding: 20px;
         resize: vertical;
     }
@@ -73,17 +73,17 @@
         display: flex;
 
         .dropdown {
-            color: $black;
+            color: $brand-primary;
             border-left: 2px solid lighten($brand-primary, 20%);
             border-right: 2px solid lighten($brand-primary, 20%);
             &__trigger,
             &__list-item {
-                background-color: $white;
-                color: $black;
+                background-color: $brand-secondary;
+                color: $brand-primary;
 
                 &:hover,
                 &.is-active {
-                    background-color: darken($white, 5%);
+                    background-color: darken($brand-secondary, 5%);
                 }
             }
         }
@@ -95,21 +95,21 @@
             padding: 0 20px;
             &:focus {
                 outline: none;
-                background-color: darken($white, 5%);
+                background-color: darken($brand-secondary, 5%);
             }
         }
 
         [type='submit'] {
             height: 50px;
             @include transition();
-            background-color: $black;
-            color: $white;
+            background-color: $brand-primary;
+            color: $brand-secondary;
             border: none;
             padding: 0 20px;
             margin: 0;
             cursor: pointer;
             &:hover {
-                background-color: lighten($black, 5%);
+                background-color: lighten($brand-primary, 5%);
             }
         }
     }
@@ -131,7 +131,7 @@
     }
 
     &__item {
-        background-color: $white;
+        background-color: $brand-secondary;
         @include transition();
         display: flex;
         flex: 1;

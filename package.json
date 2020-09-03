@@ -33,7 +33,7 @@
         "@poi/plugin-bundle-report": "12.1.2",
         "@poi/plugin-pwa": "12.0.3",
         "@poi/plugin-typescript": "12.2.1",
-        "node-sass": "4.13.0",
+        "node-sass": "4.13.1",
         "poi": "12.7.5",
         "sass-loader": "6.0.7",
         "typescript": "3.7.2"

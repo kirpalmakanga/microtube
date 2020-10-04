@@ -69,9 +69,7 @@ export const parseDuration = (PT = '') => {
 
     let durationInSec = 0;
 
-    for (let part of parts) {
-        const { pos, multiplier } = part;
-
+    for (const { pos, multiplier } of parts) {
         if (matches[pos]) {
             durationInSec += parseInt(matches[pos]) * multiplier;
         }
@@ -81,19 +79,9 @@ export const parseDuration = (PT = '') => {
 };
 
 export const formatTime = (t) => {
-    let hours,
-        minutes,
-        seconds = 0;
-
-    hours = Math.floor(t / 3600) % 24;
-
-    t = t - hours * 3600;
-
-    minutes = Math.floor(t / 60) % 60;
-
-    t = t - minutes * 60;
-
-    seconds = Math.floor(t);
+    const hours = Math.floor(t / 3600);
+    const minutes = Math.floor((t - hours * 3600) / 60);
+    const seconds = Math.floor(t - (hours * 3600 + minutes * 60));
 
     const units = [minutes, seconds];
 
@@ -101,20 +89,14 @@ export const formatTime = (t) => {
         units.unshift(hours);
     }
 
-    return units.map((t) => ('0' + t).slice(-2)).join(':');
+    return units.map((unit) => `${unit}`.padStart(2, '0')).join(':');
 };
 
 export const isMobile = () => {
     const { userAgent = '' } = navigator;
 
-    return (
-        userAgent.match(/Android/i) ||
-        userAgent.match(/webOS/i) ||
-        userAgent.match(/iPhone/i) ||
-        userAgent.match(/iPad/i) ||
-        userAgent.match(/iPod/i) ||
-        userAgent.match(/BlackBerry/i) ||
-        userAgent.match(/Windows Phone/i)
+    return userAgent.match(
+        /(Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone)/i
     );
 };
 

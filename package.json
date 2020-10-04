@@ -9,7 +9,7 @@
     },
     "dependencies": {
         "@snackbar/core": "1.7.0",
-        "date-fns": "^2.14.0",
+        "date-fns": "^2.16.1",
         "firebase": "^7.15.0",
         "history": "^5.0.0",
         "react": "^16.13.1",

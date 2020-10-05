@@ -530,7 +530,7 @@ class Player extends Component {
                         />
 
                         <div className="player__controls">
-                            {!isMobile() ? (
+                            {!isMobile() && videoId ? (
                                 <div
                                     className="player__controls-volume"
                                     onWheel={handleWheelVolume}

@@ -39,19 +39,19 @@ class SubscriptionCard extends PureComponent {
                 </CardContent>
 
                 <CardButtons>
-                    {/* {isUnsubscribed ? ( */}
-                    <Button
-                        title="Subscribe"
-                        icon="check"
-                        onClick={subscribe}
-                    />
-                    {/* ) : (
+                    {isUnsubscribed ? (
+                        <Button
+                            title="Subscribe"
+                            icon="check"
+                            onClick={subscribe}
+                        />
+                    ) : (
                         <Button
                             title="Queue playlist"
                             icon="error"
                             onClick={unsubscribe}
                         />
-                    )} */}
+                    )}
                 </CardButtons>
             </CardContainer>
         );

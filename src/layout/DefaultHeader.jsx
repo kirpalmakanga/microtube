@@ -72,7 +72,7 @@ const DefaultHeader = ({
                             to="/subscriptions"
                             aria-label="Open subscriptions"
                         >
-                            <Icon name="subscriptions" />
+                            <Icon name="users" />
                         </Link>
                     </>
                 ) : null}
@@ -81,7 +81,7 @@ const DefaultHeader = ({
                     className="navigation__link icon-button"
                     onClick={isSignedIn ? signOut : signIn}
                     title={isSignedIn ? 'Log out' : 'Log in'}
-                    icon="person"
+                    icon="user"
                 >
                     {avatar ? <img src={avatar} alt="avatar" /> : null}
                 </Button>

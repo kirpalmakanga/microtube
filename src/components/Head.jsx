@@ -2,8 +2,6 @@ import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 
-import { formatTime } from '../lib/helpers';
-
 const Head = ({
     channelTitle,
     playlistTitle,

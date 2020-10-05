@@ -45,8 +45,8 @@ class Queue extends Component {
                         <MenuWrapper
                             menuItems={[
                                 {
-                                    title: 'Add to playlist',
-                                    icon: 'playlist-add',
+                                    title: 'Save to playlist',
+                                    icon: 'folder-add',
                                     onClick: ({ id }) => editPlaylistItem(id)
                                 },
                                 {
@@ -98,7 +98,7 @@ class Queue extends Component {
                             )}
                         </MenuWrapper>
                     ) : (
-                        <Placeholder icon="empty" text="No videos in queue." />
+                        <Placeholder icon="list" text="No videos in queue." />
                     )}
                 </div>
             </section>

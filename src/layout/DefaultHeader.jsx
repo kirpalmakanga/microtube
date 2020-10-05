@@ -40,7 +40,7 @@ const DefaultHeader = ({
                     to="/"
                     aria-label="Go to homepage"
                 >
-                    <Icon name="back" />
+                    <Icon name="arrow-left" />
                 </button>
             ) : null}
 
@@ -81,7 +81,7 @@ const DefaultHeader = ({
                     className="navigation__link icon-button"
                     onClick={isSignedIn ? signOut : signIn}
                     title={isSignedIn ? 'Log out' : 'Log in'}
-                    icon="account"
+                    icon="person"
                 >
                     {avatar ? <img src={avatar} alt="avatar" /> : null}
                 </Button>

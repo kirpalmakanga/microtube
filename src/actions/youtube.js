@@ -214,7 +214,7 @@ export function editPlaylistItem(videoId) {
             prompt(
                 {
                     mode: 'playlist',
-                    promptText: `Add to playlist`,
+                    promptText: `Save to playlist`,
                     confirmText: 'Done'
                 },
                 ({ title, privacyStatus, playlistId }) => {

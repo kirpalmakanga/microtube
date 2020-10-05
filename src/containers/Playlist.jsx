@@ -37,19 +37,19 @@ const Playlist = ({
     }, [playlistId]);
 
     return totalResults === 0 ? (
-        <Placeholder icon="empty" text="This playlist is empty." />
+        <Placeholder icon="list" text="This playlist is empty." />
     ) : (
         <MenuWrapper
             menuItems={[
                 {
                     title: 'Add to queue',
-                    icon: 'queue',
+                    icon: 'circle-add',
                     onClick: queueItem
                 },
 
                 {
-                    title: 'Add to playlist',
-                    icon: 'playlist-add',
+                    title: 'Save to playlist',
+                    icon: 'folder-add',
                     onClick: ({ id }) => editPlaylistItem(id)
                 },
 

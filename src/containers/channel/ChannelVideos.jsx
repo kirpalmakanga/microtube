@@ -29,19 +29,19 @@ const ChannelVideos = ({
     useEffect(() => clearChannelVideos, []);
 
     return totalResults === 0 ? (
-        <Placeholder icon="empty" text="This channel hasn't uploaded videos." />
+        <Placeholder icon="list" text="This channel hasn't uploaded videos." />
     ) : (
         <MenuWrapper
             menuItems={[
                 {
                     title: `Add to queue`,
-                    icon: 'queue',
+                    icon: 'circle-add',
                     onClick: queueItem
                 },
 
                 {
-                    title: `Add to playlist`,
-                    icon: 'playlist-add',
+                    title: `Save to playlist`,
+                    icon: 'folder-add',
                     onClick: ({ id }) => editPlaylistItem(id)
                 }
             ]}

@@ -490,7 +490,7 @@ class Player extends Component {
                                 <Button
                                     className="player__controls-button icon-button"
                                     onClick={() => goToVideo(false)}
-                                    icon="skip-previous"
+                                    icon="chevron-left"
                                     ariaLabel="Go to previous video"
                                 />
                             ) : null}
@@ -514,7 +514,7 @@ class Player extends Component {
                                 <Button
                                     className="player__controls-button icon-button"
                                     onClick={() => goToVideo(true)}
-                                    icon="skip-next"
+                                    icon="chevron-right"
                                     ariaLabel="Go to next video"
                                 />
                             ) : null}
@@ -539,13 +539,9 @@ class Player extends Component {
                                         className="player__controls-button icon-button"
                                         onClick={toggleMute}
                                         icon={
-                                            isMuted
-                                                ? 'volume-mute'
-                                                : volume >= 50
-                                                ? 'volume-up'
-                                                : volume > 0 && volume <= 50
-                                                ? 'volume-down'
-                                                : 'volume-off'
+                                            isMuted || volume === 0
+                                                ? 'volume-off'
+                                                : 'volume-up'
                                         }
                                         ariaLabel={isMuted ? 'Unmute' : 'Mute'}
                                     />
@@ -666,19 +662,15 @@ class Player extends Component {
                                 <Button
                                     className="player__controls-button icon-button"
                                     onClick={() => editPlaylistItem(videoId)}
-                                    icon="playlist-add"
-                                    ariaLabel="Add to playlist"
+                                    icon="folder-add"
+                                    ariaLabel="Save to playlist"
                                 ></Button>
                             ) : null}
 
                             <Button
                                 className="player__controls-button icon-button"
                                 onClick={toggleFullScreen}
-                                icon={
-                                    isFullScreen
-                                        ? 'fullscreen-exit'
-                                        : 'fullscreen'
-                                }
+                                icon={isFullScreen ? 'close' : 'expand'}
                                 ariaLabel={
                                     showScreen
                                         ? 'Enable Fullscreen'

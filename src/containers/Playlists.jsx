@@ -30,7 +30,7 @@ const Playlists = ({
 
     return totalResults === 0 ? (
         <Placeholder
-            icon="empty"
+            icon="list"
             text={
                 channelId
                     ? "This channel doesn't have playlists."
@@ -42,12 +42,12 @@ const Playlists = ({
             menuItems={[
                 {
                     title: 'Queue playlist',
-                    icon: 'queue',
+                    icon: 'circle-add',
                     onClick: ({ id }) => queuePlaylist(id)
                 },
                 {
                     title: 'Launch playlist',
-                    icon: 'playlist-play',
+                    icon: 'play',
                     onClick: ({ id }) => queuePlaylist(id, true)
                 },
                 ...(!channelId

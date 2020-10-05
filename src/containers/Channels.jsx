@@ -23,7 +23,7 @@ const Subscriptions = ({
 
     return totalResults === 0 ? (
         <Placeholder
-            icon="empty"
+            icon="list"
             text="You haven't subscribed to any channel yet."
         />
     ) : (

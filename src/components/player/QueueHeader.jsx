@@ -42,7 +42,7 @@ class QueueHeader extends PureComponent {
                             className="navigation__link icon-button"
                             onClick={clearQueue}
                             title="Clear queue"
-                            icon="clear"
+                            icon="delete"
                         />
                     </nav>
                 </div>
@@ -61,7 +61,4 @@ const mapDispatchToProps = {
     importVideos
 };
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(QueueHeader);
+export default connect(mapStateToProps, mapDispatchToProps)(QueueHeader);

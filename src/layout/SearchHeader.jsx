@@ -23,9 +23,8 @@ const SearchHeader = ({ isSignedIn, forMine, setSearchTarget }) => {
                 className="layout__back-button icon-button"
                 to="/"
                 aria-label="Close search"
-                icon="back"
             >
-                <Icon name="back" />
+                <Icon name="arrow-left" />
             </Link>
 
             <SearchForm query={query} onSubmit={handleFormSubmit} />

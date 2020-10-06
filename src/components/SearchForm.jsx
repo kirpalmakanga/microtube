@@ -1,88 +1,61 @@
-import { Component } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import { stopPropagation, preventDefault } from '../lib/helpers';
 
-class Form extends Component {
-    constructor(props) {
-        super(props);
+const SearchForm = ({ query, onSubmit }) => {
+    const [input, setInput] = useState(query);
+    const inputRef = useRef(null);
 
-        this.state = { input: props.query };
-    }
+    const keyDownHandler = stopPropagation();
 
-    componentDidUpdate({ query: prevQuery }) {
-        const { query } = this.props;
+    const unlistenKeyDown = () =>
+        inputRef.current.removeEventListener('keydown', keyDownHandler);
 
-        prevQuery !== query && this.setState({ input: query });
-    }
+    const listenKeyDown = () => {
+        unlistenKeyDown();
+        inputRef.current.addEventListener('keydown', keyDownHandler);
+    };
+    useEffect(() => {
+        setInput(query);
 
-    componentDidMount() {
-        this.input.focus();
+        inputRef.current.focus();
 
-        this.__keyDownHandler = stopPropagation();
-        this.input.addEventListener('keydown', this.__keyDownHandler);
-    }
+        listenKeyDown();
 
-    componentWillUnmount() {
-        this.input.removeEventListener('keydown', this.__keyDownHandler);
-    }
+        return unlistenKeyDown;
+    }, [query]);
 
-    getInputRef = (el) => (this.input = el);
+    const handleInput = ({ target: { value } }) => setInput(value);
 
-    handleInput = ({ target: { value: input } }) => this.setState({ input });
-
-    handleFocus = preventDefault(({ target: { parentNode } }) => {
-        parentNode.classList.add('is-focused');
-    });
-
-    handleBlur = preventDefault(({ target: { parentNode } }) => {
-        parentNode.classList.remove('is-focused');
-    });
-
-    handleSubmit = preventDefault(() => {
-        const {
-            state: { input },
-            props: { query }
-        } = this;
-
+    const handleSubmit = preventDefault(() => {
         const newQuery = input.trim();
 
-        newQuery && newQuery !== query && this.props.onSubmit(newQuery);
+        if (newQuery && newQuery !== query) {
+            onSubmit(newQuery);
+        }
     });
 
-    render() {
-        const {
-            state: { input },
-            getInputRef,
-            handleInput,
-            handleFocus,
-            handleBlur,
-            handleSubmit
-        } = this;
+    return (
+        <form className="search-form" onSubmit={handleSubmit}>
+            <div className="textfield">
+                <label className="sr-only" labelfor="search">
+                    Search
+                </label>
 
-        return (
-            <form className="search-form" onSubmit={handleSubmit}>
-                <div className="textfield">
-                    <label className="sr-only" labelfor="search">
-                        Search
-                    </label>
+                <input
+                    aria-label="Search"
+                    ref={inputRef}
+                    value={input}
+                    name="search"
+                    className="textfield__input"
+                    id="search"
+                    type="text"
+                    placeholder="Search..."
+                    onChange={handleInput}
+                />
+            </div>
+        </form>
+    );
+};
 
-                    <input
-                        aria-label="Search"
-                        ref={getInputRef}
-                        value={input}
-                        name="search"
-                        className="textfield__input"
-                        id="search"
-                        type="text"
-                        placeholder="Search..."
-                        onChange={handleInput}
-                        onFocus={handleFocus}
-                        onBlur={handleBlur}
-                    />
-                </div>
-            </form>
-        );
-    }
-}
-
-export default Form;
+export default SearchForm;

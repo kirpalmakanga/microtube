@@ -1,41 +1,35 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { closeNotification } from '../actions/app.js';
 
 import TranslateY from './animations/TranslateY';
 
-class Notifications extends Component {
-    render() {
-        const {
-            notifications: { message, isActive },
-            closeNotification
-        } = this.props;
+const Notifications = () => {
+    const { message, isActive } = useSelector(
+        ({ notifications }) => notifications
+    );
 
-        return (
-            <TranslateY in={isActive} className="notification shadow--2dp">
-                <div className="notification__content">
-                    <div className="notification__text">{message || ''}</div>
-                    <button
-                        className="notification__action icon-button"
-                        onClick={closeNotification}
-                    >
-                        <span className="icon">
-                            <svg>
-                                <use xlinkHref="#icon-close" />
-                            </svg>
-                        </span>
-                    </button>
-                </div>
-            </TranslateY>
-        );
-    }
-}
+    const dispatch = useDispatch();
 
-const mapStateToProps = ({ notifications }) => ({ notifications });
+    const handleCloseNotification = () => dispatch(closeNotification());
 
-const mapDispatchToProps = {
-    closeNotification
+    return (
+        <TranslateY in={isActive} className="notification shadow--2dp">
+            <div className="notification__content">
+                <div className="notification__text">{message || ''}</div>
+                <button
+                    className="notification__action icon-button"
+                    onClick={handleCloseNotification}
+                >
+                    <span className="icon">
+                        <svg>
+                            <use xlinkHref="#icon-close" />
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </TranslateY>
+    );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Notifications);
+export default Notifications;

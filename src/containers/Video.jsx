@@ -1,24 +1,20 @@
 import { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { getVideo, clearVideo } from '../actions/youtube';
 
-const Video = ({ getVideo, clearVideo }) => {
+const Video = () => {
     const { videoId } = useParams();
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        getVideo(videoId);
+        dispatch(getVideo(videoId));
 
-        return clearVideo;
+        return () => dispatch(clearVideo);
     }, [videoId]);
 
     return null;
 };
 
-const mapDispatchToProps = {
-    getVideo,
-    clearVideo
-};
-
-export default connect(null, mapDispatchToProps)(Video);
+export default Video;

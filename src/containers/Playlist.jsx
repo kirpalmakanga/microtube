@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useEffect } from './Channel/react';
+import { useDispatch, useSelector } from './Channel/react-redux';
+import { useParams, useNavigate } from './Channel/react-router-dom';
 
 import {
     getPlaylistTitle,

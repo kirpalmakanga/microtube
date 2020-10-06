@@ -11,7 +11,7 @@ const Video = () => {
     useEffect(() => {
         dispatch(getVideo(videoId));
 
-        return () => dispatch(clearVideo);
+        return () => dispatch(clearVideo());
     }, [videoId]);
 
     return null;

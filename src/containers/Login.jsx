@@ -1,4 +1,4 @@
-import { connect } from './Channel/react-redux';
+import { connect } from 'react-redux';
 
 import { signIn } from '../actions/auth';
 

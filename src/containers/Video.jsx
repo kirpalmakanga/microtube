@@ -1,6 +1,6 @@
-import { useEffect } from './Channel/react';
-import { useDispatch } from './Channel/react-redux';
-import { useParams } from './Channel/react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import { getVideo, clearVideo } from '../actions/youtube';
 

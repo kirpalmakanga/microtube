@@ -1,11 +1,10 @@
-import { useEffect } from './react';
-import { useDispatch, useSelector } from './react-redux';
-import { useNavigate, useParams } from './react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
     getChannelVideos,
     clearChannelVideos,
     queueItem,
-    playItem,
     editPlaylistItem
 } from '../../actions/youtube';
 

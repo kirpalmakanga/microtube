@@ -1,5 +1,5 @@
 import * as api from '../api/youtube';
-import * as database from '../api/firebase';
+import database from '../api/database';
 
 import { notify, connectDevice } from './app';
 import { listenForQueueUpdate } from './youtube';

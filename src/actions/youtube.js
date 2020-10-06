@@ -1,5 +1,5 @@
 import * as api from '../api/youtube';
-import * as database from '../api/firebase';
+import database from '../api/database';
 
 import { catchErrors, parseVideoId, splitLines, chunk } from '../lib/helpers';
 

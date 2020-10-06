@@ -1,13 +1,31 @@
 import { useLocation } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet';
 
-const Head = ({
-    channelTitle,
-    playlistTitle,
-    currentVideo: { id: videoId, title: currentVideoTitle }
-}) => {
+const Head = () => {
     const { pathname } = useLocation();
+
+    const {
+        channelTitle,
+        playlistTitle,
+        currentVideo: { id: videoId, title: currentVideoTitle }
+    } = useSelector(
+        ({
+            playlistItems: { playlistTitle },
+            channel: { channelTitle },
+            player: { queue, video, currentId }
+        }) => {
+            const currentVideo = video.id
+                ? video
+                : queue.find(({ id }) => id === currentId) || {};
+
+            return {
+                playlistTitle,
+                channelTitle,
+                currentVideo
+            };
+        }
+    );
 
     let title = 'MicroTube';
 
@@ -30,20 +48,4 @@ const Head = ({
     return <Helmet title={title} />;
 };
 
-const mapStateToProps = ({
-    playlistItems: { playlistTitle },
-    channel: { channelTitle },
-    player: { queue, video, currentId, currentTime }
-}) => {
-    const currentVideo = video.id
-        ? video
-        : queue.find(({ id }) => id === currentId) || {};
-
-    return {
-        playlistTitle,
-        channelTitle,
-        currentTime,
-        currentVideo
-    };
-};
-export default connect(mapStateToProps)(Head);
+export default Head;

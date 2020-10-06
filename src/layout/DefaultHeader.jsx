@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { signIn, signOut } from '../actions/auth';
@@ -6,16 +6,28 @@ import { signIn, signOut } from '../actions/auth';
 import Icon from '../components/Icon';
 import Button from '../components/Button';
 
-const DefaultHeader = ({
-    isSignedIn,
-    signIn,
-    signOut,
-    avatar,
-    channelTitle,
-    playlistTitle
-}) => {
+const DefaultHeader = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
+    const { isSignedIn, avatar, channelTitle, playlistTitle } = useSelector(
+        ({
+            auth: {
+                isSignedIn,
+                user: { picture: avatar }
+            },
+            playlistItems: { playlistTitle },
+            channel: { channelTitle }
+        }) => ({
+            isSignedIn,
+            avatar,
+            playlistTitle,
+            channelTitle
+        })
+    );
+    const dispatch = useDispatch();
+
+    const handleSignIn = () => dispatch(signIn());
+    const handleSignOut = () => dispatch(signOut());
 
     let title = 'MicroTube';
 
@@ -79,7 +91,7 @@ const DefaultHeader = ({
 
                 <Button
                     className="navigation__link icon-button"
-                    onClick={isSignedIn ? signOut : signIn}
+                    onClick={isSignedIn ? handleSignOut : handleSignIn}
                     title={isSignedIn ? 'Log out' : 'Log in'}
                     icon="user"
                 >
@@ -90,23 +102,4 @@ const DefaultHeader = ({
     );
 };
 
-const mapStateToProps = ({
-    auth: {
-        isSignedIn,
-        user: { picture: avatar }
-    },
-    playlistItems: { playlistTitle },
-    channel: { channelTitle }
-}) => ({
-    isSignedIn,
-    avatar,
-    playlistTitle,
-    channelTitle
-});
-
-const mapDispatchToProps = {
-    signIn,
-    signOut
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DefaultHeader);
+export default DefaultHeader;

@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import {
     searchVideos,
     clearSearch,
     editPlaylistItem,
-    queueItem,
-    playItem
+    queueItem
 } from '../actions/youtube';
 
 import List from '../components/List';
@@ -17,34 +16,37 @@ import Placeholder from '../components/Placeholder';
 
 import MenuWrapper from '../components/menu/MenuWrapper';
 
-const Search = ({
-    items,
-    totalResults,
-    forMine,
-    searchVideos,
-    queueItem,
-    editPlaylistItem,
-    clearSearch
-}) => {
+const Search = () => {
     const navigate = useNavigate();
     const { query } = useParams();
+
+    const { items, totalResults, forMine } = useSelector(
+        ({ search: { items, forMine, totalResults } }) => ({
+            forMine,
+            items,
+            totalResults
+        })
+    );
+
+    const dispatch = useDispatch();
 
     const [{ mountGrid }, setState] = useState({
         mountGrid: true
     });
 
-    const reloadQuery = () => {
+    const handleEditPlaylistItem = ({ id }) => dispatch(editPlaylistItem(id));
+    const handleSearchVideos = () => dispatch(searchVideos({ query }));
+    const handleClearSearch = () => dispatch(clearSearch());
+    const handleQueueItem = (video) => dispatch(queueItem(video));
+
+    useEffect(() => {
         setState({ mountGrid: false });
 
         clearSearch();
 
         setTimeout(() => setState({ mountGrid: true }));
-    };
 
-    useEffect(() => {
-        reloadQuery();
-
-        return clearSearch;
+        return handleClearSearch;
     }, [query, forMine]);
 
     return query && mountGrid ? (
@@ -56,12 +58,12 @@ const Search = ({
                     {
                         title: `Add to queue`,
                         icon: 'circle-add',
-                        onClick: queueItem
+                        onClick: handleQueueItem
                     },
                     {
                         title: `Save to playlist`,
                         icon: 'folder-add',
-                        onClick: ({ id }) => editPlaylistItem(id)
+                        onClick: handleEditPlaylistItem
                     }
                 ]}
             >
@@ -69,7 +71,7 @@ const Search = ({
                     <List
                         items={items}
                         itemKey={(index, data) => data[index].id}
-                        loadMoreItems={() => searchVideos({ query })}
+                        loadMoreItems={handleSearchVideos}
                         renderItem={({ data }) => (
                             <VideoCard
                                 {...data}
@@ -84,18 +86,4 @@ const Search = ({
     ) : null;
 };
 
-const mapStateToProps = ({ search: { items, forMine, totalResults } }) => ({
-    forMine,
-    items,
-    totalResults
-});
-
-const mapDispatchToProps = {
-    searchVideos,
-    clearSearch,
-    queueItem,
-    playItem,
-    editPlaylistItem
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Search);
+export default Search;

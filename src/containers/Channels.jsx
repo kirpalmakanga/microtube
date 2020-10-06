@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -12,14 +12,19 @@ import Placeholder from '../components/Placeholder';
 
 import ChannelCard from '../components/cards/ChannelCard';
 
-const Subscriptions = ({
-    items,
-    totalResults,
-    getSubscriptions,
-    subscribeToChannel,
-    unsubscribeFromChannel
-}) => {
+const Subscriptions = () => {
     const navigate = useNavigate();
+
+    const { items, totalResults } = useSelector(
+        ({ subscriptions: { items, totalResults } }) => ({
+            items,
+            totalResults
+        })
+    );
+
+    const dispatch = useDispatch();
+
+    const handleGetSubscriptions = () => dispatch(getSubscriptions());
 
     return totalResults === 0 ? (
         <Placeholder
@@ -31,18 +36,22 @@ const Subscriptions = ({
             className="channels"
             items={items}
             itemKey={(index, data) => data[index].id}
-            loadMoreItems={getSubscriptions}
+            loadMoreItems={handleGetSubscriptions}
             renderItem={({ data }) => {
                 const { id, title, subscriptionId } = data;
+
+                const handleSubscribeToChannel = () =>
+                    dispatch(subscribeToChannel(id));
+
+                const handleUnsubscribeFromChannel = () =>
+                    dispatch(unsubscribeFromChannel(subscriptionId, title));
 
                 return (
                     <ChannelCard
                         {...data}
                         goToChannel={() => navigate(`/channel/${id}`)}
-                        subscribe={() => subscribeToChannel(id)}
-                        unsubscribe={() =>
-                            unsubscribeFromChannel(subscriptionId, title)
-                        }
+                        subscribe={handleSubscribeToChannel}
+                        unsubscribe={handleUnsubscribeFromChannel}
                     />
                 );
             }}
@@ -50,15 +59,4 @@ const Subscriptions = ({
     );
 };
 
-const mapStateToProps = ({ subscriptions: { items, totalResults } }) => ({
-    items,
-    totalResults
-});
-
-const mapDispatchToProps = {
-    getSubscriptions,
-    subscribeToChannel,
-    unsubscribeFromChannel
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Subscriptions);
+export default Subscriptions;

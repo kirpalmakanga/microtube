@@ -1,50 +1,45 @@
-import { PureComponent } from 'react';
+import { useState } from 'react';
 
 import Menu from './Menu';
 import MenuItem from './MenuItem';
 
-class MenuWrapper extends PureComponent {
-    state = { isMenuOpen: false, menuTitle: '', menuData: {} };
+const initialState = {
+    isMenuOpen: false,
+    menuTitle: '',
+    menuData: {}
+};
 
-    openMenu = (menuData = {}, menuTitle = '') => {
-        if (this.state.isMenuOpen) {
+const MenuWrapper = ({ menuItems = [], children = () => {} }) => {
+    const [{ isMenuOpen, menuTitle, menuData }, setState] = useState(
+        initialState
+    );
+
+    const openMenu = (menuData = {}, menuTitle = '') => {
+        if (isMenuOpen) {
             return;
         }
 
-        this.setState({ isMenuOpen: true, menuTitle, menuData });
+        setState({ isMenuOpen: true, menuTitle, menuData });
     };
 
-    closeMenu = () => this.setState({ isMenuOpen: false, menuData: {} });
+    const closeMenu = () => setState(initialState);
 
-    render() {
-        const {
-            props: { menuItems = [], children = () => {} },
-            state: { isMenuOpen, menuData, menuTitle },
-            openMenu,
-            closeMenu
-        } = this;
+    return (
+        <>
+            {children(openMenu)}
 
-        return (
-            <>
-                {children(openMenu)}
-
-                <Menu
-                    isVisible={isMenuOpen}
-                    onClick={closeMenu}
-                    title={menuTitle}
-                >
-                    {menuItems.map(({ title, icon, onClick } = {}, i) => (
-                        <MenuItem
-                            key={i}
-                            title={title}
-                            icon={icon}
-                            onClick={() => onClick(menuData)}
-                        />
-                    ))}
-                </Menu>
-            </>
-        );
-    }
-}
+            <Menu isVisible={isMenuOpen} onClick={closeMenu} title={menuTitle}>
+                {menuItems.map(({ title, icon, onClick } = {}, i) => (
+                    <MenuItem
+                        key={i}
+                        title={title}
+                        icon={icon}
+                        onClick={() => onClick(menuData)}
+                    />
+                ))}
+            </Menu>
+        </>
+    );
+};
 
 export default MenuWrapper;

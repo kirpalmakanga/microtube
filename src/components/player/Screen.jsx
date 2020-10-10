@@ -1,6 +1,6 @@
 import { PureComponent } from 'react';
 
-import YoutubePlayer from '../YoutubePlayer';
+import YoutubePlayer from './YoutubePlayer';
 import Placeholder from '../Placeholder';
 
 const playerOptions = {
@@ -41,6 +41,7 @@ class Screen extends PureComponent {
                     onPause={onPause}
                     onBuffering={onBuffering}
                     onStateChange={onStateChange}
+                    onError={(err) => console.error(err)}
                 />
                 {!videoId && <Placeholder icon="screen" text="No video." />}
             </div>

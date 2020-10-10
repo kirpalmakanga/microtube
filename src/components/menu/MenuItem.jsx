@@ -1,18 +1,11 @@
-import { PureComponent } from 'react';
 import Icon from '../Icon';
 
-class MenuItem extends PureComponent {
-    render() {
-        const { title = '', icon = '', onClick = () => {} } = this.props;
+const MenuItem = ({ title = '', icon = '', onClick = () => {} }) => (
+    <button className="menu__item" type="button" onClick={onClick}>
+        {icon ? <Icon name={icon} /> : null}
 
-        return (
-            <button className="menu__item" type="button" onClick={onClick}>
-                {icon ? <Icon name={icon} /> : null}
-
-                <span>{title}</span>
-            </button>
-        );
-    }
-}
+        <span>{title}</span>
+    </button>
+);
 
 export default MenuItem;

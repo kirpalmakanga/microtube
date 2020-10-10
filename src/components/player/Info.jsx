@@ -1,84 +1,70 @@
-import { PureComponent } from 'react';
+import { memo, useState } from 'react';
 import { preventDefault } from '../../lib/helpers';
 
 import InfoTime from './controls/InfoTime';
 import InfoProgress from './controls/InfoProgress';
 
-class Info extends PureComponent {
-    constructor(props) {
-        super(props);
+const noop = () => {};
 
-        this.state = { isSeeking: false, currentTime: props.currentTime };
-    }
+const Info = ({
+    title = '',
+    currentTime = 0,
+    duration = 0,
+    loaded = 0,
+    onStartSeeking = noop,
+    onEndSeeking = noop
+}) => {
+    const [seekingTime, setSeekingTime] = useState(currentTime);
+    const [isSeeking, setIsSeeking] = useState(false);
 
-    startSeeking = () => {
-        this.props.onStartSeeking();
+    const startSeeking = () => {
+        onStartSeeking();
 
-        this.setState({ isSeeking: true });
+        setIsSeeking(true);
     };
 
-    endSeeking = () => {
-        const {
-            state: { currentTime },
-            props: { currentTime: playerCurrentTime }
-        } = this;
+    const endSeeking = () => {
+        setIsSeeking(false);
 
-        this.setState({ isSeeking: false }, () => {
-            if (currentTime !== playerCurrentTime) {
-                this.props.onEndSeeking(currentTime);
-            }
-        });
+        if (seekingTime !== currentTime) {
+            onEndSeeking(seekingTime);
+        }
     };
 
-    handleSeeking = ({ target: { value: currentTime } }) =>
-        this.setState({ currentTime });
+    const handleSeeking = ({ target: { value: seekingTime } }) =>
+        setSeekingTime(seekingTime);
 
-    render() {
-        const {
-            state: { isSeeking, currentTime: innerCurrentTime },
-            props: { title, currentTime: playerCurrentTime, duration, loaded },
-            startSeeking,
-            endSeeking,
-            handleSeeking
-        } = this;
+    const time = isSeeking ? seekingTime : currentTime;
 
-        const currentTime = isSeeking ? innerCurrentTime : playerCurrentTime;
+    return (
+        <div className="player__info">
+            <InfoProgress
+                percentElapsed={duration ? time / duration : 0}
+                percentLoaded={loaded}
+            />
 
-        return (
-            <div className="player__info">
-                <InfoProgress
-                    percentElapsed={
-                        duration
-                            ? (isSeeking ? currentTime : playerCurrentTime) /
-                              duration
-                            : 0
-                    }
-                    percentLoaded={loaded}
-                />
+            <div className="player__info-title">{title}</div>
 
-                <div className="player__info-title">{title}</div>
+            <InfoTime time={time} duration={duration} />
 
-                <InfoTime currentTime={currentTime} duration={duration} />
+            <label className="sr-only" labelfor="seek-time">
+                Seek time
+            </label>
 
-                <label className="sr-only" labelfor="seek-time">
-                    Seek time
-                </label>
+            <input
+                aria-label="Seek time"
+                id="seek-time"
+                className="player__info-progress-loaded"
+                type="range"
+                min="0"
+                max={parseInt(duration)}
+                onWheel={preventDefault()}
+                onChange={handleSeeking}
+                onMouseDown={startSeeking}
+                onMouseUp={endSeeking}
+            />
+        </div>
+    );
+};
 
-                <input
-                    aria-label="Seek time"
-                    id="seek-time"
-                    className="player__info-progress-loaded"
-                    type="range"
-                    min="0"
-                    max={parseInt(duration)}
-                    onWheel={preventDefault()}
-                    onChange={handleSeeking}
-                    onMouseDown={startSeeking}
-                    onMouseUp={endSeeking}
-                />
-            </div>
-        );
-    }
-}
-
-export default Info;
+export default memo(Info);

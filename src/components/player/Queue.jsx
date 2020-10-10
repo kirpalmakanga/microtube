@@ -1,5 +1,4 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import MenuWrapper from '../menu/MenuWrapper';
 
@@ -16,109 +15,91 @@ import {
     editPlaylistItem
 } from '../../actions/youtube';
 
-class Queue extends Component {
-    render() {
-        const {
-            props: {
-                items,
-                currentId,
-                showQueue,
-                isPlaying,
-                isBuffering,
-                togglePlay,
-                setQueue,
-                setActiveQueueItem,
-                removeQueueItem,
-                editPlaylistItem
-            }
-        } = this;
+const Queue = ({ isPlaying, isBuffering, togglePlay }) => {
+    const dispatch = useDispatch();
+    const { items, currentId, showQueue } = useSelector(
+        ({ player: { queue: items, currentId, showQueue } }) => ({
+            items,
+            currentId,
+            showQueue
+        })
+    );
 
-        return (
-            <section
-                className="queue shadow--2dp"
-                data-state={showQueue ? 'visible' : 'hidden'}
-            >
-                <QueueHeader />
+    const handleSetQueue = (queue) => dispatch(setQueue(queue));
+    const handleEditPlaylistItem = ({ id }) => dispatch(editPlaylistItem(id));
+    const handleRemoveQueueItem = ({ id }) => dispatch(removeQueueItem(id));
+    const handleSetActiveQueueItem = (id) => dispatch(setActiveQueueItem(id));
 
-                <div className="queue__content">
-                    {items.length ? (
-                        <MenuWrapper
-                            menuItems={[
-                                {
-                                    title: 'Save to playlist',
-                                    icon: 'folder-add',
-                                    onClick: ({ id }) => editPlaylistItem(id)
-                                },
-                                {
-                                    title: 'Remove from queue',
-                                    icon: 'delete',
-                                    onClick: ({ id }) => removeQueueItem(id)
-                                }
-                            ]}
-                        >
-                            {(openMenu) => (
-                                <DraggableList
-                                    className="queue__items"
-                                    items={items}
-                                    renderItem={(data) => {
-                                        const { id } = data;
-                                        const isActive = id === currentId;
+    return (
+        <section
+            className="queue shadow--2dp"
+            data-state={showQueue ? 'visible' : 'hidden'}
+        >
+            <QueueHeader />
 
-                                        let icon = 'play';
+            <div className="queue__content">
+                {items.length ? (
+                    <MenuWrapper
+                        menuItems={[
+                            {
+                                title: 'Save to playlist',
+                                icon: 'folder-add',
+                                onClick: handleEditPlaylistItem
+                            },
+                            {
+                                title: 'Remove from queue',
+                                icon: 'delete',
+                                onClick: handleRemoveQueueItem
+                            }
+                        ]}
+                    >
+                        {(openMenu) => (
+                            <DraggableList
+                                className="queue__items"
+                                items={items}
+                                renderItem={(data) => {
+                                    const { id } = data;
+                                    const isActive = id === currentId;
 
-                                        if (isActive && isBuffering) {
-                                            icon = 'loading';
-                                        }
+                                    let icon = 'play';
 
-                                        if (isActive && isPlaying) {
-                                            icon = 'pause';
-                                        }
+                                    if (isActive && isBuffering) {
+                                        icon = 'loading';
+                                    }
 
-                                        return (
-                                            <QueueItem
-                                                {...data}
-                                                isActive={isActive}
-                                                icon={icon}
-                                                onClick={
-                                                    isActive
-                                                        ? togglePlay
-                                                        : () =>
-                                                              setActiveQueueItem(
-                                                                  id
-                                                              )
-                                                }
-                                                onClickMenu={() =>
-                                                    openMenu(data, data.title)
-                                                }
-                                            />
-                                        );
-                                    }}
-                                    onReorderItems={setQueue}
-                                />
-                            )}
-                        </MenuWrapper>
-                    ) : (
-                        <Placeholder icon="list" text="No videos in queue." />
-                    )}
-                </div>
-            </section>
-        );
-    }
-}
+                                    if (isActive && isPlaying) {
+                                        icon = 'pause';
+                                    }
 
-const mapStateToProps = ({
-    player: { queue: items, currentId, showQueue }
-}) => ({
-    items,
-    currentId,
-    showQueue
-});
-
-const mapDispatchToProps = {
-    setQueue,
-    setActiveQueueItem,
-    removeQueueItem,
-    editPlaylistItem
+                                    return (
+                                        <QueueItem
+                                            {...data}
+                                            isActive={isActive}
+                                            icon={icon}
+                                            onClick={
+                                                isActive
+                                                    ? togglePlay
+                                                    : () =>
+                                                          handleSetActiveQueueItem(
+                                                              id
+                                                          )
+                                            }
+                                            onClickMenu={() =>
+                                                openMenu(data, data.title)
+                                            }
+                                        />
+                                    );
+                                }}
+                                onReorderItems={handleSetQueue}
+                            />
+                        )}
+                    </MenuWrapper>
+                ) : (
+                    <Placeholder icon="list" text="No videos in queue." />
+                )}
+            </div>
+        </section>
+    );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Queue);
+export default Queue;

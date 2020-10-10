@@ -26,16 +26,6 @@ button {
 
 .icon-button {
     color: $brand-secondary;
-    .icon {
-        @include transition();
-        transform-origin: 50% 50%;
-        &.rotating {
-            svg {
-                width: 24px;
-                height: 24px;
-            }
-        }
-    }
 
     &,
     .icon {

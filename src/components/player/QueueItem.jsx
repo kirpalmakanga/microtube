@@ -19,10 +19,7 @@ const QueueItem = ({
         onContextMenu={onClickMenu}
     >
         <div className="queue__item-button icon-button">
-            <Icon
-                className={icon === 'loading' ? 'rotating' : ''}
-                name={icon}
-            />
+            <Icon name={icon} />
         </div>
 
         <div className="queue__item-title">{title}</div>

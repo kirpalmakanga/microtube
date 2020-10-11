@@ -28,7 +28,7 @@ const Root = ({ children }) => {
     const dispatch = useDispatch();
     const isSignedIn = useSelector(({ auth: { isSignedIn } }) => isSignedIn);
 
-    const [apiLoaded, setApiLoaded] = useState(false);
+    const [isAppReady, setIsAppReady] = useState(false);
 
     const init = async () => {
         await dispatch(initializeApp());
@@ -37,7 +37,7 @@ const Root = ({ children }) => {
 
         dispatch(enableImportMethods());
 
-        setApiLoaded(true);
+        setIsAppReady(true);
     };
 
     useEffect(() => {
@@ -53,7 +53,7 @@ const Root = ({ children }) => {
 
             <Sprite />
 
-            {apiLoaded ? (
+            {isAppReady ? (
                 <>
                     <Header />
 
@@ -67,7 +67,7 @@ const Root = ({ children }) => {
                 </>
             ) : null}
 
-            <Loader isActive={!apiLoaded} />
+            <Loader isActive={!isAppReady} />
         </div>
     );
 };

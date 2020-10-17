@@ -12,9 +12,9 @@ module.exports = {
         {
             resolve: '@poi/plugin-pwa'
         },
-        {
-            resolve: '@poi/plugin-typescript'
-        },
+        // {
+        //     resolve: '@poi/plugin-typescript'
+        // },
         {
             resolve: '@poi/bundle-report'
         }

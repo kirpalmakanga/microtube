@@ -222,7 +222,6 @@ const YouTube = ({
     };
 
     const handleUnmounting = () => {
-        console.log('unMount', videoId);
         clearInterval(timeWatcher.current);
         clearInterval(loadingWatcher.current);
 

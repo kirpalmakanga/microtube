@@ -4,11 +4,16 @@ import Button from '../controls/Button';
 
 const DevicesSelector = ({
     devices = [],
-    currentItem = {},
+    currentItem: { deviceId, deviceName, isMaster } = {},
     onClickItem = () => {}
 }) => {
     const [showItems, setShowItems] = useState(false);
-    const { deviceId, deviceName, isMaster } = currentItem;
+
+    const handleClickItem = (deviceId) => {
+        setShowItems(false);
+
+        onClickItem(deviceId);
+    };
 
     return (
         <div className="player__controls-devices">
@@ -26,7 +31,10 @@ const DevicesSelector = ({
                 className="player__controls-devices-list"
                 data-state={showItems ? 'open' : 'closed'}
             >
-                <li className="device" onClick={() => onClickItem(deviceId)}>
+                <li
+                    className="device"
+                    onClick={() => handleClickItem(deviceId)}
+                >
                     <span className="device__desc">Current device</span>
                     <span className="device__name">
                         {`${deviceName} ${isMaster ? '(active)' : ''}`}

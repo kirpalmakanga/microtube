@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useEffect, useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { listen, publish } from '../../api/socket';
 
@@ -28,27 +28,86 @@ import FullscreenWrapper from '../FullscreenWrapper';
 const UNSTARTED = -1;
 const CUED = 5;
 
-class Player extends Component {
-    constructor(props) {
-        super(props);
+const useMergedState = (initialState) => {
+    const [mergedState, setState] = useState(initialState);
 
-        this.state = {
-            isPlaying: false,
-            isBuffering: false,
-            isMuted: false,
-            showScreen: false,
-            volume: 100,
-            loaded: 0,
-            currentTime: 0,
-            youtube: null
-        };
-    }
+    return [
+        mergedState,
+        (data = {}) => setState((state) => ({ ...state, ...data }))
+    ];
+};
 
-    updateState = (data) => {
-        const {
-            currentDevice: { isMaster }
-        } = this.props;
+const Player = () => {
+    const dispatch = useDispatch();
+    const keyboardHandler = useRef(null);
+    const youtube = useRef(null);
 
+    const {
+        queue,
+        showQueue,
+        newQueueItems,
+        currentQueueIndex,
+        devices,
+        currentDevice,
+        isSingleVideo,
+        video: { id: videoId, title, duration } = {}
+    } = useSelector(
+        ({
+            app: { devices, deviceId },
+            player: { video, queue, currentId, ...player }
+        }) => {
+            const currentQueueIndex = queue.findIndex(
+                ({ id }) => id === currentId
+            );
+
+            return {
+                ...player,
+                currentQueueIndex,
+                queue,
+                isSingleVideo: !!video.id,
+                video: video.id
+                    ? video
+                    : queue[currentQueueIndex] || {
+                          id: '',
+                          title: 'No video.',
+                          duration: 0
+                      },
+                devices: devices.filter(({ deviceId: id }) => id !== deviceId),
+                currentDevice: devices.find(
+                    ({ deviceId: id }) => id === deviceId
+                ) || {
+                    isMaster: true
+                }
+            };
+        }
+    );
+
+    const { isMaster } = currentDevice;
+
+    const [
+        {
+            isPlayerReady,
+            isPlaying,
+            isBuffering,
+            isMuted,
+            showScreen,
+            volume,
+            loaded,
+            currentTime
+        },
+        setPlayerState
+    ] = useMergedState({
+        isPlayerReady: false,
+        isPlaying: false,
+        isBuffering: false,
+        isMuted: false,
+        showScreen: false,
+        volume: 100,
+        loaded: 0,
+        currentTime: 0
+    });
+
+    const updateState = (data) => {
         if (isMaster) {
             publish('player:sync', {
                 action: 'update-state',
@@ -56,29 +115,10 @@ class Player extends Component {
             });
         }
 
-        this.setState(data);
+        setPlayerState(data);
     };
 
-    isPlayerReady = () => {
-        const {
-            state: { youtube },
-            props: {
-                video: { id }
-            }
-        } = this;
-
-        return !!youtube && id;
-    };
-
-    setVolume = (volume) => {
-        const {
-            props: {
-                currentDevice: { isMaster }
-            },
-            state: { youtube },
-            updateState
-        } = this;
-
+    const setVolume = (volume) => {
         if (!isMaster) {
             publish('player:sync', {
                 action: 'set-volume',
@@ -88,75 +128,39 @@ class Player extends Component {
             return;
         }
 
-        if (!this.isPlayerReady()) {
+        if (!isPlayerReady) {
             return;
         }
 
         if (volume > 0) {
-            youtube.unMute();
+            youtube.current.unMute();
         }
-        youtube.setVolume(volume);
+
+        youtube.current.setVolume(volume);
 
         updateState({ volume });
     };
 
-    seekTime = (t) => {
-        const {
-            props: {
-                currentDevice: { isMaster }
-            },
-            togglePlay,
-            updateState
-        } = this;
-
+    const seekTime = (t) => {
         if (!isMaster) {
             publish('player:sync', {
                 action: 'seek-time',
                 data: { currentTime: t }
             });
+        } else if (isPlayerReady) {
+            youtube.current.seekTo(t);
 
-            return;
+            updateState({ currentTime: t });
+
+            setTimeout(() => {
+                if (!isPlaying) {
+                    togglePlay();
+                }
+            });
         }
-
-        if (!this.isPlayerReady()) {
-            return;
-        }
-
-        const { isPlaying, youtube } = this.state;
-
-        youtube.seekTo(t);
-
-        updateState({ currentTime: t });
-
-        setTimeout(() => {
-            if (!isPlaying) {
-                togglePlay();
-            }
-        });
     };
 
-    updateLoading = () => {
-        const {
-            state: { youtube },
-            updateState
-        } = this;
-
-        const loaded = youtube.getVideoLoadedFraction();
-
-        updateState({ loaded });
-
-        return loaded;
-    };
-
-    toggleMute = () => {
-        const {
-            props: {
-                currentDevice: { isMaster }
-            },
-            state: { isMuted, youtube },
-            updateState
-        } = this;
-
+    const toggleMute = () => {
         if (!isMaster) {
             publish('player:sync', {
                 action: 'toggle-mute'
@@ -165,28 +169,21 @@ class Player extends Component {
             return;
         }
 
-        if (!this.isPlayerReady()) {
+        if (!isPlayerReady) {
             return;
         }
 
         if (isMuted) {
-            youtube.unMute();
+            youtube.current.unMute();
         } else {
-            youtube.mute();
+            youtube.current.mute();
         }
 
         updateState({ isMuted: !isMuted });
     };
 
-    togglePlay = () => {
-        const {
-            props: {
-                currentDevice: { isMaster }
-            },
-            state: { isPlaying, youtube },
-            isPlayerReady
-        } = this;
-
+    const togglePlay = (force = false) => {
+        console.log({ isPlaying, isMaster, isPlayerReady });
         if (!isMaster) {
             publish('player:sync', {
                 action: 'toggle-play'
@@ -195,96 +192,96 @@ class Player extends Component {
             return;
         }
 
-        if (!isPlayerReady()) {
+        if (!isPlayerReady) {
             return;
         }
 
-        if (isPlaying) {
-            return youtube.pauseVideo();
+        if (!isPlaying || force === true) {
+            youtube.current.playVideo();
+        } else if (isPlaying) {
+            youtube.current.pauseVideo();
         }
-
-        youtube.playVideo();
     };
 
-    goToVideo = (next = true) => {
-        const {
-            props: { queue, currentQueueIndex, setActiveQueueItem },
-            updateState
-        } = this;
-
+    const goToVideo = (next = true) => {
         const newIndex = currentQueueIndex + (next ? 1 : -1);
         const { id } = queue[newIndex] || {};
 
-        if (!id) {
-            return;
+        if (id) {
+            updateState({
+                currentTime: 0,
+                loaded: 0
+            });
+
+            dispatch(setActiveQueueItem(id));
         }
-
-        updateState({
-            currentTime: 0,
-            loaded: 0
-        });
-
-        setActiveQueueItem(id);
     };
 
-    setPlaybackQuality = (value = 'hd1080') => {
-        const { youtube } = this.state;
+    const setPlaybackQuality = (value = 'hd1080') =>
+        youtube && youtube.current.setPlaybackQuality(value);
 
-        youtube.setPlaybackQuality(value);
-    };
-
-    bindKeyboard = () => {
-        if (this.__keyboardHandler) {
+    const bindKeyboard = () => {
+        if (keyboardHandler.current) {
             return;
         }
 
         const callbacks = {
-            ArrowLeft: () => this.goToVideo(false),
+            ArrowLeft: () => goToVideo(false),
 
-            ArrowRight: () => this.goToVideo(true),
+            ArrowRight: () => goToVideo(true),
 
-            m: this.toggleMute,
+            m: toggleMute,
 
-            q: this.props.toggleQueue,
+            q: handleToggleQueue,
 
-            s: this.props.toggleScreen,
+            s: handleToggleScreen,
 
-            ' ': this.togglePlay
+            ' ': togglePlay
         };
 
-        this.__keyboardHandler = ({ key, repeat }) =>
-            !repeat && typeof callbacks[key] === 'function' && callbacks[key]();
+        keyboardHandler.current = ({ key, repeat }) => {
+            const handler = callbacks[key];
 
-        document.addEventListener('keydown', this.__keyboardHandler);
+            if (handler && !repeat) {
+                handler();
+            }
+        };
+
+        document.addEventListener('keydown', keyboardHandler.current);
     };
 
-    unbindKeyboard = () => {
-        document.removeEventListener('keydown', this.__keyboardHandler);
+    const unbindKeyboard = () => {
+        document.removeEventListener('keydown', keyboardHandler.current);
 
-        this.__keyboardHandler = null;
+        keyboardHandler.current = null;
     };
 
-    toggleScreen = () => {
-        this.updateState({ showScreen: !this.state.showScreen });
+    const handleEditPlaylistItem = () => dispatch(editPlaylistItem(videoId));
+
+    const handleSetActiveDevice = (id) => dispatch(setActiveDevice(id));
+
+    const handleToggleScreen = () => {
+        updateState({ showScreen: !showScreen });
 
         publish('player:sync', {
             action: 'update-state',
-            data: { showScreen: !this.state.showScreen }
+            data: { showScreen: !showScreen }
         });
 
-        this.props.toggleScreen();
+        dispatch(toggleScreen());
     };
 
-    handleYoutubeIframeReady = ({ target: youtube }) => {
-        youtube.pauseVideo();
+    const handleToggleQueue = () => dispatch(toggleQueue());
 
-        this.setState({ youtube }, () => {
-            this.setPlaybackQuality();
-        });
+    const handleYoutubeIframeReady = ({ target }) => {
+        target.pauseVideo();
+
+        youtube.current = target;
+
+        setPlayerState({ isPlayerReady: true });
     };
 
-    handleYoutubeIframeStateChange = ({ data }) => {
-        const { updateState } = this;
+    const handleYoutubeIframeStateChange = ({ data }) => {
         switch (data) {
             case UNSTARTED:
                 updateState({ isPlaying: false });
@@ -292,35 +289,28 @@ class Player extends Component {
                 break;
 
             case CUED:
-                this.togglePlay();
+                togglePlay(true);
 
                 break;
         }
     };
 
-    handleTimeUpdate = (currentTime) => this.updateState({ currentTime });
+    const handleTimeUpdate = (currentTime) => updateState({ currentTime });
 
-    handleLoadingUpdate = (loaded) => this.updateState({ loaded });
+    const handleLoadingUpdate = (loaded) => updateState({ loaded });
 
-    handlePlay = () =>
-        this.updateState({ isPlaying: true, isBuffering: false });
+    const handlePlay = () =>
+        updateState({ isPlaying: true, isBuffering: false });
 
-    handlePause = () => this.updateState({ isPlaying: false });
+    const handlePause = () => updateState({ isPlaying: false });
 
-    handleBuffering = () => {
-        const { updateState, setPlaybackQuality } = this;
-
+    const handleBuffering = () => {
         updateState({ isBuffering: true });
 
         setPlaybackQuality();
     };
 
-    handleWheelVolume = ({ deltaY }) => {
-        const {
-            state: { volume },
-            setVolume
-        } = this;
-
+    const handleWheelVolume = ({ deltaY }) => {
         const newVolume = deltaY < 0 ? volume + 5 : volume - 5;
         const inRange = newVolume >= 0 && newVolume <= 100;
 
@@ -329,17 +319,19 @@ class Player extends Component {
         }
     };
 
-    bindDevicesSync = () => {
+    const bindDevicesSync = () => {
         const actions = {
-            'toggle-play': this.togglePlay,
-            'toggle-mute': this.toggleMute,
-            'set-volume': ({ volume }) => this.setVolume(volume),
-            'seek-time': ({ currentTime }) => this.seekTime(currentTime),
-            'update-state': (state) => this.setState(state)
+            'toggle-play': () => togglePlay(),
+            'toggle-mute': () => toggleMute(),
+            'set-volume': ({ volume }) => setVolume(volume),
+            'seek-time': ({ currentTime }) => seekTime(currentTime),
+            'update-state': (state) => setPlayerState(state)
         };
 
         listen('player:sync', ({ action, data = {} } = {}) => {
             const handler = actions[action];
+
+            console.log('sync', action);
 
             if (handler) {
                 handler(data);
@@ -347,292 +339,202 @@ class Player extends Component {
         });
     };
 
-    componentDidUpdate({ showScreen: prevShowScreen }) {
-        const {
-            props: {
-                currentDevice: { isMaster },
-                showScreen
-            }
-        } = this;
+    useEffect(() => {
+        console.log('binding', youtube);
+        bindDevicesSync();
 
-        if (isMaster && showScreen !== prevShowScreen) {
-            this.setState({ showScreen });
+        bindKeyboard();
+
+        return unbindKeyboard;
+    }, [isPlayerReady]);
+
+    useEffect(() => {
+        if (isMaster) {
+            setPlayerState({ showScreen });
         }
-    }
+    }, [showScreen]);
 
-    componentDidMount() {
-        this.bindDevicesSync();
-
-        this.bindKeyboard();
-    }
-
-    componentWillUnmount() {
-        this.unbindKeyboard();
-    }
-
-    render() {
-        const {
-            props: {
-                video: { id: videoId, title, duration },
-                isSingleVideo,
-                showQueue,
-                newQueueItems,
-                toggleQueue,
-                editPlaylistItem,
-                devices,
-                currentDevice,
-                setActiveDevice
-            },
-            state: {
-                currentTime,
-                loaded,
-                volume,
-                isPlaying,
-                isBuffering,
-                isMuted,
-                showScreen
-            },
-            handleWheelVolume,
-            handleTimeUpdate,
-            handleLoadingUpdate,
-            handleBuffering,
-            handlePlay,
-            handlePause,
-            setVolume,
-            seekTime,
-            toggleMute,
-            togglePlay,
-            toggleScreen,
-            goToVideo,
-            handleYoutubeIframeReady,
-            handleYoutubeIframeStateChange
-        } = this;
-
-        const { isMaster } = currentDevice;
-
-        return (
-            <FullscreenWrapper>
-                {({ containerRef, toggleFullscreen, isFullscreen }) => (
-                    <div
-                        className="player__container shadow--2dp"
-                        ref={containerRef}
-                        data-state-fullscreen={
-                            isFullscreen ? 'enabled' : 'disabled'
-                        }
-                        data-state-show-queue={
-                            showQueue ? 'enabled' : 'disabled'
-                        }
-                    >
-                        {isMaster ? (
-                            <Screen
-                                className="screen"
-                                videoId={videoId}
-                                onReady={handleYoutubeIframeReady}
-                                onEnd={!isSingleVideo ? goToVideo : () => {}}
-                                onBuffering={handleBuffering}
-                                onPlay={handlePlay}
-                                onPause={handlePause}
-                                onStateChange={handleYoutubeIframeStateChange}
-                                onTimeUpdate={handleTimeUpdate}
-                                onLoadingUpdate={handleLoadingUpdate}
-                                data-state={
-                                    isSingleVideo || showScreen || isFullscreen
-                                        ? 'visible'
-                                        : 'hidden'
-                                }
-                            />
-                        ) : null}
-
-                        <Queue
-                            isPlaying={isPlaying}
-                            isBuffering={isBuffering}
-                            togglePlay={togglePlay}
+    return (
+        <FullscreenWrapper>
+            {({ containerRef, toggleFullscreen, isFullscreen }) => (
+                <div
+                    className="player__container shadow--2dp"
+                    ref={containerRef}
+                    data-state-fullscreen={
+                        isFullscreen ? 'enabled' : 'disabled'
+                    }
+                    data-state-show-queue={showQueue ? 'enabled' : 'disabled'}
+                >
+                    {isMaster ? (
+                        <Screen
+                            className="screen"
+                            videoId={videoId}
+                            onReady={handleYoutubeIframeReady}
+                            onEnd={!isSingleVideo ? goToVideo : () => {}}
+                            onBuffering={handleBuffering}
+                            onPlay={handlePlay}
+                            onPause={handlePause}
+                            onStateChange={handleYoutubeIframeStateChange}
+                            onTimeUpdate={handleTimeUpdate}
+                            onLoadingUpdate={handleLoadingUpdate}
+                            data-state={
+                                isSingleVideo || showScreen || isFullscreen
+                                    ? 'visible'
+                                    : 'hidden'
+                            }
                         />
+                    ) : null}
 
-                        <div className="player shadow--2dp">
-                            <div className="player__inner shadow--2dp">
-                                <div className="player__controls">
-                                    {!isSingleVideo ? (
-                                        <Button
-                                            className="player__controls-button icon-button"
-                                            onClick={() => goToVideo(false)}
-                                            icon="chevron-left"
-                                            ariaLabel="Go to previous video"
-                                        />
-                                    ) : null}
+                    <Queue
+                        isPlaying={isPlaying}
+                        isBuffering={isBuffering}
+                        togglePlay={togglePlay}
+                    />
 
+                    <div className="player shadow--2dp">
+                        <div className="player__inner shadow--2dp">
+                            <div className="player__controls">
+                                {!isSingleVideo ? (
                                     <Button
                                         className="player__controls-button icon-button"
-                                        onClick={togglePlay}
-                                        icon={
-                                            isBuffering
-                                                ? 'loading'
-                                                : isPlaying
-                                                ? 'pause'
-                                                : 'play'
-                                        }
-                                        ariaLabel={
-                                            isPlaying
-                                                ? 'Pause video'
-                                                : 'Play video'
-                                        }
+                                        onClick={() => goToVideo(false)}
+                                        icon="chevron-left"
+                                        ariaLabel="Go to previous video"
                                     />
+                                ) : null}
 
-                                    {!isSingleVideo ? (
-                                        <Button
-                                            className="player__controls-button icon-button"
-                                            onClick={() => goToVideo(true)}
-                                            icon="chevron-right"
-                                            ariaLabel="Go to next video"
-                                        />
-                                    ) : null}
-                                </div>
-
-                                <Info
-                                    title={title}
-                                    currentTime={currentTime}
-                                    duration={duration}
-                                    loaded={loaded}
-                                    onStartSeeking={
-                                        isPlaying ? togglePlay : () => {}
+                                <Button
+                                    className="player__controls-button icon-button"
+                                    onClick={togglePlay}
+                                    icon={
+                                        isBuffering
+                                            ? 'loading'
+                                            : isPlaying
+                                            ? 'pause'
+                                            : 'play'
                                     }
-                                    onEndSeeking={seekTime}
+                                    ariaLabel={
+                                        isPlaying ? 'Pause video' : 'Play video'
+                                    }
                                 />
 
-                                <div className="player__controls">
-                                    {!isMobile() && videoId ? (
-                                        <div
-                                            className="player__controls-volume"
-                                            onWheel={handleWheelVolume}
-                                        >
-                                            <Button
-                                                className="player__controls-button icon-button"
-                                                onClick={toggleMute}
-                                                icon={
-                                                    isMuted || volume === 0
-                                                        ? 'volume-off'
-                                                        : 'volume-up'
-                                                }
-                                                ariaLabel={
-                                                    isMuted ? 'Unmute' : 'Mute'
-                                                }
-                                            />
-
-                                            <VolumeRange
-                                                value={volume}
-                                                onChange={setVolume}
-                                            />
-                                        </div>
-                                    ) : null}
-
-                                    {!isSingleVideo ? (
-                                        <Button
-                                            className={[
-                                                'player__controls-button badge icon-button',
-                                                showQueue ? 'is-active' : '',
-                                                newQueueItems && !showQueue
-                                                    ? 'badge--active'
-                                                    : ''
-                                            ].join(' ')}
-                                            onClick={() =>
-                                                toggleQueue(showQueue)
-                                            }
-                                            badge={newQueueItems}
-                                            icon="list"
-                                            ariaLabel={
-                                                showQueue
-                                                    ? 'Close queue'
-                                                    : 'Open queue'
-                                            }
-                                        />
-                                    ) : null}
-
-                                    {!isSingleVideo && devices.length ? (
-                                        <DevicesSelector
-                                            currentItem={currentDevice}
-                                            devices={devices}
-                                            onClickItem={setActiveDevice}
-                                        />
-                                    ) : null}
-
-                                    {!isSingleVideo && !isFullscreen ? (
-                                        <Button
-                                            className={[
-                                                'player__controls-button icon-button',
-                                                showScreen ? 'is-active' : ''
-                                            ].join(' ')}
-                                            onClick={toggleScreen}
-                                            icon="screen"
-                                            ariaLabel={
-                                                showScreen
-                                                    ? 'Close screen'
-                                                    : 'open screen'
-                                            }
-                                        />
-                                    ) : null}
-
-                                    {isSingleVideo ? (
-                                        <Button
-                                            className="player__controls-button icon-button"
-                                            onClick={() =>
-                                                editPlaylistItem(videoId)
-                                            }
-                                            icon="folder-add"
-                                            ariaLabel="Save to playlist"
-                                        ></Button>
-                                    ) : null}
-
+                                {!isSingleVideo ? (
                                     <Button
                                         className="player__controls-button icon-button"
-                                        onClick={toggleFullscreen}
-                                        icon={isFullscreen ? 'close' : 'expand'}
+                                        onClick={() => goToVideo(true)}
+                                        icon="chevron-right"
+                                        ariaLabel="Go to next video"
+                                    />
+                                ) : null}
+                            </div>
+
+                            <Info
+                                title={title}
+                                currentTime={currentTime}
+                                duration={duration}
+                                loaded={loaded}
+                                onStartSeeking={
+                                    isPlaying ? togglePlay : () => {}
+                                }
+                                onEndSeeking={seekTime}
+                            />
+
+                            <div className="player__controls">
+                                {!isMobile() && videoId ? (
+                                    <div
+                                        className="player__controls-volume"
+                                        onWheel={handleWheelVolume}
+                                    >
+                                        <Button
+                                            className="player__controls-button icon-button"
+                                            onClick={toggleMute}
+                                            icon={
+                                                isMuted || volume === 0
+                                                    ? 'volume-off'
+                                                    : 'volume-up'
+                                            }
+                                            ariaLabel={
+                                                isMuted ? 'Unmute' : 'Mute'
+                                            }
+                                        />
+
+                                        <VolumeRange
+                                            value={volume}
+                                            onChange={setVolume}
+                                        />
+                                    </div>
+                                ) : null}
+
+                                {!isSingleVideo ? (
+                                    <Button
+                                        className={[
+                                            'player__controls-button badge icon-button',
+                                            showQueue ? 'is-active' : '',
+                                            newQueueItems && !showQueue
+                                                ? 'badge--active'
+                                                : ''
+                                        ].join(' ')}
+                                        onClick={handleToggleQueue}
+                                        badge={newQueueItems}
+                                        icon="list"
                                         ariaLabel={
-                                            showScreen
-                                                ? 'Enable Fullscreen'
-                                                : 'Exit Fullscreen'
+                                            showQueue
+                                                ? 'Close queue'
+                                                : 'Open queue'
                                         }
                                     />
-                                </div>
+                                ) : null}
+
+                                {devices.length && !isSingleVideo ? (
+                                    <DevicesSelector
+                                        currentItem={currentDevice}
+                                        devices={devices}
+                                        onClickItem={handleSetActiveDevice}
+                                    />
+                                ) : null}
+
+                                {!isSingleVideo && !isFullscreen ? (
+                                    <Button
+                                        className={[
+                                            'player__controls-button icon-button',
+                                            showScreen ? 'is-active' : ''
+                                        ].join(' ')}
+                                        onClick={handleToggleScreen}
+                                        icon="screen"
+                                        ariaLabel={
+                                            showScreen
+                                                ? 'Close screen'
+                                                : 'open screen'
+                                        }
+                                    />
+                                ) : null}
+
+                                {isSingleVideo ? (
+                                    <Button
+                                        className="player__controls-button icon-button"
+                                        onClick={handleEditPlaylistItem}
+                                        icon="folder-add"
+                                        ariaLabel="Save to playlist"
+                                    ></Button>
+                                ) : null}
+
+                                <Button
+                                    className="player__controls-button icon-button"
+                                    onClick={toggleFullscreen}
+                                    icon={isFullscreen ? 'close' : 'expand'}
+                                    ariaLabel={
+                                        showScreen
+                                            ? 'Enable Fullscreen'
+                                            : 'Exit Fullscreen'
+                                    }
+                                />
                             </div>
                         </div>
                     </div>
-                )}
-            </FullscreenWrapper>
-        );
-    }
-}
-
-const mapStateToProps = ({
-    app: { devices, deviceId },
-    player: { video, queue, currentId, ...player }
-}) => {
-    const currentQueueIndex = queue.findIndex(({ id }) => id === currentId);
-
-    return {
-        ...player,
-        currentQueueIndex,
-        queue,
-        isSingleVideo: !!video.id,
-        video: video.id
-            ? video
-            : queue[currentQueueIndex] || {
-                  id: '',
-                  title: 'No video.',
-                  duration: 0
-              },
-        devices: devices.filter(({ deviceId: id }) => id !== deviceId),
-        currentDevice: devices.find(({ deviceId: id }) => id === deviceId) || {
-            isMaster: true
-        }
-    };
+                </div>
+            )}
+        </FullscreenWrapper>
+    );
 };
 
-const mapDispatchToProps = {
-    setActiveDevice,
-    setActiveQueueItem,
-    editPlaylistItem,
-    toggleQueue,
-    toggleScreen
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Player);
+export default Player;

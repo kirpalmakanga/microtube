@@ -47,7 +47,6 @@ const FullscreenWrapper = ({ children = () => {} }) => {
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     const toggleFullscreen = () => {
-        console.log('hey');
         const { current: container } = containerRef;
 
         if (!isFullscreen) {

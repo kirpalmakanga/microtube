@@ -7,7 +7,8 @@ const playerOptions = {
         modestbranding: 1,
         iv_load_policy: 3,
         controls: 0,
-        showinfo: 0
+        showinfo: 0,
+        autoplay: 1
     }
 };
 

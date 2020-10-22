@@ -274,8 +274,6 @@ const Player = () => {
     const handleToggleQueue = () => dispatch(toggleQueue());
 
     const handleYoutubeIframeReady = ({ target }) => {
-        target.pauseVideo();
-
         youtube.current = target;
 
         setPlayerState({ isPlayerReady: true });

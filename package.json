@@ -1,6 +1,6 @@
 {
     "name": "microtube",
-    "version": "1.4.0",
+    "version": "1.5.0",
     "description": "light youtube player",
     "scripts": {
         "dev": "poi --serve",
@@ -9,16 +9,16 @@
     },
     "dependencies": {
         "@snackbar/core": "1.7.0",
-        "date-fns": "^2.14.0",
-        "firebase": "^7.15.0",
-        "react": "^16.13.1",
+        "date-fns": "^2.16.1",
+        "firebase": "^7.23.0",
+        "history": "^5.0.0",
+        "react": "^16.14.0",
         "react-beautiful-dnd": "^13.0.0",
-        "react-dom": "^16.13.1",
+        "react-dom": "^16.14.0",
         "react-fastclick": "3.0.2",
         "react-helmet": "^6.1.0",
-        "react-redux": "^7.2.0",
-        "react-router": "^6.0.0-alpha.5",
-        "react-router-dom": "^6.0.0-alpha.5",
+        "react-redux": "^7.2.1",
+        "react-router-dom": "^6.0.0-beta.0",
         "react-transition-group": "^4.4.1",
         "react-virtualized-auto-sizer": "1.0.2",
         "react-visibility-sensor": "5.1.1",
@@ -26,15 +26,15 @@
         "redux": "^4.0.5",
         "redux-thunk": "2.3.0",
         "socket.io": "2.3.0",
-        "workbox-window": "^5.1.3",
+        "workbox-window": "^5.1.4",
         "youtube-player": "5.5.2"
     },
     "devDependencies": {
         "@poi/plugin-bundle-report": "12.1.2",
         "@poi/plugin-pwa": "12.0.3",
         "@poi/plugin-typescript": "12.2.1",
-        "node-sass": "4.13.0",
-        "poi": "12.7.5",
+        "node-sass": "^4.14.1",
+        "poi": "^12.10.2",
         "sass-loader": "6.0.7",
         "typescript": "3.7.2"
     }

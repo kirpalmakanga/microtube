@@ -8,13 +8,17 @@ module.exports = {
     devServer: {
         port: 8080
     },
+    constants: {
+        $RefreshReg$: () => {},
+        $RefreshSig$: () => () => {}
+    },
     plugins: [
         {
             resolve: '@poi/plugin-pwa'
         },
-        {
-            resolve: '@poi/plugin-typescript'
-        },
+        // {
+        //     resolve: '@poi/plugin-typescript'
+        // },
         {
             resolve: '@poi/bundle-report'
         }

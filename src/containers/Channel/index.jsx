@@ -1,5 +1,5 @@
-import { Component, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Outlet, NavLink, useParams } from 'react-router-dom';
 
 import { getThumbnails } from '../../lib/helpers';
@@ -8,35 +8,39 @@ import { getChannel, clearChannelData } from '../../actions/youtube';
 
 import Img from '../../components/Img';
 
-class Tabs extends Component {
-    renderTab = (content, index) => (
-        <li key={index} className="tab">
-            {content}
-        </li>
-    );
+const Tab = ({ children }, index) => (
+    <li key={index} className="tab">
+        {children}
+    </li>
+);
 
-    render() {
-        const {
-            props: { children },
-            renderTab
-        } = this;
+const Tabs = ({ children }) => (
+    <ul className="tabs">
+        {children.map((content, index) => (
+            <Tab key={index}>{content}</Tab>
+        ))}
+    </ul>
+);
 
-        return <ul className="tabs">{children.map(renderTab)}</ul>;
-    }
-}
-
-const Channel = ({
-    channelTitle,
-    thumbnails,
-    getChannel,
-    clearChannelData
-}) => {
+const Channel = () => {
     const { channelId } = useParams();
 
-    useEffect(() => {
-        getChannel(channelId);
+    const { channelTitle, thumbnails } = useSelector(
+        ({ channel: { channelTitle, thumbnails } }) => ({
+            channelTitle,
+            thumbnails
+        })
+    );
 
-        return clearChannelData;
+    const dispatch = useDispatch();
+
+    const handleGetChannel = () => dispatch(getChannel(channelId));
+    const handleClearChannelData = () => dispatch(clearChannelData());
+
+    useEffect(() => {
+        handleGetChannel();
+
+        return handleClearChannelData;
     }, []);
 
     return (
@@ -79,11 +83,4 @@ const Channel = ({
     );
 };
 
-const mapStateToProps = ({ channel: { channelTitle, thumbnails } }) => ({
-    channelTitle,
-    thumbnails
-});
-
-const mapDispatchToProps = { getChannel, clearChannelData };
-
-export default connect(mapStateToProps, mapDispatchToProps)(Channel);
+export default Channel;

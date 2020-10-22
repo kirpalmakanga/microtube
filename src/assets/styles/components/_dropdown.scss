@@ -1,6 +1,6 @@
 .dropdown {
     position: relative;
-    color: $white;
+    color: $brand-secondary;
     z-index: 1;
     &__trigger {
         border: none;
@@ -33,8 +33,8 @@
             white-space: nowrap;
         }
         @include transition();
-        background-color: $black;
-        color: $white;
+        background-color: $brand-primary;
+        color: $brand-secondary;
         height: 50px;
         display: flex;
         align-items: center;
@@ -43,7 +43,7 @@
 
         &:hover,
         &.is-active {
-            background-color: lighten($black, 5%);
+            background-color: lighten($brand-primary, 5%);
         }
     }
 

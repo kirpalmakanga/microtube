@@ -74,12 +74,6 @@ input {
     }
 }
 
-.rotating {
-    -webkit-animation: rotating 2s linear infinite;
-    -moz-animation: rotating 2s linear infinite;
-    animation: rotating 2s linear infinite;
-}
-
 .app {
     height: 100vh;
 }
@@ -166,7 +160,7 @@ input {
         font-family: $font-primary;
         font-size: 1rem;
         font-weight: 500;
-        margin: 40px 0;
+        margin: 20px 0;
     }
 }
 

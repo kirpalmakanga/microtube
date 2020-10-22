@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
     getChannelVideos,
     clearChannelVideos,
     queueItem,
-    playItem,
     editPlaylistItem
 } from '../../actions/youtube';
 
@@ -15,41 +14,52 @@ import VideoCard from '../../components/cards/VideoCard';
 
 import MenuWrapper from '../../components/menu/MenuWrapper';
 
-const ChannelVideos = ({
-    items,
-    totalResults,
-    getChannelVideos,
-    queueItem,
-    editPlaylistItem,
-    clearChannelVideos
-}) => {
+const ChannelVideos = () => {
     const { channelId } = useParams();
     const navigate = useNavigate();
 
-    useEffect(() => clearChannelVideos, []);
+    const { items, totalResults } = useSelector(
+        ({ channel: { items, totalResults } }) => ({
+            items,
+            totalResults
+        })
+    );
+
+    const dispatch = useDispatch();
+
+    const handleGetChannelVideos = () =>
+        dispatch(getChannelVideos({ channelId }));
+
+    const handleClearChannelVideos = () => dispatch(clearChannelVideos());
+
+    const handleQueueItem = (video) => dispatch(queueItem(video));
+
+    const handleEditPlaylistItem = ({ id }) => dispatch(editPlaylistItem(id));
+
+    useEffect(() => handleClearChannelVideos, []);
 
     return totalResults === 0 ? (
-        <Placeholder icon="empty" text="This channel hasn't uploaded videos." />
+        <Placeholder icon="list" text="This channel hasn't uploaded videos." />
     ) : (
         <MenuWrapper
             menuItems={[
                 {
                     title: `Add to queue`,
-                    icon: 'queue',
-                    onClick: queueItem
+                    icon: 'circle-add',
+                    onClick: handleQueueItem
                 },
 
                 {
-                    title: `Add to playlist`,
-                    icon: 'playlist-add',
-                    onClick: ({ id }) => editPlaylistItem(id)
+                    title: `Save to playlist`,
+                    icon: 'folder-add',
+                    onClick: handleEditPlaylistItem
                 }
             ]}
         >
             {(openMenu) => (
                 <List
                     items={items}
-                    loadMoreItems={() => getChannelVideos({ channelId })}
+                    loadMoreItems={handleGetChannelVideos}
                     itemKey={(index, data) => data[index].id}
                     renderItem={({ data }) => (
                         <VideoCard
@@ -64,17 +74,4 @@ const ChannelVideos = ({
     );
 };
 
-const mapStateToProps = ({ channel: { items, totalResults } }) => ({
-    items,
-    totalResults
-});
-
-const mapDispatchToProps = {
-    getChannelVideos,
-    clearChannelVideos,
-    editPlaylistItem,
-    queueItem,
-    playItem
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ChannelVideos);
+export default ChannelVideos;

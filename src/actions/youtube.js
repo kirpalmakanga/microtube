@@ -1,5 +1,5 @@
 import * as api from '../api/youtube';
-import * as database from '../api/firebase';
+import database from '../api/database';
 
 import { catchErrors, parseVideoId, splitLines, chunk } from '../lib/helpers';
 
@@ -214,7 +214,7 @@ export function editPlaylistItem(videoId) {
             prompt(
                 {
                     mode: 'playlist',
-                    promptText: `Add to playlist`,
+                    promptText: `Save to playlist`,
                     confirmText: 'Done'
                 },
                 ({ title, privacyStatus, playlistId }) => {

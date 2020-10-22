@@ -1,5 +1,4 @@
-import { Component } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 
 import { closeScreen } from '../actions/youtube';
@@ -7,31 +6,25 @@ import { closeScreen } from '../actions/youtube';
 import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';
 
-class Header extends Component {
-    render() {
-        const {
-            props: { closeScreen }
-        } = this;
+const Header = () => {
+    const dispatch = useDispatch();
 
-        return (
-            <header
-                className="layout__header shadow--2dp"
-                onClick={closeScreen}
-            >
-                <Routes>
-                    <Route path="*" element={<DefaultHeader />} />
+    const handleCloseScreen = () => dispatch(closeScreen());
 
-                    <Route path="/search/" element={<SearchHeader />} />
+    return (
+        <header
+            className="layout__header shadow--2dp"
+            onClick={handleCloseScreen}
+        >
+            <Routes>
+                <Route path="*" element={<DefaultHeader />} />
 
-                    <Route path="/search/:query" element={<SearchHeader />} />
-                </Routes>
-            </header>
-        );
-    }
-}
+                <Route path="/search" element={<SearchHeader />} />
 
-const mapDispatchToProps = {
-    closeScreen
+                <Route path="/search/:query" element={<SearchHeader />} />
+            </Routes>
+        </header>
+    );
 };
 
-export default connect(() => ({}), mapDispatchToProps)(Header);
+export default Header;

@@ -89,7 +89,7 @@ class List extends Component {
 
     _renderLoader = () => (
         <Fade in={true} className="list__loading">
-            <Icon className="rotating" name="loading" />
+            <Icon name="loading" />
         </Fade>
     );
 

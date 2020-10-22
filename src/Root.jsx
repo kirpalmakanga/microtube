@@ -1,8 +1,8 @@
 import './assets/styles/app.scss';
 
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { initializeApp } from './actions/app';
 
@@ -24,68 +24,52 @@ import Player from './components/player/Player';
 import Prompt from './components/Prompt';
 import Notifications from './components/Notifications';
 
-class Root extends Component {
-    state = { apiLoaded: false };
+const Root = ({ children }) => {
+    const dispatch = useDispatch();
+    const isSignedIn = useSelector(({ auth: { isSignedIn } }) => isSignedIn);
 
-    init = async () => {
-        const { initializeApp, getUserData, enableImportMethods } = this.props;
+    const [isAppReady, setIsAppReady] = useState(false);
 
-        await initializeApp();
+    const init = async () => {
+        await dispatch(initializeApp());
 
-        await getUserData();
+        await dispatch(getUserData());
 
-        enableImportMethods();
+        dispatch(enableImportMethods());
 
-        this.setState({ apiLoaded: true });
+        setIsAppReady(true);
     };
 
-    componentDidMount() {
-        this.init();
-    }
+    useEffect(() => {
+        init();
+    }, []);
 
-    render() {
-        const {
-            props: { children, isSignedIn },
-            state: { apiLoaded }
-        } = this;
+    return (
+        <div
+            className={`layout ${isMobile() ? 'mobile' : ''}`}
+            onContextMenu={__DEV__ ? () => {} : preventDefault()}
+        >
+            <Head />
 
-        return (
-            <div
-                className={`layout ${isMobile() ? 'mobile' : ''}`}
-                onContextMenu={__DEV__ ? () => {} : preventDefault()}
-            >
-                <Head />
+            <Sprite />
 
-                <Sprite />
+            {isAppReady ? (
+                <>
+                    <Header />
 
-                {apiLoaded ? (
-                    <>
-                        <Header />
+                    <main className="layout__content">{children}</main>
 
-                        <main className="layout__content">{children}</main>
+                    <Notifications />
 
-                        <Notifications />
+                    {isSignedIn ? <Player /> : null}
 
-                        {isSignedIn ? <Player /> : null}
+                    <Prompt />
+                </>
+            ) : null}
 
-                        <Prompt />
-                    </>
-                ) : null}
-
-                <Loader isActive={!apiLoaded} />
-            </div>
-        );
-    }
-}
-
-const mapDispatchToProps = {
-    initializeApp,
-    getUserData,
-    enableImportMethods
+            <Loader isActive={!isAppReady} />
+        </div>
+    );
 };
 
-const mapStateToProps = ({ auth: { isSignedIn } }) => ({
-    isSignedIn
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Root);
+export default Root;

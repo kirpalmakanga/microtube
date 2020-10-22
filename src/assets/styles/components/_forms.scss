@@ -16,15 +16,15 @@
         width: 100%;
         border: none;
         background-color: transparent;
-        color: $white;
+        color: $brand-secondary;
         &:focus {
             outline: none;
         }
     }
     &__label {
-        color: rgba($white, 0.3);
+        color: rgba($brand-secondary, 0.3);
         &:after {
-            background-color: $white;
+            background-color: $brand-secondary;
         }
     }
 }

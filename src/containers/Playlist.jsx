@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 
 import {
@@ -17,47 +17,57 @@ import Placeholder from '../components/Placeholder';
 import VideoCard from '../components/cards/VideoCard';
 import MenuWrapper from '../components/menu/MenuWrapper';
 
-const Playlist = ({
-    items,
-    totalResults,
-    getPlaylistTitle,
-    getPlaylistItems,
-    clearPlaylistItems,
-    queueItem,
-    removePlaylistItem,
-    editPlaylistItem
-}) => {
+const Playlist = () => {
     const navigate = useNavigate();
     const { playlistId } = useParams();
 
-    useEffect(() => {
-        getPlaylistTitle(playlistId);
+    const { items, totalResults } = useSelector(
+        ({ playlistItems: { items, totalResults } }) => ({
+            items,
+            totalResults
+        })
+    );
 
-        return clearPlaylistItems;
+    const dispatch = useDispatch();
+
+    const handleEditPlaylistItem = ({ id }) => dispatch(editPlaylistItem(id));
+
+    const handleQueueItem = (video) => dispatch(queueItem(video));
+
+    const handleRemovePlaylistItem = ({ playlistItemId, playlistId, title }) =>
+        dispatch(removePlaylistItem(playlistItemId, playlistId, title));
+
+    const handleGetPlaylistItems = () => dispatch(getPlaylistItems(playlistId));
+
+    const handleClearPlaylistItems = () => dispatch(clearPlaylistItems());
+
+    useEffect(() => {
+        dispatch(getPlaylistTitle(playlistId));
+
+        return handleClearPlaylistItems;
     }, [playlistId]);
 
     return totalResults === 0 ? (
-        <Placeholder icon="empty" text="This playlist is empty." />
+        <Placeholder icon="list" text="This playlist is empty." />
     ) : (
         <MenuWrapper
             menuItems={[
                 {
                     title: 'Add to queue',
-                    icon: 'queue',
-                    onClick: queueItem
+                    icon: 'circle-add',
+                    onClick: handleQueueItem
                 },
 
                 {
-                    title: 'Add to playlist',
-                    icon: 'playlist-add',
-                    onClick: ({ id }) => editPlaylistItem(id)
+                    title: 'Save to playlist',
+                    icon: 'folder-add',
+                    onClick: handleEditPlaylistItem
                 },
 
                 {
                     title: 'Remove from playlist',
                     icon: 'delete',
-                    onClick: ({ playlistItemId, playlistId, title }) =>
-                        removePlaylistItem(playlistItemId, playlistId, title)
+                    onClick: handleRemovePlaylistItem
                 }
             ]}
         >
@@ -72,21 +82,12 @@ const Playlist = ({
                             onClickMenu={() => openMenu(data, data.title)}
                         />
                     )}
-                    loadMoreItems={() => getPlaylistItems(playlistId)}
+                    loadMoreItems={handleGetPlaylistItems}
                 />
             )}
         </MenuWrapper>
     );
 };
-
-const mapStateToProps = ({
-    playlistItems: { playlistTitle, items, nextPageToken, totalResults }
-}) => ({
-    playlistTitle,
-    items,
-    nextPageToken,
-    totalResults
-});
 
 const mapDispatchToProps = {
     getPlaylistTitle,
@@ -97,4 +98,4 @@ const mapDispatchToProps = {
     queueItem
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Playlist);
+export default Playlist;

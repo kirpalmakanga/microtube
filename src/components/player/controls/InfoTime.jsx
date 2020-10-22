@@ -1,19 +1,11 @@
-import { PureComponent } from 'react';
-
 import { formatTime } from '../../../lib/helpers';
 
-class Time extends PureComponent {
-    render() {
-        const { currentTime, duration } = this.props;
-
-        return (
-            <div className="player__info-time">
-                <span>{duration ? formatTime(currentTime) : '--'}</span>
-                <span className="separator">/</span>
-                <span>{duration ? formatTime(duration) : '--'}</span>
-            </div>
-        );
-    }
-}
+const Time = ({ time = 0, duration = 0 }) => (
+    <div className="player__info-time">
+        <span>{duration ? formatTime(time) : '--'}</span>
+        <span className="separator">/</span>
+        <span>{duration ? formatTime(duration) : '--'}</span>
+    </div>
+);
 
 export default Time;

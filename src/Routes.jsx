@@ -8,14 +8,14 @@ import Playlists from './containers/Playlists';
 import Login from './containers/Login';
 import NotFound from './containers/NotFound';
 
-import ChannelVideos from './containers/channel/ChannelVideos';
-import ChannelAbout from './containers/channel/ChannelAbout';
+import ChannelVideos from './containers/Channel/ChannelVideos';
+import ChannelAbout from './containers/Channel/ChannelAbout';
 
 const Playlist = LazyComponent(() => import('./containers/Playlist'));
 const Search = LazyComponent(() => import('./containers/Search'));
 const Channels = LazyComponent(() => import('./containers/Channels'));
 
-const Channel = LazyComponent(() => import('./containers/channel'));
+const Channel = LazyComponent(() => import('./containers/Channel'));
 const Video = LazyComponent(() => import('./containers/Video'));
 
 const Router = () => (

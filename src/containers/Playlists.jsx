@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import {
@@ -16,21 +16,36 @@ import PlaylistCard from '../components/cards/PlaylistCard';
 
 import MenuWrapper from '../components/menu/MenuWrapper';
 
-const Playlists = ({
-    items,
-    totalResults,
-    getPlaylists,
-    queuePlaylist,
-    removePlaylist,
-    clearPlaylists
-}) => {
+const Playlists = () => {
     const { channelId } = useParams();
     const navigate = useNavigate();
-    useEffect(() => clearPlaylists, []);
+
+    const { items, totalResults } = useSelector(
+        ({ playlists: { items, totalResults } }) => ({
+            items,
+            totalResults
+        })
+    );
+
+    const dispatch = useDispatch();
+
+    const handleGetPlaylists = () =>
+        dispatch(getPlaylists(channelId ? { channelId } : { mine: true }));
+
+    const handleClearPlaylists = () => dispatch(clearPlaylists());
+
+    const handleQueuePlaylist = ({ id }) => dispatch(queuePlaylist(id));
+
+    const handleLaunchPlaylist = ({ id }) => dispatch(queuePlaylist(id, true));
+
+    const handleRemovePlaylist = ({ id, title }) =>
+        dispatch(removePlaylist(id, title));
+
+    useEffect(() => handleClearPlaylists, []);
 
     return totalResults === 0 ? (
         <Placeholder
-            icon="empty"
+            icon="list"
             text={
                 channelId
                     ? "This channel doesn't have playlists."
@@ -42,21 +57,20 @@ const Playlists = ({
             menuItems={[
                 {
                     title: 'Queue playlist',
-                    icon: 'queue',
-                    onClick: ({ id }) => queuePlaylist(id)
+                    icon: 'circle-add',
+                    onClick: handleQueuePlaylist
                 },
                 {
                     title: 'Launch playlist',
-                    icon: 'playlist-play',
-                    onClick: ({ id }) => queuePlaylist(id, true)
+                    icon: 'play',
+                    onClick: handleLaunchPlaylist
                 },
                 ...(!channelId
                     ? [
                           {
                               title: 'Remove playlist',
                               icon: 'delete',
-                              onClick: ({ id, title }) =>
-                                  removePlaylist(id, title)
+                              onClick: handleRemovePlaylist
                           }
                       ]
                     : [])
@@ -79,25 +93,11 @@ const Playlists = ({
                             />
                         );
                     }}
-                    loadMoreItems={() =>
-                        getPlaylists(channelId ? { channelId } : { mine: true })
-                    }
+                    loadMoreItems={handleGetPlaylists}
                 />
             )}
         </MenuWrapper>
     );
 };
 
-const mapStateToProps = ({ playlists: { items, totalResults } }) => ({
-    items,
-    totalResults
-});
-
-const mapDispatchToProps = {
-    getPlaylists,
-    queuePlaylist,
-    removePlaylist,
-    clearPlaylists
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Playlists);
+export default Playlists;

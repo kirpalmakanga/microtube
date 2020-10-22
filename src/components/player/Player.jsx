@@ -41,6 +41,7 @@ const Player = () => {
     const dispatch = useDispatch();
     const keyboardHandler = useRef(null);
     const youtube = useRef(null);
+    const youtubeVolume = useRef(100);
 
     const {
         queue,
@@ -89,7 +90,6 @@ const Player = () => {
             isPlayerReady,
             isPlaying,
             isBuffering,
-            isMuted,
             showScreen,
             volume,
             loaded,
@@ -100,7 +100,6 @@ const Player = () => {
         isPlayerReady: false,
         isPlaying: false,
         isBuffering: false,
-        isMuted: false,
         showScreen: false,
         volume: 100,
         loaded: 0,
@@ -130,10 +129,6 @@ const Player = () => {
 
         if (!isPlayerReady) {
             return;
-        }
-
-        if (volume > 0) {
-            youtube.current.unMute();
         }
 
         youtube.current.setVolume(volume);
@@ -173,17 +168,16 @@ const Player = () => {
             return;
         }
 
-        if (isMuted) {
-            youtube.current.unMute();
-        } else {
-            youtube.current.mute();
-        }
+        if (volume > 0) {
+            youtubeVolume.current = volume;
 
-        updateState({ isMuted: !isMuted });
+            setVolume(0);
+        } else {
+            setVolume(youtubeVolume.current);
+        }
     };
 
     const togglePlay = (force = false) => {
-        console.log({ isPlaying, isMaster, isPlayerReady });
         if (!isMaster) {
             publish('player:sync', {
                 action: 'toggle-play'
@@ -329,8 +323,6 @@ const Player = () => {
         listen('player:sync', ({ action, data = {} } = {}) => {
             const handler = actions[action];
 
-            console.log('sync', action);
-
             if (handler) {
                 handler(data);
             }
@@ -338,7 +330,6 @@ const Player = () => {
     };
 
     useEffect(() => {
-        console.log('binding', youtube);
         bindDevicesSync();
 
         bindKeyboard();
@@ -447,12 +438,12 @@ const Player = () => {
                                             className="player__controls-button icon-button"
                                             onClick={toggleMute}
                                             icon={
-                                                isMuted || volume === 0
+                                                volume === 0
                                                     ? 'volume-off'
                                                     : 'volume-up'
                                             }
                                             ariaLabel={
-                                                isMuted ? 'Unmute' : 'Mute'
+                                                volume === 0 ? 'Unmute' : 'Mute'
                                             }
                                         />
 

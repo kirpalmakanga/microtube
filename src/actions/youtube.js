@@ -237,7 +237,7 @@ export function editPlaylistItem(videoId) {
 
                             dispatch(
                                 notify({
-                                    message: `Added to playlist "${title}."`
+                                    message: `Added to playlist "${title}".`
                                 })
                             );
                         },

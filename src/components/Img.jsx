@@ -7,18 +7,16 @@ const Img = ({ src = '', alt = 'image', background = false }) => {
     useEffect(() => {
         (async () => {
             try {
-                if (!src) {
-                    throw new Error('MissingImageSource');
-                }
+                if (src) {
+                    const img = new Image();
+                    img.src = src;
 
-                const img = new Image();
-                img.src = src;
-
-                if (!img.complete) {
-                    await new Promise((resolve, reject) => {
-                        img.onload = resolve;
-                        img.onerror = reject;
-                    });
+                    if (!img.complete) {
+                        await new Promise((resolve, reject) => {
+                            img.onload = resolve;
+                            img.onerror = reject;
+                        });
+                    }
                 }
             } catch (e) {
             } finally {

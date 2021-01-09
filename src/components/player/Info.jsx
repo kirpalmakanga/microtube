@@ -59,7 +59,7 @@ const Info = ({
                 min="0"
                 max={parseInt(duration)}
                 onWheel={preventDefault()}
-                onChange={handleSeeking}
+                onInput={handleSeeking}
                 onMouseDown={startSeeking}
                 onMouseUp={endSeeking}
             />

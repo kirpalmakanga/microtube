@@ -4,22 +4,28 @@ const Progress = ({ percentElapsed, percentLoaded }) => {
     return (
         <div className="player__info-progress">
             <div className="player__info-progress-gutter">
-                <div
-                    className="player__info-progress-loaded"
-                    style={{
-                        transform: `translateX(${formatPercent(
-                            percentLoaded
-                        )}%)`
-                    }}
-                />
-                <div
-                    className="player__info-progress-played"
-                    style={{
-                        transform: `translateX(${formatPercent(
-                            percentElapsed
-                        )}%)`
-                    }}
-                />
+                {percentLoaded ? (
+                    <div
+                        className="player__info-progress-loaded"
+                        style={{
+                            transform: `translateX(${formatPercent(
+                                percentLoaded
+                            )}%)`
+                        }}
+                    />
+                ) : null}
+
+                {percentElapsed ? (
+                    <div
+                        className="player__info-progress-played"
+                        style={{
+                            opacity: percentElapsed ? 1 : 0,
+                            transform: `translateX(${formatPercent(
+                                percentElapsed
+                            )}%)`
+                        }}
+                    />
+                ) : null}
             </div>
         </div>
     );

@@ -40,9 +40,7 @@ const Root = ({ children }) => {
         setIsAppReady(true);
     };
 
-    useEffect(() => {
-        init();
-    }, []);
+    useEffect(() => init(), []);
 
     return (
         <div

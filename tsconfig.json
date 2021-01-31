@@ -3,6 +3,9 @@
         "allowJs": true,
         "target": "ESNext",
         "strict": true,
-        "module": "ESNext"
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react-jsx"
     }
 }

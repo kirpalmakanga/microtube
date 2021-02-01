@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 
-import { closeNotification } from '../actions/app.js';
+import { closeNotification } from '../store/actions/app.js';
 
 import TranslateY from './animations/TranslateY';
 

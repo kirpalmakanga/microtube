@@ -8,7 +8,7 @@ import PromptHeader from './PromptHeader';
 import PromptWrapper from './PromptWrapper';
 import PromptActions from './PromptActions';
 
-import { editPlaylistItem, getPlaylists } from '../../actions/youtube';
+import { editPlaylistItem, getPlaylists } from '../../store/actions/youtube';
 
 import { stopPropagation, preventDefault } from '../../lib/helpers';
 

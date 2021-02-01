@@ -1,7 +1,16 @@
+import { createReducer, State } from '../helpers';
 import { omit } from '../../lib/helpers';
-import { createReducer } from '../helpers';
 
-const initialState = {
+
+interface SearchState extends State {
+    items: object[],
+    nextPageToken: string,
+    hasNextPage: boolean,
+    forMine: number,
+    totalResults: number | null
+};
+
+export const initialState: SearchState = {
     items: [],
     nextPageToken: '',
     hasNextPage: true,
@@ -10,14 +19,14 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    'search/SET_TARGET': (state, { forMine }) => ({
+    'search/SET_TARGET': (state: State, { forMine }: State) => ({
         ...state,
         forMine
     }),
 
     'search/UPDATE_ITEMS': (
-        { items, ...state },
-        { items: newItems, nextPageToken = '', totalResults }
+        { items, ...state }: State,
+        { items: newItems, nextPageToken = '', totalResults }: State
     ) => ({
         ...state,
         items: [...items, ...newItems],
@@ -26,7 +35,7 @@ export default createReducer(initialState, {
         totalResults
     }),
 
-    'search/RESET': (state) => ({
+    'search/RESET': (state: State) => ({
         ...state,
         ...omit(initialState, ['forMine'])
     })

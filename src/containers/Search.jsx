@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+
+import { useStore } from '../store';
 
 import {
     searchVideos,
     clearSearch,
     editPlaylistItem,
     queueItem
-} from '../actions/youtube';
+} from '../store/actions/youtube';
 
 import List from '../components/List';
 
@@ -19,16 +20,12 @@ import MenuWrapper from '../components/menu/MenuWrapper';
 const Search = () => {
     const navigate = useNavigate();
     const { query } = useParams();
-
-    const { items, totalResults, forMine } = useSelector(
-        ({ search: { items, forMine, totalResults } }) => ({
-            forMine,
-            items,
-            totalResults
-        })
-    );
-
-    const dispatch = useDispatch();
+    const [
+        {
+            search: { items, totalResults, forMine }
+        },
+        dispatch
+    ] = useStore();
 
     const [{ mountGrid }, setState] = useState({
         mountGrid: true

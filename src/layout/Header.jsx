@@ -1,15 +1,20 @@
-import { useDispatch } from 'react-redux';
 import { Routes, Route } from 'react-router-dom';
 
-import { closeScreen } from '../actions/youtube';
+import { useStore } from '../store';
+import { closeScreen } from '../store/actions/youtube';
 
 import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';
 
 const Header = () => {
-    const dispatch = useDispatch();
+    const [
+        {
+            player: { showScreen }
+        },
+        dispatch
+    ] = useStore();
 
-    const handleCloseScreen = () => dispatch(closeScreen());
+    const handleCloseScreen = () => showScreen && dispatch(closeScreen());
 
     return (
         <header

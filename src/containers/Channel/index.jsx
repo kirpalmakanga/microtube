@@ -4,7 +4,7 @@ import { Outlet, NavLink, useParams } from 'react-router-dom';
 
 import { getThumbnails } from '../../lib/helpers';
 
-import { getChannel, clearChannelData } from '../../actions/youtube';
+import { getChannel, clearChannelData } from '../../store/actions/youtube';
 
 import Img from '../../components/Img';
 

@@ -1,7 +1,21 @@
+import { createReducer, State } from '../helpers';
 import { omit } from '../../lib/helpers';
-import { createReducer } from '../helpers';
 
-const initialState = {
+interface ChannelState {
+    channelTitle: string,
+    description: string,
+    thumbnails: {
+        default: { url: string },
+        medium: { url: string },
+        high: { url: string }
+    },
+    items: object[],
+    nextPageToken: string,
+    hasNextPage: true,
+    totalResults: null
+}
+
+export const initialState: ChannelState = {
     channelTitle: '',
     description: '',
     thumbnails: {
@@ -16,11 +30,11 @@ const initialState = {
 };
 
 export default createReducer(initialState, {
-    'channel/UPDATE_DATA': (state, data) => ({ ...state, ...data }),
+    'channel/UPDATE_DATA': (state: State, data: State) => ({ ...state, ...data }),
 
     'channel/UPDATE_ITEMS': (
-        { items, ...state },
-        { items: newItems, nextPageToken = '', totalResults }
+        { items, ...state }: State,
+        { items: newItems, nextPageToken = '', totalResults }: State
     ) => ({
         ...state,
         items: [...items, ...newItems],
@@ -29,7 +43,7 @@ export default createReducer(initialState, {
         totalResults
     }),
 
-    'channel/CLEAR_ITEMS': (state) => ({
+    'channel/CLEAR_ITEMS': (state: State) => ({
         ...state,
         ...omit(initialState, ['channelTitle', 'description', 'thumbnails'])
     }),

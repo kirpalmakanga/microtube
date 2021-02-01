@@ -2,7 +2,11 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Button from '../Button';
 
-import { clearQueue, toggleQueue, importVideos } from '../../actions/youtube';
+import {
+    clearQueue,
+    toggleQueue,
+    importVideos
+} from '../../store/actions/youtube';
 
 const QueueHeader = () => {
     const dispatch = useDispatch();

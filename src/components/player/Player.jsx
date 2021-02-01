@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { listen, publish } from '../../api/socket';
 
-import { setActiveDevice } from '../../actions/app';
+import { setActiveDevice } from '../../store/actions/app';
 
 import {
     setActiveQueueItem,
     toggleQueue,
     toggleScreen,
     editPlaylistItem
-} from '../../actions/youtube';
+} from '../../store/actions/youtube';
 
 import { isMobile } from '../../lib/helpers';
 

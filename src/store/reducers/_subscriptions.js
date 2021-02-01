@@ -1,6 +1,6 @@
 import { createReducer } from '../helpers';
 
-const initialState = {
+export const initialState = {
     items: [],
     nextPageToken: '',
     totalResults: null,

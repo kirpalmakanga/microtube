@@ -1,25 +1,34 @@
-import { useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useMemo, useCallback } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
+
+import { useStore } from '../store';
 
 import SearchForm from '../components/SearchForm';
 import Icon from '../components/Icon';
 
 import DropDown from '../components/DropDown';
 
-import { setSearchTarget } from '../actions/youtube';
+import { setSearchTarget } from '../store/actions/youtube';
 
 const SearchHeader = () => {
-    const forMine = useSelector(({ search: { forMine } }) => forMine);
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const { query } = useParams();
+    const [
+        {
+            search: { forMine }
+        },
+        dispatch
+    ] = useStore();
 
-    const handleFormSubmit = (query) =>
-        navigate(`/search/${query}`, { replace: true });
+    const handleFormSubmit = useCallback(
+        (query) => navigate(`/search/${query}`, { replace: true }),
+        [query]
+    );
 
-    const handleDropDownSelect = (value) =>
-        dispatch(setSearchTarget(parseInt(value)));
+    const handleDropDownSelect = useCallback(
+        (value) => dispatch(setSearchTarget(parseInt(value))),
+        [forMine]
+    );
 
     return (
         <div className="layout__header-row">

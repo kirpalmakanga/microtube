@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Icon from './Icon';
 
 import { stopPropagation, preventDefault } from '../lib/helpers';
@@ -6,12 +6,21 @@ import { stopPropagation, preventDefault } from '../lib/helpers';
 const DropDown = ({ currentValue, options = [], onSelect = () => {} }) => {
     const [isOpen, setOpenStatus] = useState(false);
 
-    const closeOptions = () => isOpen && setOpenStatus(false);
+    const closeOptions = useCallback(() => isOpen && setOpenStatus(false), [
+        currentValue,
+        isOpen
+    ]);
 
-    const toggleOptions = () => setOpenStatus(!isOpen);
+    const toggleOptions = useCallback(() => setOpenStatus(!isOpen), [
+        currentValue,
+        isOpen
+    ]);
 
-    const handleOptionClick = (value, isActiveItem) =>
-        preventDefault(() => !isActiveItem && onSelect(value));
+    const handleOptionClick = useCallback(
+        (value, isActiveItem) =>
+            preventDefault(() => !isActiveItem && onSelect(value)),
+        [currentValue]
+    );
 
     const currentIndex = options.findIndex(
         ({ value }) => value === currentValue

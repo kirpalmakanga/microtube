@@ -13,7 +13,7 @@ import {
     setActiveQueueItem,
     removeQueueItem,
     editPlaylistItem
-} from '../../actions/youtube';
+} from '../../store/actions/youtube';
 
 const Queue = ({ isPlaying, isBuffering, togglePlay }) => {
     const dispatch = useDispatch();

@@ -202,3 +202,19 @@ export const uuidv4 = () =>
             (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
         ).toString(16)
     );
+
+export const deepMerge = (target, source) => {
+    const result = { ...target, ...source };
+    const keys = Object.keys(result);
+
+    for (const key of keys) {
+        const tprop = target[key];
+        const sprop = source[key];
+        //if two objects are in conflict
+        if (typeof tprop == 'object' && typeof sprop == 'object') {
+            result[key] = deepMerge(tprop, sprop);
+        }
+    }
+
+    return result;
+};

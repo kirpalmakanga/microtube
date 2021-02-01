@@ -1,8 +1,8 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { getPlaylists } from '../actions/youtube';
-import { closePrompt } from '../actions/app';
+import { getPlaylists } from '../store/actions/youtube';
+import { closePrompt } from '../store/actions/app';
 
 import Fade from './animations/Fade';
 

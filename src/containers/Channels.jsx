@@ -5,7 +5,7 @@ import {
     getSubscriptions,
     subscribeToChannel,
     unsubscribeFromChannel
-} from '../actions/youtube';
+} from '../store/actions/youtube';
 
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';

@@ -2,13 +2,12 @@ import './assets/styles/app.scss';
 
 import { useState, useEffect } from 'react';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { loadAPI, loadAuth } from './api/youtube';
 
-import { initializeApp } from './actions/app';
+import { useStore } from './store';
+import { getUserData } from './store/actions/user';
 
-import { getUserData } from './actions/auth';
-
-import { enableImportMethods } from './actions/youtube';
+// import { enableImportMethods } from './actions.bak/youtube';
 
 import { preventDefault, isMobile } from './lib/helpers';
 
@@ -16,26 +15,37 @@ import { __DEV__ } from './config/app';
 
 import Header from './layout/Header';
 
-import Head from './components/Head';
+// import Head from './components/Head';
 import Sprite from './components/Sprite';
 import Loader from './components/Loader';
-import Player from './components/player/Player';
+// import Player from './components/player/Player';
 
-import Prompt from './components/Prompt';
-import Notifications from './components/Notifications';
+// import Prompt from './components/Prompt';
+// import Notifications from './components/Notifications';
 
 const Root = ({ children }) => {
-    const dispatch = useDispatch();
-    const isSignedIn = useSelector(({ auth: { isSignedIn } }) => isSignedIn);
+    const [
+        {
+            user: { isSignedIn }
+        },
+        dispatch
+    ] = useStore();
+    // const dispatch = useDispatch();
+    // const isSignedIn = useSelector(({ auth: { isSignedIn } }) => isSignedIn);
 
     const [isAppReady, setIsAppReady] = useState(false);
 
     const init = async () => {
-        await dispatch(initializeApp());
+        await loadAPI();
+        await loadAuth();
 
         await dispatch(getUserData());
 
-        dispatch(enableImportMethods());
+        // dispatch(enableImportMethods());
+
+        // dispatch(listenForQueueUpdate());
+
+        // dispatch(connectDevice());
 
         setIsAppReady(true);
     };
@@ -47,7 +57,7 @@ const Root = ({ children }) => {
             className={`layout ${isMobile() ? 'mobile' : ''}`}
             onContextMenu={__DEV__ ? () => {} : preventDefault()}
         >
-            <Head />
+            {/* <Head /> */}
 
             <Sprite />
 
@@ -57,11 +67,11 @@ const Root = ({ children }) => {
 
                     <main className="layout__content">{children}</main>
 
-                    <Notifications />
+                    {/* <Notifications />
 
                     {isSignedIn ? <Player /> : null}
 
-                    <Prompt />
+                    <Prompt /> */}
                 </>
             ) : null}
 

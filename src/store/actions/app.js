@@ -1,21 +1,12 @@
-import { uuidv4, delay } from '../lib/helpers';
+import { uuidv4, delay } from '../../lib/helpers';
 
-import { loadAPI, getAuthInstance as loadAuth } from '../api/youtube';
-
-import { listen, publish } from '../api/socket';
-
-export const initializeApp = () => async () => {
-    await loadAPI();
-
-    await loadAuth();
-};
+import { listen, publish } from '../../api/socket';
 
 export const setDevice = () => (dispatch, getState) => {
-    let {
+    const { appCodeName: deviceName } = navigator;
+    const {
         app: { deviceId }
     } = getState();
-
-    let deviceName = navigator.appCodeName;
 
     if (!deviceId) {
         deviceId = uuidv4();
@@ -79,32 +70,6 @@ export const connectDevice = () => (dispatch, getState) => {
 
         dispatch(listenDevicesSync());
     });
-};
-
-export const notify = ({ message }) => async (dispatch, getState) => {
-    dispatch({ type: 'notifications/OPEN', data: { message } });
-
-    await delay(4000);
-
-    const {
-        notifications: { message: storedMessage }
-    } = getState();
-
-    if (storedMessage) {
-        dispatch({ type: 'notifications/CLOSE' });
-
-        await delay(300);
-
-        dispatch({ type: 'notifications/CLEAR_MESSAGE' });
-    }
-};
-
-export const closeNotification = () => async (dispatch) => {
-    dispatch({ type: 'notifications/CLOSE' });
-
-    await delay(300);
-
-    dispatch({ type: 'notifications/CLEAR_MESSAGE' });
 };
 
 export const prompt = (config = {}, callback = async () => {}) => (dispatch) =>

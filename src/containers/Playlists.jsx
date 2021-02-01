@@ -1,13 +1,6 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import {
-    getPlaylists,
-    clearPlaylists,
-    queuePlaylist,
-    removePlaylist
-} from '../actions/youtube';
+import usePlaylists from '../store/hooks/playlists';
 
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
@@ -20,28 +13,16 @@ const Playlists = () => {
     const { channelId } = useParams();
     const navigate = useNavigate();
 
-    const { items, totalResults } = useSelector(
-        ({ playlists: { items, totalResults } }) => ({
-            items,
-            totalResults
-        })
-    );
-
-    const dispatch = useDispatch();
-
-    const handleGetPlaylists = () =>
-        dispatch(getPlaylists(channelId ? { channelId } : { mine: true }));
-
-    const handleClearPlaylists = () => dispatch(clearPlaylists());
-
-    const handleQueuePlaylist = ({ id }) => dispatch(queuePlaylist(id));
-
-    const handleLaunchPlaylist = ({ id }) => dispatch(queuePlaylist(id, true));
-
-    const handleRemovePlaylist = ({ id, title }) =>
-        dispatch(removePlaylist(id, title));
-
-    useEffect(() => handleClearPlaylists, []);
+    const [
+        { items, totalResults },
+        {
+            getPlaylists,
+            clearPlaylists,
+            removePlaylist,
+            queuePlaylist,
+            launchPlaylist
+        }
+    ] = usePlaylists();
 
     return totalResults === 0 ? (
         <Placeholder
@@ -58,19 +39,19 @@ const Playlists = () => {
                 {
                     title: 'Queue playlist',
                     icon: 'circle-add',
-                    onClick: handleQueuePlaylist
+                    onClick: queuePlaylist
                 },
                 {
                     title: 'Launch playlist',
                     icon: 'play',
-                    onClick: handleLaunchPlaylist
+                    onClick: launchPlaylist
                 },
                 ...(!channelId
                     ? [
                           {
                               title: 'Remove playlist',
                               icon: 'delete',
-                              onClick: handleRemovePlaylist
+                              onClick: removePlaylist
                           }
                       ]
                     : [])
@@ -79,7 +60,7 @@ const Playlists = () => {
             {(openMenu) => (
                 <List
                     items={items}
-                    itemKey={(index, data) => data[index].id}
+                    itemKey={(index, { [index]: { id } }) => id}
                     renderItem={({ data }) => {
                         const { id, title } = data;
 
@@ -87,13 +68,11 @@ const Playlists = () => {
                             <PlaylistCard
                                 {...data}
                                 onClick={() => navigate(`/playlist/${id}`)}
-                                onClickMenu={() =>
-                                    openMenu({ id, title }, title)
-                                }
+                                onClickMenu={() => openMenu(data, title)}
                             />
                         );
                     }}
-                    loadMoreItems={handleGetPlaylists}
+                    loadMoreItems={getPlaylists}
                 />
             )}
         </MenuWrapper>

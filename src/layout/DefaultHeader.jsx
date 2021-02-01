@@ -1,7 +1,8 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useCallback } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
-import { signIn, signOut } from '../actions/auth';
+import { useStore } from '../store';
+import { signIn, signOut } from '../store/actions/user';
 
 import Icon from '../components/Icon';
 import Button from '../components/Button';
@@ -9,25 +10,19 @@ import Button from '../components/Button';
 const DefaultHeader = () => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { isSignedIn, avatar, channelTitle, playlistTitle } = useSelector(
-        ({
-            auth: {
-                isSignedIn,
-                user: { picture: avatar }
-            },
+    const [
+        {
+            user: { picture, isSignedIn },
             playlistItems: { playlistTitle },
             channel: { channelTitle }
-        }) => ({
-            isSignedIn,
-            avatar,
-            playlistTitle,
-            channelTitle
-        })
-    );
-    const dispatch = useDispatch();
+        },
+        dispatch
+    ] = useStore();
 
-    const handleSignIn = () => dispatch(signIn());
-    const handleSignOut = () => dispatch(signOut());
+    const handleClickUser = useCallback(
+        () => dispatch(isSignedIn ? signOut() : signIn()),
+        [isSignedIn]
+    );
 
     let title = 'MicroTube';
 
@@ -91,11 +86,11 @@ const DefaultHeader = () => {
 
                 <Button
                     className="navigation__link icon-button"
-                    onClick={isSignedIn ? handleSignOut : handleSignIn}
+                    onClick={handleClickUser}
                     title={isSignedIn ? 'Log out' : 'Log in'}
                     icon="user"
                 >
-                    {avatar ? <img src={avatar} alt="avatar" /> : null}
+                    {picture ? <img src={picture} alt="avatar" /> : null}
                 </Button>
             </nav>
         </div>

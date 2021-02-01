@@ -37,7 +37,7 @@ export const loadAPI = async () => {
     return gapi;
 };
 
-export const getAuthInstance = () => {
+const getAuthInstance = () => {
     const { auth2 } = window.gapi;
 
     const params = {
@@ -47,6 +47,8 @@ export const getAuthInstance = () => {
 
     return auth2.init(params);
 };
+
+export const loadAuth = getAuthInstance;
 
 export const getSignedInUser = () => {
     const GoogleAuth = getAuthInstance();
@@ -77,10 +79,10 @@ export const getSignedInUser = () => {
     } = isSignedIn ? currentUser.getAuthResponse(true) : {};
 
     return {
+        ...user,
         isSignedIn,
         idToken,
-        accessToken,
-        user
+        accessToken
     };
 };
 

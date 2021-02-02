@@ -15,7 +15,7 @@ import { __DEV__ } from './config/app';
 
 import Header from './layout/Header';
 
-// import Head from './components/Head';
+import Head from './components/Head';
 import Sprite from './components/Sprite';
 import Loader from './components/Loader';
 // import Player from './components/player/Player';
@@ -57,7 +57,7 @@ const Root = ({ children }) => {
             className={`layout ${isMobile() ? 'mobile' : ''}`}
             onContextMenu={__DEV__ ? () => {} : preventDefault()}
         >
-            {/* <Head /> */}
+            <Head />
 
             <Sprite />
 

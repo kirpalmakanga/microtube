@@ -203,7 +203,7 @@ export const uuidv4 = () =>
         ).toString(16)
     );
 
-export const deepMerge = (target, source) => {
+export const mergeDeep = (target, source) => {
     const result = { ...target, ...source };
     const keys = Object.keys(result);
 
@@ -211,8 +211,16 @@ export const deepMerge = (target, source) => {
         const tprop = target[key];
         const sprop = source[key];
         //if two objects are in conflict
-        if (typeof tprop == 'object' && typeof sprop == 'object') {
-            result[key] = deepMerge(tprop, sprop);
+
+        if (
+            tprop instanceof Object &&
+            !Array.isArray(tprop) &&
+            sprop instanceof Object &&
+            !Array.isArray(sprop)
+        ) {
+            console.log({ key, tprop, sprop });
+
+            result[key] = mergeDeep(tprop, sprop);
         }
     }
 

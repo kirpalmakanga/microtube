@@ -4,17 +4,17 @@ import Icon from './Icon';
 import { stopPropagation, preventDefault } from '../lib/helpers';
 
 interface OptionsData {
-    label: string
-    value: unknown
+    label: string;
+    value: unknown;
 }
 
 interface Props {
-    currentValue: unknown,
-    options: OptionsData[],
-    onSelect: (value: unknown) => void
+    currentValue: unknown;
+    options: OptionsData[];
+    onSelect: (value: unknown) => void;
 }
 
-const DropDown: FunctionComponent<Props> = ({ 
+const DropDown: FunctionComponent<Props> = ({
     currentValue,
     options = [],
     onSelect
@@ -56,9 +56,7 @@ const DropDown: FunctionComponent<Props> = ({
                 type="button"
             >
                 <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} />
-                <span className="dropdown__trigger-title">
-                    {label}
-                </span>
+                <span className="dropdown__trigger-title">{label}</span>
             </button>
 
             <ul className="dropdown__list shadow--2dp">

@@ -47,7 +47,7 @@ const Info = ({
 
             <InfoTime time={time} duration={duration} />
 
-            <label className="sr-only" labelfor="seek-time">
+            <label className="sr-only" htmlFor="seek-time">
                 Seek time
             </label>
 

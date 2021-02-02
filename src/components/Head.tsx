@@ -4,21 +4,19 @@ import { Helmet } from 'react-helmet';
 import { useStore } from '../store';
 
 interface QueueItem {
-    id: string
+    id: string;
 }
 
 const Head: FunctionComponent = () => {
     const { pathname } = useLocation();
 
-    const [{
-        playlistItems: { playlistTitle },
-        channel: { channelTitle },
-        player: {
-            queue,
-            video,
-            currentId
+    const [
+        {
+            playlistItems: { playlistTitle },
+            channel: { channelTitle },
+            player: { queue, video, currentId }
         }
-    }] = useStore();
+    ] = useStore();
 
     const { id: currentVideoId, title: currentVideoTitle } = video.id
         ? video

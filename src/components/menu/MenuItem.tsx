@@ -1,10 +1,10 @@
-import { FunctionComponent} from 'react';
+import { FunctionComponent } from 'react';
 import Icon from '../Icon';
 
 interface Props {
-    title: string
-    icon: string,
-    onClick: () => void
+    title: string;
+    icon: string;
+    onClick: () => void;
 }
 
 const MenuItem: FunctionComponent<Props> = ({ title, icon, onClick }) => (

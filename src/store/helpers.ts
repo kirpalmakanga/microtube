@@ -1,16 +1,16 @@
 import { useCallback, useReducer } from 'react';
 
 export interface Action {
-    type: string,
-    payload?: object
+    type: string;
+    payload?: object;
 }
 
 interface Handlers {
-    [actionType: string]: (state: object, payload: object) => object
+    [actionType: string]: (state: object, payload: object) => object;
 }
 
 interface Slices {
-    [namespace: string]: Reducer
+    [namespace: string]: Reducer;
 }
 
 type NotFunction<T> = T extends Function ? never : T;
@@ -20,18 +20,18 @@ export interface State {
 }
 
 export interface RootState {
-    [namespace: string]: State
+    [namespace: string]: State;
 }
 
 type Reducer = (state: State, action: Action) => object;
 type RootReducer = (state: State, action: Action) => RootState;
 type Dispatch<Action> = (action: Action) => void;
-type AsyncDispatch<Action> = Dispatch<Action | Promise<Action>>; 
+type AsyncDispatch<Action> = Dispatch<Action | Promise<Action>>;
 
-export const createReducer = (initialState: object, handlers: Handlers): Reducer => (
-    state: object,
-    { type, payload = {} } : Action
-) => {
+export const createReducer = (
+    initialState: object,
+    handlers: Handlers
+): Reducer => (state: object, { type, payload = {} }: Action) => {
     const { [type]: handler } = handlers;
 
     if (typeof handler === 'function') {
@@ -41,22 +41,30 @@ export const createReducer = (initialState: object, handlers: Handlers): Reducer
     return { ...initialState, ...state };
 };
 
-const wrapAsync = (dispatch: Dispatch<Action>) : AsyncDispatch<Action> => (action: Action | Promise<Action>) => {
+const wrapAsync = (dispatch: Dispatch<Action>): AsyncDispatch<Action> => (
+    action: Action | Promise<Action>
+) => {
     if (action instanceof Promise) {
         return action.then(dispatch);
     }
     return dispatch(action);
-}
+};
 
-export const useAsyncReducer = (reducer: Reducer, initialState: RootState | State) => {
+export const useAsyncReducer = (
+    reducer: Reducer,
+    initialState: RootState | State
+) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const asyncDispatch = useCallback(wrapAsync(dispatch), [dispatch])
+    const asyncDispatch = useCallback(wrapAsync(dispatch), [dispatch]);
 
     return [state, asyncDispatch];
-}
+};
 
-export const combineReducers = (slices: Slices): RootReducer => (rootState: RootState, action: Action) => {
+export const combineReducers = (slices: Slices): RootReducer => (
+    rootState: RootState,
+    action: Action
+) => {
     const result = { ...rootState };
 
     for (const [namespace, reducer] of Object.entries(slices)) {
@@ -64,4 +72,4 @@ export const combineReducers = (slices: Slices): RootReducer => (rootState: Root
     }
 
     return result;
-}
+};

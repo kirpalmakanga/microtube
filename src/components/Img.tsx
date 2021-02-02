@@ -2,12 +2,16 @@ import { useState, useEffect, FunctionComponent } from 'react';
 import Fade from './animations/Fade';
 
 interface Props {
-    src: string,
-    alt: string,
-    background: boolean
+    src: string;
+    alt: string;
+    background: boolean;
 }
 
-const Img: FunctionComponent<Props> = ({ src = '', alt = 'image', background = false }) => {
+const Img: FunctionComponent<Props> = ({
+    src = '',
+    alt = 'image',
+    background = false
+}) => {
     const [isLoading, setLoadingStatus] = useState(true);
 
     useEffect(() => {

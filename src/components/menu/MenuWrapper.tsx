@@ -1,23 +1,23 @@
-import { useReducer, useState, useCallback, FunctionComponent } from 'react';
+import { useReducer, useCallback, FunctionComponent, ReactNode } from 'react';
 
 import Menu from './Menu';
 import MenuItem from './MenuItem';
 
 interface MenuItemData {
-    title: string
-    icon: string
-    onClick: (callbackData: object) => void
+    title: string;
+    icon: string;
+    onClick: (callbackData: object) => void;
 }
 
 interface Props {
-    menuItems: MenuItemData[]
-    children: (openMenu: Function) => Element | Element[]
+    menuItems: MenuItemData[];
+    children: (openMenu: Function) => ReactNode;
 }
 
 interface State {
-    isMenuOpen: boolean
-    menuTitle: string
-    callbackData: object
+    isMenuOpen: boolean;
+    menuTitle: string;
+    callbackData: object;
 }
 
 const initialState: State = {

@@ -1,13 +1,19 @@
+import { ReactNode, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import usePlaylists from '../store/hooks/playlists';
 
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
-
 import PlaylistCard from '../components/cards/PlaylistCard';
-
 import MenuWrapper from '../components/menu/MenuWrapper';
+
+interface PlaylistData {
+    id: string;
+    title: string;
+    thumbnails: object;
+    itemCount: number;
+}
 
 const Playlists = () => {
     const { channelId } = useParams();
@@ -15,14 +21,23 @@ const Playlists = () => {
 
     const [
         { items, totalResults },
-        {
-            getPlaylists,
-            clearPlaylists,
-            removePlaylist,
-            queuePlaylist,
-            launchPlaylist
-        }
-    ] = usePlaylists();
+        { getPlaylists, removePlaylist, queuePlaylist, launchPlaylist }
+    ] = usePlaylists(channelId);
+
+    const handleClickCard = useCallback(
+        ({ id }: PlaylistData) => () => navigate(`/playlist/${id}`),
+        []
+    );
+    const handleClickMenu = useCallback(
+        (data: PlaylistData, callback: Function) => () => {
+            const { title } = data;
+
+            callback(data, title);
+        },
+        []
+    );
+
+    console.log({ items, totalResults });
 
     return totalResults === 0 ? (
         <Placeholder
@@ -51,7 +66,8 @@ const Playlists = () => {
                           {
                               title: 'Remove playlist',
                               icon: 'delete',
-                              onClick: removePlaylist
+                              onClick: () => {} // TODO: Add prompt
+                              //   onClick: removePlaylist
                           }
                       ]
                     : [])
@@ -60,18 +76,14 @@ const Playlists = () => {
             {(openMenu) => (
                 <List
                     items={items}
-                    itemKey={(index, { [index]: { id } }) => id}
-                    renderItem={({ data }) => {
-                        const { id, title } = data;
-
-                        return (
-                            <PlaylistCard
-                                {...data}
-                                onClick={() => navigate(`/playlist/${id}`)}
-                                onClickMenu={() => openMenu(data, title)}
-                            />
-                        );
-                    }}
+                    itemKey={({ id }: PlaylistData) => id}
+                    renderItem={(data: PlaylistData) => (
+                        <PlaylistCard
+                            {...data}
+                            onClick={handleClickCard(data)}
+                            onClickMenu={handleClickMenu(data, openMenu)}
+                        />
+                    )}
                     loadMoreItems={getPlaylists}
                 />
             )}

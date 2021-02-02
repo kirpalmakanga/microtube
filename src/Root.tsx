@@ -10,7 +10,7 @@ import { getUserData } from './store/actions/user';
 // import { enableImportMethods } from './actions.bak/youtube';
 
 import { preventDefault, isMobile } from './lib/helpers';
-
+import { FunctionComponent } from 'react';
 import { __DEV__ } from './config/app';
 
 import Header from './layout/Header';
@@ -21,9 +21,9 @@ import Loader from './components/Loader';
 // import Player from './components/player/Player';
 
 // import Prompt from './components/Prompt';
-// import Notifications from './components/Notifications';
+import Notifications from './components/Notifications';
 
-const Root = ({ children }) => {
+const Root: FunctionComponent = ({ children }) => {
     const [
         {
             user: { isSignedIn }
@@ -35,22 +35,22 @@ const Root = ({ children }) => {
 
     const [isAppReady, setIsAppReady] = useState(false);
 
-    const init = async () => {
-        await loadAPI();
-        await loadAuth();
+    useEffect(() => {
+        (async () => {
+            await loadAPI();
+            await loadAuth();
 
-        await dispatch(getUserData());
+            await dispatch(getUserData());
 
-        // dispatch(enableImportMethods());
+            // dispatch(enableImportMethods());
 
-        // dispatch(listenForQueueUpdate());
+            // dispatch(listenForQueueUpdate());
 
-        // dispatch(connectDevice());
+            // dispatch(connectDevice());
 
-        setIsAppReady(true);
-    };
-
-    useEffect(() => init(), []);
+            setIsAppReady(true);
+        })();
+    }, []);
 
     return (
         <div
@@ -67,8 +67,8 @@ const Root = ({ children }) => {
 
                     <main className="layout__content">{children}</main>
 
-                    {/* <Notifications />
-
+                    <Notifications />
+                    {/*
                     {isSignedIn ? <Player /> : null}
 
                     <Prompt /> */}

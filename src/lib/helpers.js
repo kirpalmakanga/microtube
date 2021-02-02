@@ -218,8 +218,6 @@ export const mergeDeep = (target, source) => {
             sprop instanceof Object &&
             !Array.isArray(sprop)
         ) {
-            console.log({ key, tprop, sprop });
-
             result[key] = mergeDeep(tprop, sprop);
         }
     }

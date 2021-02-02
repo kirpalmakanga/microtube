@@ -1,44 +1,65 @@
-import { useState, useEffect, useRef } from 'react';
+import {
+    useState,
+    useEffect,
+    useRef,
+    useCallback,
+    FunctionComponent
+} from 'react';
 
 import { stopPropagation, preventDefault } from '../lib/helpers';
 
-const SearchForm = ({ query, onSubmit }) => {
+interface Props {
+    query: string;
+    onSubmit: (query: string) => void;
+}
+
+const SearchForm: FunctionComponent<Props> = ({ query, onSubmit }) => {
     const [input, setInput] = useState(query);
-    const inputRef = useRef(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     const keyDownHandler = stopPropagation();
 
-    const unlistenKeyDown = () =>
-        inputRef.current.removeEventListener('keydown', keyDownHandler);
+    const unlistenKeyDown = () => {
+        inputRef.current &&
+            inputRef.current.removeEventListener('keydown', keyDownHandler);
+    };
 
     const listenKeyDown = () => {
         unlistenKeyDown();
-        inputRef.current.addEventListener('keydown', keyDownHandler);
+
+        inputRef.current?.addEventListener('keydown', keyDownHandler);
     };
+
     useEffect(() => {
         setInput(query);
 
-        inputRef.current.focus();
+        inputRef.current?.focus();
 
         listenKeyDown();
 
         return unlistenKeyDown;
     }, [query]);
 
-    const handleInput = ({ target: { value } }) => setInput(value);
+    const handleInput = useCallback(
+        ({ target: { value } }) => setInput(value),
+        []
+    );
 
-    const handleSubmit = preventDefault(() => {
-        const newQuery = input.trim();
+    const handleSubmit = useCallback(
+        preventDefault(() => {
+            const newQuery = input.trim();
 
-        if (newQuery && newQuery !== query) {
-            onSubmit(newQuery);
-        }
-    });
+            if (newQuery && newQuery !== query) {
+                onSubmit(newQuery);
+            }
+        }),
+        []
+    );
 
     return (
         <form className="search-form" onSubmit={handleSubmit}>
             <div className="textfield">
-                <label className="sr-only" labelfor="search">
+                <label className="sr-only" htmlFor="search">
                     Search
                 </label>
 

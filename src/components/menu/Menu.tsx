@@ -1,12 +1,12 @@
-import { FunctionComponent, ReactNode, ReactNodeArray, ReactElement } from 'react';
+import { FunctionComponent, ReactNode, ReactNodeArray } from 'react';
 import Fade from '../animations/Fade';
 import { stopPropagation } from '../../lib/helpers';
 
 interface Props {
-    title: string
-    isVisible: boolean
-    onClick: () => void
-    children: ReactNodeArray
+    title: string;
+    isVisible: boolean;
+    onClick: () => void;
+    children: ReactNodeArray;
 }
 
 const Menu: FunctionComponent<Props> = ({

@@ -1,9 +1,8 @@
 {
     "compilerOptions": {
         "allowJs": true,
-        "target": "ESNext",
+        "target": "ES2019",
         "strict": true,
-        "module": "ESNext",
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "jsx": "react-jsx"

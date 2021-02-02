@@ -1,14 +1,21 @@
-import { FunctionComponent, MouseEvent } from 'react';
-import Transition, { TransitionStatus, ENTERING, ENTERED, EXITING, EXITED, UNMOUNTED } from 'react-transition-group/Transition';
+import { FunctionComponent, MouseEvent, ReactNode } from 'react';
+import Transition, {
+    TransitionStatus,
+    ENTERING,
+    ENTERED,
+    EXITING,
+    EXITED,
+    UNMOUNTED
+} from 'react-transition-group/Transition';
 
 interface Props {
-    in: boolean,
-    onClick?: (event: MouseEvent) => void,
-    className?: string,
-    duration?: number,
-    mountOnEnter?: boolean,
-    unmountOnExit?: boolean,
-    children ?: any
+    in: boolean;
+    onClick?: (event: MouseEvent) => void;
+    className?: string;
+    duration?: number;
+    mountOnEnter?: boolean;
+    unmountOnExit?: boolean;
+    children?: ReactNode;
 }
 
 const duration = 150;
@@ -33,8 +40,7 @@ const Fade: FunctionComponent<Props> = ({
     in: inProp,
     children,
     ...props
-}
-) => {
+}) => {
     return (
         <Transition
             in={inProp}
@@ -55,6 +61,6 @@ const Fade: FunctionComponent<Props> = ({
             )}
         </Transition>
     );
-}
+};
 
 export default Fade;

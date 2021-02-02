@@ -1,9 +1,9 @@
-import { FunctionComponent} from 'react';
+import { FunctionComponent } from 'react';
 import Fade from './animations/Fade';
 import Icon from './Icon';
 
 interface Props {
-    isActive: boolean,
+    isActive: boolean;
 }
 
 const Loader: FunctionComponent<Props> = ({ isActive }: Props) => {

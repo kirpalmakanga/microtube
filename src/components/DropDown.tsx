@@ -41,7 +41,9 @@ const DropDown: FunctionComponent<Props> = ({
         ({ value }) => value === currentValue
     );
 
-    const { [currentIndex]: label = '' } = options;
+    const {
+        [currentIndex]: { label = '' }
+    } = options;
 
     return (
         <div

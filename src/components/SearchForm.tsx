@@ -9,11 +9,11 @@ import {
 import { stopPropagation, preventDefault } from '../lib/helpers';
 
 interface Props {
-    query: string;
+    query?: string;
     onSubmit: (query: string) => void;
 }
 
-const SearchForm: FunctionComponent<Props> = ({ query, onSubmit }) => {
+const SearchForm: FunctionComponent<Props> = ({ query = '', onSubmit }) => {
     const [input, setInput] = useState(query);
     const inputRef = useRef<HTMLInputElement>(null);
 

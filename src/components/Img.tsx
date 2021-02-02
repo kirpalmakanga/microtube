@@ -1,22 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FunctionComponent } from 'react';
 import Fade from './animations/Fade';
 
-const Img = ({ src = '', alt = 'image', background = false }) => {
+interface Props {
+    src: string,
+    alt: string,
+    background: boolean
+}
+
+const Img: FunctionComponent<Props> = ({ src = '', alt = 'image', background = false }) => {
     const [isLoading, setLoadingStatus] = useState(true);
 
     useEffect(() => {
         (async () => {
             try {
-                if (src) {
-                    const img = new Image();
-                    img.src = src;
+                const img = new Image();
+                img.src = src;
 
-                    if (!img.complete) {
-                        await new Promise((resolve, reject) => {
-                            img.onload = resolve;
-                            img.onerror = reject;
-                        });
-                    }
+                if (!img.complete) {
+                    await new Promise((resolve, reject) => {
+                        img.onload = resolve;
+                        img.onerror = reject;
+                    });
                 }
             } catch (e) {
             } finally {

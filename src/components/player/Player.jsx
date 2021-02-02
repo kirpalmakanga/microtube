@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { listen, publish } from '../../api/socket';
@@ -30,11 +30,12 @@ const CUED = 5;
 
 const useMergedState = (initialState) => {
     const [mergedState, setState] = useState(initialState);
+    const setMergedState = useCallback(
+        (newState = {}) => setState((state) => ({ ...state, ...newState })),
+        [mergedState]
+    );
 
-    return [
-        mergedState,
-        (data = {}) => setState((state) => ({ ...state, ...data }))
-    ];
+    return [mergedState, setMergedState];
 };
 
 const Player = () => {

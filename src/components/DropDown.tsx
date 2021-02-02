@@ -1,9 +1,24 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, FunctionComponent } from 'react';
 import Icon from './Icon';
 
 import { stopPropagation, preventDefault } from '../lib/helpers';
 
-const DropDown = ({ currentValue, options = [], onSelect = () => {} }) => {
+interface OptionsData {
+    label: string
+    value: unknown
+}
+
+interface Props {
+    currentValue: unknown,
+    options: OptionsData[],
+    onSelect: (value: unknown) => void
+}
+
+const DropDown: FunctionComponent<Props> = ({ 
+    currentValue,
+    options = [],
+    onSelect
+}) => {
     const [isOpen, setOpenStatus] = useState(false);
 
     const closeOptions = useCallback(() => isOpen && setOpenStatus(false), [
@@ -17,7 +32,7 @@ const DropDown = ({ currentValue, options = [], onSelect = () => {} }) => {
     ]);
 
     const handleOptionClick = useCallback(
-        (value, isActiveItem) =>
+        (value: unknown, isActiveItem: boolean) =>
             preventDefault(() => !isActiveItem && onSelect(value)),
         [currentValue]
     );
@@ -25,6 +40,8 @@ const DropDown = ({ currentValue, options = [], onSelect = () => {} }) => {
     const currentIndex = options.findIndex(
         ({ value }) => value === currentValue
     );
+
+    const { [currentIndex]: label = '' } = options;
 
     return (
         <div
@@ -40,17 +57,17 @@ const DropDown = ({ currentValue, options = [], onSelect = () => {} }) => {
             >
                 <Icon name={isOpen ? 'chevron-up' : 'chevron-down'} />
                 <span className="dropdown__trigger-title">
-                    {options[currentIndex].label}
+                    {label}
                 </span>
             </button>
 
             <ul className="dropdown__list shadow--2dp">
-                {options.map(({ label, value }, i) => {
+                {options.map(({ label, value }) => {
                     const isActiveItem = currentValue === value;
 
                     return (
                         <li
-                            key={i}
+                            key={label}
                             className={[
                                 'dropdown__list-item',
                                 isActiveItem ? 'is-active' : ''

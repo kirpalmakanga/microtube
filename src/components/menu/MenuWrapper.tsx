@@ -45,8 +45,6 @@ const MenuWrapper: FunctionComponent<Props> = ({ menuItems, children }) => {
 
     const closeMenu = useCallback(() => {
         setState({ isMenuOpen: false });
-
-        setTimeout(() => setState(initialState));
     }, [isMenuOpen]);
 
     return (

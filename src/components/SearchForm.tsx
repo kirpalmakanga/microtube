@@ -20,8 +20,7 @@ const SearchForm: FunctionComponent<Props> = ({ query, onSubmit }) => {
     const keyDownHandler = stopPropagation();
 
     const unlistenKeyDown = () => {
-        inputRef.current &&
-            inputRef.current.removeEventListener('keydown', keyDownHandler);
+        inputRef.current?.removeEventListener('keydown', keyDownHandler);
     };
 
     const listenKeyDown = () => {

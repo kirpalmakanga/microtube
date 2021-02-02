@@ -2,9 +2,9 @@ import { createContext, useContext, useEffect, useMemo, FunctionComponent } from
 import { useAsyncReducer } from './helpers';
 import rootReducer, { rootInitialState } from './reducers';
 import { saveState, loadState } from '../lib/localStorage';
-import { pick, omit, deepMerge } from '../lib/helpers';
+import { pick, omit, mergeDeep } from '../lib/helpers';
 
-const initialState = deepMerge(rootInitialState, loadState() || {});
+const initialState = mergeDeep(rootInitialState, loadState() || {});
 
 interface StorableState {
     player?: any,
@@ -21,7 +21,7 @@ const Store: FunctionComponent = ({ children }) => {
 
     useEffect(() => {
         const { player, search }: StorableState = state;
-        // TODO: save state to localStorage (check isEqualDeep)
+
         saveState({
             player: omit(player, ['newQueueItems', 'video']),
             search: pick(search, ['forMine'])

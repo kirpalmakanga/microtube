@@ -1,4 +1,4 @@
-import { useMemo, useReducer } from 'react';
+import { useCallback, useReducer } from 'react';
 
 export interface Action {
     type: string,
@@ -51,7 +51,7 @@ const wrapAsync = (dispatch: Dispatch<Action>) : AsyncDispatch<Action> => (actio
 export const useAsyncReducer = (reducer: Reducer, initialState: RootState | State) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const asyncDispatch = useMemo(() => wrapAsync(dispatch), [dispatch])
+    const asyncDispatch = useCallback(wrapAsync(dispatch), [dispatch])
 
     return [state, asyncDispatch];
 }

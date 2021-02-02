@@ -1,6 +1,13 @@
+import { FunctionComponent} from 'react';
 import Icon from '../Icon';
 
-const MenuItem = ({ title = '', icon = '', onClick = () => {} }) => (
+interface Props {
+    title: string
+    icon: string,
+    onClick: () => void
+}
+
+const MenuItem: FunctionComponent<Props> = ({ title, icon, onClick }) => (
     <button className="menu__item" type="button" onClick={onClick}>
         {icon ? <Icon name={icon} /> : null}
 

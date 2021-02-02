@@ -1,11 +1,19 @@
+import { FunctionComponent, ReactNode, ReactNodeArray, ReactElement } from 'react';
 import Fade from '../animations/Fade';
 import { stopPropagation } from '../../lib/helpers';
 
-const Menu = ({
+interface Props {
+    title: string
+    isVisible: boolean
+    onClick: () => void
+    children: ReactNodeArray
+}
+
+const Menu: FunctionComponent<Props> = ({
+    title,
     isVisible = false,
-    onClick = () => {},
-    children = [],
-    title = ''
+    onClick,
+    children = []
 }) => (
     <Fade in={isVisible}>
         <div className="menu" onClick={onClick}>
@@ -17,8 +25,8 @@ const Menu = ({
                 ) : null}
 
                 <ul className="menu__items">
-                    {children.map((child, i) => (
-                        <li key={i}>{child}</li>
+                    {children.map((child: ReactNode) => (
+                        <li>{child}</li>
                     ))}
                 </ul>
             </div>

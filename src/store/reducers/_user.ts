@@ -1,11 +1,11 @@
 import { createReducer, State } from '../helpers';
 
 export interface UserState {
-    uid: string,
-    name: string,
-    picture: string,
-    isSignedIn: boolean,
-    isSigningIn: boolean
+    uid: string;
+    name: string;
+    picture: string;
+    isSignedIn: boolean;
+    isSigningIn: boolean;
 }
 
 export const initialState: UserState = {
@@ -17,12 +17,9 @@ export const initialState: UserState = {
 };
 
 const reducer = createReducer(initialState, {
-    'user/UPDATE_DATA': (
-        state: State,
-        data: State
-    ) => ({ ...state, ...data }),
+    'user/UPDATE_DATA': (state: State, data: State) => ({ ...state, ...data }),
 
-    'user/SIGN_OUT': () => initialState
+    'user/SIGN_OUT': () => ({ initialState })
 });
 
 export default reducer;

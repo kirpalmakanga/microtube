@@ -65,10 +65,6 @@ export const useAuth = () => {
             await database.signOut();
 
             dispatch({ type: 'user/SIGN_OUT' });
-            dispatch({
-                type: 'player/CLEAR_QUEUE',
-                payload: { clearAll: true }
-            });
         } catch (error) {
             console.error(error);
         }

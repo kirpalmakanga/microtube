@@ -1,14 +1,13 @@
 import { createReducer, State } from '../helpers';
 import { omit } from '../../lib/helpers';
 
-
 interface SearchState extends State {
-    items: object[],
-    nextPageToken: string,
-    hasNextPage: boolean,
-    forMine: number,
-    totalResults: number | null
-};
+    items: object[];
+    nextPageToken: string;
+    hasNextPage: boolean;
+    forMine: number;
+    totalResults: number | null;
+}
 
 export const initialState: SearchState = {
     items: [],
@@ -38,5 +37,7 @@ export default createReducer(initialState, {
     'search/RESET': (state: State) => ({
         ...state,
         ...omit(initialState, ['forMine'])
-    })
+    }),
+
+    'user/SIGN_OUT': () => ({ ...initialState })
 });

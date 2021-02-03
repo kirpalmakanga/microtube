@@ -1,16 +1,16 @@
 import { createReducer, State } from '../helpers';
 
 interface PlaylistItem {
-    playlistItemId: string
+    playlistItemId: string;
 }
 
 interface PlaylistItemsState extends State {
-    playlistTitle: string,
-    items: object[],
-    nextPageToken: string,
-    totalResults: number | null,
-    hasNextPage: boolean
-};
+    playlistTitle: string;
+    items: object[];
+    nextPageToken: string;
+    totalResults: number | null;
+    hasNextPage: boolean;
+}
 
 export const initialState: PlaylistItemsState = {
     playlistTitle: '',
@@ -47,5 +47,5 @@ export default createReducer(initialState, {
 
     'playlist/CLEAR_ITEMS': () => ({ ...initialState }),
 
-    'auth/SIGN_OUT': () => ({ ...initialState })
+    'user/SIGN_OUT': () => ({ ...initialState })
 });

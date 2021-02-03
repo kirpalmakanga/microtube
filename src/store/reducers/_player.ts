@@ -1,22 +1,21 @@
 import { createReducer, State } from '../helpers';
 
-
 interface QueueItem {
-    id: string,
-    title: string,
-    description: string,
-    duration: number
+    id: string;
+    title: string;
+    description: string;
+    duration: number;
 }
 
 export interface PlayerState extends State {
-    queue: QueueItem[],
-    currentId: string,
-    showQueue: boolean,
-    showScreen: boolean,
-    volume: number,
-    newQueueItems: number,
-    currentTime: number,
-    video: QueueItem
+    queue: QueueItem[];
+    currentId: string;
+    showQueue: boolean;
+    showScreen: boolean;
+    volume: number;
+    newQueueItems: number;
+    currentTime: number;
+    video: QueueItem;
 }
 
 export const initialState: PlayerState = {
@@ -31,13 +30,18 @@ export const initialState: PlayerState = {
         id: '',
         title: 'No video.',
         description: '',
-        duration: 0,
+        duration: 0
     }
 };
 
 const isActiveItem = (videoId: string) => ({ id }: QueueItem) => id === videoId;
 
-const extractQueueItemData = ({ id, title, description, duration }: any): QueueItem => ({
+const extractQueueItemData = ({
+    id,
+    title,
+    description,
+    duration
+}: any): QueueItem => ({
     id,
     title,
     description,
@@ -82,5 +86,10 @@ export default createReducer(initialState, {
         currentId
     }),
 
-    'player/CLEAR_VIDEO': (state: State) => ({ ...state, video: initialState.video })
+    'player/CLEAR_VIDEO': (state: State) => ({
+        ...state,
+        video: initialState.video
+    }),
+
+    'user/SIGN_OUT': () => ({ ...initialState })
 });

@@ -66,5 +66,5 @@ export default createReducer(initialState, {
 
     'playlists/CLEAR_ITEMS': () => ({ ...initialState }),
 
-    'auth/SIGN_OUT': () => ({ ...initialState })
+    'user/SIGN_OUT': () => ({ ...initialState })
 });

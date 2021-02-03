@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useStore } from '../store';
-import useNotifications from '../store/hooks/notifications';
+import { useNotifications } from '../store/hooks/notifications';
 
 import Icon from './Icon';
 import TranslateY from './animations/TranslateY';

@@ -1,54 +1,36 @@
 import { useCallback } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { useStore } from '../store';
-import { signIn, signOut } from '../store/actions/user';
 
 import Icon from '../components/Icon';
 import Button from '../components/Button';
 
+import useAppTitle from '../store/hooks/app-title';
+import { useAuth } from '../store/hooks/auth';
+
 const DefaultHeader = () => {
-    const navigate = useNavigate();
     const { pathname } = useLocation();
-    const [
-        {
-            user: { picture, isSignedIn },
-            playlistItems: { playlistTitle },
-            channel: { channelTitle }
-        },
-        dispatch
-    ] = useStore();
+
+    const [{ picture, isSignedIn }, { signIn, signOut }] = useAuth();
+
+    const title = useAppTitle();
 
     const handleClickUser = useCallback(
-        () => dispatch(isSignedIn ? signOut() : signIn()),
+        () => (isSignedIn ? signOut() : signIn()),
         [isSignedIn]
     );
-
-    let title = 'MicroTube';
-
-    if (pathname.startsWith('/subscriptions')) {
-        title = 'Subscriptions';
-    }
-
-    if (pathname.includes('/channel')) {
-        title = channelTitle;
-    }
-
-    if (pathname.startsWith('/playlist')) {
-        title = playlistTitle;
-    }
 
     return (
         <div className="layout__header-row">
             {pathname !== '/' && pathname !== '/login' ? (
-                <button
-                    onClick={() => navigate(-1)}
-                    className="layout__back-button icon-button"
+                <Link
                     to="/"
+                    className="layout__back-button icon-button"
                     aria-label="Go to homepage"
                 >
                     <Icon name="arrow-left" />
-                </button>
+                </Link>
             ) : null}
 
             <span className="layout__title">

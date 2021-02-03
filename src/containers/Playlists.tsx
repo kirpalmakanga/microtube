@@ -37,8 +37,6 @@ const Playlists = () => {
         []
     );
 
-    console.log({ items, totalResults });
-
     return totalResults === 0 ? (
         <Placeholder
             icon="list"

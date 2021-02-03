@@ -1,8 +1,7 @@
-import { useEffect, useCallback } from 'react';
 import { useStore } from '../index';
 import { delay } from '../../lib/helpers';
 
-export default () => {
+export const useNotifications = () => {
     const [{ notifications }, dispatch] = useStore();
     const { message: storedMessage } = notifications;
 

@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import { loadAPI, loadAuth } from './api/youtube';
 
 import { useStore } from './store';
-import { getUserData } from './store/actions/user';
 
 // import { enableImportMethods } from './actions.bak/youtube';
 
@@ -22,17 +21,10 @@ import Loader from './components/Loader';
 
 // import Prompt from './components/Prompt';
 import Notifications from './components/Notifications';
+import { useAuth } from './store/hooks/auth';
 
 const Root: FunctionComponent = ({ children }) => {
-    const [
-        {
-            user: { isSignedIn }
-        },
-        dispatch
-    ] = useStore();
-    // const dispatch = useDispatch();
-    // const isSignedIn = useSelector(({ auth: { isSignedIn } }) => isSignedIn);
-
+    const [{ isSignedIn }, { getUserData }] = useAuth();
     const [isAppReady, setIsAppReady] = useState(false);
 
     useEffect(() => {
@@ -40,13 +32,13 @@ const Root: FunctionComponent = ({ children }) => {
             await loadAPI();
             await loadAuth();
 
-            await dispatch(getUserData());
+            await getUserData();
 
-            // dispatch(enableImportMethods());
+            // enableImportMethods();
 
-            // dispatch(listenForQueueUpdate());
+            // listenForQueueUpdate();
 
-            // dispatch(connectDevice());
+            // connectDevice();
 
             setIsAppReady(true);
         })();

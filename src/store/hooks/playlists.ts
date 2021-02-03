@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { useStore } from '../index';
-import useNotifications from './notifications';
+import { useNotifications } from './notifications';
 import * as api from '../../api/youtube';
 
 /* TODO: hook up usePlaylistItems, usePrompt */

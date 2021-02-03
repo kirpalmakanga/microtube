@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 import { useStore } from '../store';
@@ -14,7 +15,10 @@ const Header = () => {
         dispatch
     ] = useStore();
 
-    const handleCloseScreen = () => showScreen && dispatch(closeScreen());
+    const handleCloseScreen = useCallback(
+        () => showScreen && dispatch(closeScreen()),
+        []
+    );
 
     return (
         <header

@@ -17,7 +17,7 @@ import Header from './layout/Header';
 import Head from './components/Head';
 import Sprite from './components/Sprite';
 import Loader from './components/Loader';
-// import Player from './components/player/Player';
+import Player from './components/player/Player';
 
 // import Prompt from './components/Prompt';
 import Notifications from './components/Notifications';
@@ -60,10 +60,10 @@ const Root: FunctionComponent = ({ children }) => {
                     <main className="layout__content">{children}</main>
 
                     <Notifications />
-                    {/*
+
                     {isSignedIn ? <Player /> : null}
 
-                    <Prompt /> */}
+                    {/* <Prompt /> */}
                 </>
             ) : null}
 

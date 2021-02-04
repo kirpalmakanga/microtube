@@ -1,22 +1,16 @@
 import { useCallback } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import { useStore } from '../store';
-import { closeScreen } from '../store/actions/youtube';
+import { usePlayer } from '../store/hooks/player';
 
 import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';
 
 const Header = () => {
-    const [
-        {
-            player: { showScreen }
-        },
-        dispatch
-    ] = useStore();
+    const [{ showScreen }, { closeScreen }] = usePlayer();
 
     const handleCloseScreen = useCallback(
-        () => showScreen && dispatch(closeScreen()),
+        () => showScreen && closeScreen(),
         []
     );
 

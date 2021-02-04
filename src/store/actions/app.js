@@ -9,7 +9,7 @@ export const setDevice = () => (dispatch, getState) => {
     } = getState();
 
     if (!deviceId) {
-        deviceId = uuidv4();
+        // deviceId = uuidv4();
 
         dispatch({
             type: 'app/SET_DEVICE_ID',

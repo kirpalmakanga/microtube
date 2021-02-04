@@ -1,7 +1,7 @@
-import { ReactNode, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import usePlaylists from '../store/hooks/playlists';
+import { usePlaylists } from '../store/hooks/playlists';
 
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';

@@ -5,12 +5,13 @@ import {
     useMemo,
     FunctionComponent
 } from 'react';
+import merge from 'lodash/merge';
 import { useAsyncReducer } from './helpers';
 import rootReducer, { rootInitialState } from './reducers';
 import { saveState, loadState } from '../lib/localStorage';
-import { pick, omit, mergeDeep } from '../lib/helpers';
+import { pick, omit } from '../lib/helpers';
 
-const initialState = mergeDeep(rootInitialState, loadState() || {});
+const initialState = merge(rootInitialState, loadState() || {});
 
 interface StorableState {
     player?: any;

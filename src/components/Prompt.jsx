@@ -184,86 +184,82 @@ class PlaylistManager extends Component {
     }
 }
 
-class Prompt extends Component {
-    render() {
-        const {
-            props: {
-                mode,
-                form,
-                playlists,
-                isVisible,
-                promptText,
-                confirmText,
-                cancelText,
-                callback,
-                getPlaylists,
-                closePrompt
-            }
-        } = this;
+const Prompt = () => {
+    const {
+        props: {
+            mode,
+            form,
+            playlists,
+            isVisible,
+            promptText,
+            confirmText,
+            cancelText,
+            callback,
+            getPlaylists,
+            closePrompt
+        }
+    } = this;
 
-        return (
-            <Fade
-                className="dialog__overlay"
-                onClick={closePrompt}
-                in={isVisible}
-            >
-                <div className="dialog shadow--2dp" onClick={stopPropagation()}>
-                    <header className="dialog__header">
-                        <Icon name="prompt" />
-                        {promptText}
-                    </header>
+    const [playlists, { getPlaylists }] = usePlaylists();
 
-                    {form ? (
-                        <div className="dialog__content">
-                            <ImportVideoForm
-                                id="importVideos"
-                                onSubmit={callback}
-                            />
-                        </div>
-                    ) : mode === 'playlist' ? (
-                        <div className="dialog__content">
-                            <PlaylistManager
-                                items={playlists.items}
-                                loadContent={() =>
-                                    playlists.nextPageToken !== null &&
-                                    getPlaylists({
-                                        mine: true,
-                                        pageToken: playlists.nextPageToken
-                                    })
-                                }
-                                onClickItem={callback}
-                            />
-                        </div>
+    return (
+        <Fade className="dialog__overlay" onClick={closePrompt} in={isVisible}>
+            <div className="dialog shadow--2dp" onClick={stopPropagation()}>
+                <header className="dialog__header">
+                    <Icon name="prompt" />
+                    {promptText}
+                </header>
+
+                {form ? (
+                    <div className="dialog__content">
+                        <ImportVideoForm
+                            id="importVideos"
+                            onSubmit={callback}
+                        />
+                    </div>
+                ) : mode === 'playlist' ? (
+                    <div className="dialog__content">
+                        <PlaylistManager
+                            items={playlists.items}
+                            loadContent={() =>
+                                playlists.nextPageToken !== null &&
+                                getPlaylists({
+                                    mine: true,
+                                    pageToken: playlists.nextPageToken
+                                })
+                            }
+                            onClickItem={callback}
+                        />
+                    </div>
+                ) : null}
+
+                <footer className="dialog__actions">
+                    {mode !== 'playlist' ? (
+                        <Button
+                            className="button button--close shadow--2dp"
+                            onClick={closePrompt}
+                            title={cancelText}
+                        />
                     ) : null}
 
-                    <footer className="dialog__actions">
-                        {mode !== 'playlist' ? (
-                            <Button
-                                className="button button--close shadow--2dp"
-                                onClick={closePrompt}
-                                title={cancelText}
-                            />
-                        ) : null}
-
-                        <Button
-                            className="button shadow--2dp"
-                            type={form ? 'submit' : 'button'}
-                            form={form ? 'importVideos' : ''}
-                            onClick={
-                                form
-                                    ? () => {}
-                                    : mode === 'playlist'
-                                    ? closePrompt
-                                    : callback
-                            }
-                            title={confirmText}
-                        />
-                    </footer>
-                </div>
-            </Fade>
-        );
-    }
-}
+                    <Button
+                        className="button shadow--2dp"
+                        type={form ? 'submit' : 'button'}
+                        form={form ? 'importVideos' : ''}
+                        onClick={
+                            form
+                                ? () => {}
+                                : mode === 'playlist'
+                                ? closePrompt
+                                : callback
+                        }
+                        title={confirmText}
+                    />
+                </footer>
+            </div>
+        </Fade>
+    );
+};
 
 const mapStateToProps = ({ prompt, playlists: { items, nextPageToken } }) => ({
     ...prompt,

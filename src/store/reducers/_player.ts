@@ -1,6 +1,6 @@
 import { createReducer, State } from '../helpers';
 
-interface QueueItem {
+export interface QueueItem {
     id: string;
     title: string;
     description: string;

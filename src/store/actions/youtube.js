@@ -12,23 +12,6 @@ export const enableImportMethods = () => (dispatch) => {
     }
 };
 /* Videos */
-// export function getVideo(videoId) {
-//     return async (dispatch) =>
-//         catchErrors(
-//             async () => {
-//                 dispatch(clearVideo());
-
-//                 const video = await api.getVideo(videoId);
-
-//                 dispatch({ type: 'player/UPDATE_DATA', data: { video } });
-//             },
-//             () => dispatch(notify({ message: 'Error fetching video.' }))
-//         );
-// }
-
-export function clearVideo() {
-    return (dispatch) => dispatch({ type: 'player/CLEAR_VIDEO' });
-}
 
 /* Playlist */
 export function getPlaylistTitle(playlistId) {
@@ -183,92 +166,6 @@ export const clearPlaylistItems = () => (dispatch) =>
 // }
 
 /* Player */
-const saveQueue = () => async (_, getState) => {
-    const {
-        auth: {
-            isSignedIn,
-            user: { id: userId }
-        },
-        player: { queue, currentId }
-    } = getState();
-
-    if (isSignedIn) {
-        database.set(`users/${__DEV__ ? 'dev' : userId}`, {
-            queue,
-            currentId
-        });
-    }
-};
-
-export const listenForQueueUpdate = () => (dispatch, getState) => {
-    const {
-        auth: {
-            isSignedIn,
-            user: { id: userId }
-        }
-    } = getState();
-
-    if (isSignedIn) {
-        database.listen(
-            `users/${__DEV__ ? 'dev' : userId}`,
-            ({ queue = [], currentId = '' } = {}) =>
-                dispatch({
-                    type: 'player/UPDATE_DATA',
-                    data: { queue, currentId }
-                })
-        );
-    }
-};
-
-export const toggleQueue = () => (dispatch, getState) => {
-    const {
-        player: { showQueue }
-    } = getState();
-
-    dispatch({
-        type: 'player/UPDATE_DATA',
-        data: {
-            showQueue: !showQueue,
-            ...(!showQueue ? { showScreen: false, newQueueItems: 0 } : {})
-        }
-    });
-};
-
-export const toggleScreen = () => (dispatch, getState) => {
-    const {
-        player: { showScreen }
-    } = getState();
-
-    dispatch({
-        type: 'player/UPDATE_DATA',
-        data: {
-            showScreen: !showScreen,
-            ...(!showScreen ? { showQueue: false } : {})
-        }
-    });
-};
-
-export const closeScreen = () => {
-    return { type: 'player/UPDATE_DATA', data: { showScreen: false } };
-};
-
-// export const queueItems = (newItems = []) => (dispatch, getState) => {
-//     const {
-//         player: { queue }
-//     } = getState();
-
-//     const items = newItems.filter(
-//         ({ id }) => !queue.find(({ id: queueItemId }) => queueItemId === id)
-//     );
-
-//     dispatch({ type: 'player/ADD_QUEUE_ITEMS', data: { items } });
-
-//     dispatch(saveQueue());
-
-//     return items;
-// };
-
-// export const queueItem = (data) => (dispatch) => dispatch(queueItems([data]));
 
 // export const setQueue = (queue) => (dispatch) => {
 //     dispatch({ type: 'player/UPDATE_DATA', data: { queue } });

@@ -1,12 +1,21 @@
-import { memo, useState } from 'react';
+import { memo, useState, useCallback, FunctionComponent } from 'react';
 import { preventDefault } from '../../lib/helpers';
 
 import InfoTime from './controls/InfoTime';
 import InfoProgress from './controls/InfoProgress';
 
+interface Props {
+    title: string;
+    currentTime: number;
+    duration: number;
+    loaded: number;
+    onStartSeeking: Function;
+    onEndSeeking: Function;
+}
+
 const noop = () => {};
 
-const Info = ({
+const Info: FunctionComponent<Props> = ({
     title = '',
     currentTime = 0,
     duration = 0,
@@ -17,22 +26,24 @@ const Info = ({
     const [seekingTime, setSeekingTime] = useState(currentTime);
     const [isSeeking, setIsSeeking] = useState(false);
 
-    const startSeeking = () => {
+    const startSeeking = useCallback(() => {
         onStartSeeking();
 
         setIsSeeking(true);
-    };
+    }, []);
 
-    const endSeeking = () => {
+    const endSeeking = useCallback(() => {
         setIsSeeking(false);
 
         if (seekingTime !== currentTime) {
             onEndSeeking(seekingTime);
         }
-    };
+    }, []);
 
-    const handleSeeking = ({ target: { value: seekingTime } }) =>
-        setSeekingTime(seekingTime);
+    const handleSeeking = useCallback(
+        ({ target: { value: seekingTime } }) => setSeekingTime(seekingTime),
+        []
+    );
 
     const time = isSeeking ? seekingTime : currentTime;
 
@@ -57,7 +68,7 @@ const Info = ({
                 className="player__info-progress-loaded"
                 type="range"
                 min="0"
-                max={parseInt(duration)}
+                max={duration}
                 onWheel={preventDefault()}
                 onInput={handleSeeking}
                 onMouseDown={startSeeking}

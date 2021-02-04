@@ -1,20 +1,16 @@
-import { useDispatch, useSelector } from 'react-redux';
-
+import { FunctionComponent } from 'react';
 import Button from '../Button';
 
-import {
-    clearQueue,
-    toggleQueue,
-    importVideos
-} from '../../store/actions/youtube';
+import { importVideos } from '../../store/actions/youtube';
+import { usePlayer } from '../../store/hooks/player';
 
 const QueueHeader = () => {
-    const dispatch = useDispatch();
-    const itemCount = useSelector(({ player: { queue } }) => queue.length);
-
-    const handleToggleQueue = () => dispatch(toggleQueue());
-    const handleImportVideos = () => dispatch(importVideos());
-    const handleClearQueue = () => dispatch(clearQueue());
+    const [
+        {
+            queue: { length: itemCount }
+        },
+        { importVideos, toggleQueue, clearQueue }
+    ] = usePlayer();
 
     return (
         <header className="layout__header queue__header shadow--2dp">
@@ -22,7 +18,7 @@ const QueueHeader = () => {
                 <Button
                     className="navigation__link layout__back-button icon-button"
                     title="Close queue"
-                    onClick={handleToggleQueue}
+                    onClick={toggleQueue}
                     icon="chevron-down"
                 />
 
@@ -35,14 +31,14 @@ const QueueHeader = () => {
                 <nav className="navigation">
                     <Button
                         className="navigation__link icon-button"
-                        onClick={handleImportVideos}
+                        onClick={importVideos}
                         title="Import videos"
                         icon="add"
                     />
 
                     <Button
                         className="navigation__link icon-button"
-                        onClick={handleClearQueue}
+                        onClick={clearQueue}
                         title="Clear queue"
                         icon="delete"
                     />

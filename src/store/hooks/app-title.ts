@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import { useStore } from '../index';
+import { useStore } from '..';
 
 export default () => {
     const { pathname } = useLocation();

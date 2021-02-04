@@ -1,19 +1,38 @@
-import { useState } from 'react';
+import { useState, FunctionComponent, useCallback } from 'react';
 
-import Button from '../controls/Button';
+import Button from './Button';
 
-const DevicesSelector = ({
+interface Device {
+    deviceId: string;
+    deviceName: string;
+    isMaster: boolean;
+}
+
+interface Props {
+    devices: Device[];
+    currentItem: Device;
+    onClickItem: (deviceId: string) => void;
+}
+
+const DevicesSelector: FunctionComponent<Props> = ({
     devices = [],
-    currentItem: { deviceId, deviceName, isMaster } = {},
+    currentItem: { deviceId, deviceName, isMaster },
     onClickItem = () => {}
 }) => {
     const [showItems, setShowItems] = useState(false);
 
-    const handleClickItem = (deviceId) => {
-        setShowItems(false);
+    const handleClickItem = useCallback(
+        (deviceId) => () => {
+            setShowItems(false);
 
-        onClickItem(deviceId);
-    };
+            onClickItem(deviceId);
+        },
+        []
+    );
+
+    const handleToggleItems = useCallback(() => setShowItems(!showItems), [
+        showItems
+    ]);
 
     return (
         <div className="player__controls-devices">
@@ -24,28 +43,25 @@ const DevicesSelector = ({
                 ].join(' ')}
                 icon="devices"
                 ariaLabel="Devices"
-                onClick={() => setShowItems(!showItems)}
+                onClick={handleToggleItems}
             />
 
             <ul
                 className="player__controls-devices-list"
                 data-state={showItems ? 'open' : 'closed'}
             >
-                <li
-                    className="device"
-                    onClick={() => handleClickItem(deviceId)}
-                >
+                <li className="device" onClick={handleClickItem(deviceId)}>
                     <span className="device__desc">Current device</span>
                     <span className="device__name">
                         {`${deviceName} ${isMaster ? '(active)' : ''}`}
                     </span>
                 </li>
 
-                {devices.map(({ deviceId, deviceName, isMaster }, index) => (
+                {devices.map(({ deviceId, deviceName, isMaster }) => (
                     <li
-                        key={index}
+                        key={deviceId}
                         className="device"
-                        onClick={() => onClickItem(deviceId)}
+                        onClick={handleClickItem(deviceId)}
                     >
                         <span className="device__desc">Browser</span>
                         <span className="device__name">

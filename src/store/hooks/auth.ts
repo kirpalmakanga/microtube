@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useStore } from '../index';
+import { useStore } from '..';
 
 import * as api from '../../api/youtube';
 import database from '../../api/database';

@@ -1,6 +1,16 @@
-const formatPercent = (progress) => parseFloat(progress * 100 - 100).toFixed(2);
+import { FunctionComponent } from 'react';
 
-const Progress = ({ percentElapsed, percentLoaded }) => {
+const formatPercent = (progress: number) => (progress * 100 - 100).toFixed(2);
+
+interface Props {
+    percentElapsed: number;
+    percentLoaded: number;
+}
+
+const Progress: FunctionComponent<Props> = ({
+    percentElapsed,
+    percentLoaded
+}) => {
     return (
         <div className="player__info-progress">
             <div className="player__info-progress-gutter">

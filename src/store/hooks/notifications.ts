@@ -1,4 +1,4 @@
-import { useStore } from '../index';
+import { useStore } from '..';
 import { delay } from '../../lib/helpers';
 
 export const useNotifications = () => {

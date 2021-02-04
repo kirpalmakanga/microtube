@@ -6,5 +6,6 @@
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "jsx": "react-jsx"
-    }
+    },
+    "exclude": ["node_modules", "dist", "poi.config.js"]
 }

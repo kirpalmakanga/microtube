@@ -1,8 +1,17 @@
-import { useRef } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useRef, FunctionComponent, ReactNode } from 'react';
+import {
+    DragDropContext,
+    Droppable,
+    Draggable,
+    DropResult
+} from 'react-beautiful-dnd';
 import VisibilitySensor from 'react-visibility-sensor';
 
-const reorder = (list, sourceIndex, destinationIndex) => {
+const reorder = (
+    list: unknown[],
+    sourceIndex: number,
+    destinationIndex: number
+) => {
     const result = [...list];
     const [removed] = result.splice(sourceIndex, 1);
 
@@ -11,21 +20,30 @@ const reorder = (list, sourceIndex, destinationIndex) => {
     return result;
 };
 
-const DraggableList = ({
+interface Props {
+    className: string;
+    items: any[];
+    renderItem: (...args: any[]) => ReactNode;
+    onReorderItems: (updatedItems: any[]) => void;
+}
+
+const DraggableList: FunctionComponent<Props> = ({
     className,
     items = [],
     renderItem,
     onReorderItems
 }) => {
-    const containerRef = useRef(null);
+    const containerRef = useRef<HTMLDivElement | null>();
 
-    const getContainer = (innerRef) => (el) => {
+    const getContainer = (innerRef: (el: HTMLDivElement) => void) => (
+        el: HTMLDivElement
+    ) => {
         innerRef(el);
 
         containerRef.current = el;
     };
 
-    const onDragEnd = (result) => {
+    const onDragEnd = (result: DropResult) => {
         if (!result.destination) {
             return;
         }
@@ -44,8 +62,12 @@ const DraggableList = ({
         onReorderItems(updatedItems);
     };
 
-    const renderInnerItem = (props, index) => (
-        <Draggable key={index} draggableId={`draggable${index}`} index={index}>
+    const renderInnerItem = (props: any, index: number) => (
+        <Draggable
+            key={`draggable${index}`}
+            draggableId={`draggable${index}`}
+            index={index}
+        >
             {({ innerRef, draggableProps, dragHandleProps }) => (
                 <VisibilitySensor
                     key={index}
@@ -61,7 +83,7 @@ const DraggableList = ({
                             {...draggableProps}
                             {...dragHandleProps}
                         >
-                            {isVisible ? renderItem(props, index) : null}
+                            {isVisible ? renderItem(props) : null}
                         </div>
                     )}
                 </VisibilitySensor>

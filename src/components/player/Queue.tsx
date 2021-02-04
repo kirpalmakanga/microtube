@@ -1,5 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
-
+import { FunctionComponent } from 'react';
 import MenuWrapper from '../menu/MenuWrapper';
 
 import QueueHeader from './QueueHeader';
@@ -8,27 +7,23 @@ import QueueItem from './QueueItem';
 import DraggableList from '../DraggableList';
 import Placeholder from '../Placeholder';
 
-import {
-    setQueue,
-    setActiveQueueItem,
-    removeQueueItem,
-    editPlaylistItem
-} from '../../store/actions/youtube';
+import { usePlayer } from '../../store/hooks/player';
 
-const Queue = ({ isPlaying, isBuffering, togglePlay }) => {
-    const dispatch = useDispatch();
-    const { items, currentId, showQueue } = useSelector(
-        ({ player: { queue: items, currentId, showQueue } }) => ({
-            items,
-            currentId,
-            showQueue
-        })
-    );
+interface Props {
+    isPlaying: boolean;
+    isBuffering: boolean;
+    togglePlay: () => void;
+}
 
-    const handleSetQueue = (queue) => dispatch(setQueue(queue));
-    const handleEditPlaylistItem = ({ id }) => dispatch(editPlaylistItem(id));
-    const handleRemoveQueueItem = ({ id }) => dispatch(removeQueueItem(id));
-    const handleSetActiveQueueItem = (id) => dispatch(setActiveQueueItem(id));
+const Queue: FunctionComponent<Props> = ({
+    isPlaying,
+    isBuffering,
+    togglePlay
+}) => {
+    const [
+        { queue: items, currentId, showQueue },
+        { setQueue, removeQueueItem, setActiveQueueItem }
+    ] = usePlayer();
 
     return (
         <section
@@ -44,12 +39,12 @@ const Queue = ({ isPlaying, isBuffering, togglePlay }) => {
                             {
                                 title: 'Save to playlist',
                                 icon: 'folder-add',
-                                onClick: handleEditPlaylistItem
+                                onClick: editPlaylistItem
                             },
                             {
                                 title: 'Remove from queue',
                                 icon: 'delete',
-                                onClick: handleRemoveQueueItem
+                                onClick: removeQueueItem
                             }
                         ]}
                     >
@@ -57,7 +52,7 @@ const Queue = ({ isPlaying, isBuffering, togglePlay }) => {
                             <DraggableList
                                 className="queue__items"
                                 items={items}
-                                renderItem={(data) => {
+                                renderItem={(data: QueueItem) => {
                                     const { id } = data;
                                     const isActive = id === currentId;
 
@@ -80,9 +75,7 @@ const Queue = ({ isPlaying, isBuffering, togglePlay }) => {
                                                 isActive
                                                     ? togglePlay
                                                     : () =>
-                                                          handleSetActiveQueueItem(
-                                                              id
-                                                          )
+                                                          setActiveQueueItem(id)
                                             }
                                             onClickMenu={() =>
                                                 openMenu(data, data.title)
@@ -90,7 +83,7 @@ const Queue = ({ isPlaying, isBuffering, togglePlay }) => {
                                         />
                                     );
                                 }}
-                                onReorderItems={handleSetQueue}
+                                onReorderItems={setQueue}
                             />
                         )}
                     </MenuWrapper>

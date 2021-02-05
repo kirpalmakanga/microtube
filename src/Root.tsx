@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 
 import { loadAPI, loadAuth } from './api/youtube';
 
-import { useStore } from './store';
-
 // import { enableImportMethods } from './actions.bak/youtube';
 
 import { preventDefault, isMobile } from './lib/helpers';

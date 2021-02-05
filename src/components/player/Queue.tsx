@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { useCallback, FunctionComponent } from 'react';
 import MenuWrapper from '../menu/MenuWrapper';
 
 import QueueHeader from './QueueHeader';
@@ -15,6 +15,14 @@ interface Props {
     togglePlay: () => void;
 }
 
+interface QueueItemData {
+    id: string;
+    title: string;
+    duration: number;
+    isActive: boolean;
+    icon: string;
+}
+
 const Queue: FunctionComponent<Props> = ({
     isPlaying,
     isBuffering,
@@ -24,6 +32,17 @@ const Queue: FunctionComponent<Props> = ({
         { queue: items, currentId, showQueue },
         { setQueue, removeQueueItem, setActiveQueueItem }
     ] = usePlayer();
+
+    const editPlaylistItem = () => {}; /* TODO: create hook callback */
+
+    const handleClickMenu = useCallback(
+        (data: QueueItemData, callback: Function) => () => {
+            const { title } = data;
+
+            callback(data, title);
+        },
+        []
+    );
 
     return (
         <section
@@ -52,7 +71,7 @@ const Queue: FunctionComponent<Props> = ({
                             <DraggableList
                                 className="queue__items"
                                 items={items}
-                                renderItem={(data: QueueItem) => {
+                                renderItem={(data: QueueItemData) => {
                                     const { id } = data;
                                     const isActive = id === currentId;
 
@@ -77,9 +96,10 @@ const Queue: FunctionComponent<Props> = ({
                                                     : () =>
                                                           setActiveQueueItem(id)
                                             }
-                                            onClickMenu={() =>
-                                                openMenu(data, data.title)
-                                            }
+                                            onContextMenu={handleClickMenu(
+                                                data,
+                                                openMenu
+                                            )}
                                         />
                                     );
                                 }}

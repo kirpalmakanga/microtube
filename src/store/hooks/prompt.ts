@@ -1,26 +1,33 @@
-import { te } from 'date-fns/locale';
 import { useState, useCallback } from 'react';
+import { GenericObject } from '../../..';
 import { useMergedState } from '../../lib/hooks';
 
-export const initialState = {
-    form: false,
+interface PromptState {
+    isVisible: boolean;
+    headerText: string;
+    confirmText: string;
+    cancelText: string;
+    callback: (...args: unknown[]) => void;
+}
+
+export const initialState: PromptState = {
     isVisible: false,
-    promptText: '',
+    headerText: '',
     confirmText: '',
-    cancelText: 'Cancel',
+    cancelText: '',
     callback: () => {}
 };
-export const usePrompt = (initialState: PromptState) => {
-    const [isVisible, setVisibility] = useState(false);
+export const usePrompt = () => {
     const [state, setState] = useMergedState(initialState);
 
-    const openPrompt = useCallback(() => setState({ isVisible: true }), [
-        state
-    ]);
+    const openPrompt = useCallback(
+        (data: GenericObject) => setState({ ...data, isVisible: true }),
+        [state]
+    );
 
     const closePrompt = useCallback(() => setState({ isVisible: false }), [
         state
     ]);
 
-    return [{ openPrompt, closePrompt }];
+    return [state, { openPrompt, closePrompt }];
 };

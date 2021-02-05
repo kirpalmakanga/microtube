@@ -37,13 +37,13 @@ export const usePlayer = () => {
             ({ queue = [], currentId = '' } = {}) =>
                 dispatch({
                     type: 'player/UPDATE_DATA',
-                    data: { queue, currentId }
+                    payload: { queue, currentId }
                 })
         );
     }, []);
 
     const setQueue = (queue: QueueItem[]) => {
-        dispatch({ type: 'player/UPDATE_DATA', data: { queue } });
+        dispatch({ type: 'player/UPDATE_DATA', payload: { queue } });
 
         saveQueue();
     };
@@ -58,7 +58,7 @@ export const usePlayer = () => {
                 )
         );
 
-        dispatch({ type: 'player/ADD_QUEUE_ITEMS', data: { items } });
+        dispatch({ type: 'player/ADD_QUEUE_ITEMS', payload: { items } });
 
         saveQueue();
 
@@ -69,7 +69,7 @@ export const usePlayer = () => {
         (currentId) => () => {
             dispatch({
                 type: 'player/UPDATE_DATA',
-                data: { currentId }
+                payload: { currentId }
             });
 
             saveQueue();
@@ -85,7 +85,7 @@ export const usePlayer = () => {
 
             const video = await api.getVideo(videoId);
 
-            dispatch({ type: 'player/UPDATE_DATA', data: { video } });
+            dispatch({ type: 'player/UPDATE_DATA', payload: { video } });
         } catch (error) {
             openNotification({ message: 'Error fetching video.' });
         }
@@ -96,7 +96,7 @@ export const usePlayer = () => {
 
         dispatch({
             type: 'player/UPDATE_DATA',
-            data: {
+            payload: {
                 showQueue: !showQueue,
                 ...(!showQueue ? { showScreen: false, newQueueItems: 0 } : {})
             }
@@ -108,7 +108,7 @@ export const usePlayer = () => {
 
         dispatch({
             type: 'player/UPDATE_DATA',
-            data: {
+            payload: {
                 showScreen: !showScreen,
                 ...(!showScreen ? { showQueue: false } : {})
             }
@@ -116,7 +116,10 @@ export const usePlayer = () => {
     }, [player]);
 
     const closeScreen = () =>
-        dispatch({ type: 'player/UPDATE_DATA', data: { showScreen: false } });
+        dispatch({
+            type: 'player/UPDATE_DATA',
+            payload: { showScreen: false }
+        });
 
     return [
         player,

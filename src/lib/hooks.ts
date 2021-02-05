@@ -22,7 +22,7 @@ const listenFullScreenChange = (
     );
 
 export const useFullscreen = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
+    const containerRef = useRef<HTMLDivElement>();
     const [isFullscreen, setIsFullscreen] = useState(false);
 
     const toggleFullscreen = useCallback(() => {

@@ -1,7 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { FunctionComponent, useCallback, useEffect, useRef } from 'react';
 
 import isEqual from 'lodash/isEqual';
 import youTubePlayer from 'youtube-player';
+import { YouTubePlayer, Options } from 'youtube-player/dist/types';
+import { EventHandlerMapType } from 'youtube-player/dist/YouTubePlayer';
 
 const PLAYBACK_STATES = {
     UNSTARTED: -1,
@@ -11,10 +13,31 @@ const PLAYBACK_STATES = {
     BUFFERING: 3,
     CUED: 5
 };
+interface Props {
+    id?: string;
+    className?: string;
+    videoId: string;
+    options: Options;
+    onReady: (playerInstance: object) => void;
+    onError: (error: object) => void;
+    onBuffering: () => void;
+    onPlay: () => void;
+    onPause: () => void;
+    onEnd: () => void;
+    onTimeUpdate: (t: number | undefined) => void;
+    onLoadingUpdate: (t: number | undefined) => void;
+    onStateChange: (playbackStateId: number) => void;
+    // onPlaybackRateChange?: (data: any) => void,
+    // onPlaybackQualityChange:(data: any) => void
+}
 
-const noop = () => {};
+interface NewOptions {
+    videoId: string;
+    startSeconds?: number;
+    endSeconds?: number;
+}
 
-const useDeepCompareMemoize = (value) => {
+const useDeepCompareMemoize = (value: any) => {
     const ref = useRef();
 
     if (!isEqual(value, ref.current)) {
@@ -24,7 +47,7 @@ const useDeepCompareMemoize = (value) => {
     return ref.current;
 };
 
-const useEffectUpdateOnly = (callback, dependencies) => {
+const useEffectUpdateOnly = (callback: () => void, dependencies: any) => {
     const isFirstRun = useRef(true);
 
     useEffect(() => {
@@ -38,94 +61,101 @@ const useEffectUpdateOnly = (callback, dependencies) => {
     }, dependencies);
 };
 
-const useDeepCompareEffect = (callback, dependencies, updateOnly) =>
+const useDeepCompareEffect = (
+    callback: () => void,
+    dependencies: any,
+    updateOnly: boolean
+) =>
     (updateOnly ? useEffectUpdateOnly : useEffect)(callback, [
         useDeepCompareMemoize(dependencies)
     ]);
 
-const filterResetOptions = (opts) => ({
-    ...opts,
+const filterResetOptions = (options: Options) => ({
+    ...options,
     playerVars: {
-        ...opts.playerVars,
+        ...options.playerVars,
         autoplay: 0,
         start: 0,
         end: 0
     }
 });
 
-const YouTube = ({
-    id,
+export { Options };
+
+export const YoutubePlayer: FunctionComponent<Props> = ({
+    id = 'youtube-player',
     className,
     videoId,
-    opts = {},
-    onReady = noop,
-    onError = noop,
-    onBuffering = noop,
-    onPlay = noop,
-    onPause = noop,
-    onEnd = noop,
-    onTimeUpdate = noop,
-    onLoadingUpdate = noop,
-    onStateChange = noop,
-    onPlaybackRateChange = noop,
-    onPlaybackQualityChange = noop
+    options,
+    onReady,
+    onError,
+    onBuffering,
+    onPlay,
+    onPause,
+    onEnd,
+    onTimeUpdate,
+    onLoadingUpdate,
+    onStateChange
+    // onPlaybackRateChange = noop,
+    // onPlaybackQualityChange = noop
 }) => {
-    const { start, end } = opts.playerVars || {};
-    const container = useRef(null);
-    const internalPlayer = useRef<unknown>(null);
-    const currentTime = useRef(0);
-    const timeWatcher = useRef(null);
-    const currentLoadedPercentage = useRef(0);
-    const loadingWatcher = useRef(null);
+    const {
+        playerVars: { start, end }
+    } = options;
+    const internalPlayer = useRef<YouTubePlayer | null>(null);
+    const currentTime = useRef<number | undefined>(0);
+    const timeWatcher = useRef<number>();
+    const currentLoadedPercentage = useRef<number | undefined>(0);
+    const loadingWatcher = useRef<number>();
 
-    const updateTime = async () => {
-        const time = await internalPlayer.current.getCurrentTime();
+    const updateTime = useCallback(async () => {
+        const time = await internalPlayer.current?.getCurrentTime();
 
         if (time !== currentTime.current) {
             currentTime.current = time;
 
             onTimeUpdate(time);
         }
-    };
+    }, []);
 
-    const watchTime = () => {
+    const watchTime = useCallback(() => {
         if (timeWatcher.current) {
             return;
         }
 
         updateTime();
 
-        timeWatcher.current = setInterval(updateTime, 200);
-    };
+        timeWatcher.current = window.setInterval(updateTime, 200);
+    }, []);
 
-    const updateLoading = async () => {
-        const loaded = await internalPlayer.current.getVideoLoadedFraction();
+    const updateLoading = useCallback(async () => {
+        const loaded = await internalPlayer.current?.getVideoLoadedFraction();
 
         if (loaded !== currentLoadedPercentage.current) {
             currentLoadedPercentage.current = loaded;
 
             onLoadingUpdate(loaded);
         }
-    };
+    }, []);
 
-    const watchLoading = () => {
+    const watchLoading = useCallback(() => {
         if (loadingWatcher.current) {
             return;
         }
 
         updateLoading();
 
-        loadingWatcher.current = setInterval(updateLoading, 500);
-    };
+        loadingWatcher.current = window.setInterval(updateLoading, 500);
+    }, []);
 
-    const handleIframeReady = (youtube) => {
+    const handleIframeReady = useCallback(({ target }) => {
         watchTime();
         watchLoading();
 
-        onReady(youtube);
-    };
+        onReady(target);
+    }, []);
 
-    const createPlayer = () => {
+    const createPlayer = useCallback(() => {
         if (typeof document === 'undefined' || internalPlayer.current) {
             return;
         }
@@ -135,73 +165,76 @@ const YouTube = ({
         const events = {
             ready: handleIframeReady,
             error: onError,
-            stateChange: (e) => {
-                onStateChange(e);
+            stateChange: ({ data }: { [key: string]: any }) => {
+                /* TODO: use correct typing */
+                onStateChange(data);
 
-                switch (e.data) {
+                switch (data) {
                     case ENDED:
-                        onEnd(e);
+                        onEnd();
                         break;
 
                     case PLAYING:
-                        onPlay(e);
+                        onPlay();
                         break;
 
                     case PAUSED:
-                        onPause(e);
+                        onPause();
                         break;
 
                     case BUFFERING:
-                        onBuffering(e);
+                        onBuffering();
                         break;
 
                     default:
                         return;
                 }
-            },
-            playbackRateChange: onPlaybackRateChange,
-            playbackQualityChange: onPlaybackQualityChange
+            }
+            // playbackRateChange: onPlaybackRateChange,
+            // playbackQualityChange: onPlaybackQualityChange
         };
 
         try {
-            internalPlayer.current = youTubePlayer(container.current, {
-                ...opts,
+            internalPlayer.current = youTubePlayer(id, {
+                ...options,
                 videoId
             });
 
-            for (const eventKey in events) {
-                internalPlayer.current.on(eventKey, events[eventKey]);
+            for (const [eventKey, event] of Object.entries(events)) {
+                internalPlayer.current?.on(eventKey, event);
             }
         } catch (error) {
             console.error(error);
 
             onError(error);
         }
-    };
+    }, []);
 
-    const resetPlayer = async () => {
-        await internalPlayer.current.destroy();
+    const resetPlayer = useCallback(async () => {
+        await internalPlayer.current?.destroy();
 
         createPlayer();
-    };
+    }, []);
 
-    const updatePlayer = async () => {
-        const iframe = await internalPlayer.current.getIframe();
+    const updatePlayer = useCallback(async () => {
+        const iframe = await internalPlayer.current?.getIframe();
 
-        iframe.setAttribute('id', id);
-    };
+        if (id) {
+            iframe?.setAttribute('id', id);
+        }
+    }, []);
 
-    const updateVideo = () => {
-        const newOpts = { videoId };
+    const updateVideo = useCallback(() => {
+        const newOpts: NewOptions = { videoId };
         let autoplay = false;
 
         if (!videoId) {
-            internalPlayer.current.stopVideo();
+            internalPlayer.current?.stopVideo();
             return;
         }
 
-        if ('playerVars' in opts) {
-            const { playerVars } = opts;
+        if ('playerVars' in options) {
+            const { playerVars = {} } = options;
 
             autoplay = playerVars.autoplay === 1;
 
@@ -214,22 +247,22 @@ const YouTube = ({
         }
 
         if (autoplay) {
-            internalPlayer.current.loadVideoById(newOpts);
+            internalPlayer.current?.loadVideoById(newOpts);
             return;
         }
 
-        internalPlayer.current.cueVideoById(newOpts);
-    };
+        internalPlayer.current?.cueVideoById(newOpts);
+    }, []);
 
-    const handleUnmounting = () => {
-        clearInterval(timeWatcher.current);
-        clearInterval(loadingWatcher.current);
+    const handleUnmounting = useCallback(() => {
+        window.clearInterval(timeWatcher.current);
+        window.clearInterval(loadingWatcher.current);
 
         if (internalPlayer.current) {
-            internalPlayer.current.destroy();
+            internalPlayer.current?.destroy();
             internalPlayer.current = null;
         }
-    };
+    }, []);
 
     useEffect(() => {
         createPlayer();
@@ -248,7 +281,7 @@ const YouTube = ({
         () => {
             resetPlayer();
         },
-        filterResetOptions(opts),
+        filterResetOptions(options),
         true
     );
 
@@ -258,9 +291,7 @@ const YouTube = ({
 
     return (
         <div className={className}>
-            <div ref={container}></div>
+            <div id={id}></div>
         </div>
     );
 };
-
-export default YouTube;

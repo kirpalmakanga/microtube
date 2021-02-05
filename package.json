@@ -38,6 +38,7 @@
         "@types/react-transition-group": "^4.4.0",
         "@types/react-virtualized-auto-sizer": "^1.0.0",
         "@types/react-window": "^1.8.2",
+        "@types/youtube-player": "^5.5.3",
         "node-sass": "^4.14.1",
         "poi": "^12.10.2",
         "sass-loader": "6.0.7",

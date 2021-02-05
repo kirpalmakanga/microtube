@@ -6,8 +6,7 @@ import {
     FunctionComponent
 } from 'react';
 
-import { stopPropagation, preventDefault } from '../lib/helpers';
-
+import { preventDefault } from '../lib/helpers';
 interface Props {
     query?: string;
     onSubmit: (query: string) => void;
@@ -17,17 +16,20 @@ const SearchForm: FunctionComponent<Props> = ({ query = '', onSubmit }) => {
     const [input, setInput] = useState(query);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const keyDownHandler = stopPropagation();
+    const keyDownHandler = useCallback(
+        (e: KeyboardEvent) => e.stopPropagation(),
+        []
+    );
 
-    const unlistenKeyDown = () => {
+    const unlistenKeyDown = useCallback(() => {
         inputRef.current?.removeEventListener('keydown', keyDownHandler);
-    };
+    }, []);
 
-    const listenKeyDown = () => {
+    const listenKeyDown = useCallback(() => {
         unlistenKeyDown();
 
         inputRef.current?.addEventListener('keydown', keyDownHandler);
-    };
+    }, []);
 
     useEffect(() => {
         setInput(query);

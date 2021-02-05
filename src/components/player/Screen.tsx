@@ -1,18 +1,29 @@
-import YoutubePlayer from './YoutubePlayer';
+import { FunctionComponent } from 'react';
+import { YoutubePlayer, Options } from './YoutubePlayer';
 import Placeholder from '../Placeholder';
 
-const playerOptions = {
+const playerOptions: Options = {
     playerVars: {
-        autohide: 1,
         modestbranding: 1,
         iv_load_policy: 3,
         controls: 0,
-        showinfo: 0,
         autoplay: 1
     }
 };
 
-const Screen = ({
+interface Props {
+    videoId: string;
+    onReady: (playerInstance: object) => void;
+    onBuffering: () => void;
+    onPlay: () => void;
+    onPause: () => void;
+    onEnd: () => void;
+    onStateChange: (playbackStateId: number) => void;
+    onTimeUpdate: (t: number | undefined) => void;
+    onLoadingUpdate: (t: number | undefined) => void;
+}
+
+const Screen: FunctionComponent<Props> = ({
     videoId,
     onReady,
     onBuffering,
@@ -24,10 +35,10 @@ const Screen = ({
     onLoadingUpdate,
     ...props
 }) => (
-    <div {...props}>
+    <div className="screen" {...props}>
         <YoutubePlayer
             videoId={videoId}
-            opts={playerOptions}
+            options={playerOptions}
             onReady={onReady}
             onEnd={onEnd}
             onTimeUpdate={onTimeUpdate}

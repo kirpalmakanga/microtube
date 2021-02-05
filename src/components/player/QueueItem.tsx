@@ -1,22 +1,32 @@
 import Icon from '../Icon';
 
 import { formatTime, stopPropagation } from '../../lib/helpers';
+import { FunctionComponent, MouseEvent, SyntheticEvent } from 'react';
 
-const QueueItem = ({
+interface Props {
+    title: string;
+    duration: number;
+    isActive: boolean;
+    onClick: () => void;
+    onContextMenu: (e: MouseEvent<HTMLElement> | SyntheticEvent) => void;
+    icon: string;
+}
+
+const QueueItem: FunctionComponent<Props> = ({
     title,
     duration,
     isActive,
-    onClickMenu,
-    icon,
-    ...props
+    onClick,
+    onContextMenu,
+    icon
 }) => (
     <div
         className={[
             'queue__item shadow--2dp',
             isActive ? 'queue__item--active' : ''
         ].join(' ')}
-        {...props}
-        onContextMenu={onClickMenu}
+        onClick={onClick}
+        onContextMenu={onContextMenu}
     >
         <div className="queue__item-button icon-button">
             <Icon name={icon} />
@@ -28,7 +38,7 @@ const QueueItem = ({
 
         <button
             className="queue__item-button icon-button"
-            onClick={stopPropagation(onClickMenu)}
+            onClick={stopPropagation(onContextMenu)}
         >
             <Icon name="more" />
         </button>

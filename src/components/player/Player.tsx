@@ -23,6 +23,8 @@ import VolumeRange from './controls/VolumeRange';
 
 import Info from './Info';
 import { QueueItem } from '../../store/reducers/_player';
+import { GenericObject } from '../../..';
+import { YouTubePlayer } from 'youtube-player/dist/types';
 
 interface PlayerState {
     isPlayerReady: boolean;
@@ -34,12 +36,17 @@ interface PlayerState {
     currentTime: number;
 }
 
+interface Device {
+    deviceId: string;
+    isMaster: boolean;
+}
+
 const UNSTARTED = -1;
 const CUED = 5;
 
 const Player = () => {
-    const youtube = useRef(null);
-    const youtubeVolume = useRef(100);
+    const youtube = useRef<YouTubePlayer | null>(null);
+    const youtubeVolume = useRef<number>(100);
 
     const [
         {
@@ -63,12 +70,6 @@ const Player = () => {
     });
 
     const [
-        isFullscreen,
-        fullscreenContainerRef,
-        toggleFullscreen
-    ] = useFullscreen();
-
-    const [
         {
             app: { devices, deviceId },
             player: {}
@@ -80,11 +81,19 @@ const Player = () => {
         { setActiveQueueItem, toggleQueue, toggleScreen }
     ] = usePlayer();
 
+    const [
+        isFullscreen,
+        fullscreenContainerRef,
+        toggleFullscreen
+    ] = useFullscreen();
+
     useKeyPress('ArrowLeft', () => goToVideo(false));
     useKeyPress('ArrowRight', () => goToVideo(true));
     useKeyPress('m', () => toggleMute());
     useKeyPress('s', () => handleToggleScreen());
     useKeyPress(' ', () => togglePlay());
+
+    const editPlaylistItem = () => {};
 
     const currentQueueIndex = queue.findIndex(
         ({ id }: QueueItem) => id === currentId
@@ -101,17 +110,17 @@ const Player = () => {
           };
 
     const availableDevices = devices.filter(
-        ({ deviceId: id }) => id !== deviceId
+        ({ deviceId: id }: Device) => id !== deviceId
     );
     const currentDevice = availableDevices.find(
-        ({ deviceId: id }) => id === deviceId
+        ({ deviceId: id }: Device) => id === deviceId
     ) || {
         isMaster: true
     };
 
     const { isMaster } = currentDevice;
 
-    const updateState = (data) => {
+    const updateState = (data: GenericObject) => {
         // if (isMaster) {
         //     publish('player:sync', {
         //         action: 'update-state',
@@ -152,7 +161,7 @@ const Player = () => {
         //     });
         // } else
         if (isPlayerReady) {
-            youtube.current?.seekTo(t);
+            youtube.current?.seekTo(t, true);
 
             updateState({ currentTime: t });
 
@@ -210,7 +219,7 @@ const Player = () => {
     );
 
     const goToVideo = useCallback(
-        (next = true) => {
+        (next: boolean | undefined = true) => {
             const newIndex = currentQueueIndex + (next ? 1 : -1);
             const { id } = queue[newIndex] || {};
 
@@ -240,27 +249,30 @@ const Player = () => {
         // });
 
         toggleScreen();
-    }, []);
+    }, [showScreen]);
 
-    const handleYoutubeIframeReady = useCallback(({ target }) => {
-        youtube.current = target;
+    const handleYoutubeIframeReady = useCallback((playerInstance) => {
+        youtube.current = playerInstance;
 
         setPlayerState({ isPlayerReady: true });
     }, []);
 
-    const handleYoutubeIframeStateChange = useCallback(({ data }) => {
-        switch (data) {
-            case UNSTARTED:
-                updateState({ isPlaying: false });
+    const handleYoutubeIframeStateChange = useCallback(
+        (playbackStateId: number) => {
+            switch (playbackStateId) {
+                case UNSTARTED:
+                    updateState({ isPlaying: false });
 
-                break;
+                    break;
 
-            case CUED:
-                togglePlay(true);
+                case CUED:
+                    togglePlay(true);
 
-                break;
-        }
-    }, []);
+                    break;
+            }
+        },
+        []
+    );
 
     const handleTimeUpdate = useCallback(
         (currentTime) => updateState({ currentTime }),
@@ -334,7 +346,6 @@ const Player = () => {
         >
             {isMaster ? (
                 <Screen
-                    className="screen"
                     videoId={videoId}
                     onReady={handleYoutubeIframeReady}
                     onEnd={!isSingleVideo ? goToVideo : () => {}}

@@ -81,11 +81,11 @@ const Player = () => {
         { setActiveQueueItem, toggleQueue, toggleScreen }
     ] = usePlayer();
 
-    const [
+    const {
         isFullscreen,
-        fullscreenContainerRef,
+        setFullscreenRef,
         toggleFullscreen
-    ] = useFullscreen();
+    } = useFullscreen();
 
     useKeyPress('ArrowLeft', () => goToVideo(false));
     useKeyPress('ArrowRight', () => goToVideo(true));
@@ -340,7 +340,7 @@ const Player = () => {
     return (
         <div
             className="player__container shadow--2dp"
-            ref={fullscreenContainerRef}
+            ref={setFullscreenRef}
             data-state-fullscreen={isFullscreen ? 'enabled' : 'disabled'}
             data-state-show-queue={showQueue ? 'enabled' : 'disabled'}
         >

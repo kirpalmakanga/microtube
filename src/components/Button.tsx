@@ -7,7 +7,7 @@ interface Props {
     icon?: string;
     title?: string;
     type?: 'button' | 'submit';
-    onClick: () => void;
+    onClick?: () => void;
     children?: ReactNode;
 }
 

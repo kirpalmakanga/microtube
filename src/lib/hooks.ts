@@ -1,51 +1,42 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { GenericObject } from '../..';
 
-const enableFullScreen = (element: HTMLDivElement) =>
-    element.requestFullscreen();
-
-const exitFullScreen = () => document.exitFullscreen();
-
-const listenFullScreenChange = (
-    element: HTMLDivElement,
-    callback: (isFullscreen: boolean) => void
-) =>
-    document.addEventListener(
-        'fullscreenchange',
-        () => {
-            const { ['fullscreenElement']: fullScreenElement } = document;
-            const isFullscreen = fullScreenElement === element;
-
-            callback(isFullscreen);
-        },
-        true
-    );
-
 export const useFullscreen = () => {
-    const containerRef = useRef<HTMLDivElement>();
+    const container = useRef<HTMLElement | null>(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
 
-    const toggleFullscreen = useCallback(() => {
-        const { current: container } = containerRef;
+    const setFullscreenRef = useCallback((node) => {
+        const handler = () => {
+            const { ['fullscreenElement']: fullScreenElement } = document;
+            const isFullscreen = fullScreenElement === node;
 
-        if (!isFullscreen && container) {
-            enableFullScreen(container);
+            setIsFullscreen(isFullscreen);
+        };
+
+        if (container.current) {
+            document.removeEventListener('fullscreenchange', handler);
+
+            container.current = null;
+        }
+
+        if (node) {
+            document.addEventListener('fullscreenchange', handler, true);
+        }
+
+        container.current = node;
+    }, []);
+
+    const toggleFullscreen = useCallback(() => {
+        if (!isFullscreen && container.current) {
+            container.current.requestFullscreen();
         } else {
-            exitFullScreen();
+            document.exitFullscreen();
         }
 
         setIsFullscreen(!isFullscreen);
     }, [isFullscreen]);
 
-    useEffect(() => {
-        const { current: container } = containerRef;
-
-        if (container) {
-            listenFullScreenChange(container, setIsFullscreen);
-        }
-    }, []);
-
-    return [isFullscreen, containerRef, toggleFullscreen];
+    return { isFullscreen, setFullscreenRef, toggleFullscreen };
 };
 
 export const useKeyDown = (key: string, action: () => void) => {

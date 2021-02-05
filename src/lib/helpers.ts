@@ -127,7 +127,7 @@ export const delay = (t: number) =>
 
 export const splitLines = (str: string) => str.match(/[^\r\n]+/g) || [];
 
-export const chunk = (array: unknown[] = [], size: number) => {
+export const chunk = (array: any[] = [], size: number) => {
     const chunks = [];
 
     let index = 0;

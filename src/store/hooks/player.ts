@@ -7,6 +7,8 @@ import { __DEV__ } from '../../config/app';
 import * as api from '../../api/youtube';
 import database from '../../api/database';
 
+import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
+
 import { QueueItem } from '../reducers/_player';
 
 export const usePlayer = () => {
@@ -77,6 +79,31 @@ export const usePlayer = () => {
         []
     );
 
+    const queueVideos = async (ids: string[]) => {
+        try {
+            const items = await api.getVideosFromIds(ids);
+
+            queueItems(items);
+        } catch (error) {}
+        openNotification('Error queuing videos.');
+    };
+
+    const importVideos = async (text: string) => {
+        const lines = splitLines(text).filter(Boolean);
+
+        if (!lines.length) {
+            return;
+        }
+
+        const videoIds = [...new Set(lines.map(parseVideoId))];
+
+        const chunks = chunk(videoIds, 50);
+
+        for (const ids of chunks) {
+            await queueVideos(ids);
+        }
+    };
+
     const clearVideo = () => dispatch({ type: 'player/CLEAR_VIDEO' });
 
     const setVideo = useCallback(async (videoId) => {
@@ -128,6 +155,7 @@ export const usePlayer = () => {
             setQueue,
             queueItems,
             setActiveQueueItem,
+            importVideos,
             clearVideo,
             setVideo,
             toggleQueue,

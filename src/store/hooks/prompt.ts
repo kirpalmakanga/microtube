@@ -17,6 +17,7 @@ export const initialState: PromptState = {
     cancelText: '',
     callback: () => {}
 };
+
 export const usePrompt = () => {
     const [state, setState] = useMergedState(initialState);
 

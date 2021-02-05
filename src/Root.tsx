@@ -17,7 +17,7 @@ import Sprite from './components/Sprite';
 import Loader from './components/Loader';
 import Player from './components/player/Player';
 
-// import Prompt from './components/Prompt';
+import Prompt from './components/Prompt';
 import Notifications from './components/Notifications';
 import { useAuth } from './store/hooks/auth';
 
@@ -61,7 +61,7 @@ const Root: FunctionComponent = ({ children }) => {
 
                     {isSignedIn ? <Player /> : null}
 
-                    {/* <Prompt /> */}
+                    <Prompt />
                 </>
             ) : null}
 

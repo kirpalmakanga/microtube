@@ -2,17 +2,18 @@ import { createReducer, State } from '../helpers';
 import { omit } from '../../lib/helpers';
 
 interface ChannelState {
-    channelTitle: string,
-    description: string,
+    [key: string]: unknown;
+    channelTitle: string;
+    description: string;
     thumbnails: {
-        default: { url: string },
-        medium: { url: string },
-        high: { url: string }
-    },
-    items: object[],
-    nextPageToken: string,
-    hasNextPage: true,
-    totalResults: null
+        default: { url: string };
+        medium: { url: string };
+        high: { url: string };
+    };
+    items: object[];
+    nextPageToken: string;
+    hasNextPage: true;
+    totalResults: null;
 }
 
 export const initialState: ChannelState = {
@@ -30,7 +31,10 @@ export const initialState: ChannelState = {
 };
 
 export default createReducer(initialState, {
-    'channel/UPDATE_DATA': (state: State, data: State) => ({ ...state, ...data }),
+    'channel/UPDATE_DATA': (state: State, data: State) => ({
+        ...state,
+        ...data
+    }),
 
     'channel/UPDATE_ITEMS': (
         { items, ...state }: State,

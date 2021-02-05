@@ -1,10 +1,9 @@
 import { FunctionComponent } from 'react';
 import Button from '../Button';
 
-import { importVideos } from '../../store/actions/youtube';
 import { usePlayer } from '../../store/hooks/player';
 
-const QueueHeader = () => {
+const QueueHeader: FunctionComponent = () => {
     const [
         {
             queue: { length: itemCount }

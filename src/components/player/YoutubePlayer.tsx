@@ -3,7 +3,7 @@ import { FunctionComponent, useCallback, useEffect, useRef } from 'react';
 import isEqual from 'lodash/isEqual';
 import youTubePlayer from 'youtube-player';
 import { YouTubePlayer, Options } from 'youtube-player/dist/types';
-import { EventHandlerMapType } from 'youtube-player/dist/YouTubePlayer';
+import EVENT_NAMES, { EventType } from 'youtube-player/dist/eventNames';
 
 const PLAYBACK_STATES = {
     UNSTARTED: -1,
@@ -101,7 +101,7 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
 }) => {
     const {
         playerVars: { start, end }
-    } = options;
+    }: any = options;
     const internalPlayer = useRef<YouTubePlayer | null>(null);
     const currentTime = useRef<number | undefined>(0);
     const timeWatcher = useRef<number>();
@@ -160,12 +160,13 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
             return;
         }
 
+        const [READY, STATE_CHANGE, _, __, ERROR] = EVENT_NAMES;
         const { ENDED, PLAYING, PAUSED, BUFFERING } = PLAYBACK_STATES;
 
         const events = {
-            ready: handleIframeReady,
-            error: onError,
-            stateChange: ({ data }: { [key: string]: any }) => {
+            [READY]: handleIframeReady,
+            [STATE_CHANGE]: onError,
+            [ERROR]: ({ data }: { [key: string]: any }) => {
                 /* TODO: use correct typing */
                 onStateChange(data);
 
@@ -201,7 +202,7 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
             });
 
             for (const [eventKey, event] of Object.entries(events)) {
-                internalPlayer.current?.on(eventKey, event);
+                internalPlayer.current?.on(eventKey as EventType, event);
             }
         } catch (error) {
             console.error(error);

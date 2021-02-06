@@ -29,7 +29,6 @@
     "devDependencies": {
         "@poi/plugin-bundle-report": "12.1.2",
         "@poi/plugin-pwa": "12.0.3",
-        "@poi/plugin-typescript": "^12.3.1",
         "@types/lodash": "^4.14.168",
         "@types/react": "^17.0.0",
         "@types/react-beautiful-dnd": "^13.0.0",
@@ -39,9 +38,11 @@
         "@types/react-virtualized-auto-sizer": "^1.0.0",
         "@types/react-window": "^1.8.2",
         "@types/youtube-player": "^5.5.3",
-        "node-sass": "^4.14.1",
         "poi": "^12.10.2",
-        "sass-loader": "6.0.7",
+        "sass": "^1.32.6",
+        "sass-loader": "^10.1.1",
+        "ts-loader": "^8.0.15",
+        "ts-pnp": "^1.2.0",
         "typescript": "^4.1.3"
     }
 }

@@ -165,8 +165,8 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
 
         const events = {
             [READY]: handleIframeReady,
-            [STATE_CHANGE]: onError,
-            [ERROR]: ({ data }: { [key: string]: any }) => {
+            [ERROR]: onError,
+            [STATE_CHANGE]: ({ data }: { [key: string]: any }) => {
                 /* TODO: use correct typing */
                 onStateChange(data);
 

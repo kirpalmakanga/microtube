@@ -6,7 +6,7 @@ import {
     FunctionComponent
 } from 'react';
 import merge from 'lodash/merge';
-import { useAsyncReducer } from './helpers';
+import { useRootReducer } from './helpers';
 import rootReducer, { rootInitialState } from './reducers';
 import { saveState, loadState } from '../lib/localStorage';
 import { pick, omit } from '../lib/helpers';
@@ -23,7 +23,7 @@ export const StoreContext = createContext(initialState);
 export const useStore = () => useContext(StoreContext);
 
 const Store: FunctionComponent = ({ children }) => {
-    const [state, dispatch] = useAsyncReducer(rootReducer, initialState);
+    const [state, dispatch] = useRootReducer(rootReducer, initialState);
     const store = useMemo(() => [state, dispatch], [state]);
 
     useEffect(() => {

@@ -1,4 +1,4 @@
-import { useCallback, useReducer } from 'react';
+import { useCallback, useReducer, useRef } from 'react';
 
 export interface Action {
     type: string;
@@ -25,13 +25,14 @@ export interface RootState {
 
 type Reducer = (state: State, action: Action) => object;
 type RootReducer = (state: State, action: Action) => RootState;
-type Dispatch<Action> = (action: Action) => void;
-type AsyncDispatch<Action> = Dispatch<Action | Promise<Action>>;
+export type Dispatch<Action> = (action: Action) => void;
+type Thunk = (dispatch: Dispatch<Action>, getState: Function) => void;
+export type GetState = () => RootState;
 
 export const createReducer = (
-    initialState: object,
+    initialState: State,
     handlers: Handlers
-): Reducer => (state: object, { type, payload = {} }: Action) => {
+): Reducer => (state: State, { type, payload = {} }: Action) => {
     const { [type]: handler } = handlers;
 
     if (typeof handler === 'function') {
@@ -41,22 +42,35 @@ export const createReducer = (
     return { ...initialState, ...state };
 };
 
-const wrapAsync = (dispatch: Dispatch<Action>): AsyncDispatch<Action> => (
-    action: Action | Promise<Action>
-) => {
-    if (action instanceof Promise) {
-        return action.then(dispatch);
-    }
-    return dispatch(action);
-};
-
-export const useAsyncReducer = (
+export const useRootReducer = (
     reducer: Reducer,
     initialState: RootState | State
 ) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const asyncDispatch = useCallback(wrapAsync(dispatch), [dispatch]);
+    const stateRef = useRef(state);
+    const getState = useCallback(() => stateRef.current, [state]);
+    const reduce = useCallback((action) => reducer(getState(), action), [
+        reducer,
+        getState
+    ]);
+    const setState = useCallback(
+        (action) => {
+            stateRef.current = reduce(action);
+            dispatch(action);
+        },
+        [state, dispatch]
+    );
+
+    const asyncDispatch: Dispatch<Action> = useCallback(
+        (action: Action | Thunk) => {
+            if (typeof action === 'function') {
+                return action(asyncDispatch, getState);
+            }
+            return setState(action);
+        },
+        [getState, setState]
+    );
 
     return [state, asyncDispatch];
 };

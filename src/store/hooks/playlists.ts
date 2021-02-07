@@ -1,17 +1,17 @@
+import { useCallback } from 'react';
 import { useStore } from '..';
 import { useNotifications } from './notifications';
 import * as api from '../../api/youtube';
 import { usePlayer } from './player';
 import { usePrompt } from './prompt';
 import { PlaylistData } from '../../../@types/alltypes';
+import { Action, Dispatch, GetState } from '../helpers';
 
 export const usePlaylists = (channelId?: string) => {
     const [{ playlists }, dispatch] = useStore();
     const [, { openNotification }] = useNotifications();
     const [, { setActiveQueueItem, queueItems }] = usePlayer();
     const [, { openPrompt }] = usePrompt();
-
-    console.log('usePlaylists', playlists.nextPageToken, playlists.hasNextPage);
 
     const queuePlaylist = async (
         { id: playlistId }: PlaylistData,
@@ -45,30 +45,27 @@ export const usePlaylists = (channelId?: string) => {
 
     const launchPlaylist = (data: PlaylistData) => queuePlaylist(data, true);
 
-    const getPlaylists = async () => {
-        try {
-            const { nextPageToken: pageToken, hasNextPage } = playlists;
+    const getPlaylists = () =>
+        dispatch(async (dispatch: Dispatch<Action>, getState: GetState) => {
+            try {
+                const {
+                    playlists: { nextPageToken: pageToken, hasNextPage }
+                } = getState();
 
-            console.log(
-                'getPlaylists',
-                playlists.nextPageToken,
-                playlists.hasNextPage
-            );
+                if (!hasNextPage) {
+                    return;
+                }
 
-            if (!hasNextPage) {
-                return;
+                const payload = await api.getPlaylists({
+                    ...(channelId ? { channelId } : { mine: true }),
+                    pageToken
+                });
+
+                dispatch({ type: 'playlists/UPDATE_ITEMS', payload });
+            } catch (error) {
+                openNotification('Error fetching playlists.');
             }
-
-            const payload = await api.getPlaylists({
-                ...(channelId ? { channelId } : { mine: true }),
-                pageToken
-            });
-
-            dispatch({ type: 'playlists/UPDATE_ITEMS', payload });
-        } catch (error) {
-            openNotification('Error fetching playlists.');
-        }
-    };
+        });
 
     const createPlaylist = async ({ title, privacyStatus }: PlaylistData) => {
         try {

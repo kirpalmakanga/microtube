@@ -7,43 +7,35 @@ import { usePrompt } from './prompt';
 import { PlaylistData, VideoData } from '../../../@types/alltypes';
 
 import * as api from '../../api/youtube';
+import { Action, Dispatch, GetState } from '../helpers';
 
 export const usePlaylistItems = (playlistId: string) => {
     const [{ playlistItems }, dispatch] = useStore();
     const [, { openNotification }] = useNotifications();
     const [, { openPrompt }] = usePrompt();
 
-    console.log(
-        'usePlaylistItems',
-        playlistItems.nextPageToken,
-        playlistItems.hasNextPage
-    );
+    const getPlaylistItems = () =>
+        dispatch(async (dispatch: Dispatch<Action>, getState: GetState) => {
+            try {
+                const {
+                    playlistItems: { nextPageToken: pageToken, hasNextPage }
+                } = getState();
 
-    const getPlaylistItems = async () => {
-        try {
-            const { nextPageToken: pageToken, hasNextPage } = playlistItems;
+                if (hasNextPage) {
+                    const payload = await api.getPlaylistItems({
+                        playlistId,
+                        pageToken
+                    });
 
-            console.log(
-                'getPlaylistItems',
-                playlistItems.nextPageToken,
-                playlistItems.hasNextPage
-            );
-
-            if (hasNextPage) {
-                const payload = await api.getPlaylistItems({
-                    playlistId,
-                    pageToken
-                });
-
-                dispatch({
-                    type: 'playlist/UPDATE_ITEMS',
-                    payload
-                });
+                    dispatch({
+                        type: 'playlist/UPDATE_ITEMS',
+                        payload
+                    });
+                }
+            } catch (error) {
+                openNotification('Error fetching playlist items.');
             }
-        } catch (error) {
-            openNotification('Error fetching playlist items.');
-        }
-    };
+        });
 
     const addPlaylistItem = async (id: string, playlistId: string) => {
         try {

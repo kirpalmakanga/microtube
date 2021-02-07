@@ -13,3 +13,24 @@ export interface ThumbnailsData {
 }
 
 export type GenericObject = { [key: string]: any };
+
+interface PlaylistData {
+    id: string;
+    title: string;
+    thumbnails: ThumbnailsData;
+    itemCount: number;
+    privacyStatus: string;
+}
+
+interface VideoData {
+    id: string;
+    title: string;
+    description: string;
+    thumbnails: ThumbnailsData;
+    duration: number;
+    publishedAt: string;
+    channelId: string;
+    channelTitle: string;
+    playlistId?: string;
+    playlistItemId?: string;
+}

@@ -32,9 +32,21 @@ export const usePlaylistItems = (playlistId: string) => {
     const [, { openNotification }] = useNotifications();
     const [, { openPrompt }] = usePrompt();
 
+    console.log(
+        'usePlaylistItems',
+        playlistItems.nextPageToken,
+        playlistItems.hasNextPage
+    );
+
     const getPlaylistItems = async () => {
         try {
             const { nextPageToken: pageToken, hasNextPage } = playlistItems;
+
+            console.log(
+                'getPlaylistItems',
+                playlistItems.nextPageToken,
+                playlistItems.hasNextPage
+            );
 
             if (hasNextPage) {
                 const payload = await api.getPlaylistItems({

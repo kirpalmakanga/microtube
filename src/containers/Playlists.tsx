@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ThumbnailsData } from '../../@types/alltypes';
+import { PlaylistData } from '../../@types/alltypes';
 
 import { usePlaylists } from '../store/hooks/playlists';
 
@@ -9,12 +9,6 @@ import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 import PlaylistCard from '../components/cards/PlaylistCard';
 import MenuWrapper from '../components/menu/MenuWrapper';
-interface PlaylistData {
-    id: string;
-    title: string;
-    thumbnails: ThumbnailsData;
-    itemCount: number;
-}
 
 const Playlists = () => {
     const { channelId } = useParams();

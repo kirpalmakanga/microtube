@@ -1,17 +1,18 @@
 import { useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { ThumbnailsData } from '../../@types/alltypes';
+
 import { usePlaylists } from '../store/hooks/playlists';
 
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 import PlaylistCard from '../components/cards/PlaylistCard';
 import MenuWrapper from '../components/menu/MenuWrapper';
-
 interface PlaylistData {
     id: string;
     title: string;
-    thumbnails: object;
+    thumbnails: ThumbnailsData;
     itemCount: number;
 }
 
@@ -64,8 +65,7 @@ const Playlists = () => {
                           {
                               title: 'Remove playlist',
                               icon: 'delete',
-                              onClick: () => {} // TODO: Add prompt
-                              //   onClick: removePlaylist
+                              onClick: removePlaylist
                           }
                       ]
                     : [])

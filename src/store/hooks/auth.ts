@@ -7,7 +7,7 @@ import { useNotifications } from './notifications';
 
 export const useAuth = () => {
     const [{ user }, dispatch] = useStore();
-    const [_, { openNotification }] = useNotifications();
+    const [, { openNotification }] = useNotifications();
 
     const getUserData = useCallback(async () => {
         const {
@@ -49,7 +49,7 @@ export const useAuth = () => {
             await getUserData();
         } catch (error) {
             if (error !== 'popup_closed_by_user') {
-                openNotification({ message: 'Error signing in user.' });
+                openNotification('Error signing in user.');
             }
         } finally {
             dispatch({

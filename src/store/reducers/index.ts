@@ -14,6 +14,7 @@ import search, { initialState as searchInitialState } from './_search';
 import notifications, {
     initialState as notificationsInitialState
 } from './_notifications';
+import prompt, { initialState as promptInitialState } from './_prompt';
 
 export const rootInitialState = {
     app: appInitialState,
@@ -24,7 +25,8 @@ export const rootInitialState = {
     channel: channelInitialState,
     subscriptions: subscriptionsInitialState,
     search: searchInitialState,
-    notifications: notificationsInitialState
+    notifications: notificationsInitialState,
+    prompt: promptInitialState
 };
 
 export default combineReducers({
@@ -36,5 +38,6 @@ export default combineReducers({
     channel,
     subscriptions,
     search,
-    notifications
+    notifications,
+    prompt
 });

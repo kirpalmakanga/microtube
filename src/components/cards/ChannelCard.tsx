@@ -1,4 +1,6 @@
-import { memo } from 'react';
+import { FunctionComponent, memo } from 'react';
+
+import { ThumbnailsData } from '../../../@types/alltypes';
 
 import { getThumbnails } from '../../lib/helpers';
 
@@ -10,7 +12,17 @@ import CardButtons from './CardButtons';
 import Button from './CardButton';
 import Title from './CardTitle';
 
-const SubscriptionCard = ({
+interface Props {
+    title: string;
+    thumbnails: ThumbnailsData;
+    isUnsubscribed: boolean;
+    totalItemCount: number;
+    goToChannel: () => void;
+    unsubscribe: () => void;
+    subscribe: () => void;
+}
+
+const SubscriptionCard: FunctionComponent<Props> = ({
     title,
     thumbnails,
     isUnsubscribed,

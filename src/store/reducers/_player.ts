@@ -66,12 +66,13 @@ export default createReducer(initialState, {
 
     'player/REMOVE_QUEUE_ITEM': (
         { queue, currentId, ...state }: State,
-        { videoId }: State
+        { id }: State
     ) => {
+        console.log({ id, queue });
         return {
             ...state,
-            queue: queue.filter(({ id }: QueueItem) => id !== videoId),
-            currentId: currentId === videoId ? '' : currentId
+            queue: queue.filter(({ id: videoId }: QueueItem) => videoId !== id),
+            currentId: currentId === id ? '' : currentId
         };
     },
 

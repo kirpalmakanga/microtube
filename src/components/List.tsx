@@ -1,4 +1,5 @@
 import {
+    memo,
     useState,
     useRef,
     useEffect,
@@ -133,4 +134,4 @@ const List: FunctionComponent<Props> = ({
     );
 };
 
-export default List;
+export default memo(List);

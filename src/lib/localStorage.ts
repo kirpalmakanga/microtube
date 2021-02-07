@@ -1,6 +1,7 @@
+import { GenericObject } from '../../@types/alltypes';
 import { STORAGE_KEY } from '../config/app';
 
-export const saveState = (state) => {
+export const saveState = (state: GenericObject) => {
     try {
         const serializedState = JSON.stringify(state);
 

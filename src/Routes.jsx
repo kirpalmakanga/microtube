@@ -11,7 +11,7 @@ import NotFound from './containers/NotFound';
 // import ChannelVideos from './containers/Channel/ChannelVideos';
 // import ChannelAbout from './containers/Channel/ChannelAbout';
 
-// const Playlist = LazyComponent(() => import('./containers/Playlist'));
+const Playlist = LazyComponent(() => import('./containers/Playlist'));
 // const Search = LazyComponent(() => import('./containers/Search'));
 // const Channels = LazyComponent(() => import('./containers/Channels'));
 
@@ -22,9 +22,9 @@ const Router = () => (
     <Routes>
         <AuthRoute path="/" element={<Playlists />} />
 
-        {/* <AuthRoute path="/playlist/:playlistId" element={<Playlist />} />
+        <AuthRoute path="/playlist/:playlistId" element={<Playlist />} />
 
-        <AuthRoute path="/subscriptions" element={<Channels />} />
+        {/*<AuthRoute path="/subscriptions" element={<Channels />} />
 
         <AuthRoute path="/search/" element={<Search />} />
 

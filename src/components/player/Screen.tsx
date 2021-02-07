@@ -1,4 +1,6 @@
 import { FunctionComponent } from 'react';
+import { YouTubePlayer } from 'youtube-player/dist/types';
+
 import { YoutubePlayer, Options } from './YoutubePlayer';
 import Placeholder from '../Placeholder';
 
@@ -13,7 +15,7 @@ const playerOptions: Options = {
 
 interface Props {
     videoId: string;
-    onReady: (playerInstance: object) => void;
+    onReady: (playerInstance: YouTubePlayer) => void;
     onBuffering: () => void;
     onPlay: () => void;
     onPause: () => void;

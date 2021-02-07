@@ -1,133 +1,31 @@
-import * as api from '../../api/youtube';
-import database from '../../api/database';
+// import * as api from '../../api/youtube';
+// import database from '../../api/database';
 
-import { __DEV__ } from '../../config/app';
-export const enableImportMethods = () => (dispatch) => {
-    if (!window.queueVideos) {
-        window.queueVideos = (ids = []) => dispatch(queueVideos(ids));
-    }
+// import { __DEV__ } from '../../config/app';
+// export const enableImportMethods = () => (dispatch) => {
+//     if (!window.queueVideos) {
+//         window.queueVideos = (ids = []) => dispatch(queueVideos(ids));
+//     }
 
-    if (!window.queuePlaylist) {
-        window.queuePlaylist = (id) => dispatch(queuePlaylist(id));
-    }
-};
+//     if (!window.queuePlaylist) {
+//         window.queuePlaylist = (id) => dispatch(queuePlaylist(id));
+//     }
+// };
 /* Videos */
 
 /* Playlist */
-export function getPlaylistTitle(playlistId) {
-    return async (dispatch) => {
-        const playlistTitle = await api.getPlaylistTitle(playlistId);
+// export function getPlaylistTitle(playlistId) {
+//     return async (dispatch) => {
+//         const playlistTitle = await api.getPlaylistTitle(playlistId);
 
-        dispatch({
-            type: 'playlist/SET_TITLE',
-            data: { playlistTitle }
-        });
-    };
-}
-
-// export function getPlaylistItems(playlistId) {
-//     return (dispatch, getState) =>
-//         catchErrors(
-//             async () => {
-//                 const {
-//                     playlistItems: { nextPageToken: pageToken, hasNextPage }
-//                 } = getState();
-
-//                 if (!hasNextPage) {
-//                     return;
-//                 }
-
-//                 const data = await api.getPlaylistItems({
-//                     playlistId,
-//                     pageToken
-//                 });
-
-//                 dispatch({
-//                     type: 'playlist/UPDATE_ITEMS',
-//                     data
-//                 });
-//             },
-//             () =>
-//                 dispatch(notify({ message: 'Error fetching playlist items.' }))
-//         );
-// }
-
-export const clearPlaylistItems = () => (dispatch) =>
-    dispatch({ type: 'playlist/CLEAR_ITEMS' });
-
-// export function removePlaylistItem(playlistItemId, playlistId, title) {
-//     return async (dispatch) =>
-//         dispatch(
-//             prompt(
-//                 {
-//                     promptText: `Remove "${title}" ?`,
-//                     confirmText: 'Remove'
-//                 },
-//                 () => {
-//                     catchErrors(
-//                         () => {
-//                             dispatch({
-//                                 type: 'playlist/REMOVE_ITEM',
-//                                 data: { playlistItemId, playlistId }
-//                             });
-
-//                             dispatch(
-//                                 notify({
-//                                     message: `Removed ${title}.`
-//                                 })
-//                             );
-
-//                             return api.removePlaylistItem(playlistItemId);
-//                         },
-//                         () =>
-//                             dispatch(
-//                                 notify({
-//                                     message: 'Error deleting playlist item.'
-//                                 })
-//                             )
-//                     );
-//                 }
-//             )
-//         );
+//         dispatch({
+//             type: 'playlist/SET_TITLE',
+//             data: { playlistTitle }
+//         });
+//     };
 // }
 
 /* Player */
-
-// export const setQueue = (queue) => (dispatch) => {
-//     dispatch({ type: 'player/UPDATE_DATA', data: { queue } });
-
-//     dispatch(saveQueue());
-// };
-
-// export const removeQueueItem = (videoId) => (dispatch) => {
-//     dispatch({ type: 'player/REMOVE_QUEUE_ITEM', data: { videoId } });
-
-//     dispatch(saveQueue());
-// };
-
-// export const clearQueue = () => (dispatch) =>
-//     dispatch(
-//         prompt(
-//             {
-//                 promptText: 'Clear the queue ?',
-//                 confirmText: 'Clear'
-//             },
-//             () => {
-//                 dispatch({ type: 'player/CLEAR_QUEUE' });
-
-//                 dispatch(saveQueue());
-//             }
-//         )
-//     );
-
-// export const setActiveQueueItem = (currentId) => (dispatch) => {
-//     dispatch({
-//         type: 'player/UPDATE_DATA',
-//         data: { currentId }
-//     });
-
-//     dispatch(saveQueue());
-// };
 
 // export const playItem = (data) => (dispatch) => {
 //     dispatch(queueItem(data));
@@ -165,16 +63,6 @@ export const clearPlaylistItems = () => (dispatch) =>
 //         );
 //     };
 // }
-
-// export const queueVideos = (ids = []) => (dispatch) =>
-//     catchErrors(
-//         async () => {
-//             const items = await api.getVideosFromIds(ids);
-
-//             dispatch(queueItems(items));
-//         },
-//         () => dispatch(notify({ message: 'Error queuing videos.' }))
-//     );
 
 // export const importVideos = () => (dispatch) =>
 //     dispatch(
@@ -227,14 +115,14 @@ export const clearPlaylistItems = () => (dispatch) =>
 //         );
 // }
 
-export const setSearchTarget = (forMine) => ({
-    type: 'search/SET_TARGET',
-    payload: {
-        forMine
-    }
-});
+// export const setSearchTarget = (forMine) => ({
+//     type: 'search/SET_TARGET',
+//     payload: {
+//         forMine
+//     }
+// });
 
-export const clearSearch = () => ({ type: 'search/RESET' });
+// export const clearSearch = () => ({ type: 'search/RESET' });
 
 /* Channels */
 // export const getSubscriptions = (channelId) => (dispatch, getState) =>

@@ -1,11 +1,11 @@
-import { useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useStore } from '..';
 import { useNotifications } from './notifications';
 import * as api from '../../api/youtube';
+import { usePlayer } from './player';
+import { usePrompt } from './prompt';
 
 /* TODO: hook up usePlaylistItems, usePrompt */
-const queueItems = (items: object[]) => [];
-const setActiveQueueItem = (id: string) => {};
 
 export const usePlaylists = (channelId?: string) => {
     const [
@@ -15,13 +15,16 @@ export const usePlaylists = (channelId?: string) => {
         },
         dispatch
     ] = useStore();
-    const [_, { openNotification }] = useNotifications();
+    const [, { openNotification }] = useNotifications();
+    const [, { setActiveQueueItem, queueItems }] = usePlayer();
+    const [, { openPrompt }] = usePrompt();
 
-    const { nextPageToken: pageToken, hasNextPage } = playlists;
+    /* TODO: déclarer les callbacks puis les retourner */
 
     const queuePlaylist = useCallback(
-        async ({ id: playlistId }, play) => {
-            const getItems = async (pageToken: string) => {
+        async ({ id: playlistId, ...data }, play) => {
+            console.log({ playlistId, data });
+            const getItems = async (pageToken?: string) => {
                 const { items, nextPageToken } = await api.getPlaylistItems({
                     playlistId,
                     pageToken
@@ -32,7 +35,7 @@ export const usePlaylists = (channelId?: string) => {
                 if (play && !pageToken && newItems.length) {
                     const [{ id }] = newItems;
 
-                    dispatch(setActiveQueueItem(id));
+                    setActiveQueueItem(id);
                 }
 
                 if (nextPageToken) {
@@ -41,37 +44,37 @@ export const usePlaylists = (channelId?: string) => {
             };
 
             try {
-                await getItems(pageToken);
+                await getItems();
             } catch (error) {
-                dispatch(
-                    openNotification({
-                        message: 'Error queueing playlist items.'
-                    })
-                );
+                openNotification('Error queueing playlist items.');
             }
         },
         [channelId, playlists]
     );
 
+    const getPlaylists = useCallback(async () => {
+        try {
+            const { nextPageToken: pageToken, hasNextPage } = playlists;
+
+            if (!hasNextPage) {
+                return;
+            }
+
+            const payload = await api.getPlaylists({
+                ...(channelId ? { channelId } : { mine: true }),
+                pageToken
+            });
+
+            dispatch({ type: 'playlists/UPDATE_ITEMS', payload });
+        } catch (error) {
+            openNotification('Error fetching playlists.');
+        }
+    }, [playlists]);
+
     return [
         playlists,
         {
-            getPlaylists: useCallback(async () => {
-                try {
-                    if (!hasNextPage) {
-                        return;
-                    }
-
-                    const payload = await api.getPlaylists({
-                        ...(channelId ? { channelId } : { mine: true }),
-                        pageToken
-                    });
-
-                    dispatch({ type: 'playlists/UPDATE_ITEMS', payload });
-                } catch (error) {
-                    dispatch(openNotification('Error fetching playlists.'));
-                }
-            }, [channelId, playlists]),
+            getPlaylists,
 
             // clearPlaylists: useCallback(
             //     () => dispatch({ type: 'playlists/CLEAR_ITEMS' }),
@@ -81,47 +84,49 @@ export const usePlaylists = (channelId?: string) => {
             createPlaylist: useCallback(
                 async (params) => {
                     try {
-                        const data = await api.createPlaylist(params);
+                        const payload = await api.createPlaylist(params);
 
-                        dispatch({ type: 'playlists/ADD_ITEM', data });
+                        dispatch({ type: 'playlists/ADD_ITEM', payload });
 
-                        return data;
+                        return payload;
                     } catch (error) {
                         const { title } = params;
 
-                        dispatch(
-                            openNotification(
-                                `Error creating playlist "${title}".`
-                            )
-                        );
+                        openNotification(`Error creating playlist "${title}".`);
                     }
                 },
                 [channelId, playlists]
             ),
 
             removePlaylist: useCallback(
-                async ({ id: playlistId, title }) => {
-                    try {
-                        dispatch({
-                            type: 'playlists/REMOVE_ITEM',
-                            data: { playlistId }
-                        });
+                ({ id: playlistId, title }) => {
+                    openPrompt({
+                        headerText: `Remove playlist ${title} ?`,
+                        confirmText: 'Remove',
+                        callback: async () => {
+                            try {
+                                dispatch({
+                                    type: 'playlists/REMOVE_ITEM',
+                                    payload: { playlistId }
+                                });
 
-                        dispatch(
-                            openNotification(`Removed playlist "${title}".`)
-                        );
+                                openNotification(
+                                    `Removed playlist "${title}".`
+                                );
 
-                        await api.removePlaylist(playlistId);
-                    } catch (error) {
-                        dispatch(openNotification('Error deleting playlist.'));
-                    }
+                                await api.removePlaylist(playlistId);
+                            } catch (error) {
+                                openNotification('Error deleting playlist.');
+                            }
+                        }
+                    });
                 },
                 [channelId, playlists]
             ),
 
             queuePlaylist,
 
-            launchPlaylist: useCallback(({ id }) => queuePlaylist(id, true), [
+            launchPlaylist: useCallback((data) => queuePlaylist(data, true), [
                 channelId,
                 playlists
             ])

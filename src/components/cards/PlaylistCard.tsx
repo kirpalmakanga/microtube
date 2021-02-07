@@ -1,6 +1,8 @@
+import { FunctionComponent } from 'react';
+
 import { memo } from 'react';
 
-import { getThumbnails, preventDefault } from '../../lib/helpers';
+import { getThumbnails } from '../../lib/helpers';
 
 import CardContainer from './CardContainer';
 import CardContent from './CardContent';
@@ -9,15 +11,24 @@ import CardThumbnail from './CardThumbnail';
 import CardButtons from './CardButtons';
 import Button from './CardButton';
 import Title from './CardTitle';
+import { ThumbnailsData } from '../../../@types/alltypes';
 
-const PlaylistCard = ({
+interface Props {
+    title: string;
+    thumbnails: ThumbnailsData;
+    itemCount: number;
+    onClick: () => void;
+    onClickMenu: () => void;
+}
+
+const PlaylistCard: FunctionComponent<Props> = ({
     title,
     thumbnails,
     itemCount,
     onClick,
     onClickMenu
 }) => (
-    <CardContainer onContextMenu={preventDefault(onClickMenu)}>
+    <CardContainer onContextMenu={onClickMenu}>
         <CardContent onClick={onClick}>
             <CardThumbnail
                 src={getThumbnails(thumbnails, 'medium')}

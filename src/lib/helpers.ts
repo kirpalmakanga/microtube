@@ -1,5 +1,5 @@
 import { SyntheticEvent } from 'react';
-import { ThumbnailsData } from '../../index';
+import { ThumbnailsData } from '../../@types/alltypes';
 import { format } from 'date-fns';
 
 export const preventDefault = (func = (e: SyntheticEvent) => {}) => (

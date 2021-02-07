@@ -18,7 +18,7 @@ interface Props {
     className?: string;
     videoId: string;
     options: Options;
-    onReady: (playerInstance: object) => void;
+    onReady: (playerInstance: YouTubePlayer) => void;
     onError: (error: object) => void;
     onBuffering: () => void;
     onPlay: () => void;
@@ -160,7 +160,7 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
             return;
         }
 
-        const [READY, STATE_CHANGE, _, __, ERROR] = EVENT_NAMES;
+        const [READY, STATE_CHANGE, , , ERROR] = EVENT_NAMES;
         const { ENDED, PLAYING, PAUSED, BUFFERING } = PLAYBACK_STATES;
 
         const events = {
@@ -260,6 +260,7 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
         window.clearInterval(loadingWatcher.current);
 
         if (internalPlayer.current) {
+            console.log('destroy');
             internalPlayer.current?.destroy();
             internalPlayer.current = null;
         }

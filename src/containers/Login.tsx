@@ -6,7 +6,7 @@ import Placeholder from '../components/Placeholder';
 import { useAuth } from '../store/hooks/auth';
 
 const Login: FunctionComponent = () => {
-    const [_, { signIn }] = useAuth();
+    const [, { signIn }] = useAuth();
 
     return (
         <Placeholder
@@ -16,6 +16,7 @@ const Login: FunctionComponent = () => {
             <Button
                 className="button shadow--2dp"
                 title="Log in"
+                type="button"
                 onClick={signIn}
             />
         </Placeholder>

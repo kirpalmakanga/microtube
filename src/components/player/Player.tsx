@@ -1,4 +1,7 @@
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useRef, WheelEvent } from 'react';
+
+import { GenericObject } from '../../../@types/alltypes';
+import { YouTubePlayer } from 'youtube-player/dist/types';
 
 import { useStore } from '../../store';
 import { usePlayer } from '../../store/hooks/player';
@@ -11,7 +14,12 @@ import { usePlayer } from '../../store/hooks/player';
 //     editPlaylistItem
 // } from '../../store/actions/youtube';
 
-import { useFullscreen, useKeyPress, useMergedState } from '../../lib/hooks';
+import {
+    useFullscreen,
+    useKeyPress,
+    useMergedState,
+    useUpdateEffect
+} from '../../lib/hooks';
 import { isMobile } from '../../lib/helpers';
 
 import Queue from './Queue';
@@ -23,8 +31,6 @@ import VolumeRange from './controls/VolumeRange';
 
 import Info from './Info';
 import { QueueItem } from '../../store/reducers/_player';
-import { GenericObject } from '../../..';
-import { YouTubePlayer } from 'youtube-player/dist/types';
 
 interface PlayerState {
     isPlayerReady: boolean;
@@ -131,29 +137,24 @@ const Player = () => {
         setPlayerState(data);
     };
 
-    const setVolume = useCallback(
-        (volume) => {
-            // if (!isMaster) {
-            //     publish('player:sync', {
-            //         action: 'set-volume',
-            //         data: { volume }
-            //     });
+    const setVolume = (volume: number) => {
+        // if (!isMaster) {
+        //     publish('player:sync', {
+        //         action: 'set-volume',
+        //         data: { volume }
+        //     });
 
-            //     return;
-            // }
+        //     return;
+        // }
 
-            if (!isPlayerReady) {
-                return;
-            }
-
+        if (isPlayerReady) {
             youtube.current?.setVolume(volume);
 
             updateState({ volume });
-        },
-        [isPlayerReady]
-    );
+        }
+    };
 
-    const seekTime = useCallback((t) => {
+    const seekTime = (t: number) => {
         // if (!isMaster) {
         //     publish('player:sync', {
         //         action: 'seek-time',
@@ -171,9 +172,9 @@ const Player = () => {
                 }
             });
         }
-    }, []);
+    };
 
-    const toggleMute = useCallback(() => {
+    const toggleMute = () => {
         // if (!isMaster) {
         //     publish('player:sync', {
         //         action: 'toggle-mute'
@@ -193,54 +194,46 @@ const Player = () => {
         } else {
             setVolume(youtubeVolume.current);
         }
-    }, [volume]);
+    };
 
-    const togglePlay = useCallback(
-        (force = false) => {
-            // if (!isMaster) {
-            //     publish('player:sync', {
-            //         action: 'toggle-play'
-            //     });
+    const togglePlay = (force: boolean = false) => {
+        // if (!isMaster) {
+        //     publish('player:sync', {
+        //         action: 'toggle-play'
+        //     });
 
-            //     return;
-            // }
+        //     return;
+        // }
 
-            if (!isPlayerReady) {
-                return;
-            }
+        if (!isPlayerReady) {
+            return;
+        }
 
-            if (!isPlaying || force === true) {
-                youtube.current?.playVideo();
-            } else if (isPlaying) {
-                youtube.current?.pauseVideo();
-            }
-        },
-        [isPlaying]
-    );
+        if (!isPlaying || force === true) {
+            youtube.current?.playVideo();
+        } else if (isPlaying) {
+            youtube.current?.pauseVideo();
+        }
+    };
 
-    const goToVideo = useCallback(
-        (next: boolean | undefined = true) => {
-            const newIndex = currentQueueIndex + (next ? 1 : -1);
-            const { id } = queue[newIndex] || {};
+    const goToVideo = (next: boolean | undefined = true) => {
+        const newIndex = currentQueueIndex + (next ? 1 : -1);
+        const { id } = queue[newIndex] || {};
 
-            if (id) {
-                updateState({
-                    currentTime: 0,
-                    loaded: 0
-                });
+        if (id) {
+            updateState({
+                currentTime: 0,
+                loaded: 0
+            });
 
-                setActiveQueueItem(id);
-            }
-        },
-        [currentQueueIndex, queue]
-    );
+            setActiveQueueItem(id);
+        }
+    };
 
-    const setPlaybackQuality = useCallback(
-        (value = 'hd1080') => youtube.current?.setPlaybackQuality(value),
-        [youtube]
-    );
+    const setPlaybackQuality = (value = 'hd1080') =>
+        youtube.current?.setPlaybackQuality(value);
 
-    const handleToggleScreen = useCallback(() => {
+    const handleToggleScreen = () => {
         updateState({ showScreen: !showScreen });
 
         // publish('player:sync', {
@@ -249,65 +242,52 @@ const Player = () => {
         // });
 
         toggleScreen();
-    }, [showScreen]);
+    };
 
-    const handleYoutubeIframeReady = useCallback((playerInstance) => {
+    const handleYoutubeIframeReady = (playerInstance: YouTubePlayer) => {
         youtube.current = playerInstance;
 
         setPlayerState({ isPlayerReady: true });
-    }, []);
+    };
 
-    const handleYoutubeIframeStateChange = useCallback(
-        (playbackStateId: number) => {
-            switch (playbackStateId) {
-                case UNSTARTED:
-                    updateState({ isPlaying: false });
+    const handleYoutubeIframeStateChange = (playbackStateId: number) => {
+        switch (playbackStateId) {
+            case UNSTARTED:
+                updateState({ isPlaying: false });
 
-                    break;
+                break;
 
-                case CUED:
-                    togglePlay(true);
+            case CUED:
+                togglePlay(true);
 
-                    break;
-            }
-        },
-        []
-    );
+                break;
+        }
+    };
 
-    const handleTimeUpdate = useCallback(
-        (currentTime) => updateState({ currentTime }),
-        []
-    );
+    const handleTimeUpdate = (currentTime: number = 0) =>
+        updateState({ currentTime });
 
-    const handleLoadingUpdate = useCallback(
-        (loaded) => updateState({ loaded }),
-        []
-    );
+    const handleLoadingUpdate = (loaded: number = 0) => updateState({ loaded });
 
-    const handlePlay = useCallback(
-        () => updateState({ isPlaying: true, isBuffering: false }),
-        []
-    );
+    const handlePlay = () =>
+        updateState({ isPlaying: true, isBuffering: false });
 
-    const handlePause = useCallback(
-        () => updateState({ isPlaying: false }),
-        []
-    );
+    const handlePause = () => updateState({ isPlaying: false });
 
-    const handleBuffering = useCallback(() => {
+    const handleBuffering = () => {
         updateState({ isBuffering: true });
 
         setPlaybackQuality();
-    }, []);
+    };
 
-    const handleWheelVolume = useCallback(({ deltaY }) => {
+    const handleWheelVolume = ({ deltaY }: WheelEvent<HTMLDivElement>) => {
         const newVolume = deltaY < 0 ? volume + 5 : volume - 5;
         const inRange = newVolume >= 0 && newVolume <= 100;
 
         if (inRange) {
             setVolume(newVolume);
         }
-    }, []);
+    };
 
     // const bindDevicesSync =  useCallback(() => {
     //     const actions = {
@@ -327,15 +307,23 @@ const Player = () => {
     //     });
     // }, []);
 
-    useEffect(() => {
-        // bindDevicesSync();
-    }, [isPlayerReady]);
+    // useEffect(() => {
+    // bindDevicesSync();
+    // }, []);
 
-    useEffect(() => {
-        if (isMaster) {
-            setPlayerState({ showScreen });
+    // useEffect(() => {
+    //     if (isMaster) {
+    //         setPlayerState({ showScreen });
+    //     }
+    // }, [isMaster, showScreen]);
+
+    useUpdateEffect(() => {
+        if (!videoId) {
+            youtube.current = null;
+
+            setPlayerState({ isPlayerReady: true });
         }
-    }, [showScreen]);
+    }, [videoId]);
 
     return (
         <div
@@ -447,6 +435,7 @@ const Player = () => {
                                         : ''
                                 ].join(' ')}
                                 onClick={toggleQueue}
+                                badge={newQueueItems}
                                 icon="list"
                                 ariaLabel={
                                     showQueue ? 'Close queue' : 'Open queue'

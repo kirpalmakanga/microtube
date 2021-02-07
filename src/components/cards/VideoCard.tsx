@@ -1,12 +1,13 @@
-import { memo } from 'react';
+import { FunctionComponent, memo } from 'react';
 import { Link } from 'react-router-dom';
+
+import { ThumbnailsData } from '../../../@types/alltypes';
 
 import {
     formatDate,
     formatTime,
     getThumbnails,
-    stopPropagation,
-    preventDefault
+    stopPropagation
 } from '../../lib/helpers';
 
 import CardContainer from './CardContainer';
@@ -18,7 +19,19 @@ import Button from './CardButton';
 import Title from './CardTitle';
 import Subtitle from './CardSubtitle';
 
-const VideoCard = ({
+interface Props {
+    title: string;
+    thumbnails: ThumbnailsData;
+    publishedAt: string;
+    privacyStatus: string;
+    duration: number;
+    channelId: string;
+    channelTitle: string;
+    onClick: () => void;
+    onClickMenu: () => void;
+}
+
+const VideoCard: FunctionComponent<Props> = ({
     title,
     thumbnails,
     publishedAt,
@@ -29,7 +42,7 @@ const VideoCard = ({
     onClick,
     onClickMenu
 }) => (
-    <CardContainer onContextMenu={preventDefault(onClickMenu)}>
+    <CardContainer onContextMenu={onClickMenu}>
         <CardContent onClick={onClick}>
             <CardThumbnail
                 src={getThumbnails(thumbnails, 'medium')}

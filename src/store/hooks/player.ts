@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useStore } from '..';
 import { useNotifications } from './notifications';
 
@@ -13,7 +13,7 @@ import { QueueItem } from '../reducers/_player';
 
 export const usePlayer = () => {
     const [{ user, player }, dispatch] = useStore();
-    const [_, openNotification] = useNotifications();
+    const [, openNotification] = useNotifications();
 
     const getCurrentUserId = useCallback(() => {
         const { id } = user;
@@ -21,19 +21,8 @@ export const usePlayer = () => {
         return __DEV__ ? 'dev' : id;
     }, [user]);
 
-    const saveQueue = useCallback(() => {
-        const { isSignedIn } = user;
-        const { queue, currentId } = player;
-
-        if (isSignedIn) {
-            database.set(`users/${getCurrentUserId()}`, {
-                queue,
-                currentId
-            });
-        }
-    }, [user, player]);
-
     const listenForQueueUpdate = useCallback(() => {
+        /* TODO: Prevent useless updates */
         database.listen(
             `users/${getCurrentUserId()}`,
             ({ queue = [], currentId = '' } = {}) =>
@@ -46,8 +35,6 @@ export const usePlayer = () => {
 
     const setQueue = (queue: QueueItem[]) => {
         dispatch({ type: 'player/UPDATE_DATA', payload: { queue } });
-
-        saveQueue();
     };
 
     const queueItems = useCallback((newItems: QueueItem[]) => {
@@ -62,22 +49,17 @@ export const usePlayer = () => {
 
         dispatch({ type: 'player/ADD_QUEUE_ITEMS', payload: { items } });
 
-        saveQueue();
-
         return items;
     }, []);
 
-    const setActiveQueueItem = useCallback(
-        (currentId) => () => {
-            dispatch({
-                type: 'player/UPDATE_DATA',
-                payload: { currentId }
-            });
+    const queueItem = (data: QueueItem) => queueItems([data]);
 
-            saveQueue();
-        },
-        []
-    );
+    const setActiveQueueItem = useCallback((currentId) => {
+        dispatch({
+            type: 'player/UPDATE_DATA',
+            payload: { currentId }
+        });
+    }, []);
 
     const queueVideos = async (ids: string[]) => {
         try {
@@ -104,6 +86,13 @@ export const usePlayer = () => {
         }
     };
 
+    const removeQueueItem = useCallback(({ id }) => {
+        console.log({ id });
+        dispatch({ type: 'player/REMOVE_QUEUE_ITEM', payload: { id } });
+    }, []);
+
+    const clearQueue = () => dispatch({ type: 'player/CLEAR_QUEUE' });
+
     const clearVideo = () => dispatch({ type: 'player/CLEAR_VIDEO' });
 
     const setVideo = useCallback(async (videoId) => {
@@ -114,7 +103,7 @@ export const usePlayer = () => {
 
             dispatch({ type: 'player/UPDATE_DATA', payload: { video } });
         } catch (error) {
-            openNotification({ message: 'Error fetching video.' });
+            openNotification('Error fetching video.');
         }
     }, []);
 
@@ -148,14 +137,31 @@ export const usePlayer = () => {
             payload: { showScreen: false }
         });
 
+    const { queue, currentId } = player;
+
+    useEffect(() => {
+        database.set(`users/${getCurrentUserId()}`, {
+            queue
+        });
+    }, [queue]);
+
+    useEffect(() => {
+        database.set(`users/${getCurrentUserId()}`, {
+            currentId
+        });
+    }, [currentId]);
+
     return [
         player,
         {
             listenForQueueUpdate,
             setQueue,
             queueItems,
+            queueItem,
             setActiveQueueItem,
             importVideos,
+            removeQueueItem,
+            clearQueue,
             clearVideo,
             setVideo,
             toggleQueue,

@@ -1,34 +1,27 @@
-import { useState, useCallback } from 'react';
-import { GenericObject } from '../../..';
-import { useMergedState } from '../../lib/hooks';
-
-interface PromptState {
-    isVisible: boolean;
-    headerText: string;
-    confirmText: string;
-    cancelText: string;
-    callback: (...args: unknown[]) => void;
-}
-
-export const initialState: PromptState = {
-    isVisible: false,
-    headerText: '',
-    confirmText: '',
-    cancelText: '',
-    callback: () => {}
-};
+import { useCallback } from 'react';
+import { useStore } from '..';
+import { GenericObject } from '../../../@types/alltypes';
+import { delay } from '../../lib/helpers';
 
 export const usePrompt = () => {
-    const [state, setState] = useMergedState(initialState);
+    const [{ prompt }, dispatch] = useStore();
 
     const openPrompt = useCallback(
-        (data: GenericObject) => setState({ ...data, isVisible: true }),
-        [state]
+        (payload: GenericObject) =>
+            dispatch({
+                type: 'prompt/OPEN',
+                payload
+            }),
+        [prompt]
     );
 
-    const closePrompt = useCallback(() => setState({ isVisible: false }), [
-        state
-    ]);
+    const closePrompt = useCallback(async () => {
+        dispatch({
+            type: 'prompt/CLOSE'
+        });
 
-    return [state, { openPrompt, closePrompt }];
+        await delay(300), dispatch({ type: 'prompt/RESET' });
+    }, [prompt]);
+
+    return [prompt, { openPrompt, closePrompt }];
 };

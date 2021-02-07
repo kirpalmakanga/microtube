@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
-import { GenericObject } from '../..';
+import { useRef, useState, useEffect, useCallback, Ref } from 'react';
+import { GenericObject } from '../../@types/alltypes';
 
 export const useFullscreen = () => {
     const container = useRef<HTMLElement | null>(null);
@@ -72,4 +72,18 @@ export const useMergedState = (
     );
 
     return [mergedState, setMergedState];
+};
+
+export const useUpdateEffect = (callback: () => void, dependencies: any) => {
+    const isFirstRun = useRef(true);
+
+    useEffect(() => {
+        if (isFirstRun.current) {
+            isFirstRun.current = false;
+
+            return;
+        }
+
+        callback();
+    }, dependencies);
 };

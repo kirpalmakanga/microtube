@@ -8,24 +8,18 @@ import TranslateY from './animations/TranslateY';
 const Notifications = () => {
     const [
         {
-            notifications: { message, isActive }
-        },
-        dispatch
+            notifications: { message, isVisible }
+        }
     ] = useStore();
-    const [_, { closeNotification }] = useNotifications();
-
-    const handleCloseNotification = useCallback(
-        () => dispatch(closeNotification()),
-        [message, isActive]
-    );
+    const [, { closeNotification }] = useNotifications();
 
     return (
-        <TranslateY in={isActive} className="notification shadow--2dp">
+        <TranslateY in={isVisible} className="notification shadow--2dp">
             <div className="notification__content">
                 <div className="notification__text">{message}</div>
                 <button
                     className="notification__action icon-button"
-                    onClick={handleCloseNotification}
+                    onClick={closeNotification}
                 >
                     <Icon name="close" />
                 </button>

@@ -90,11 +90,10 @@ const Queue: FunctionComponent<Props> = ({
                                             {...data}
                                             isActive={isActive}
                                             icon={icon}
-                                            onClick={
+                                            onClick={() =>
                                                 isActive
-                                                    ? togglePlay
-                                                    : () =>
-                                                          setActiveQueueItem(id)
+                                                    ? togglePlay()
+                                                    : setActiveQueueItem(id)
                                             }
                                             onContextMenu={handleClickMenu(
                                                 data,

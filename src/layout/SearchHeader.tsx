@@ -8,7 +8,7 @@ import Icon from '../components/Icon';
 
 import DropDown from '../components/DropDown';
 
-import { setSearchTarget } from '../store/actions/youtube';
+const setSearchTarget = (val: number) => {};
 
 const SearchHeader = () => {
     const navigate = useNavigate();

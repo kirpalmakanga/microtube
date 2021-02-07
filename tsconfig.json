@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "sourceMap": true,
         "allowJs": true,
         "target": "ES2019",
         "strict": true,

@@ -48,9 +48,9 @@ export default createReducer(initialState, {
         return { ...state, items };
     },
 
-    'playlists/REMOVE_ITEM': (state, { playlistId }) => ({
+    'playlists/REMOVE_ITEM': (state, { id }) => ({
         ...state,
-        items: state.items.filter((item) => item.id !== playlistId)
+        items: state.items.filter(({ id: itemId }) => itemId !== id)
     }),
 
     'playlist/REMOVE_ITEM': (state, { playlistId }) => {

@@ -4,28 +4,9 @@ import { useStore } from '..';
 import { useNotifications } from './notifications';
 import { usePrompt } from './prompt';
 
-import { ThumbnailsData } from '../../../@types/alltypes';
+import { PlaylistData, VideoData } from '../../../@types/alltypes';
 
 import * as api from '../../api/youtube';
-
-interface VideoData {
-    id: string;
-    title: string;
-    description: string;
-    thumbnails: ThumbnailsData;
-    duration: number;
-    publishedAt: string;
-    channelId: string;
-    channelTitle: string;
-    playlistId: string;
-    playlistItemId: string;
-}
-
-interface PlaylistData {
-    id: string;
-    title: string;
-    privacyStatus: string;
-}
 
 export const usePlaylistItems = (playlistId: string) => {
     const [{ playlistItems }, dispatch] = useStore();

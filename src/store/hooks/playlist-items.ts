@@ -108,7 +108,12 @@ export const usePlaylistItems = (playlistId: string) => {
                 try {
                     dispatch({
                         type: 'playlist/REMOVE_ITEM',
-                        data: { playlistItemId, playlistId }
+                        payload: { playlistItemId }
+                    });
+
+                    dispatch({
+                        type: 'playlist/REMOVE_ITEM',
+                        payload: { playlistId }
                     });
 
                     openNotification(`Removed ${title}.`);

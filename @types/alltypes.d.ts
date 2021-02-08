@@ -31,6 +31,7 @@ interface VideoData {
     publishedAt: string;
     channelId: string;
     channelTitle: string;
+    privacyStatus: string;
     playlistId?: string;
     playlistItemId?: string;
 }

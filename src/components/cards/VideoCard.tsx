@@ -1,7 +1,7 @@
 import { FunctionComponent, memo } from 'react';
 import { Link } from 'react-router-dom';
 
-import { ThumbnailsData } from '../../../@types/alltypes';
+import { ThumbnailsData, VideoData } from '../../../@types/alltypes';
 
 import {
     formatDate,
@@ -19,14 +19,7 @@ import Button from './CardButton';
 import Title from './CardTitle';
 import Subtitle from './CardSubtitle';
 
-interface Props {
-    title: string;
-    thumbnails: ThumbnailsData;
-    publishedAt: string;
-    privacyStatus: string;
-    duration: number;
-    channelId: string;
-    channelTitle: string;
+interface Props extends VideoData {
     onClick: () => void;
     onClickMenu: () => void;
 }

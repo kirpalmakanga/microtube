@@ -73,7 +73,7 @@ export default createReducer(initialState, {
 
         updateItem(playlistId, items, ({ itemCount, ...item }) => ({
             ...item,
-            itemCount: itemCount || itemCount - 1
+            itemCount: itemCount > 0 ? itemCount - 1 : itemCount
         }));
 
         return { ...state, items };

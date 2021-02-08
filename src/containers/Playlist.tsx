@@ -1,8 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { ThumbnailsData } from '../../@types/alltypes';
-
 import { usePlaylistItems } from '../store/hooks/playlist-items';
 
 import List from '../components/List';
@@ -10,20 +8,7 @@ import Placeholder from '../components/Placeholder';
 import VideoCard from '../components/cards/VideoCard';
 import MenuWrapper from '../components/menu/MenuWrapper';
 import { usePlayer } from '../store/hooks/player';
-
-interface PlaylistItemData {
-    id: string;
-    title: string;
-    description: string;
-    thumbnails: ThumbnailsData;
-    duration: number;
-    publishedAt: string;
-    channelId: string;
-    channelTitle: string;
-    privacyStatus: string;
-    playlistId: string;
-    playlistItemId: string;
-}
+import { VideoData } from '../../@types/alltypes';
 
 const Playlists = () => {
     const { playlistId } = useParams();
@@ -42,12 +27,12 @@ const Playlists = () => {
     const [, { queueItem }] = usePlayer();
 
     const handleClickCard = useCallback(
-        ({ id }: PlaylistItemData) => () => navigate(`/video/${id}`),
+        ({ id }: VideoData) => () => navigate(`/video/${id}`),
         []
     );
 
     const handleClickMenu = useCallback(
-        (data: PlaylistItemData, callback: Function) => () => {
+        (data: VideoData, callback: Function) => () => {
             const { title } = data;
 
             callback(data, title);
@@ -82,8 +67,8 @@ const Playlists = () => {
             {(openMenu) => (
                 <List
                     items={items}
-                    itemKey={({ id }: PlaylistItemData) => id}
-                    renderItem={(data: PlaylistItemData) => (
+                    itemKey={({ id }: VideoData) => id}
+                    renderItem={(data: VideoData) => (
                         <VideoCard
                             {...data}
                             onClick={handleClickCard(data)}

@@ -285,6 +285,7 @@ export async function getPlaylistItems({ pageToken = '', playlistId }) {
 
         items = videos.map((data, index) => ({
             ...data,
+            playlistId,
             playlistItemId: playlistItems[index].id
         }));
     }

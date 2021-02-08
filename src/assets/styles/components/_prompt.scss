@@ -103,7 +103,7 @@
             padding: 0 20px;
             &:focus {
                 outline: none;
-                background-color: darken($brand-secondary, 5%);
+                background-color: lighten($brand-primary, 10%);
             }
         }
 

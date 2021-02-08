@@ -49,55 +49,45 @@ const Prompt: FunctionComponent = () => {
             break;
     }
 
-    return container
-        ? createPortal(
-              <Fade
-                  className="dialog__overlay"
-                  onClick={closePrompt}
-                  in={isVisible}
-              >
-                  <div
-                      className="dialog shadow--2dp"
-                      onClick={stopPropagation()}
-                  >
-                      <header className="dialog__header">
-                          <Icon name="prompt" />
+    return (
+        <Fade className="dialog__overlay" onClick={closePrompt} in={isVisible}>
+            <div className="dialog shadow--2dp" onClick={stopPropagation()}>
+                <header className="dialog__header">
+                    <Icon name="prompt" />
 
-                          <span>{headerText}</span>
-                      </header>
+                    <span>{headerText}</span>
+                </header>
 
-                      {mode === 'import' ? (
-                          <div className="dialog__content">
-                              <ImportVideoForm onSubmit={handleConfirm} />
-                          </div>
-                      ) : null}
+                {mode === 'import' ? (
+                    <div className="dialog__content">
+                        <ImportVideoForm onSubmit={handleConfirm} />
+                    </div>
+                ) : null}
 
-                      {mode === 'playlists' ? (
-                          <div className="dialog__content">
-                              <PlaylistManager onClickItem={handleConfirm} />
-                          </div>
-                      ) : null}
+                {mode === 'playlists' ? (
+                    <div className="dialog__content">
+                        <PlaylistManager onClickItem={handleConfirm} />
+                    </div>
+                ) : null}
 
-                      <footer className="dialog__actions">
-                          {cancelText ? (
-                              <Button
-                                  className="button button--close shadow--2dp"
-                                  onClick={closePrompt}
-                                  title={cancelText}
-                              />
-                          ) : null}
+                <footer className="dialog__actions">
+                    {cancelText ? (
+                        <Button
+                            className="button button--close shadow--2dp"
+                            onClick={closePrompt}
+                            title={cancelText}
+                        />
+                    ) : null}
 
-                          <Button
-                              className="button shadow--2dp"
-                              title={confirmText}
-                              {...confirmButtonProps}
-                          />
-                      </footer>
-                  </div>
-              </Fade>,
-              container
-          )
-        : null;
+                    <Button
+                        className="button shadow--2dp"
+                        title={confirmText}
+                        {...confirmButtonProps}
+                    />
+                </footer>
+            </div>
+        </Fade>
+    );
 };
 
 export default Prompt;

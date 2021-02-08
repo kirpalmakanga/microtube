@@ -20,7 +20,7 @@ const Prompt: FunctionComponent = () => {
         { closePrompt }
     ] = usePrompt();
 
-    const onFormSubmit = (data: unknown) => {
+    const handleConfirm = (data?: unknown) => {
         closePrompt();
 
         callback(data);
@@ -38,17 +38,13 @@ const Prompt: FunctionComponent = () => {
 
         case 'playlists':
             confirmButtonProps = {
-                onClick: () => closePrompt
+                onClick: closePrompt
             };
             break;
 
         default:
             confirmButtonProps = {
-                onClick: () => {
-                    closePrompt();
-
-                    callback();
-                }
+                onClick: handleConfirm
             };
             break;
     }
@@ -71,11 +67,15 @@ const Prompt: FunctionComponent = () => {
                       </header>
 
                       {mode === 'import' ? (
-                          <ImportVideoForm onSubmit={onFormSubmit} />
+                          <div className="dialog__content">
+                              <ImportVideoForm onSubmit={handleConfirm} />
+                          </div>
                       ) : null}
 
                       {mode === 'playlists' ? (
-                          <PlaylistManager onClickItem={onFormSubmit} />
+                          <div className="dialog__content">
+                              <PlaylistManager onClickItem={handleConfirm} />
+                          </div>
                       ) : null}
 
                       <footer className="dialog__actions">

@@ -14,6 +14,15 @@ export const usePlaylistItems = (playlistId: string) => {
     const [, { openNotification }] = useNotifications();
     const [, { openPrompt }] = usePrompt();
 
+    const getPlaylistTitle = async (playlistId: string) => {
+        const playlistTitle = await api.getPlaylistTitle(playlistId);
+
+        dispatch({
+            type: 'playlist/SET_TITLE',
+            payload: { playlistTitle }
+        });
+    };
+
     const getPlaylistItems = () =>
         dispatch(async (dispatch: Dispatch<Action>, getState: GetState) => {
             try {
@@ -114,7 +123,11 @@ export const usePlaylistItems = (playlistId: string) => {
 
     const clearPlaylistItems = () => dispatch({ type: 'playlist/CLEAR_ITEMS' });
 
-    useEffect(() => clearPlaylistItems, []);
+    useEffect(() => {
+        getPlaylistTitle(playlistId);
+
+        return clearPlaylistItems;
+    }, [playlistId]);
 
     return [
         playlistItems,

@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { ThumbnailsData } from '../../@types/alltypes';
@@ -31,7 +31,12 @@ const Playlists = () => {
 
     const [
         { items, totalResults },
-        { getPlaylistItems, editPlaylistItem, removePlaylistItem }
+        {
+            getPlaylistTitle,
+            getPlaylistItems,
+            editPlaylistItem,
+            removePlaylistItem
+        }
     ] = usePlaylistItems(playlistId);
 
     const [, { queueItem }] = usePlayer();

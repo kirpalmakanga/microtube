@@ -11,19 +11,6 @@
 //         window.queuePlaylist = (id) => dispatch(queuePlaylist(id));
 //     }
 // };
-/* Videos */
-
-/* Playlist */
-// export function getPlaylistTitle(playlistId) {
-//     return async (dispatch) => {
-//         const playlistTitle = await api.getPlaylistTitle(playlistId);
-
-//         dispatch({
-//             type: 'playlist/SET_TITLE',
-//             data: { playlistTitle }
-//         });
-//     };
-// }
 
 /* Player */
 
@@ -32,37 +19,6 @@
 
 //     dispatch(setActiveQueueItem(data.id));
 // };
-
-// export function queuePlaylist(playlistId, play) {
-//     return (dispatch, getState) => {
-//         const {
-//             player: { queue }
-//         } = getState();
-
-//         const getItems = async (pageToken) => {
-//             const { items, nextPageToken } = await api.getPlaylistItems({
-//                 playlistId,
-//                 pageToken
-//             });
-
-//             const newItems = dispatch(queueItems(items));
-
-//             if (play && !pageToken && newItems.length) {
-//                 const [{ id }] = newItems;
-
-//                 dispatch(setActiveQueueItem(id));
-//             }
-
-//             if (nextPageToken) {
-//                 await getItems(nextPageToken);
-//             }
-//         };
-
-//         catchErrors(getItems, () =>
-//             dispatch(notify({ message: 'Error queueing playlist items.' }))
-//         );
-//     };
-// }
 
 // export const importVideos = () => (dispatch) =>
 //     dispatch(

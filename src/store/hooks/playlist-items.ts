@@ -42,13 +42,13 @@ export const usePlaylistItems = (playlistId: string) => {
             await api.addPlaylistItem(playlistId, id);
 
             const {
-                items: [payload]
+                items: [playlist]
             } = await api.getPlaylists({ ids: [playlistId] });
 
-            if (payload) {
+            if (playlist) {
                 dispatch({
                     type: 'playlists/UPDATE_ITEM',
-                    payload
+                    payload: { playlist }
                 });
             }
         } catch (error) {

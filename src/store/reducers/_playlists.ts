@@ -15,18 +15,12 @@ export const initialState: PlaylistsState = {
     hasNextPage: true
 };
 
-const matchPlaylistId = (playlistId: string) => ({ id }: PlaylistData) =>
-    id === playlistId;
-
-const findPlaylistIndex = (playlistId: string, items: PlaylistData[]) =>
-    items.findIndex(matchPlaylistId(playlistId));
-
 const updateItem = (
     playlistId: string,
     items: PlaylistData[],
     update: (data: PlaylistData) => PlaylistData
 ) => {
-    const index = findPlaylistIndex(playlistId, items);
+    const index = items.findIndex(({ id }: PlaylistData) => id === playlistId);
 
     if (index > -1) {
         items[index] = update(items[index]);
@@ -45,14 +39,17 @@ export default createReducer(initialState, {
         totalResults
     }),
 
-    'playlists/ADD_ITEM': ({ items, ...state }: State, data: State) => ({
+    'playlists/ADD_ITEM': (
+        { items, ...state }: State,
+        { playlist }: State
+    ) => ({
         ...state,
-        items: [data, ...items]
+        items: [playlist, ...items]
     }),
 
     'playlists/UPDATE_ITEM': (
         { items: currentItems, ...state }: State,
-        { id, ...data }: State
+        { playlist: { id, ...data } }: State
     ) => {
         const items = [...currentItems];
 

@@ -69,11 +69,11 @@ export const usePlaylists = (channelId?: string) => {
 
     const createPlaylist = async ({ title, privacyStatus }: PlaylistData) => {
         try {
-            const payload = await api.createPlaylist({ title, privacyStatus });
+            const playlist = await api.createPlaylist({ title, privacyStatus });
 
-            dispatch({ type: 'playlists/ADD_ITEM', payload });
+            dispatch({ type: 'playlists/ADD_ITEM', payload: { playlist } });
 
-            return payload;
+            return playlist;
         } catch (error) {
             openNotification(`Error creating playlist "${title}".`);
         }

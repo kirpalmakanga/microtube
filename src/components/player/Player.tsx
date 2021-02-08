@@ -1,6 +1,6 @@
-import { useEffect, useRef, WheelEvent } from 'react';
+import { useRef, WheelEvent } from 'react';
 
-import { GenericObject } from '../../../@types/alltypes';
+import { GenericObject, QueueItem } from '../../../@types/alltypes';
 import { YouTubePlayer } from 'youtube-player/dist/types';
 
 import { useStore } from '../../store';
@@ -30,7 +30,6 @@ import VolumeRange from './controls/VolumeRange';
 // import DevicesSelector from './controls/DevicesSelector';
 
 import Info from './Info';
-import { QueueItem } from '../../store/reducers/_player';
 
 interface PlayerState {
     isPlayerReady: boolean;

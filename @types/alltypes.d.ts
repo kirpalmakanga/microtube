@@ -34,3 +34,10 @@ interface VideoData {
     playlistId?: string;
     playlistItemId?: string;
 }
+
+export interface QueueItem {
+    id: string;
+    title: string;
+    description: string;
+    duration: number;
+}

@@ -253,14 +253,13 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
         }
 
         internalPlayer.current?.cueVideoById(newOpts);
-    }, []);
+    }, [videoId]);
 
     const handleUnmounting = useCallback(() => {
         window.clearInterval(timeWatcher.current);
         window.clearInterval(loadingWatcher.current);
 
         if (internalPlayer.current) {
-            console.log('destroy');
             internalPlayer.current?.destroy();
             internalPlayer.current = null;
         }

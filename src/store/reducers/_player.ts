@@ -1,11 +1,5 @@
+import { QueueItem, VideoData } from '../../../@types/alltypes';
 import { createReducer, State } from '../helpers';
-
-export interface QueueItem {
-    id: string;
-    title: string;
-    description: string;
-    duration: number;
-}
 
 export interface PlayerState extends State {
     queue: QueueItem[];
@@ -41,7 +35,7 @@ const extractQueueItemData = ({
     title,
     description,
     duration
-}: any): QueueItem => ({
+}: VideoData): QueueItem => ({
     id,
     title,
     description,
@@ -67,14 +61,11 @@ export default createReducer(initialState, {
     'player/REMOVE_QUEUE_ITEM': (
         { queue, currentId, ...state }: State,
         { id }: State
-    ) => {
-        console.log({ id, queue });
-        return {
-            ...state,
-            queue: queue.filter(({ id: videoId }: QueueItem) => videoId !== id),
-            currentId: currentId === id ? '' : currentId
-        };
-    },
+    ) => ({
+        ...state,
+        queue: queue.filter(({ id: videoId }: QueueItem) => videoId !== id),
+        currentId: currentId === id ? '' : currentId
+    }),
 
     'player/CLEAR_QUEUE': (
         { queue, currentId, ...state }: State,
@@ -85,6 +76,11 @@ export default createReducer(initialState, {
             ? initialState.queue
             : queue.filter(isActiveItem(currentId)),
         currentId
+    }),
+
+    'player/SET_VIDEO': (state: State, { video }: State) => ({
+        ...state,
+        video: extractQueueItemData(video)
     }),
 
     'player/CLEAR_VIDEO': (state: State) => ({

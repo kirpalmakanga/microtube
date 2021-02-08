@@ -1,11 +1,8 @@
 import { FunctionComponent } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { QueueItem } from '../../@types/alltypes';
 import { useStore } from '../store';
-
-interface QueueItem {
-    id: string;
-}
 
 const Head: FunctionComponent = () => {
     const { pathname } = useLocation();

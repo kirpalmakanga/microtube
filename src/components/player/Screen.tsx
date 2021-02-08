@@ -38,20 +38,23 @@ const Screen: FunctionComponent<Props> = ({
     ...props
 }) => (
     <div className="screen" {...props}>
-        <YoutubePlayer
-            videoId={videoId}
-            options={playerOptions}
-            onReady={onReady}
-            onEnd={onEnd}
-            onTimeUpdate={onTimeUpdate}
-            onLoadingUpdate={onLoadingUpdate}
-            onPlay={onPlay}
-            onPause={onPause}
-            onBuffering={onBuffering}
-            onStateChange={onStateChange}
-            onError={(err) => console.error(err)}
-        />
-        {!videoId && <Placeholder icon="screen" text="No video." />}
+        {videoId ? (
+            <YoutubePlayer
+                videoId={videoId}
+                options={playerOptions}
+                onReady={onReady}
+                onEnd={onEnd}
+                onTimeUpdate={onTimeUpdate}
+                onLoadingUpdate={onLoadingUpdate}
+                onPlay={onPlay}
+                onPause={onPause}
+                onBuffering={onBuffering}
+                onStateChange={onStateChange}
+                onError={(err) => console.error(err)}
+            />
+        ) : (
+            <Placeholder icon="screen" text="No video." />
+        )}
     </div>
 );
 

@@ -79,20 +79,21 @@ export const usePlaylists = (channelId?: string) => {
         }
     };
 
-    const removePlaylist = ({ id: playlistId, title }: PlaylistData) => {
+    const removePlaylist = ({ id, title }: PlaylistData) => {
         openPrompt({
             headerText: `Remove playlist ${title} ?`,
             confirmText: 'Remove',
+            cancelText: 'Cancel',
             callback: async () => {
                 try {
                     dispatch({
                         type: 'playlists/REMOVE_ITEM',
-                        payload: { playlistId }
+                        payload: { id }
                     });
 
                     openNotification(`Removed playlist "${title}".`);
 
-                    await api.removePlaylist(playlistId);
+                    await api.removePlaylist(id);
                 } catch (error) {
                     openNotification('Error deleting playlist.');
                 }

@@ -20,6 +20,12 @@ const Prompt: FunctionComponent = () => {
         { closePrompt }
     ] = usePrompt();
 
+    const onFormSubmit = (data: unknown) => {
+        closePrompt();
+
+        callback(data);
+    };
+
     let confirmButtonProps;
 
     switch (mode) {
@@ -65,11 +71,11 @@ const Prompt: FunctionComponent = () => {
                       </header>
 
                       {mode === 'import' ? (
-                          <ImportVideoForm onSubmit={callback} />
+                          <ImportVideoForm onSubmit={onFormSubmit} />
                       ) : null}
 
                       {mode === 'playlists' ? (
-                          <PlaylistManager onClickItem={callback} />
+                          <PlaylistManager onClickItem={onFormSubmit} />
                       ) : null}
 
                       <footer className="dialog__actions">

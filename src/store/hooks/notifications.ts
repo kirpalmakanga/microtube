@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { useStore } from '..';
 import { delay } from '../../lib/helpers';
+import { Action, Dispatch, GetState } from '../helpers';
 
 export const useNotifications = () => {
     const [{ notifications }, dispatch] = useStore();
@@ -13,20 +14,26 @@ export const useNotifications = () => {
         dispatch({ type: 'notifications/CLEAR_MESSAGE' });
     }, []);
 
-    const openNotification = useCallback(async (message: string) => {
-        dispatch({
-            type: 'notifications/OPEN',
-            payload: { message }
-        });
+    const openNotification = useCallback(
+        (message) =>
+            dispatch(async (dispatch: Dispatch<Action>, getState: GetState) => {
+                dispatch({
+                    type: 'notifications/OPEN',
+                    payload: { message }
+                });
 
-        await delay(4000);
+                await delay(4000);
 
-        const { isVisible } = notifications;
+                const {
+                    notifications: { isVisible }
+                } = getState();
 
-        if (isVisible) {
-            closeNotification();
-        }
-    }, []);
+                if (isVisible) {
+                    closeNotification();
+                }
+            }),
+        []
+    );
 
     return [
         notifications,

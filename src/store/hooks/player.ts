@@ -2,14 +2,14 @@ import { useEffect, useCallback } from 'react';
 import { useStore } from '..';
 import { useNotifications } from './notifications';
 
+import { QueueItem } from '../../../@types/alltypes';
+
 import { __DEV__ } from '../../config/app';
 
 import * as api from '../../api/youtube';
 import database from '../../api/database';
 
 import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
-
-import { QueueItem } from '../reducers/_player';
 
 export const usePlayer = () => {
     const [{ user, player }, dispatch] = useStore();
@@ -86,22 +86,23 @@ export const usePlayer = () => {
         }
     };
 
-    const removeQueueItem = useCallback(({ id }) => {
-        console.log({ id });
-        dispatch({ type: 'player/REMOVE_QUEUE_ITEM', payload: { id } });
-    }, []);
+    const removeQueueItem = useCallback(
+        ({ id }) =>
+            dispatch({ type: 'player/REMOVE_QUEUE_ITEM', payload: { id } }),
+        []
+    );
 
     const clearQueue = () => dispatch({ type: 'player/CLEAR_QUEUE' });
 
     const clearVideo = () => dispatch({ type: 'player/CLEAR_VIDEO' });
 
-    const setVideo = useCallback(async (videoId) => {
+    const getVideo = useCallback(async (videoId) => {
         try {
             clearVideo();
 
             const video = await api.getVideo(videoId);
 
-            dispatch({ type: 'player/UPDATE_DATA', payload: { video } });
+            dispatch({ type: 'player/SET_VIDEO', payload: { video } });
         } catch (error) {
             openNotification('Error fetching video.');
         }
@@ -163,7 +164,7 @@ export const usePlayer = () => {
             removeQueueItem,
             clearQueue,
             clearVideo,
-            setVideo,
+            getVideo,
             toggleQueue,
             toggleScreen,
             closeScreen

@@ -22,13 +22,13 @@ const SearchForm: FunctionComponent<Props> = ({ query = '', onSubmit }) => {
     );
 
     const unlistenKeyDown = useCallback(() => {
-        inputRef.current?.removeEventListener('keydown', keyDownHandler);
+        inputRef.current?.removeEventListener('keyup', keyDownHandler);
     }, []);
 
     const listenKeyDown = useCallback(() => {
         unlistenKeyDown();
 
-        inputRef.current?.addEventListener('keydown', keyDownHandler);
+        inputRef.current?.addEventListener('keyup', keyDownHandler);
     }, []);
 
     useEffect(() => {
@@ -42,7 +42,7 @@ const SearchForm: FunctionComponent<Props> = ({ query = '', onSubmit }) => {
     }, [query]);
 
     const handleInput = useCallback(
-        ({ target: { value } }) => setInput(value),
+        ({ currentTarget: { value } }) => setInput(value),
         []
     );
 
@@ -54,7 +54,7 @@ const SearchForm: FunctionComponent<Props> = ({ query = '', onSubmit }) => {
                 onSubmit(newQuery);
             }
         }),
-        []
+        [input]
     );
 
     return (

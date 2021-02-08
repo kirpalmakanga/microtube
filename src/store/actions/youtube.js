@@ -46,40 +46,6 @@
 //         )
 //     );
 
-/* Search */
-// export function searchVideos(config) {
-//     return (dispatch, getState) =>
-//         catchErrors(
-//             async () => {
-//                 const {
-//                     search: { hasNextPage, forMine, nextPageToken: pageToken }
-//                 } = getState();
-
-//                 if (!hasNextPage) {
-//                     return;
-//                 }
-
-//                 const data = await api.searchVideos({
-//                     ...config,
-//                     forMine,
-//                     pageToken
-//                 });
-
-//                 dispatch({ type: 'search/UPDATE_ITEMS', data });
-//             },
-//             () => dispatch(notify({ message: 'Error searching videos.' }))
-//         );
-// }
-
-// export const setSearchTarget = (forMine) => ({
-//     type: 'search/SET_TARGET',
-//     payload: {
-//         forMine
-//     }
-// });
-
-// export const clearSearch = () => ({ type: 'search/RESET' });
-
 /* Channels */
 // export const getSubscriptions = (channelId) => (dispatch, getState) =>
 //     catchErrors(

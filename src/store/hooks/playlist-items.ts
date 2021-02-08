@@ -9,7 +9,7 @@ import { PlaylistData, VideoData } from '../../../@types/alltypes';
 import * as api from '../../api/youtube';
 import { Action, Dispatch, GetState } from '../helpers';
 
-export const usePlaylistItems = (playlistId: string) => {
+export const usePlaylistItems = (playlistId?: string) => {
     const [{ playlistItems }, dispatch] = useStore();
     const [, { openNotification }] = useNotifications();
     const [, { openPrompt }] = usePrompt();
@@ -127,12 +127,6 @@ export const usePlaylistItems = (playlistId: string) => {
     };
 
     const clearPlaylistItems = () => dispatch({ type: 'playlist/CLEAR_ITEMS' });
-
-    useEffect(() => {
-        getPlaylistTitle(playlistId);
-
-        return clearPlaylistItems;
-    }, [playlistId]);
 
     return [
         playlistItems,

@@ -20,7 +20,8 @@ const Playlists = () => {
             getPlaylistTitle,
             getPlaylistItems,
             editPlaylistItem,
-            removePlaylistItem
+            removePlaylistItem,
+            clearPlaylistItems
         }
     ] = usePlaylistItems(playlistId);
 
@@ -39,6 +40,12 @@ const Playlists = () => {
         },
         []
     );
+
+    useEffect(() => {
+        getPlaylistTitle(playlistId);
+
+        return clearPlaylistItems;
+    }, [playlistId]);
 
     return totalResults === 0 ? (
         <Placeholder icon="list" text="This playlist is empty." />

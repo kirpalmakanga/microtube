@@ -1,40 +1,46 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
-import { useStore } from '../store';
+import { VideoData } from '../../@types/alltypes';
 
-import {
-    searchVideos,
-    clearSearch,
-    editPlaylistItem,
-    queueItem
-} from '../store/actions/youtube';
+import { useSearch } from '../store/hooks/search';
+import { usePlaylistItems } from '../store/hooks/playlist-items';
+import { usePlayer } from '../store/hooks/player';
 
 import List from '../components/List';
-
 import VideoCard from '../components/cards/VideoCard';
 import Placeholder from '../components/Placeholder';
-
 import MenuWrapper from '../components/menu/MenuWrapper';
 
 const Search = () => {
     const navigate = useNavigate();
     const { query } = useParams();
     const [
-        {
-            search: { items, totalResults, forMine }
-        },
-        dispatch
-    ] = useStore();
+        { items, totalResults, forMine },
+        { searchVideos, clearSearch }
+    ] = useSearch();
+    const [, { editPlaylistItem }] = usePlaylistItems();
+    const [, { queueItem }] = usePlayer();
 
     const [{ mountGrid }, setState] = useState({
         mountGrid: true
     });
 
-    const handleEditPlaylistItem = ({ id }) => dispatch(editPlaylistItem(id));
-    const handleSearchVideos = () => dispatch(searchVideos({ query }));
-    const handleClearSearch = () => dispatch(clearSearch());
-    const handleQueueItem = (video) => dispatch(queueItem(video));
+    const handleSearchVideos = () => searchVideos(query);
+
+    const handleClickCard = useCallback(
+        ({ id }: VideoData) => () => navigate(`/video/${id}`),
+        []
+    );
+
+    const handleClickMenu = useCallback(
+        (data: VideoData, callback: Function) => () => {
+            const { title } = data;
+
+            callback(data, title);
+        },
+        []
+    );
 
     useEffect(() => {
         setState({ mountGrid: false });
@@ -43,7 +49,7 @@ const Search = () => {
 
         setTimeout(() => setState({ mountGrid: true }));
 
-        return handleClearSearch;
+        return clearSearch;
     }, [query, forMine]);
 
     return query && mountGrid ? (
@@ -55,25 +61,25 @@ const Search = () => {
                     {
                         title: `Add to queue`,
                         icon: 'circle-add',
-                        onClick: handleQueueItem
+                        onClick: queueItem
                     },
                     {
                         title: `Save to playlist`,
                         icon: 'folder-add',
-                        onClick: handleEditPlaylistItem
+                        onClick: editPlaylistItem
                     }
                 ]}
             >
                 {(openMenu) => (
                     <List
                         items={items}
-                        itemKey={(index, data) => data[index].id}
+                        itemKey={({ id }: VideoData) => id}
                         loadMoreItems={handleSearchVideos}
-                        renderItem={({ data }) => (
+                        renderItem={(data: VideoData) => (
                             <VideoCard
                                 {...data}
-                                onClick={() => navigate(`/video/${data.id}`)}
-                                onClickMenu={() => openMenu(data, data.title)}
+                                onClick={handleClickCard(data)}
+                                onClickMenu={handleClickMenu(data, openMenu)}
                             />
                         )}
                     />

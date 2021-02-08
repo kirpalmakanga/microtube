@@ -2,13 +2,12 @@ import { useMemo, useCallback } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 
 import { useStore } from '../store';
+import { useSearch } from '../store/hooks/search';
 
 import SearchForm from '../components/SearchForm';
 import Icon from '../components/Icon';
 
 import DropDown from '../components/DropDown';
-
-const setSearchTarget = (val: number) => {};
 
 const SearchHeader = () => {
     const navigate = useNavigate();
@@ -20,14 +19,15 @@ const SearchHeader = () => {
         dispatch
     ] = useStore();
 
-    const handleFormSubmit = useCallback(
-        (query) => navigate(`/search/${query}`, { replace: true }),
-        [query]
-    );
+    const [_, { setSearchTarget }] = useSearch();
 
-    const handleDropDownSelect = useCallback(
-        (value) => dispatch(setSearchTarget(parseInt(value))),
-        [forMine]
+    const handleFormSubmit = useCallback(
+        (query) => {
+            console.log('searchSubmit');
+
+            navigate(`/search/${query}`, { replace: true });
+        },
+        [query]
     );
 
     return (
@@ -51,7 +51,7 @@ const SearchHeader = () => {
                                 { label: 'All videos', value: 0 },
                                 { label: 'My Videos', value: 1 }
                             ]}
-                            onSelect={handleDropDownSelect}
+                            onSelect={setSearchTarget}
                         />
                     ),
                     [forMine]

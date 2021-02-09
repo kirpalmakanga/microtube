@@ -67,7 +67,7 @@ export const usePlaylists = (channelId?: string) => {
             }
         });
 
-    const createPlaylist = async ({ title, privacyStatus }: PlaylistData) => {
+    const createPlaylist = async (title: string, privacyStatus: string) => {
         try {
             const playlist = await api.createPlaylist({ title, privacyStatus });
 

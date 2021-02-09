@@ -1,30 +1,18 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
-import {
-    getSubscriptions,
-    subscribeToChannel,
-    unsubscribeFromChannel
-} from '../store/actions/youtube';
 
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 
 import ChannelCard from '../components/cards/ChannelCard';
+import { useSubscriptions } from '../store/hooks/subscriptions';
+import { ChannelData } from '../../@types/alltypes';
 
 const Subscriptions = () => {
     const navigate = useNavigate();
-
-    const { items, totalResults } = useSelector(
-        ({ subscriptions: { items, totalResults } }) => ({
-            items,
-            totalResults
-        })
-    );
-
-    const dispatch = useDispatch();
-
-    const handleGetSubscriptions = () => dispatch(getSubscriptions());
+    const [
+        { items, totalResults },
+        { getSubscriptions, subscribeToChannel, unsubscribeFromChannel }
+    ] = useSubscriptions();
 
     return totalResults === 0 ? (
         <Placeholder
@@ -35,16 +23,15 @@ const Subscriptions = () => {
         <List
             className="channels"
             items={items}
-            itemKey={(index, data) => data[index].id}
-            loadMoreItems={handleGetSubscriptions}
-            renderItem={({ data }) => {
+            itemKey={({ id }: ChannelData) => id}
+            loadMoreItems={getSubscriptions}
+            renderItem={(data) => {
                 const { id, title, subscriptionId } = data;
 
-                const handleSubscribeToChannel = () =>
-                    dispatch(subscribeToChannel(id));
+                const handleSubscribeToChannel = () => subscribeToChannel(id);
 
                 const handleUnsubscribeFromChannel = () =>
-                    dispatch(unsubscribeFromChannel(subscriptionId, title));
+                    unsubscribeFromChannel(subscriptionId, title);
 
                 return (
                     <ChannelCard

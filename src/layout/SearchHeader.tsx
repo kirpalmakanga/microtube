@@ -15,10 +15,8 @@ const SearchHeader = () => {
     const [
         {
             search: { forMine }
-        },
-        dispatch
+        }
     ] = useStore();
-
     const [_, { setSearchTarget }] = useSearch();
 
     const handleFormSubmit = useCallback(

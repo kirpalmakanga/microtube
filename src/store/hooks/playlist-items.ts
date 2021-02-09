@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import { useStore } from '..';
+import { usePlaylists } from './playlists';
 import { useNotifications } from './notifications';
 import { usePrompt } from './prompt';
 
@@ -13,6 +14,7 @@ export const usePlaylistItems = (playlistId?: string) => {
     const [{ playlistItems }, dispatch] = useStore();
     const [, { openNotification }] = useNotifications();
     const [, { openPrompt }] = usePrompt();
+    const [, { createPlaylist }] = usePlaylists();
 
     const getPlaylistTitle = async (playlistId: string) => {
         const playlistTitle = await api.getPlaylistTitle(playlistId);
@@ -77,10 +79,10 @@ export const usePlaylistItems = (playlistId?: string) => {
             }: PlaylistData) => {
                 try {
                     if (!playlistId) {
-                        const { id: newPlaylistId } = await api.createPlaylist({
+                        const { id: newPlaylistId } = await createPlaylist(
                             title,
                             privacyStatus
-                        });
+                        );
 
                         playlistId = newPlaylistId;
                     }
@@ -112,7 +114,7 @@ export const usePlaylistItems = (playlistId?: string) => {
                     });
 
                     dispatch({
-                        type: 'playlist/REMOVE_ITEM',
+                        type: 'playlists/REMOVE_ITEM',
                         payload: { playlistId }
                     });
 
@@ -131,6 +133,7 @@ export const usePlaylistItems = (playlistId?: string) => {
     return [
         playlistItems,
         {
+            getPlaylistTitle,
             getPlaylistItems,
             addPlaylistItem,
             editPlaylistItem,

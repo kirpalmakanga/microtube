@@ -42,3 +42,7 @@ export interface QueueItem {
     description: string;
     duration: number;
 }
+
+export interface ChannelData {
+    id: string;
+}

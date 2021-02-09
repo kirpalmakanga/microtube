@@ -47,67 +47,6 @@
 //     );
 
 /* Channels */
-// export const getSubscriptions = (channelId) => (dispatch, getState) =>
-//     catchErrors(
-//         async () => {
-//             const {
-//                 subscriptions: { nextPageToken: pageToken, hasNextPage }
-//             } = getState();
-
-//             if (!hasNextPage) {
-//                 return;
-//             }
-
-//             const data = await api.getSubscriptions({
-//                 pageToken,
-//                 channelId,
-//                 ...(!channelId ? { mine: true } : {})
-//             });
-
-//             dispatch({ type: 'subscriptions/UPDATE_ITEMS', data });
-//         },
-//         () => dispatch(notify({ message: 'Error fetching subscriptions.' }))
-//     );
-
-// export const subscribeToChannel = (channelId) => async (dispatch) =>
-//     catchErrors(
-//         async () => {
-//             await api.subscribeToChannel(channelId);
-
-//             dispatch({ type: 'subscriptions/SUBSCRIBE', data: { channelId } });
-//         },
-//         () => dispatch(notify({ message: 'Error subscribing to channel.' }))
-//     );
-
-// export const unsubscribeFromChannel = (subscriptionId, channelTitle) => async (
-//     dispatch
-// ) =>
-//     dispatch(
-//         prompt(
-//             {
-//                 promptText: `Unsubscribe from ${channelTitle}`,
-//                 confirmText: 'Done'
-//             },
-//             () => {
-//                 catchErrors(
-//                     () => {
-//                         dispatch({
-//                             type: 'subscriptions/UNSUBSCRIBE',
-//                             data: { subscriptionId }
-//                         });
-
-//                         return api.unsubscribeFromChannel(subscriptionId);
-//                     },
-//                     () =>
-//                         dispatch(
-//                             notify({
-//                                 message: 'Error unsubscribing to channel.'
-//                             })
-//                         )
-//                 );
-//             }
-//         )
-//     );
 
 // export const getChannel = (channelId) => async (dispatch) =>
 //     catchErrors(

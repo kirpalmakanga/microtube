@@ -16,8 +16,8 @@ export const initialState: PlaylistsState = {
 };
 
 const updateItem = (
-    playlistId: string,
     items: PlaylistData[],
+    playlistId: string,
     update: (data: PlaylistData) => PlaylistData
 ) => {
     const index = items.findIndex(({ id }: PlaylistData) => id === playlistId);
@@ -53,7 +53,7 @@ export default createReducer(initialState, {
     ) => {
         const items = [...currentItems];
 
-        updateItem(id, items, (item) => ({
+        updateItem(items, id, (item) => ({
             ...item,
             ...data
         }));
@@ -71,7 +71,7 @@ export default createReducer(initialState, {
     'playlist/REMOVE_ITEM': (state: State, { playlistId }: State) => {
         const items = [...state.items];
 
-        updateItem(playlistId, items, ({ itemCount, ...item }) => ({
+        updateItem(items, playlistId, ({ itemCount, ...item }) => ({
             ...item,
             itemCount: itemCount > 0 ? itemCount - 1 : itemCount
         }));

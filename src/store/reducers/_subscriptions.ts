@@ -1,6 +1,14 @@
-import { createReducer } from '../helpers';
+import { createReducer, State } from '../helpers';
+import { ChannelData } from '../../../@types/alltypes';
 
-export const initialState = {
+interface SubscriptionsState extends State {
+    items: ChannelData[];
+    nextPageToken: '';
+    totalResults: null;
+    hasNextPage: true;
+}
+
+export const initialState: SubscriptionsState = {
     items: [],
     nextPageToken: '',
     totalResults: null,
@@ -9,8 +17,8 @@ export const initialState = {
 
 export default createReducer(initialState, {
     'subscriptions/UPDATE_ITEMS': (
-        { items, ...state },
-        { items: newItems, nextPageToken = '', totalResults }
+        { items, ...state }: State,
+        { items: newItems, nextPageToken = '', totalResults }: State
     ) => ({
         ...state,
         items: [...items, ...newItems],
@@ -19,22 +27,26 @@ export default createReducer(initialState, {
         totalResults
     }),
 
-    'subscriptions/SUBSCRIBE': (state, { channelId }) => {
-        const items = [...state.items];
+    'subscriptions/SUBSCRIBE': (
+        { items: storedItems, ...state }: State,
+        { channelId }: State
+    ) => {
+        const items = [...storedItems];
 
         const index = items.findIndex(({ id }) => id === channelId);
 
         if (index > -1) {
             items[index].isUnsubscribed = false;
-
-            return { ...state, items };
         }
 
-        return { ...state };
+        return { ...state, items };
     },
 
-    'subscriptions/UNSUBSCRIBE': (state, { subscriptionId }) => {
-        const items = [...state.items];
+    'subscriptions/UNSUBSCRIBE': (
+        { items: storedItems, ...state }: State,
+        { subscriptionId }: State
+    ) => {
+        const items = [...storedItems];
 
         const index = items.findIndex(
             (item) => item.subscriptionId === subscriptionId
@@ -42,11 +54,9 @@ export default createReducer(initialState, {
 
         if (index > -1) {
             items[index].isUnsubscribed = true;
-
-            return { ...state, items };
         }
 
-        return { ...state };
+        return { ...state, items };
     },
 
     'subscriptions/CLEAR_ITEMS': () => ({ ...initialState }),

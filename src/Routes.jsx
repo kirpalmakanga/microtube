@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Navigate, Routes, Route } from 'react-router-dom';
 
 import LazyComponent from './components/LazyComponent';
 
@@ -35,7 +35,9 @@ const Router = () => (
         <AuthRoute path="/subscriptions" element={<Channels />} />
 
         <AuthRoute path="/channel/:channelId/*" element={<Channel />}>
-            <Route path="" element={<ChannelVideos />} />
+            <Route path="" element={<Navigate to="videos" />} />
+
+            <Route path="videos" element={<ChannelVideos />} />
 
             <Route path="playlists" element={<Playlists />} />
 

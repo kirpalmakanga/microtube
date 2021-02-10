@@ -1,5 +1,5 @@
 import { useEffect, FunctionComponent, ReactNode } from 'react';
-import { Outlet, NavLink, useParams } from 'react-router-dom';
+import { Outlet, NavLink, useParams, useLocation } from 'react-router-dom';
 
 import { getThumbnails } from '../../lib/helpers';
 
@@ -52,7 +52,7 @@ const Channel = () => {
                 </div>
 
                 <Tabs>
-                    <NavLink to="" replace>
+                    <NavLink to="videos" replace>
                         Videos
                     </NavLink>
 

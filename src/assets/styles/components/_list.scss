@@ -3,10 +3,7 @@ $gutter: 16px;
 .list {
     &__item {
         display: flex;
-
-        &:not(:last-child) {
-            border-bottom: 1px solid $brand-primary;
-        }
+        border-bottom: 1px solid $brand-primary;
     }
 
     &__loading {

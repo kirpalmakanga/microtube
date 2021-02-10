@@ -52,7 +52,7 @@
     }
 
     &__item {
-        @include transition(opacity, 0.2s, ease-out);
+        @include transition(background-color, 0.2s, ease-out);
         border-bottom: 2px solid rgba($brand-primary, 0.5);
         display: flex;
         align-items: center;

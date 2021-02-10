@@ -31,7 +31,6 @@ export const useSubscriptions = () => {
                     payload
                 });
             } catch (error) {
-                console.log(error);
                 openNotification('Error fetching subscriptions.');
             }
         });

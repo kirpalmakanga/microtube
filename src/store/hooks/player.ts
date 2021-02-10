@@ -1,6 +1,7 @@
 import { useEffect, useCallback } from 'react';
 import { useStore } from '..';
 import { useNotifications } from './notifications';
+import { usePrompt } from './prompt';
 
 import { QueueItem } from '../../../@types/alltypes';
 
@@ -13,7 +14,8 @@ import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
 
 export const usePlayer = () => {
     const [{ user, player }, dispatch] = useStore();
-    const [, openNotification] = useNotifications();
+    const [, { openNotification }] = useNotifications();
+    const [, { openPrompt }] = usePrompt();
 
     const getCurrentUserId = useCallback(() => {
         const { id } = user;
@@ -66,25 +68,30 @@ export const usePlayer = () => {
             const items = await api.getVideosFromIds(ids);
 
             queueItems(items);
-        } catch (error) {}
-        openNotification('Error queuing videos.');
-    };
-
-    const importVideos = async (text: string) => {
-        const lines = splitLines(text).filter(Boolean);
-
-        if (!lines.length) {
-            return;
-        }
-
-        const videoIds = [...new Set(lines.map(parseVideoId))];
-
-        const chunks = chunk(videoIds, 50);
-
-        for (const ids of chunks) {
-            await queueVideos(ids);
+        } catch (error) {
+            openNotification('Error queuing videos.');
         }
     };
+
+    const importVideos = () =>
+        openPrompt({
+            mode: 'import',
+            headerText: 'Import videos',
+            confirmText: 'Import',
+            callback: async (text: string) => {
+                const lines = splitLines(text).filter(Boolean);
+
+                if (lines.length) {
+                    const videoIds = [...new Set(lines.map(parseVideoId))];
+
+                    const chunks = chunk(videoIds, 50);
+
+                    for (const ids of chunks) {
+                        await queueVideos(ids);
+                    }
+                }
+            }
+        });
 
     const removeQueueItem = useCallback(
         ({ id }) =>
@@ -92,7 +99,13 @@ export const usePlayer = () => {
         []
     );
 
-    const clearQueue = () => dispatch({ type: 'player/CLEAR_QUEUE' });
+    const clearQueue = () =>
+        openPrompt({
+            headerText: 'Clear queue ?',
+            confirmText: 'Clear',
+            cancelText: 'Cancel',
+            callback: () => dispatch({ type: 'player/CLEAR_QUEUE' })
+        });
 
     const clearVideo = () => dispatch({ type: 'player/CLEAR_VIDEO' });
 

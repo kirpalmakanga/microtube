@@ -20,11 +20,7 @@ const SearchHeader = () => {
     const [_, { setSearchTarget }] = useSearch();
 
     const handleFormSubmit = useCallback(
-        (query) => {
-            console.log('searchSubmit');
-
-            navigate(`/search/${query}`, { replace: true });
-        },
+        (query) => navigate(`/search/${query}`, { replace: true }),
         [query]
     );
 

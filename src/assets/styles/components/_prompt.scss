@@ -25,8 +25,8 @@
     -webkit-tap-highlight-color: transparent;
     color: $brand-primary;
     .textfield__input {
-        background-color: $brand-secondary;
-        color: $brand-primary;
+        background-color: lighten($brand-primary, 5%);
+        color: $brand-secondary;
         padding: 20px;
         resize: vertical;
     }

@@ -2,7 +2,6 @@ import { FunctionComponent } from 'react';
 import Button from '../Button';
 
 import { usePlayer } from '../../store/hooks/player';
-import { usePrompt } from '../../store/hooks/prompt';
 
 const QueueHeader: FunctionComponent = () => {
     const [, { clearQueue }] = usePlayer();
@@ -12,15 +11,6 @@ const QueueHeader: FunctionComponent = () => {
         },
         { importVideos, toggleQueue }
     ] = usePlayer();
-    const [, { openPrompt }] = usePrompt();
-
-    const handleClearQueue = () =>
-        openPrompt({
-            headerText: 'Clear queue ?',
-            confirmText: 'Clear',
-            cancelText: 'Cancel',
-            callback: clearQueue
-        });
 
     return (
         <header className="layout__header queue__header shadow--2dp">
@@ -48,7 +38,7 @@ const QueueHeader: FunctionComponent = () => {
 
                     <Button
                         className="navigation__link icon-button"
-                        onClick={handleClearQueue}
+                        onClick={clearQueue}
                         title="Clear queue"
                         icon="delete"
                     />

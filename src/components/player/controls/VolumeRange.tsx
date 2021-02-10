@@ -1,4 +1,4 @@
-import { FunctionComponent, useCallback } from 'react';
+import { FunctionComponent, SyntheticEvent, useCallback } from 'react';
 
 interface Props {
     value: number;
@@ -6,10 +6,9 @@ interface Props {
 }
 
 const VolumeRange: FunctionComponent<Props> = ({ value, onChange }) => {
-    const handleUpdate = useCallback(
-        ({ currentTarget: { value } }) => onChange(parseInt(value)),
-        []
-    );
+    const handleUpdate = ({
+        currentTarget: { value }
+    }: SyntheticEvent<HTMLInputElement>) => onChange(parseInt(value));
 
     return (
         <div className="player__controls-volume-range">

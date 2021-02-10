@@ -160,9 +160,7 @@ const Player = () => {
         //         data: { currentTime: t }
         //     });
         // } else
-        console.log({ time: t });
         if (isPlayerReady) {
-            console.log({ t });
             youtube.current?.seekTo(t, true);
 
             updateState({ currentTime: t });

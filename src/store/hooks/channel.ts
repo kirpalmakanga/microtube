@@ -3,7 +3,6 @@ import * as api from '../../api/youtube';
 import { useStore } from '..';
 import { useNotifications } from './notifications';
 import { Action, Dispatch, GetState } from '../helpers';
-import { useEffect } from 'react';
 
 export const useChannel = (channelId: string) => {
     const [{ channel }, dispatch] = useStore();
@@ -11,9 +10,9 @@ export const useChannel = (channelId: string) => {
 
     const getChannel = async () => {
         try {
-            const data = await api.getChannel(channelId);
+            const payload = await api.getChannel(channelId);
 
-            dispatch({ type: 'channel/UPDATE_DATA', data });
+            dispatch({ type: 'channel/UPDATE_DATA', payload });
         } catch (error) {
             openNotification('Error fetching channel data.');
         }
@@ -28,16 +27,14 @@ export const useChannel = (channelId: string) => {
                     channel: { nextPageToken: pageToken, hasNextPage }
                 } = getState();
 
-                if (!hasNextPage) {
-                    return;
+                if (hasNextPage) {
+                    const payload = await api.getChannelVideos({
+                        channelId,
+                        pageToken
+                    });
+
+                    dispatch({ type: 'channel/UPDATE_ITEMS', payload });
                 }
-
-                const payload = await api.getChannelVideos({
-                    channelId,
-                    pageToken
-                });
-
-                dispatch({ type: 'channel/UPDATE_ITEMS', payload });
             } catch (error) {
                 openNotification('Error fetching channel videos.');
             }

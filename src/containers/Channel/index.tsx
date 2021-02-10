@@ -1,47 +1,37 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, FunctionComponent, ReactNode } from 'react';
 import { Outlet, NavLink, useParams } from 'react-router-dom';
 
 import { getThumbnails } from '../../lib/helpers';
 
-import { getChannel, clearChannelData } from '../../store/actions/youtube';
-
 import Img from '../../components/Img';
+import { useChannel } from '../../store/hooks/channel';
 
-const Tab = ({ children }, index) => (
-    <li key={index} className="tab">
-        {children}
-    </li>
-);
+interface TabsProps {
+    children: ReactNode[];
+}
 
-const Tabs = ({ children }) => (
+const Tabs: FunctionComponent<TabsProps> = ({ children }) => (
     <ul className="tabs">
-        {children.map((content, index) => (
-            <Tab key={index}>{content}</Tab>
+        {children.map((content: ReactNode, index: number) => (
+            <li key={index} className="tab">
+                {content}
+            </li>
         ))}
     </ul>
 );
 
 const Channel = () => {
     const { channelId } = useParams();
-
-    const { channelTitle, thumbnails } = useSelector(
-        ({ channel: { channelTitle, thumbnails } }) => ({
-            channelTitle,
-            thumbnails
-        })
-    );
-
-    const dispatch = useDispatch();
-
-    const handleGetChannel = () => dispatch(getChannel(channelId));
-    const handleClearChannelData = () => dispatch(clearChannelData());
+    const [
+        { channelTitle, thumbnails },
+        { getChannel, clearChannelData }
+    ] = useChannel(channelId);
 
     useEffect(() => {
-        handleGetChannel();
+        getChannel(channelId);
 
-        return handleClearChannelData;
-    }, []);
+        return clearChannelData;
+    }, [channelId]);
 
     return (
         <div className="channel">

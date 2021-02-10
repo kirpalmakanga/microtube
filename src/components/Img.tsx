@@ -4,7 +4,7 @@ import Fade from './animations/Fade';
 interface Props {
     src: string;
     alt: string;
-    background: boolean;
+    background?: boolean;
 }
 
 const Img: FunctionComponent<Props> = ({

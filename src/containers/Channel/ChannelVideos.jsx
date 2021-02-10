@@ -27,10 +27,9 @@ const ChannelVideos = () => {
 
     const dispatch = useDispatch();
 
-    const handleGetChannelVideos = () =>
-        dispatch(getChannelVideos({ channelId }));
+    const handleGetChannelVideos = () => getChannelVideos(channelId);
 
-    const handleClearChannelVideos = () => dispatch(clearChannelVideos());
+    const handleClearChannelVideos = () => clearChannelVideos;
 
     const handleQueueItem = (video) => dispatch(queueItem(video));
 

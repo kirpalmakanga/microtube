@@ -45,39 +45,3 @@
 //             }
 //         )
 //     );
-
-/* Channels */
-
-// export const getChannel = (channelId) => async (dispatch) =>
-//     catchErrors(
-//         async () => {
-//             const data = await api.getChannel(channelId);
-
-//             dispatch({ type: 'channel/UPDATE_DATA', data });
-//         },
-//         () => dispatch(notify({ message: 'Error fetching channel data.' }))
-//     );
-
-// export const clearChannelData = () => (dispatch) =>
-//     dispatch({ type: 'channel/CLEAR_DATA' });
-
-// export const getChannelVideos = ({ channelId }) => async (dispatch, getState) =>
-//     catchErrors(
-//         async () => {
-//             const {
-//                 channel: { nextPageToken: pageToken, hasNextPage }
-//             } = getState();
-
-//             if (!hasNextPage) {
-//                 return;
-//             }
-
-//             const data = await api.getChannelVideos({ channelId, pageToken });
-
-//             dispatch({ type: 'channel/UPDATE_ITEMS', data });
-//         },
-//         () => dispatch(notify({ message: 'Error fetching channel videos.' }))
-//     );
-
-// export const clearChannelVideos = () => (dispatch) =>
-//     dispatch({ type: 'channel/CLEAR_ITEMS' });

@@ -1,4 +1,10 @@
-import { memo, useState, useCallback, FunctionComponent } from 'react';
+import {
+    memo,
+    useState,
+    useCallback,
+    FunctionComponent,
+    SyntheticEvent
+} from 'react';
 import { preventDefault } from '../../lib/helpers';
 
 import InfoTime from './controls/InfoTime';
@@ -13,37 +19,35 @@ interface Props {
     onEndSeeking: Function;
 }
 
-const noop = () => {};
-
 const Info: FunctionComponent<Props> = ({
-    title = '',
-    currentTime = 0,
-    duration = 0,
-    loaded = 0,
-    onStartSeeking = noop,
-    onEndSeeking = noop
+    title,
+    currentTime,
+    duration,
+    loaded,
+    onStartSeeking,
+    onEndSeeking
 }) => {
     const [seekingTime, setSeekingTime] = useState(currentTime);
     const [isSeeking, setIsSeeking] = useState(false);
 
-    const startSeeking = useCallback(() => {
+    const startSeeking = () => {
         onStartSeeking();
 
         setIsSeeking(true);
-    }, []);
+    };
 
-    const endSeeking = useCallback(() => {
+    const endSeeking = () => {
         setIsSeeking(false);
 
         if (seekingTime !== currentTime) {
             onEndSeeking(seekingTime);
         }
-    }, []);
+    };
 
-    const handleSeeking = useCallback(
-        ({ target: { value: seekingTime } }) => setSeekingTime(seekingTime),
-        []
-    );
+    const handleSeeking = ({
+        currentTarget: { value: seekingTime }
+    }: SyntheticEvent<HTMLInputElement>) =>
+        setSeekingTime(parseInt(seekingTime));
 
     const time = isSeeking ? seekingTime : currentTime;
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useStore } from '..';
 import { useNotifications } from './notifications';
 import * as api from '../../api/youtube';

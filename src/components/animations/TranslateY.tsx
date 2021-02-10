@@ -29,8 +29,8 @@ const transitionStatuses = {
     [ENTERING]: { transform: 'translateY(100%)' },
     [ENTERED]: { transform: 'translateY(0)' },
     [EXITING]: { transform: 'translateY(0)' },
-    [EXITED]: { transform: 'translateY(100%)' },
-    [UNMOUNTED]: { transform: 'translateY(100%)' }
+    [EXITED]: { transform: 'translateY(0)' },
+    [UNMOUNTED]: { transform: 'translateY(0)' }
 };
 
 const Fade: FunctionComponent<Props> = ({

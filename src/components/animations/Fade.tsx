@@ -28,7 +28,7 @@ const defaultStyle = {
 const transitionStatuses = {
     [ENTERING]: { opacity: 0 },
     [ENTERED]: { opacity: 1 },
-    [EXITING]: { opacity: 1 },
+    [EXITING]: { opacity: 0 },
     [EXITED]: { opacity: 0 },
     [UNMOUNTED]: { opacity: 0 }
 };

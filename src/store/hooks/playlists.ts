@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useStore } from '..';
 import { useNotifications } from './notifications';
 import * as api from '../../api/youtube';
@@ -102,8 +101,6 @@ export const usePlaylists = (channelId?: string) => {
     };
 
     const clearPlaylists = () => dispatch({ type: 'playlists/CLEAR_ITEMS' });
-
-    useEffect(() => clearPlaylists, [channelId]);
 
     return [
         playlists,

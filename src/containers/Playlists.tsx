@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { PlaylistData } from '../../@types/alltypes';
@@ -16,7 +16,13 @@ const Playlists = () => {
 
     const [
         { items, totalResults },
-        { getPlaylists, removePlaylist, queuePlaylist, launchPlaylist }
+        {
+            getPlaylists,
+            removePlaylist,
+            queuePlaylist,
+            launchPlaylist,
+            clearPlaylists
+        }
     ] = usePlaylists(channelId);
 
     const handleClickCard = useCallback(
@@ -31,6 +37,8 @@ const Playlists = () => {
         },
         []
     );
+
+    useEffect(() => clearPlaylists, [channelId]);
 
     return totalResults === 0 ? (
         <Placeholder

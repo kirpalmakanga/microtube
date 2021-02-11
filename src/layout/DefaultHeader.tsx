@@ -1,7 +1,5 @@
 import { useCallback } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-
-import { useStore } from '../store';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import Icon from '../components/Icon';
 import Button from '../components/Button';
@@ -11,6 +9,7 @@ import { useAuth } from '../store/hooks/auth';
 
 const DefaultHeader = () => {
     const { pathname } = useLocation();
+    const navigate = useNavigate();
 
     const [{ picture, isSignedIn }, { signIn, signOut }] = useAuth();
 
@@ -24,13 +23,13 @@ const DefaultHeader = () => {
     return (
         <div className="layout__header-row">
             {pathname !== '/' && pathname !== '/login' ? (
-                <Link
-                    to="/"
+                <Button
+                    onClick={() => navigate(-1)}
                     className="layout__back-button icon-button"
                     aria-label="Go to homepage"
                 >
                     <Icon name="arrow-left" />
-                </Link>
+                </Button>
             ) : null}
 
             <span className="layout__title">

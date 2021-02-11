@@ -8,6 +8,7 @@ import DraggableList from '../DraggableList';
 import Placeholder from '../Placeholder';
 
 import { usePlayer } from '../../store/hooks/player';
+import { usePlaylistItems } from '../../store/hooks/playlist-items';
 
 interface Props {
     isPlaying: boolean;
@@ -33,7 +34,7 @@ const Queue: FunctionComponent<Props> = ({
         { setQueue, removeQueueItem, setActiveQueueItem }
     ] = usePlayer();
 
-    const editPlaylistItem = () => {}; /* TODO: create hook callback */
+    const [, { editPlaylistItem }] = usePlaylistItems();
 
     const handleClickMenu = useCallback(
         (data: QueueItemData, callback: Function) => () => {

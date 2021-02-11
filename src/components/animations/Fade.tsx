@@ -26,11 +26,11 @@ const defaultStyle = {
 };
 
 const transitionStatuses = {
-    [ENTERING]: { opacity: 0 },
+    [ENTERING]: {},
     [ENTERED]: { opacity: 1 },
-    [EXITING]: { opacity: 0 },
+    [EXITING]: {},
     [EXITED]: { opacity: 0 },
-    [UNMOUNTED]: { opacity: 0 }
+    [UNMOUNTED]: {}
 };
 
 const Fade: FunctionComponent<Props> = ({

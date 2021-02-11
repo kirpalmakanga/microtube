@@ -26,11 +26,11 @@ const defaultStyle = {
 };
 
 const transitionStatuses = {
-    [ENTERING]: { transform: 'translateY(100%)' },
+    [ENTERING]: {},
     [ENTERED]: { transform: 'translateY(0)' },
-    [EXITING]: { transform: 'translateY(0)' },
-    [EXITED]: { transform: 'translateY(0)' },
-    [UNMOUNTED]: { transform: 'translateY(0)' }
+    [EXITING]: {},
+    [EXITED]: { transform: 'translateY(100%)' },
+    [UNMOUNTED]: {}
 };
 
 const Fade: FunctionComponent<Props> = ({
@@ -40,27 +40,25 @@ const Fade: FunctionComponent<Props> = ({
     in: inProp,
     children,
     ...props
-}) => {
-    return (
-        <Transition
-            in={inProp}
-            mountOnEnter={mountOnEnter}
-            unmountOnExit={unmountOnExit}
-            timeout={duration}
-        >
-            {(state: TransitionStatus) => (
-                <div
-                    {...props}
-                    style={{
-                        ...defaultStyle,
-                        ...transitionStatuses[state]
-                    }}
-                >
-                    {children}
-                </div>
-            )}
-        </Transition>
-    );
-};
+}) => (
+    <Transition
+        in={inProp}
+        mountOnEnter={mountOnEnter}
+        unmountOnExit={unmountOnExit}
+        timeout={duration}
+    >
+        {(state: TransitionStatus) => (
+            <div
+                {...props}
+                style={{
+                    ...defaultStyle,
+                    ...transitionStatuses[state]
+                }}
+            >
+                {children}
+            </div>
+        )}
+    </Transition>
+);
 
 export default Fade;

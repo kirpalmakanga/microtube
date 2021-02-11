@@ -30,6 +30,7 @@ import VolumeRange from './controls/VolumeRange';
 // import DevicesSelector from './controls/DevicesSelector';
 
 import Info from './Info';
+import { usePlaylistItems } from '../../store/hooks/playlist-items';
 
 interface PlayerState {
     isPlayerReady: boolean;
@@ -85,6 +86,7 @@ const Player = () => {
         { video, queue, currentId, showQueue, newQueueItems, ...player },
         { setActiveQueueItem, toggleQueue, toggleScreen }
     ] = usePlayer();
+    const [, { editPlaylistItem }] = usePlaylistItems();
 
     const {
         isFullscreen,
@@ -97,8 +99,6 @@ const Player = () => {
     useKeyPress('m', () => toggleMute());
     useKeyPress('s', () => handleToggleScreen());
     useKeyPress(' ', () => togglePlay());
-
-    const editPlaylistItem = () => {};
 
     const currentQueueIndex = queue.findIndex(
         ({ id }: QueueItem) => id === currentId
@@ -124,6 +124,8 @@ const Player = () => {
     };
 
     const { isMaster } = currentDevice;
+
+    const handleEditPlaylistItem = () => editPlaylistItem({ id: videoId });
 
     const updateState = (data: GenericObject) => {
         // if (isMaster) {
@@ -467,7 +469,7 @@ const Player = () => {
                         {isSingleVideo ? (
                             <Button
                                 className="player__controls-button icon-button"
-                                onClick={editPlaylistItem}
+                                onClick={handleEditPlaylistItem}
                                 icon="folder-add"
                                 ariaLabel="Save to playlist"
                             ></Button>

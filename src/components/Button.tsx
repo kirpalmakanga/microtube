@@ -21,8 +21,12 @@ const Button: FunctionComponent<Props> = ({
     children,
     ...props
 }) => (
-    <button type={type as ButtonType} aria-label={title} {...props}>
-        {children ? children : icon ? <Icon name={icon} /> : title}
+    <button type={type as ButtonType} {...props}>
+        {icon ? <Icon name={icon} /> : null}
+
+        {title ? <span>{title}</span> : null}
+
+        {children}
     </button>
 );
 

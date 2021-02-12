@@ -1,6 +1,7 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
+import Fade from '../components/animations/Fade';
 import Icon from '../components/Icon';
 import Button from '../components/Button';
 
@@ -10,15 +11,21 @@ import { useAuth } from '../store/hooks/auth';
 const DefaultHeader = () => {
     const { pathname } = useLocation();
     const navigate = useNavigate();
-
-    const [{ picture, isSignedIn }, { signIn, signOut }] = useAuth();
+    const [{ name, picture, isSignedIn }, { signIn, signOut }] = useAuth();
+    const [isMenuOpen, setMenuState] = useState(false);
 
     const title = useAppTitle();
 
     const handleClickUser = useCallback(
-        () => (isSignedIn ? signOut() : signIn()),
-        [isSignedIn]
+        () => (isSignedIn ? setMenuState(!isMenuOpen) : signIn()),
+        [isSignedIn, isMenuOpen]
     );
+
+    const handleLoggingOut = useCallback(() => {
+        signOut();
+
+        setMenuState(false);
+    }, []);
 
     return (
         <div className="layout__header-row">
@@ -64,15 +71,28 @@ const DefaultHeader = () => {
                         </Link>
                     </>
                 ) : null}
-
-                <Button
-                    className="navigation__link icon-button"
-                    onClick={handleClickUser}
-                    title={isSignedIn ? 'Log out' : 'Log in'}
-                    icon="user"
-                >
-                    {picture ? <img src={picture} alt="avatar" /> : null}
-                </Button>
+                <div className="navigation__menu">
+                    <Button
+                        className="navigation__link icon-button"
+                        onClick={handleClickUser}
+                        icon={!isSignedIn ? 'user' : ''}
+                    >
+                        {picture ? <img src={picture} alt="avatar" /> : null}
+                    </Button>
+                    <Fade in={isSignedIn && isMenuOpen}>
+                        <div className="navigation__menu__content">
+                            <p className="navigation__menu__content__text">
+                                {name}
+                            </p>
+                            <Button
+                                className="button shadow--2dp"
+                                icon="log-out"
+                                title={isSignedIn ? 'Log out' : 'Log in'}
+                                onClick={handleLoggingOut}
+                            ></Button>
+                        </div>
+                    </Fade>
+                </div>
             </nav>
         </div>
     );

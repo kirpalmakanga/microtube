@@ -13,8 +13,16 @@ button {
     text-transform: uppercase;
     cursor: pointer;
     font-size: 14px;
+    line-height: 0.9em;
     font-weight: 700;
     border-radius: 2px;
+    display: flex;
+    align-items: center;
+    .icon {
+        width: 1.5em;
+        height: 1.5em;
+        margin-right: 10px;
+    }
 
     &:hover {
         background-color: lighten($brand-primary, 5%);

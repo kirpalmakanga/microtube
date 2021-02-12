@@ -42,11 +42,7 @@ const PlaylistCard: FunctionComponent<Props> = ({
         </CardContent>
 
         <CardButtons>
-            <Button
-                title="Open playlist menu"
-                icon="more"
-                onClick={onClickMenu}
-            />
+            <Button icon="more" onClick={onClickMenu} />
         </CardButtons>
     </CardContainer>
 );

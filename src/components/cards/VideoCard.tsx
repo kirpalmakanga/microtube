@@ -66,7 +66,11 @@ const VideoCard: FunctionComponent<Props> = ({
         </CardContent>
 
         <CardButtons>
-            <Button title="Open video menu" icon="more" onClick={onClickMenu} />
+            <Button
+                aria-label="Open video menu"
+                icon="more"
+                onClick={onClickMenu}
+            />
         </CardButtons>
     </CardContainer>
 );

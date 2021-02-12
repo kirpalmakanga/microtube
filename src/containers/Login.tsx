@@ -15,6 +15,7 @@ const Login: FunctionComponent = () => {
         >
             <Button
                 className="button shadow--2dp"
+                icon="user"
                 title="Log in"
                 type="button"
                 onClick={signIn}

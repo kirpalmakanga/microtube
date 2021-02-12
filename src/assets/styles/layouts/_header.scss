@@ -1,3 +1,5 @@
+$header-height: 50px;
+
 .layout {
     &__title {
         overflow: hidden;
@@ -23,7 +25,7 @@
         background-color: $brand-primary;
         display: flex;
         flex-shrink: 0;
-        height: 50px;
+        height: $header-height;
         z-index: 1;
         &-row {
             display: flex;
@@ -61,6 +63,7 @@
 .navigation {
     height: 100%;
     display: flex;
+    position: relative;
 
     img {
         border-radius: 100%;
@@ -95,6 +98,7 @@
         border: none;
         cursor: pointer;
         position: relative;
+        height: $header-height;
 
         .layout__header-row & {
             padding: 0 12px;
@@ -114,6 +118,38 @@
         &.is-active,
         &:hover {
             color: rgba($brand-secondary, 0.7);
+        }
+    }
+
+    &__menu {
+        > .navigation__link {
+            padding-right: 0;
+        }
+
+        &__content {
+            top: 100%;
+            right: 0;
+            position: absolute;
+            background-color: $brand-primary;
+            padding: 20px;
+            width: 300px;
+
+            &__text {
+                margin-top: 0;
+                font-family: $font-primary;
+                font-size: 20px;
+            }
+
+            .button {
+                @include transition(background-color);
+                background-color: lighten($brand-primary, 10%);
+                width: 100%;
+                justify-content: center;
+
+                &:hover {
+                    background-color: lighten($brand-primary, 20%);
+                }
+            }
         }
     }
 }

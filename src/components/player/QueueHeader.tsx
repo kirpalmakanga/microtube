@@ -17,7 +17,7 @@ const QueueHeader: FunctionComponent = () => {
             <div className="layout__header-row">
                 <Button
                     className="navigation__link layout__back-button icon-button"
-                    title="Close queue"
+                    aria-label="Close queue"
                     onClick={toggleQueue}
                     icon="chevron-down"
                 />
@@ -32,14 +32,14 @@ const QueueHeader: FunctionComponent = () => {
                     <Button
                         className="navigation__link icon-button"
                         onClick={importVideos}
-                        title="Import videos"
+                        aria-label="Import videos"
                         icon="add"
                     />
 
                     <Button
                         className="navigation__link icon-button"
                         onClick={clearQueue}
-                        title="Clear queue"
+                        aria-label="Clear queue"
                         icon="delete"
                     />
                 </nav>

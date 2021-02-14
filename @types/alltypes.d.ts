@@ -2,6 +2,12 @@ export const SIZE_DEFAULT = 'default';
 export const SIZE_MEDIUM = 'medium';
 export const SIZE_HIGH = 'high';
 
+interface DeviceData {
+    deviceId: string;
+    deviceName: string;
+    isMaster: boolean;
+}
+
 export interface File {
     url: string;
 }

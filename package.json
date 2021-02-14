@@ -23,6 +23,7 @@
         "react-visibility-sensor": "5.1.1",
         "react-window": "1.8.5",
         "socket.io": "2.3.0",
+        "uuid": "^3.4.0",
         "workbox-window": "^5.1.4",
         "youtube-player": "5.5.2"
     },
@@ -37,6 +38,8 @@
         "@types/react-transition-group": "^4.4.0",
         "@types/react-virtualized-auto-sizer": "^1.0.0",
         "@types/react-window": "^1.8.2",
+        "@types/socket.io-client": "^1.4.35",
+        "@types/uuid": "^8.3.0",
         "@types/youtube-player": "^5.5.3",
         "poi": "^12.10.2",
         "sass": "^1.32.6",

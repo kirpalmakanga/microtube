@@ -1,38 +1,29 @@
-import { useState, FunctionComponent, useCallback } from 'react';
+import { useState, FunctionComponent } from 'react';
 
 import Button from './Button';
 
-interface Device {
-    deviceId: string;
-    deviceName: string;
-    isMaster: boolean;
-}
+import { DeviceData } from '../../../../@types/alltypes';
 
 interface Props {
-    devices: Device[];
-    currentItem: Device;
-    onClickItem: (deviceId: string) => void;
+    devices: DeviceData[];
+    currentDevice: DeviceData;
+    onClickItem?: (deviceId: string) => void;
 }
 
 const DevicesSelector: FunctionComponent<Props> = ({
-    devices = [],
-    currentItem: { deviceId, deviceName, isMaster },
-    onClickItem = () => {}
+    devices,
+    currentDevice: { deviceId, deviceName, isMaster },
+    onClickItem
 }) => {
     const [showItems, setShowItems] = useState(false);
 
-    const handleClickItem = useCallback(
-        (deviceId) => () => {
-            setShowItems(false);
+    const handleClickItem = (deviceId: string) => () => {
+        setShowItems(false);
 
-            onClickItem(deviceId);
-        },
-        []
-    );
+        onClickItem && onClickItem(deviceId);
+    };
 
-    const handleToggleItems = useCallback(() => setShowItems(!showItems), [
-        showItems
-    ]);
+    const handleToggleItems = () => setShowItems(!showItems);
 
     return (
         <div className="player__controls-devices">

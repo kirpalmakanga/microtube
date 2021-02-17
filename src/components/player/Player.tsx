@@ -1,9 +1,8 @@
-import { useRef, WheelEvent } from 'react';
+import { useCallback, useEffect, useRef, WheelEvent } from 'react';
 
 import { GenericObject, QueueItem } from '../../../@types/alltypes';
 import { YouTubePlayer } from 'youtube-player/dist/types';
 
-import { useStore } from '../../store';
 import { usePlayer } from '../../store/hooks/player';
 
 import {
@@ -27,6 +26,25 @@ import { useDevices } from '../../store/hooks/devices';
 
 const UNSTARTED = -1;
 const CUED = 5;
+
+interface PlayerInnerState {
+    isPlayerReady: boolean;
+    isPlaying: boolean;
+    isBuffering: boolean;
+    showScreen: boolean;
+    volume: number;
+    loaded: number;
+    currentTime: number;
+}
+
+interface PlayerSyncPayload {
+    action: string;
+    data: GenericObject;
+}
+
+interface PlayerSyncHandlers {
+    [key: string]: Function;
+}
 
 const Player = () => {
     const youtube = useRef<YouTubePlayer | null>(null);
@@ -55,14 +73,17 @@ const Player = () => {
 
     const [
         { video, queue, currentId, showQueue, newQueueItems },
-        { setActiveQueueItem, toggleQueue, toggleScreen }
+        { listenForQueueUpdate, setActiveQueueItem, toggleQueue, toggleScreen }
     ] = usePlayer();
     const [, { editPlaylistItem }] = usePlaylistItems();
 
-    const [
-        { currentDevice, availableDevices },
-        { setMasterDevice, synchronizePlayer }
-    ] = useDevices();
+    const {
+        currentDevice,
+        availableDevices,
+        setMasterDevice,
+        synchronizePlayer,
+        subscribeToPlayerSync
+    } = useDevices();
 
     const {
         isFullscreen,
@@ -95,27 +116,23 @@ const Player = () => {
     const handleEditPlaylistItem = () => editPlaylistItem({ id: videoId });
 
     const updateState = (data: GenericObject) => {
-        // if (isMaster) {
-        // synchronizePlayer({
-        //     action: 'update-state',
-        //     data
-        // })
-        // }
+        if (isMaster) {
+            synchronizePlayer({
+                action: 'update-state',
+                data
+            });
+        }
 
         setPlayerState(data);
     };
 
     const setVolume = (volume: number) => {
-        // if (!isMaster) {
-        //     synchronizePlayer({
-        //         action: 'set-volume',
-        //         data: { volume }
-        //     });
-
-        //     return;
-        // }
-
-        if (isPlayerReady) {
+        if (!isMaster) {
+            synchronizePlayer({
+                action: 'set-volume',
+                data: { volume }
+            });
+        } else if (isPlayerReady) {
             youtube.current?.setVolume(volume);
 
             updateState({ volume });
@@ -123,13 +140,12 @@ const Player = () => {
     };
 
     const seekTime = (t: number) => {
-        // if (!isMaster) {
-        //     synchronizePlayer({
-        //         action: 'seek-time',
-        //         data: { currentTime: t }
-        //     });
-        // } else
-        if (isPlayerReady) {
+        if (!isMaster) {
+            synchronizePlayer({
+                action: 'seek-time',
+                data: { currentTime: t }
+            });
+        } else if (isPlayerReady) {
             youtube.current?.seekTo(t, true);
 
             updateState({ currentTime: t });
@@ -143,15 +159,11 @@ const Player = () => {
     };
 
     const toggleMute = () => {
-        // if (!isMaster) {
-        //     synchronizePlayer({
-        //         action: 'toggle-mute'
-        //     });
-
-        //     return;
-        // }
-
-        if (!isPlayerReady) {
+        if (!isMaster) {
+            synchronizePlayer({
+                action: 'toggle-mute'
+            });
+        } else if (isPlayerReady) {
             if (volume > 0) {
                 youtubeVolume.current = volume;
 
@@ -162,23 +174,20 @@ const Player = () => {
         }
     };
 
-    const togglePlay = (force: boolean = false) => {
-        // if (!isMaster) {
-        //     synchronizePlayer({
-        //         action: 'toggle-play'
-        //     });
-
-        //     return;
-        // }
-
-        if (!isPlayerReady) {
-            return;
+    const togglePlay = () => {
+        if (isMaster) {
+            console.log({ isPlayerReady });
         }
-
-        if (!isPlaying || force === true) {
-            youtube.current?.playVideo();
-        } else if (isPlaying) {
-            youtube.current?.pauseVideo();
+        if (!isMaster) {
+            synchronizePlayer({
+                action: 'toggle-play'
+            });
+        } else if (isPlayerReady) {
+            if (isPlaying) {
+                youtube.current?.pauseVideo();
+            } else {
+                youtube.current?.playVideo();
+            }
         }
     };
 
@@ -202,12 +211,14 @@ const Player = () => {
     const handleToggleScreen = () => {
         updateState({ showScreen: !showScreen });
 
-        // synchronizePlayer({
-        //     action: 'update-state',
-        //     data: { showScreen: !showScreen }
-        // });
-
-        toggleScreen();
+        if (!isMaster) {
+            synchronizePlayer({
+                action: 'update-state',
+                data: { showScreen: !showScreen }
+            });
+        } else {
+            toggleScreen();
+        }
     };
 
     const handleYoutubeIframeReady = (playerInstance: YouTubePlayer) => {
@@ -224,7 +235,7 @@ const Player = () => {
                 break;
 
             case CUED:
-                togglePlay(true);
+                youtube.current?.playVideo();
 
                 break;
         }
@@ -243,45 +254,55 @@ const Player = () => {
     const handleBuffering = () => {
         updateState({ isBuffering: true });
 
-        setPlaybackQuality();
+        if (isMaster) {
+            setPlaybackQuality();
+        }
     };
 
     const handleWheelVolume = ({ deltaY }: WheelEvent<HTMLDivElement>) => {
         const newVolume = deltaY < 0 ? volume + 5 : volume - 5;
         const inRange = newVolume >= 0 && newVolume <= 100;
 
+        if (!isMaster) {
+            console.log({ newVolume });
+        }
+
         if (inRange) {
             setVolume(newVolume);
         }
     };
 
-    // const bindDevicesSync =  useCallback(() => {
-    //     const actions = {
-    //         'toggle-play': () => togglePlay(),
-    //         'toggle-mute': () => toggleMute(),
-    //         'set-volume': ({ volume }) => setVolume(volume),
-    //         'seek-time': ({ currentTime }) => seekTime(currentTime),
-    //         'update-state': (state) => setPlayerState(state)
-    //     };
+    useEffect(() => {
+        listenForQueueUpdate();
+    }, []);
 
-    //     listen('player:sync', ({ action, data = {} } = {}) => {
-    //         const handler = actions[action];
+    useEffect(() => {
+        if (isMaster) {
+            const actions: PlayerSyncHandlers = {
+                'toggle-play': () => togglePlay(),
+                'toggle-mute': () => toggleMute(),
+                'set-volume': ({ volume }: GenericObject) => setVolume(volume),
+                'seek-time': ({ currentTime }: GenericObject) =>
+                    seekTime(currentTime),
+                'update-state': (state: PlayerInnerState) =>
+                    setPlayerState(state)
+            };
 
-    //         if (handler) {
-    //             handler(data);
-    //         }
-    //     });
-    // }, []);
+            subscribeToPlayerSync(({ action, data }: PlayerSyncPayload) => {
+                const { [action]: handler } = actions;
 
-    // useEffect(() => {
-    // bindDevicesSync();
-    // }, []);
+                if (handler) {
+                    handler(data);
+                }
+            });
+        }
+    }, [isMaster]);
 
-    // useEffect(() => {
-    //     if (isMaster) {
-    //         setPlayerState({ showScreen });
-    //     }
-    // }, [isMaster, showScreen]);
+    useEffect(() => {
+        if (isMaster) {
+            setPlayerState({ showScreen });
+        }
+    }, [isMaster, showScreen]);
 
     useUpdateEffect(() => {
         if (!videoId) {
@@ -368,6 +389,14 @@ const Player = () => {
                     />
 
                     <div className="player__controls">
+                        {availableDevices.length && !isSingleVideo ? (
+                            <DevicesSelector
+                                currentDevice={currentDevice}
+                                devices={availableDevices}
+                                onClickItem={setMasterDevice}
+                            />
+                        ) : null}
+
                         {!isMobile() && videoId ? (
                             <div
                                 className="player__controls-volume"
@@ -406,14 +435,6 @@ const Player = () => {
                                 ariaLabel={
                                     showQueue ? 'Close queue' : 'Open queue'
                                 }
-                            />
-                        ) : null}
-
-                        {availableDevices.length && !isSingleVideo ? (
-                            <DevicesSelector
-                                currentDevice={currentDevice}
-                                devices={availableDevices}
-                                onClickItem={setMasterDevice}
                             />
                         ) : null}
 

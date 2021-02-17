@@ -43,9 +43,9 @@ const extractQueueItemData = ({
 });
 
 export default createReducer(initialState, {
-    'player/UPDATE_DATA': (state: State, data: State) => ({
+    'player/UPDATE_DATA': (state: State, payload: State) => ({
         ...state,
-        ...data
+        ...payload
     }),
 
     'player/ADD_QUEUE_ITEMS': (

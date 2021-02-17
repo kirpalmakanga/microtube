@@ -1,4 +1,4 @@
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import { GenericObject } from '../../@types/alltypes';
 
@@ -92,15 +92,19 @@ export const useUpdateEffect = (callback: () => void, dependencies: any) => {
 export const useSocket = (serverUrl: string) => {
     const client = useRef<any | null>(null);
 
-    useEffect(() => {
-        client.current = io(serverUrl);
-    }, [serverUrl]);
+    const getSocket = () => {
+        if (!client.current) {
+            client.current = io(serverUrl);
+        }
+        return client.current;
+    };
 
     return {
-        subscribe: (eventKey: string, callback: (response: any) => void) =>
-            client.current?.on(eventKey, callback),
-
-        emit: (eventKey: string, payload: any) =>
-            client.current?.emit(eventKey, payload)
+        subscribe: (eventKey: string, callback: (response: any) => void) => {
+            getSocket().on(eventKey, callback);
+        },
+        emit: (eventKey: string, payload: any) => {
+            getSocket().emit(eventKey, payload);
+        }
     };
 };

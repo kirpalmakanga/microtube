@@ -52,10 +52,7 @@ class Database {
     listen = async (path, callback = () => {}) => {
         const ref = await this.getRef(path);
 
-        ref.on(
-            'value',
-            debounce((snapshot) => callback(snapshot.val() || undefined), 200)
-        );
+        ref.on('value', (snapshot) => callback(snapshot.val() || undefined));
     };
 }
 

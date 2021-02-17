@@ -11,6 +11,7 @@ import * as api from '../../api/youtube';
 import database from '../../api/database';
 
 import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
+import { Action, Dispatch, GetState } from '../helpers';
 
 export const usePlayer = () => {
     const [{ user, player }, dispatch] = useStore();
@@ -27,17 +28,17 @@ export const usePlayer = () => {
         /* TODO: Prevent useless updates */
         database.listen(
             `users/${getCurrentUserId()}`,
-            ({ queue = [], currentId = '' } = {}) =>
+            ({ queue = [], currentId = '' } = {}) => {
                 dispatch({
                     type: 'player/UPDATE_DATA',
                     payload: { queue, currentId }
-                })
+                });
+            }
         );
     }, []);
 
-    const setQueue = (queue: QueueItem[]) => {
+    const setQueue = (queue: QueueItem[]) =>
         dispatch({ type: 'player/UPDATE_DATA', payload: { queue } });
-    };
 
     const queueItems = useCallback((newItems: QueueItem[]) => {
         const { queue } = player;
@@ -99,13 +100,16 @@ export const usePlayer = () => {
         []
     );
 
-    const clearQueue = () =>
-        openPrompt({
-            headerText: 'Clear queue ?',
-            confirmText: 'Clear',
-            cancelText: 'Cancel',
-            callback: () => dispatch({ type: 'player/CLEAR_QUEUE' })
-        });
+    const clearQueue = useCallback(
+        () =>
+            openPrompt({
+                headerText: 'Clear queue ?',
+                confirmText: 'Clear',
+                cancelText: 'Cancel',
+                callback: () => dispatch({ type: 'player/CLEAR_QUEUE' })
+            }),
+        []
+    );
 
     const clearVideo = () => dispatch({ type: 'player/CLEAR_VIDEO' });
 
@@ -154,15 +158,11 @@ export const usePlayer = () => {
     const { queue, currentId } = player;
 
     useEffect(() => {
-        database.set(`users/${getCurrentUserId()}`, {
-            queue
-        });
+        database.set(`users/${getCurrentUserId()}/queue`, queue);
     }, [queue]);
 
     useEffect(() => {
-        database.set(`users/${getCurrentUserId()}`, {
-            currentId
-        });
+        database.set(`users/${getCurrentUserId()}/currentId`, currentId);
     }, [currentId]);
 
     return [

@@ -33,15 +33,15 @@ export const useDevices = () => {
     };
 
     const synchronizePlayer = (data: GenericObject) =>
-        emit('player:sync', {
-            action: 'update-state',
-            data
-        });
+        emit('player:sync', data);
+
+    const subscribeToPlayerSync = (callback: (response: any) => void) =>
+        subscribe('player:sync', callback);
 
     const availableDevices = devices.filter(
         ({ deviceId: id }: DeviceData) => id !== localDeviceId
     );
-    const currentDevice = availableDevices.find(
+    const currentDevice = devices.find(
         ({ deviceId: id }: DeviceData) => id === localDeviceId
     ) || {
         isMaster: true
@@ -60,8 +60,11 @@ export const useDevices = () => {
         return () => emit('device:delete', localDeviceId);
     }, []);
 
-    return [
-        { currentDevice, availableDevices },
-        { setMasterDevice, synchronizePlayer }
-    ];
+    return {
+        currentDevice,
+        availableDevices,
+        setMasterDevice,
+        synchronizePlayer,
+        subscribeToPlayerSync
+    };
 };

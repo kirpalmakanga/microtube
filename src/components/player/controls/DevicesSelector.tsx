@@ -7,7 +7,7 @@ import { DeviceData } from '../../../../@types/alltypes';
 interface Props {
     devices: DeviceData[];
     currentDevice: DeviceData;
-    onClickItem?: (deviceId: string) => void;
+    onClickItem: (deviceId: string) => void;
 }
 
 const DevicesSelector: FunctionComponent<Props> = ({

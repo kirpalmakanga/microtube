@@ -296,7 +296,7 @@ const Player = () => {
                 }
             });
         }
-    }, [isMaster]);
+    }, [isMaster, isPlaying]);
 
     useEffect(() => {
         if (isMaster) {

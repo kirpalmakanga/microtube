@@ -73,7 +73,7 @@ const Player = () => {
 
     const [
         { video, queue, currentId, showQueue, newQueueItems },
-        { listenForQueueUpdate, setActiveQueueItem, toggleQueue, toggleScreen }
+        { setActiveQueueItem, toggleQueue, toggleScreen }
     ] = usePlayer();
     const [, { editPlaylistItem }] = usePlaylistItems();
 
@@ -175,9 +175,6 @@ const Player = () => {
     };
 
     const togglePlay = () => {
-        if (isMaster) {
-            console.log({ isPlayerReady });
-        }
         if (!isMaster) {
             synchronizePlayer({
                 action: 'toggle-play'
@@ -273,30 +270,23 @@ const Player = () => {
     };
 
     useEffect(() => {
-        listenForQueueUpdate();
+        const actions: PlayerSyncHandlers = {
+            'toggle-play': () => togglePlay(),
+            'toggle-mute': () => toggleMute(),
+            'set-volume': ({ volume }: GenericObject) => setVolume(volume),
+            'seek-time': ({ currentTime }: GenericObject) =>
+                seekTime(currentTime),
+            'update-state': (state: PlayerInnerState) => setPlayerState(state)
+        };
+
+        subscribeToPlayerSync(({ action, data }: PlayerSyncPayload) => {
+            const { [action]: handler } = actions;
+
+            if (handler) {
+                handler(data);
+            }
+        });
     }, []);
-
-    useEffect(() => {
-        if (isMaster) {
-            const actions: PlayerSyncHandlers = {
-                'toggle-play': () => togglePlay(),
-                'toggle-mute': () => toggleMute(),
-                'set-volume': ({ volume }: GenericObject) => setVolume(volume),
-                'seek-time': ({ currentTime }: GenericObject) =>
-                    seekTime(currentTime),
-                'update-state': (state: PlayerInnerState) =>
-                    setPlayerState(state)
-            };
-
-            subscribeToPlayerSync(({ action, data }: PlayerSyncPayload) => {
-                const { [action]: handler } = actions;
-
-                if (handler) {
-                    handler(data);
-                }
-            });
-        }
-    }, [isMaster, isPlaying]);
 
     useEffect(() => {
         if (isMaster) {

@@ -1,4 +1,6 @@
 import { useEffect, useCallback } from 'react';
+import isEqual from 'lodash/isEqual';
+
 import { useStore } from '..';
 import { useNotifications } from './notifications';
 import { usePrompt } from './prompt';
@@ -24,17 +26,46 @@ export const usePlayer = () => {
         return __DEV__ ? 'dev' : id;
     }, [user]);
 
-    const listenForQueueUpdate = useCallback(() => {
-        /* TODO: Prevent useless updates */
-        database.listen(
-            `users/${getCurrentUserId()}`,
-            ({ queue = [], currentId = '' } = {}) => {
-                dispatch({
-                    type: 'player/UPDATE_DATA',
-                    payload: { queue, currentId }
-                });
-            }
-        );
+    const subscribeToQueue = useCallback(() => {
+        const path = `users/${getCurrentUserId()}/queue`;
+
+        const listener = database.subscribe(path, (queue = []) => {
+            dispatch((_: Dispatch<Action>, getState: GetState) => {
+                const {
+                    player: { queue: previousQueue }
+                } = getState();
+
+                if (!isEqual(queue, previousQueue)) {
+                    dispatch({
+                        type: 'player/UPDATE_DATA',
+                        payload: { queue }
+                    });
+                }
+            });
+        });
+
+        return () => database.unsubscribe(path, listener);
+    }, []);
+
+    const subscribeToCurrentQueueId = useCallback(() => {
+        const path = `users/${getCurrentUserId()}/currentId`;
+
+        const listener = database.subscribe(path, (currentId = '') => {
+            dispatch((_: Dispatch<Action>, getState: GetState) => {
+                const {
+                    player: { currentId: previousCurrentId }
+                } = getState();
+
+                if (currentId !== previousCurrentId) {
+                    dispatch({
+                        type: 'player/UPDATE_DATA',
+                        payload: { queue, currentId }
+                    });
+                }
+            });
+        });
+
+        return () => database.unsubscribe(path, listener);
     }, []);
 
     const setQueue = (queue: QueueItem[]) =>
@@ -168,7 +199,8 @@ export const usePlayer = () => {
     return [
         player,
         {
-            listenForQueueUpdate,
+            subscribeToQueue,
+            subscribeToCurrentQueueId,
             setQueue,
             queueItems,
             queueItem,

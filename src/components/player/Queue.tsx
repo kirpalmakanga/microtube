@@ -1,4 +1,4 @@
-import { useCallback, FunctionComponent } from 'react';
+import { useEffect, useCallback, FunctionComponent } from 'react';
 import MenuWrapper from '../menu/MenuWrapper';
 
 import QueueHeader from './QueueHeader';
@@ -31,7 +31,13 @@ const Queue: FunctionComponent<Props> = ({
 }) => {
     const [
         { queue: items, currentId, showQueue },
-        { setQueue, removeQueueItem, setActiveQueueItem }
+        {
+            subscribeToQueue,
+            subscribeToCurrentQueueId,
+            setQueue,
+            removeQueueItem,
+            setActiveQueueItem
+        }
     ] = usePlayer();
 
     const [, { editPlaylistItem }] = usePlaylistItems();
@@ -44,6 +50,18 @@ const Queue: FunctionComponent<Props> = ({
         },
         []
     );
+
+    useEffect(() => {
+        const unsubscribe = subscribeToQueue();
+
+        return unsubscribe;
+    }, []);
+
+    useEffect(() => {
+        const unsubscribe = subscribeToCurrentQueueId();
+
+        return unsubscribe;
+    }, []);
 
     return (
         <section

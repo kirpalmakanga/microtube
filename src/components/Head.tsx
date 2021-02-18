@@ -1,37 +1,16 @@
 import { FunctionComponent } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { QueueItem } from '../../@types/alltypes';
-import { useStore } from '../store';
+import useAppTitle from '../store/hooks/app-title';
+import { usePlayer } from '../store/hooks/player';
 
 const Head: FunctionComponent = () => {
-    const { pathname } = useLocation();
-
-    const [
-        {
-            playlistItems: { playlistTitle },
-            channel: { channelTitle },
-            player: { queue, video, currentId }
-        }
-    ] = useStore();
+    let title = useAppTitle();
+    const [{ queue, video, currentId }] = usePlayer();
 
     const { id: currentVideoId, title: currentVideoTitle } = video.id
         ? video
         : queue.find(({ id }: QueueItem) => id === currentId) || {};
-
-    let title = 'MicroTube';
-
-    if (pathname.includes('/subscriptions')) {
-        title = 'Subscriptions';
-    }
-
-    if (pathname.includes('/channel')) {
-        title = channelTitle;
-    }
-
-    if (pathname.includes('/playlist')) {
-        title = playlistTitle;
-    }
 
     if (currentVideoId) {
         title = `Microtube | ${currentVideoTitle}`;

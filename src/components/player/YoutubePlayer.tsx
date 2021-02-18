@@ -21,8 +21,8 @@ interface Props {
     onReady: (playerInstance: YouTubePlayer) => void;
     onError: (error: object) => void;
     onBuffering: () => void;
-    onPlay: () => void;
-    onPause: () => void;
+    onPlay?: () => void;
+    onPause?: () => void;
     onEnd: () => void;
     onTimeUpdate: (t: number | undefined) => void;
     onLoadingUpdate: (t: number | undefined) => void;
@@ -90,8 +90,8 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
     onReady,
     onError,
     onBuffering,
-    onPlay,
-    onPause,
+    onPlay = () => {},
+    onPause = () => {},
     onEnd,
     onTimeUpdate,
     onLoadingUpdate,

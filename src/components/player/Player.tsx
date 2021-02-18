@@ -58,7 +58,8 @@ const Player = () => {
             showScreen,
             volume,
             loaded,
-            currentTime
+            currentTime,
+            seekingTime
         },
         setPlayerState
     ] = useMergedState({
@@ -68,7 +69,8 @@ const Player = () => {
         showScreen: false,
         volume: 100,
         loaded: 0,
-        currentTime: 0
+        currentTime: 0,
+        seekingTime: 0
     });
 
     const [
@@ -116,47 +118,17 @@ const Player = () => {
     const handleEditPlaylistItem = () => editPlaylistItem({ id: videoId });
 
     const updateState = (data: GenericObject) => {
-        if (isMaster) {
-            synchronizePlayer({
-                action: 'update-state',
-                data
-            });
-        }
+        synchronizePlayer({
+            action: 'update-state',
+            data
+        });
 
         setPlayerState(data);
     };
 
-    const setVolume = (volume: number) => {
-        if (!isMaster) {
-            synchronizePlayer({
-                action: 'set-volume',
-                data: { volume }
-            });
-        } else if (isPlayerReady) {
-            youtube.current?.setVolume(volume);
+    const setVolume = (volume: number) => updateState({ volume });
 
-            updateState({ volume });
-        }
-    };
-
-    const seekTime = (t: number) => {
-        if (!isMaster) {
-            synchronizePlayer({
-                action: 'seek-time',
-                data: { currentTime: t }
-            });
-        } else if (isPlayerReady) {
-            youtube.current?.seekTo(t, true);
-
-            updateState({ currentTime: t });
-
-            setTimeout(() => {
-                if (!isPlaying) {
-                    togglePlay();
-                }
-            });
-        }
-    };
+    const seekTime = (t: number) => updateState({ seekingTime: t });
 
     const toggleMute = () => {
         if (!isMaster) {
@@ -174,19 +146,8 @@ const Player = () => {
         }
     };
 
-    const togglePlay = () => {
-        if (!isMaster) {
-            synchronizePlayer({
-                action: 'toggle-play'
-            });
-        } else if (isPlayerReady) {
-            if (isPlaying) {
-                youtube.current?.pauseVideo();
-            } else {
-                youtube.current?.playVideo();
-            }
-        }
-    };
+    const togglePlay = () =>
+        updateState({ isPlaying: !isPlaying, isBuffering: false });
 
     const goToVideo = (next: boolean | undefined = true) => {
         const newIndex = currentQueueIndex + (next ? 1 : -1);
@@ -205,7 +166,7 @@ const Player = () => {
     const setPlaybackQuality = (value = 'hd1080') =>
         youtube.current?.setPlaybackQuality(value);
 
-    const handleToggleScreen = () => {
+    const handleToggleScreen = useCallback(() => {
         updateState({ showScreen: !showScreen });
 
         if (!isMaster) {
@@ -216,7 +177,7 @@ const Player = () => {
         } else {
             toggleScreen();
         }
-    };
+    }, [showScreen]);
 
     const handleYoutubeIframeReady = (playerInstance: YouTubePlayer) => {
         youtube.current = playerInstance;
@@ -238,18 +199,25 @@ const Player = () => {
         }
     };
 
+    const handlePlay = () =>
+        updateState({
+            isPlaying: true,
+            isBuffering: false
+        });
+
+    const handlePause = () =>
+        updateState({
+            isPlaying: false,
+            isBuffering: false
+        });
+
     const handleTimeUpdate = (currentTime: number = 0) =>
         updateState({ currentTime });
 
     const handleLoadingUpdate = (loaded: number = 0) => updateState({ loaded });
 
-    const handlePlay = () =>
-        updateState({ isPlaying: true, isBuffering: false });
-
-    const handlePause = () => updateState({ isPlaying: false });
-
     const handleBuffering = () => {
-        updateState({ isBuffering: true });
+        // updateState({ isBuffering: true });
 
         if (isMaster) {
             setPlaybackQuality();
@@ -260,10 +228,6 @@ const Player = () => {
         const newVolume = deltaY < 0 ? volume + 5 : volume - 5;
         const inRange = newVolume >= 0 && newVolume <= 100;
 
-        if (!isMaster) {
-            console.log({ newVolume });
-        }
-
         if (inRange) {
             setVolume(newVolume);
         }
@@ -271,9 +235,9 @@ const Player = () => {
 
     useEffect(() => {
         const actions: PlayerSyncHandlers = {
-            'toggle-play': () => togglePlay(),
+            // 'toggle-play': () => togglePlay(),
             'toggle-mute': () => toggleMute(),
-            'set-volume': ({ volume }: GenericObject) => setVolume(volume),
+            // 'set-volume': ({ volume }: GenericObject) => setVolume(volume),
             'seek-time': ({ currentTime }: GenericObject) =>
                 seekTime(currentTime),
             'update-state': (state: PlayerInnerState) => setPlayerState(state)
@@ -287,6 +251,35 @@ const Player = () => {
             }
         });
     }, []);
+
+    useEffect(() => {
+        if (isPlayerReady) youtube.current?.setVolume(volume);
+    }, [isPlayerReady, isMaster, volume]);
+
+    useEffect(() => {
+        if (!isPlayerReady) {
+            return;
+        }
+        if (!isPlaying) {
+            youtube.current?.pauseVideo();
+        } else {
+            youtube.current?.playVideo();
+        }
+    }, [isPlayerReady, isPlaying]);
+
+    useEffect(() => {
+        if (isPlayerReady) {
+            youtube.current?.seekTo(seekingTime, true);
+
+            updateState({ currentTime: seekingTime });
+
+            setTimeout(() => {
+                if (!isPlaying) {
+                    togglePlay();
+                }
+            });
+        }
+    }, [isPlayerReady, seekingTime]);
 
     useEffect(() => {
         if (isMaster) {
@@ -320,6 +313,7 @@ const Player = () => {
                     onStateChange={handleYoutubeIframeStateChange}
                     onTimeUpdate={handleTimeUpdate}
                     onLoadingUpdate={handleLoadingUpdate}
+                    onClick={togglePlay}
                     data-state={
                         isSingleVideo || showScreen || isFullscreen
                             ? 'visible'
@@ -350,11 +344,10 @@ const Player = () => {
                             className="player__controls-button icon-button"
                             onClick={togglePlay}
                             icon={
-                                isBuffering
-                                    ? 'loading'
-                                    : isPlaying
-                                    ? 'pause'
-                                    : 'play'
+                                // isBuffering
+                                //     ? 'loading'
+                                //     :
+                                isPlaying ? 'pause' : 'play'
                             }
                             ariaLabel={isPlaying ? 'Pause video' : 'Play video'}
                         />

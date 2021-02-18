@@ -17,12 +17,13 @@ interface Props {
     videoId: string;
     onReady: (playerInstance: YouTubePlayer) => void;
     onBuffering: () => void;
-    onPlay: () => void;
-    onPause: () => void;
+    onPlay?: () => void;
+    onPause?: () => void;
     onEnd: () => void;
     onStateChange: (playbackStateId: number) => void;
     onTimeUpdate: (t: number | undefined) => void;
     onLoadingUpdate: (t: number | undefined) => void;
+    onClick: () => void;
 }
 
 const Screen: FunctionComponent<Props> = ({

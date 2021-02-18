@@ -156,17 +156,24 @@ export const usePlayer = () => {
         }
     }, []);
 
-    const toggleQueue = useCallback(() => {
-        const { showQueue } = player;
+    const toggleQueue = () =>
+        dispatch((_: Dispatch<Action>, getState: GetState) => {
+            const {
+                player: { showQueue }
+            } = getState();
 
-        dispatch({
-            type: 'player/UPDATE_DATA',
-            payload: {
-                showQueue: !showQueue,
-                ...(!showQueue ? { showScreen: false, newQueueItems: 0 } : {})
-            }
+            console.log({ showQueue });
+
+            dispatch({
+                type: 'player/UPDATE_DATA',
+                payload: {
+                    showQueue: !showQueue,
+                    ...(!showQueue
+                        ? { showScreen: false, newQueueItems: 0 }
+                        : {})
+                }
+            });
         });
-    }, [player]);
 
     const toggleScreen = useCallback(() => {
         const { showScreen } = player;

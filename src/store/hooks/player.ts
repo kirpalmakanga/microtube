@@ -61,7 +61,7 @@ export const usePlayer = () => {
                     if (currentId !== previousCurrentId) {
                         dispatch({
                             type: 'player/UPDATE_DATA',
-                            payload: { queue, currentId }
+                            payload: { currentId }
                         });
                     }
                 });
@@ -164,8 +164,6 @@ export const usePlayer = () => {
             const {
                 player: { showQueue }
             } = getState();
-
-            console.log({ showQueue });
 
             dispatch({
                 type: 'player/UPDATE_DATA',

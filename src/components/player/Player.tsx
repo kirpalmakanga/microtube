@@ -55,6 +55,7 @@ const Player = () => {
             isPlayerReady,
             isPlaying,
             isBuffering,
+            isMuted,
             showScreen,
             volume,
             loaded,
@@ -66,6 +67,7 @@ const Player = () => {
         isPlayerReady: false,
         isPlaying: false,
         isBuffering: false,
+        isMuted: false,
         showScreen: false,
         volume: 100,
         loaded: 0,
@@ -131,19 +133,8 @@ const Player = () => {
     const seekTime = (t: number) => updateState({ seekingTime: t });
 
     const toggleMute = () => {
-        if (!isMaster) {
-            synchronizePlayer({
-                action: 'toggle-mute'
-            });
-        } else if (isPlayerReady) {
-            if (volume > 0) {
-                youtubeVolume.current = volume;
-
-                setVolume(0);
-            } else {
-                setVolume(youtubeVolume.current);
-            }
-        }
+        console.log({ isMuted: !isMuted });
+        updateState({ isMuted: !isMuted });
     };
 
     const togglePlay = () =>
@@ -235,9 +226,6 @@ const Player = () => {
 
     useEffect(() => {
         const actions: PlayerSyncHandlers = {
-            // 'toggle-play': () => togglePlay(),
-            'toggle-mute': () => toggleMute(),
-            // 'set-volume': ({ volume }: GenericObject) => setVolume(volume),
             'seek-time': ({ currentTime }: GenericObject) =>
                 seekTime(currentTime),
             'update-state': (state: PlayerInnerState) => setPlayerState(state)
@@ -255,6 +243,16 @@ const Player = () => {
     useEffect(() => {
         if (isPlayerReady) youtube.current?.setVolume(volume);
     }, [isPlayerReady, isMaster, volume]);
+
+    useUpdateEffect(() => {
+        if (isMuted) {
+            youtubeVolume.current = volume;
+
+            setVolume(0);
+        } else {
+            setVolume(youtubeVolume.current);
+        }
+    }, [isMuted]);
 
     useEffect(() => {
         if (!isPlayerReady) {
@@ -291,7 +289,7 @@ const Player = () => {
         if (!videoId) {
             youtube.current = null;
 
-            setPlayerState({ isPlayerReady: true });
+            setPlayerState({ isPlayerReady: false });
         }
     }, [videoId]);
 

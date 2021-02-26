@@ -25,10 +25,11 @@
     &__header {
         cursor: default;
         font-family: $font-primary;
-        background-color: $brand-secondary;
-        color: $brand-primary;
+        background-color: $brand-primary;
+        color: $brand-secondary;
         font-size: 16px;
         padding: 15px;
+        line-height: 24px;
     }
 
     &__item {
@@ -36,8 +37,8 @@
         display: flex;
         align-items: center;
         flex: 1;
-        background-color: $brand-secondary;
-        color: $brand-primary;
+        background-color: lighten($brand-primary, 5%);
+        color: $brand-secondary;
         border: none;
         padding: 15px;
         font-family: $font-primary;
@@ -51,7 +52,7 @@
         }
 
         &:hover {
-            background-color: darken($brand-secondary, 5%);
+            background-color: lighten($brand-primary, 10%);
         }
     }
 }

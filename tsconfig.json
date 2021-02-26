@@ -1,8 +1,18 @@
 {
     "compilerOptions": {
+        "sourceMap": true,
         "allowJs": true,
-        "target": "ESNext",
+        "target": "ES2019",
         "strict": true,
-        "module": "ESNext"
-    }
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react-jsx"
+    },
+    "exclude": [
+        "node_modules",
+        "dist",
+        "poi.config.js",
+        "src/**/*.js",
+        "src/**/*.jsx"
+    ]
 }

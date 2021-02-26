@@ -3,10 +3,7 @@ $gutter: 16px;
 .list {
     &__item {
         display: flex;
-
-        &:not(:last-child) {
-            border-bottom: 1px solid $brand-primary;
-        }
+        border-bottom: 1px solid $brand-primary;
     }
 
     &__loading {
@@ -24,8 +21,8 @@ $gutter: 16px;
         }
 
         svg {
-            height: 24px;
-            width: 24px;
+            height: 48px;
+            width: 48px;
         }
     }
 }

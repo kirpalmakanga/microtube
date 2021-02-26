@@ -16,7 +16,7 @@
 
 .dialog {
     cursor: default;
-    background-color: $brand-secondary;
+    background-color: lighten($brand-primary, 5%);
     position: relative;
     overflow: hidden;
     width: 100%;
@@ -25,14 +25,17 @@
     -webkit-tap-highlight-color: transparent;
     color: $brand-primary;
     .textfield__input {
-        color: $brand-primary;
+        background-color: lighten($brand-primary, 5%);
+        color: $brand-secondary;
         padding: 20px;
         resize: vertical;
     }
 
     &__header {
+        background-color: $brand-primary;
         padding: 16px;
         border-bottom: 2px solid lighten($brand-primary, 20%);
+        color: $brand-secondary;
         display: flex;
         align-items: center;
         flex-shrink: 0;
@@ -52,11 +55,16 @@
     }
 
     &__actions {
+        background-color: $brand-primary;
         display: flex;
         justify-content: flex-end;
         flex-shrink: 0;
         padding: 16px;
         .button {
+            background-color: lighten($brand-primary, 5%);
+            &:hover {
+                background-color: lighten($brand-primary, 10%);
+            }
             &:not(:last-child) {
                 margin-right: 10px;
             }
@@ -73,17 +81,17 @@
         display: flex;
 
         .dropdown {
-            color: $brand-primary;
+            color: $brand-secondary;
             border-left: 2px solid lighten($brand-primary, 20%);
             border-right: 2px solid lighten($brand-primary, 20%);
             &__trigger,
             &__list-item {
-                background-color: $brand-secondary;
-                color: $brand-primary;
+                background-color: $brand-primary;
+                color: $brand-secondary;
 
                 &:hover,
                 &.is-active {
-                    background-color: darken($brand-secondary, 5%);
+                    background-color: lighten($brand-primary, 5%);
                 }
             }
         }
@@ -95,7 +103,7 @@
             padding: 0 20px;
             &:focus {
                 outline: none;
-                background-color: darken($brand-secondary, 5%);
+                background-color: lighten($brand-primary, 10%);
             }
         }
 
@@ -124,6 +132,9 @@
         flex: 1;
         &__item {
             height: 54px;
+            &:not(:last-child) {
+                border-bottom: 1px solid lighten($brand-primary, 20%);
+            }
         }
         &__loading .icon {
             color: $brand-primary;
@@ -131,7 +142,7 @@
     }
 
     &__item {
-        background-color: $brand-secondary;
+        background-color: lighten($brand-primary, 5%);
         @include transition();
         display: flex;
         flex: 1;
@@ -143,15 +154,21 @@
         border: none;
         overflow: hidden;
 
+        &:hover {
+            background-color: lighten($brand-primary, 10%);
+        }
+
+        &-count,
+        &-text {
+            color: $brand-secondary;
+        }
+
         &-text {
             line-height: 0.9em;
             flex: 1;
             white-space: nowrap;
             text-overflow: ellipsis;
             overflow: hidden;
-        }
-
-        &-text {
             padding: 20px;
         }
 

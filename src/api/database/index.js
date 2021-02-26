@@ -1,5 +1,3 @@
-import { debounce } from '../../lib/helpers';
-
 class Database {
     db = null;
 
@@ -9,7 +7,10 @@ class Database {
                 const { default: db } = await import('./init');
 
                 this.db = db;
-            } catch (error) {}
+            } catch (error) {
+                console.error(new Error('Database connection failed'));
+                console.error(error);
+            }
         }
     };
 
@@ -49,13 +50,14 @@ class Database {
         return ref.set(data);
     };
 
-    listen = async (path, callback = () => {}) => {
+    subscribe = async (path, callback = () => {}) => {
         const ref = await this.getRef(path);
 
-        ref.on(
-            'value',
-            debounce((snapshot) => callback(snapshot.val() || undefined), 200)
-        );
+        const handler = (snapshot) => callback(snapshot.val() || undefined);
+
+        ref.on('value', handler);
+
+        return () => ref.off('value', handler);
     };
 }
 

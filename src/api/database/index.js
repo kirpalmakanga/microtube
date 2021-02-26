@@ -53,13 +53,11 @@ class Database {
     subscribe = async (path, callback = () => {}) => {
         const ref = await this.getRef(path);
 
-        ref.on('value', (snapshot) => callback(snapshot.val() || undefined));
-    };
+        const handler = (snapshot) => callback(snapshot.val() || undefined);
 
-    unsubscribe = async (path, listener) => {
-        const ref = await this.getRef(path);
+        ref.on('value', handler);
 
-        ref.off('value', listener);
+        return () => ref.off('value', handler);
     };
 }
 

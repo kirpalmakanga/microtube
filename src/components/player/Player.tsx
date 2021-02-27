@@ -9,7 +9,7 @@ import {
     useFullscreen,
     useKeyPress,
     useMergedState,
-    useUpdateEffect
+    useUpdateEffect,
 } from '../../lib/hooks';
 import { isMobile } from '../../lib/helpers';
 
@@ -60,9 +60,9 @@ const Player = () => {
             volume,
             loaded,
             currentTime,
-            seekingTime
+            seekingTime,
         },
-        setPlayerState
+        setPlayerState,
     ] = useMergedState({
         isPlayerReady: false,
         isPlaying: false,
@@ -72,12 +72,12 @@ const Player = () => {
         volume: 100,
         loaded: 0,
         currentTime: 0,
-        seekingTime: 0
+        seekingTime: 0,
     });
 
     const [
         { video, queue, currentId, showQueue, newQueueItems },
-        { setActiveQueueItem, toggleQueue, toggleScreen }
+        { setActiveQueueItem, toggleQueue, toggleScreen },
     ] = usePlayer();
     const [, { editPlaylistItem }] = usePlaylistItems();
 
@@ -86,13 +86,13 @@ const Player = () => {
         availableDevices,
         setMasterDevice,
         synchronizePlayer,
-        subscribeToPlayerSync
+        subscribeToPlayerSync,
     } = useDevices();
 
     const {
         isFullscreen,
         setFullscreenRef,
-        toggleFullscreen
+        toggleFullscreen,
     } = useFullscreen();
 
     useKeyPress('ArrowLeft', () => goToVideo(false));
@@ -114,7 +114,7 @@ const Player = () => {
         : queue[currentQueueIndex] || {
               id: '',
               title: 'No video.',
-              duration: 0
+              duration: 0,
           };
 
     const handleEditPlaylistItem = () => editPlaylistItem({ id: videoId });
@@ -122,7 +122,7 @@ const Player = () => {
     const updateState = (data: GenericObject) => {
         synchronizePlayer({
             action: 'update-state',
-            data
+            data,
         });
 
         setPlayerState(data);
@@ -147,7 +147,7 @@ const Player = () => {
         if (id) {
             updateState({
                 currentTime: 0,
-                loaded: 0
+                loaded: 0,
             });
 
             setActiveQueueItem(id);
@@ -163,7 +163,7 @@ const Player = () => {
         if (!isMaster) {
             synchronizePlayer({
                 action: 'update-state',
-                data: { showScreen: !showScreen }
+                data: { showScreen: !showScreen },
             });
         } else {
             toggleScreen();
@@ -177,14 +177,11 @@ const Player = () => {
     };
 
     const handleYoutubeIframeStateChange = (playbackStateId: number) => {
+        console.log({ playbackStateId });
         switch (playbackStateId) {
-            case UNSTARTED:
-                updateState({ isPlaying: false });
-
-                break;
-
             case CUED:
-                youtube.current?.playVideo();
+                console.log('cued');
+                updateState({ isPlaying: true });
 
                 break;
         }
@@ -193,13 +190,13 @@ const Player = () => {
     const handlePlay = () =>
         updateState({
             isPlaying: true,
-            isBuffering: false
+            isBuffering: false,
         });
 
     const handlePause = () =>
         updateState({
             isPlaying: false,
-            isBuffering: false
+            isBuffering: false,
         });
 
     const handleTimeUpdate = (currentTime: number = 0) =>
@@ -228,7 +225,7 @@ const Player = () => {
         const actions: PlayerSyncHandlers = {
             'seek-time': ({ currentTime }: GenericObject) =>
                 seekTime(currentTime),
-            'update-state': (state: PlayerInnerState) => setPlayerState(state)
+            'update-state': (state: PlayerInnerState) => setPlayerState(state),
         };
 
         subscribeToPlayerSync(({ action, data }: PlayerSyncPayload) => {
@@ -288,6 +285,8 @@ const Player = () => {
     useUpdateEffect(() => {
         if (!videoId) {
             youtube.current = null;
+
+            console.log('notReady');
 
             setPlayerState({ isPlayerReady: false });
         }
@@ -408,7 +407,7 @@ const Player = () => {
                                     showQueue ? 'is-active' : '',
                                     newQueueItems && !showQueue
                                         ? 'badge--active'
-                                        : ''
+                                        : '',
                                 ].join(' ')}
                                 onClick={toggleQueue}
                                 badge={newQueueItems}
@@ -423,7 +422,7 @@ const Player = () => {
                             <Button
                                 className={[
                                     'player__controls-button icon-button',
-                                    showScreen ? 'is-active' : ''
+                                    showScreen ? 'is-active' : '',
                                 ].join(' ')}
                                 onClick={handleToggleScreen}
                                 icon="screen"

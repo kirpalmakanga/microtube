@@ -214,10 +214,21 @@ export const wrapURLs = (text: string) => {
         .replace(emailAddressPattern, '<a href="mailto:$&">$&</a>');
 };
 
-// export const uuidv4 = () =>
-//     ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
-//         (
-//             c ^
-//             (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
-//         ).toString(16)
-//     );
+export const loadScript = (src: string) => {
+    return new Promise((resolve: (value?: unknown) => void, reject) => {
+        try {
+            if (document.querySelector(`script[src="${src}"]`)) {
+                resolve();
+            } else {
+                const js = document.createElement('script');
+
+                document.body.appendChild(js);
+
+                js.src = src;
+                js.onload = resolve;
+            }
+        } catch (err) {
+            reject(err);
+        }
+    });
+};

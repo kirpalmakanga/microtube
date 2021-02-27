@@ -1,44 +1,27 @@
 import { API_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SCOPE } from '../config/api';
 import { parseVideoData, parsePlaylistData, parseChannelData } from './parsers';
-import { parseVideoId, pick } from '../lib/helpers';
+import { loadScript, parseVideoId, pick } from '../lib/helpers';
 
 const ITEMS_PER_REQUEST = 50;
 
-function loadScript(src) {
-    return new Promise((resolve, reject) => {
-        try {
-            if (!document.querySelector(`script[src="${src}"]`)) {
-                const js = document.createElement('script');
+const loadAPI = async () => {
+    await loadScript(API_URL);
 
-                document.body.appendChild(js);
-
-                js.src = src;
-                js.onload = () => resolve(true);
-            } else {
-                resolve(false);
-            }
-        } catch (err) {
-            reject(err);
-        }
-    });
-}
-
-export const loadAPI = async () => {
-    const initServices = await loadScript(API_URL);
-
-    const { gapi } = window;
-
-    if (initServices) {
-        await new Promise((callback) =>
-            gapi.load('client:auth2', { callback })
-        );
-    }
-
-    return gapi;
+    return window.gapi;
 };
 
-const getAuthInstance = () => {
-    const { auth2 } = window.gapi;
+const getService = async (service) => {
+    const gapi = await loadAPI();
+
+    if (!gapi[service]) {
+        await new Promise((callback) => gapi.load(service, { callback }));
+    }
+
+    return gapi[service];
+};
+
+const getAuthInstance = async () => {
+    const auth2 = await getService('auth2');
 
     const params = {
         clientId: GOOGLE_CLIENT_ID,
@@ -48,10 +31,8 @@ const getAuthInstance = () => {
     return auth2.init(params);
 };
 
-export const loadAuth = getAuthInstance;
-
-export const getSignedInUser = () => {
-    const GoogleAuth = getAuthInstance();
+export const getSignedInUser = async () => {
+    const GoogleAuth = await getAuthInstance();
 
     const isSignedIn = GoogleAuth.isSignedIn.get();
 
@@ -87,14 +68,18 @@ export const getSignedInUser = () => {
 };
 
 export const signIn = async () => {
-    await getAuthInstance().signIn({
+    const auth = await getAuthInstance();
+
+    return auth.signIn({
         prompt: 'select_account'
     });
-
-    return getSignedInUser();
 };
 
-export const signOut = () => getAuthInstance().signOut();
+export const signOut = async () => {
+    const auth = await getAuthInstance();
+
+    return auth.signOut();
+};
 
 function removeEmptyParams(params = {}) {
     for (const p in params) {
@@ -106,16 +91,14 @@ function removeEmptyParams(params = {}) {
 }
 
 const request = async (method = '', path = '', params = {}, body) => {
-    const { client } = window.gapi;
+    const client = await getService('client');
 
-    const config = {
+    const { result } = await client.request({
         method,
         path: `/youtube/v3/${path}`,
         params: removeEmptyParams(params),
         ...(body ? { body } : {})
-    };
-
-    const { result } = await client.request(config);
+    });
 
     return result;
 };

@@ -15,7 +15,7 @@ export const useAuth = () => {
             idToken,
             accessToken,
             ...data
-        } = api.getSignedInUser();
+        } = await api.getSignedInUser();
         let id = '';
 
         if (isSignedIn) {

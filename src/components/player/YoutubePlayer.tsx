@@ -11,7 +11,7 @@ const PLAYBACK_STATES = {
     PLAYING: 1,
     PAUSED: 2,
     BUFFERING: 3,
-    CUED: 5,
+    CUED: 5
 };
 interface Props {
     id?: string;
@@ -26,7 +26,7 @@ interface Props {
     onEnd: () => void;
     onTimeUpdate: (t: number | undefined) => void;
     onLoadingUpdate: (t: number | undefined) => void;
-    onStateChange: (playbackStateId: number) => void;
+    onStateChange?: (playbackStateId: number) => void;
     // onPlaybackRateChange?: (data: any) => void,
     // onPlaybackQualityChange:(data: any) => void
 }
@@ -67,7 +67,7 @@ const useDeepCompareEffect = (
     updateOnly: boolean
 ) =>
     (updateOnly ? useEffectUpdateOnly : useEffect)(callback, [
-        useDeepCompareMemoize(dependencies),
+        useDeepCompareMemoize(dependencies)
     ]);
 
 const filterResetOptions = (options: Options) => ({
@@ -76,8 +76,8 @@ const filterResetOptions = (options: Options) => ({
         ...options.playerVars,
         autoplay: 0,
         start: 0,
-        end: 0,
-    },
+        end: 0
+    }
 });
 
 export { Options };
@@ -95,12 +95,12 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
     onEnd,
     onTimeUpdate,
     onLoadingUpdate,
-    onStateChange,
+    onStateChange = () => {}
     // onPlaybackRateChange = noop,
     // onPlaybackQualityChange = noop
 }) => {
     const {
-        playerVars: { start, end },
+        playerVars: { start, end }
     }: any = options;
     const internalPlayer = useRef<YouTubePlayer | null>(null);
     const currentTime = useRef<number | undefined>(0);
@@ -167,7 +167,6 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
             [READY]: handleIframeReady,
             [ERROR]: onError,
             [STATE_CHANGE]: ({ data }: { [key: string]: any }) => {
-                /* TODO: use correct typing */
                 onStateChange(data);
 
                 switch (data) {
@@ -190,7 +189,7 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
                     default:
                         return;
                 }
-            },
+            }
             // playbackRateChange: onPlaybackRateChange,
             // playbackQualityChange: onPlaybackQualityChange
         };
@@ -198,7 +197,7 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
         try {
             internalPlayer.current = youTubePlayer(id, {
                 ...options,
-                videoId,
+                videoId
             });
 
             for (const [eventKey, event] of Object.entries(events)) {

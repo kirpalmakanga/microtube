@@ -25,7 +25,6 @@ import { usePlaylistItems } from '../../store/hooks/playlist-items';
 import { useDevices } from '../../store/hooks/devices';
 
 const UNSTARTED = -1;
-const CUED = 5;
 
 interface PlayerInnerState {
     isPlayerReady: boolean;
@@ -120,6 +119,7 @@ const Player = () => {
     const handleEditPlaylistItem = () => editPlaylistItem({ id: videoId });
 
     const updateState = (data: GenericObject) => {
+        console.log(data);
         synchronizePlayer({
             action: 'update-state',
             data
@@ -132,10 +132,7 @@ const Player = () => {
 
     const seekTime = (t: number) => updateState({ seekingTime: t });
 
-    const toggleMute = () => {
-        console.log({ isMuted: !isMuted });
-        updateState({ isMuted: !isMuted });
-    };
+    const toggleMute = () => updateState({ isMuted: !isMuted });
 
     const togglePlay = () =>
         updateState({ isPlaying: !isPlaying, isBuffering: false });
@@ -179,13 +176,8 @@ const Player = () => {
     const handleYoutubeIframeStateChange = (playbackStateId: number) => {
         switch (playbackStateId) {
             case UNSTARTED:
-                updateState({ isPlaying: false });
-
-                break;
-
-            case CUED:
                 youtube.current?.playVideo();
-
+                updateState({ isPlaying: true, isBuffering: false });
                 break;
         }
     };
@@ -208,7 +200,7 @@ const Player = () => {
     const handleLoadingUpdate = (loaded: number = 0) => updateState({ loaded });
 
     const handleBuffering = () => {
-        // updateState({ isBuffering: true });
+        updateState({ isBuffering: true });
 
         if (isMaster) {
             setPlaybackQuality();
@@ -271,13 +263,9 @@ const Player = () => {
 
             updateState({ currentTime: seekingTime });
 
-            setTimeout(() => {
-                if (!isPlaying) {
-                    togglePlay();
-                }
-            });
+            togglePlay();
         }
-    }, [isPlayerReady, seekingTime]);
+    }, [seekingTime]);
 
     useEffect(() => {
         if (isMaster) {
@@ -290,6 +278,8 @@ const Player = () => {
             youtube.current = null;
 
             setPlayerState({ isPlayerReady: false });
+        } else {
+            togglePlay();
         }
     }, [videoId]);
 

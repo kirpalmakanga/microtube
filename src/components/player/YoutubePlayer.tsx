@@ -2,7 +2,7 @@ import { FunctionComponent, useCallback, useEffect, useRef } from 'react';
 
 import isEqual from 'lodash/isEqual';
 import youTubePlayer from 'youtube-player';
-import { YouTubePlayer, Options } from 'youtube-player/dist/types';
+import type { YouTubePlayer, Options } from 'youtube-player/dist/types';
 import EVENT_NAMES, { EventType } from 'youtube-player/dist/eventNames';
 
 const PLAYBACK_STATES = {
@@ -11,7 +11,7 @@ const PLAYBACK_STATES = {
     PLAYING: 1,
     PAUSED: 2,
     BUFFERING: 3,
-    CUED: 5
+    CUED: 5,
 };
 interface Props {
     id?: string;
@@ -67,7 +67,7 @@ const useDeepCompareEffect = (
     updateOnly: boolean
 ) =>
     (updateOnly ? useEffectUpdateOnly : useEffect)(callback, [
-        useDeepCompareMemoize(dependencies)
+        useDeepCompareMemoize(dependencies),
     ]);
 
 const filterResetOptions = (options: Options) => ({
@@ -76,8 +76,8 @@ const filterResetOptions = (options: Options) => ({
         ...options.playerVars,
         autoplay: 0,
         start: 0,
-        end: 0
-    }
+        end: 0,
+    },
 });
 
 export { Options };
@@ -95,12 +95,12 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
     onEnd,
     onTimeUpdate,
     onLoadingUpdate,
-    onStateChange
+    onStateChange,
     // onPlaybackRateChange = noop,
     // onPlaybackQualityChange = noop
 }) => {
     const {
-        playerVars: { start, end }
+        playerVars: { start, end },
     }: any = options;
     const internalPlayer = useRef<YouTubePlayer | null>(null);
     const currentTime = useRef<number | undefined>(0);
@@ -190,7 +190,7 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
                     default:
                         return;
                 }
-            }
+            },
             // playbackRateChange: onPlaybackRateChange,
             // playbackQualityChange: onPlaybackQualityChange
         };
@@ -198,7 +198,7 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
         try {
             internalPlayer.current = youTubePlayer(id, {
                 ...options,
-                videoId
+                videoId,
             });
 
             for (const [eventKey, event] of Object.entries(events)) {

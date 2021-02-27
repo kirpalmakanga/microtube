@@ -1,29 +1,5 @@
-lib-cov
-*.seed
-*.log
-*.csv
-*.dat
-*.out
-*.pid
-*.gz
-*.swp
-
-pids
-logs
-results
-tmp
-coverage
-
-# Dependency directory
 node_modules
-
-# Editors
-.idea
-*.iml
-.vscode
-
-# OS metadata
 .DS_Store
-Thumbs.db
-
 dist
+dist-ssr
+*.local

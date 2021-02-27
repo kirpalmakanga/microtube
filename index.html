@@ -24,12 +24,7 @@
             content="https://microtube.netlify.com/"
         />
 
-        <% if (pkg.description) { %>
-        <meta name="description" content="<%= pkg.description %>" />
-        <% } %>
-
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="image_src" href="/images/icons/icon-512x512.png" />
+        <link rel="image_src" href="/icon-512x512.png" />
 
         <link
             rel="apple-touch-icon"
@@ -39,14 +34,15 @@
 
         <link rel="icon" href="/favicon.svg" />
 
-        <title><%= html.title %></title>
+        <title>MicroTube</title>
     </head>
     <body>
         <noscript>
-            <%= html.title %> doesn't work without JavaScript enabled. Please
-            enable it to continue.
+            Microtube doesn't work without JavaScript enabled. Please enable it
+            to continue.
         </noscript>
 
         <div id="app" class="app"></div>
+        <script type="module" src="/src/main.tsx"></script>
     </body>
 </html>

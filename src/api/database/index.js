@@ -4,7 +4,7 @@ class Database {
     init = async () => {
         if (!this.db) {
             try {
-                const { default: db } = await import('./init');
+                const { db } = await import('./init');
 
                 this.db = db;
             } catch (error) {

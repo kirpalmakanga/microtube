@@ -20,7 +20,7 @@ interface Props {
     onPlay?: () => void;
     onPause?: () => void;
     onEnd: () => void;
-    onStateChange: (playbackStateId: number) => void;
+    onStateChange?: (playbackStateId: number) => void;
     onTimeUpdate: (t: number | undefined) => void;
     onLoadingUpdate: (t: number | undefined) => void;
     onClick: () => void;

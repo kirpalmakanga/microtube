@@ -2,8 +2,6 @@ import './assets/styles/app.scss';
 
 import { useState, useEffect } from 'react';
 
-import { loadAPI, loadAuth } from './api/youtube';
-
 // import { enableImportMethods } from './actions.bak/youtube';
 
 import { preventDefault, isMobile } from './lib/helpers';
@@ -27,16 +25,7 @@ const Root: FunctionComponent = ({ children }) => {
 
     useEffect(() => {
         (async () => {
-            await loadAPI();
-            await loadAuth();
-
             await getUserData();
-
-            // enableImportMethods();
-
-            // listenForQueueUpdate();
-
-            // connectDevice();
 
             setIsAppReady(true);
         })();

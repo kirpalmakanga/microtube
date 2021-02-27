@@ -1,4 +1,4 @@
-## Youtube Lite
+## MicroTube
 
 ![Screenshot](./screenshot.png)
 

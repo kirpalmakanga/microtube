@@ -34,6 +34,7 @@ interface PlayerInnerState {
     volume: number;
     loaded: number;
     currentTime: number;
+    seekingTime: number;
 }
 
 interface PlayerSyncPayload {
@@ -46,12 +47,12 @@ interface PlayerSyncHandlers {
 }
 
 const Player = () => {
+    const isStartup = useRef<boolean>(true);
     const youtube = useRef<YouTubePlayer | null>(null);
     const youtubeVolume = useRef<number>(100);
 
     const [
         {
-            isPlayerReady,
             isPlaying,
             isBuffering,
             isMuted,
@@ -63,7 +64,6 @@ const Player = () => {
         },
         setPlayerState
     ] = useMergedState({
-        isPlayerReady: false,
         isPlaying: false,
         isBuffering: false,
         isMuted: false,
@@ -119,7 +119,6 @@ const Player = () => {
     const handleEditPlaylistItem = () => editPlaylistItem({ id: videoId });
 
     const updateState = (data: GenericObject) => {
-        console.log(data);
         synchronizePlayer({
             action: 'update-state',
             data
@@ -134,12 +133,9 @@ const Player = () => {
 
     const toggleMute = () => updateState({ isMuted: !isMuted });
 
-    const togglePlay = () =>
-        updateState({ isPlaying: !isPlaying, isBuffering: false });
-
     const goToVideo = (next: boolean | undefined = true) => {
         const newIndex = currentQueueIndex + (next ? 1 : -1);
-        const { id } = queue[newIndex] || {};
+        const { [newIndex]: { id = null } = {} } = queue;
 
         if (id) {
             updateState({
@@ -169,15 +165,16 @@ const Player = () => {
 
     const handleYoutubeIframeReady = (playerInstance: YouTubePlayer) => {
         youtube.current = playerInstance;
-
-        setPlayerState({ isPlayerReady: true });
     };
 
     const handleYoutubeIframeStateChange = (playbackStateId: number) => {
         switch (playbackStateId) {
             case UNSTARTED:
-                youtube.current?.playVideo();
-                updateState({ isPlaying: true, isBuffering: false });
+                if (!isStartup.current) {
+                    updateState({ isPlaying: true, isBuffering: false });
+                } else {
+                    isStartup.current = false;
+                }
                 break;
         }
     };
@@ -193,6 +190,10 @@ const Player = () => {
             isPlaying: false,
             isBuffering: false
         });
+
+    const togglePlay = () => {
+        updateState({ isPlaying: !isPlaying, isBuffering: false });
+    };
 
     const handleTimeUpdate = (currentTime: number = 0) =>
         updateState({ currentTime });
@@ -233,8 +234,8 @@ const Player = () => {
     }, []);
 
     useEffect(() => {
-        if (isPlayerReady) youtube.current?.setVolume(volume);
-    }, [isPlayerReady, isMaster, volume]);
+        youtube.current?.setVolume(volume);
+    }, [volume]);
 
     useUpdateEffect(() => {
         if (isMuted) {
@@ -247,24 +248,19 @@ const Player = () => {
     }, [isMuted]);
 
     useEffect(() => {
-        if (!isPlayerReady) {
-            return;
-        }
         if (!isPlaying) {
             youtube.current?.pauseVideo();
         } else {
             youtube.current?.playVideo();
         }
-    }, [isPlayerReady, isPlaying]);
+    }, [isPlaying]);
 
-    useEffect(() => {
-        if (isPlayerReady) {
-            youtube.current?.seekTo(seekingTime, true);
+    useUpdateEffect(() => {
+        youtube.current?.seekTo(seekingTime, true);
 
-            updateState({ currentTime: seekingTime });
+        updateState({ currentTime: seekingTime });
 
-            togglePlay();
-        }
+        handlePlay();
     }, [seekingTime]);
 
     useEffect(() => {
@@ -276,10 +272,6 @@ const Player = () => {
     useUpdateEffect(() => {
         if (!videoId) {
             youtube.current = null;
-
-            setPlayerState({ isPlayerReady: false });
-        } else {
-            togglePlay();
         }
     }, [videoId]);
 
@@ -355,7 +347,7 @@ const Player = () => {
                         currentTime={currentTime}
                         duration={duration}
                         loaded={loaded}
-                        onStartSeeking={isPlaying ? togglePlay : () => {}}
+                        onStartSeeking={handlePause}
                         onEndSeeking={seekTime}
                     />
 

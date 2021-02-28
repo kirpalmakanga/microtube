@@ -196,6 +196,24 @@ export const usePlayer = () => {
 
     const { queue, currentId } = player;
 
+    const goToNextQueueItem = (next: boolean | undefined = true) =>
+        dispatch((_: Dispatch<Action>, getState: GetState) => {
+            const {
+                player: { queue, currentId }
+            } = getState();
+            const currentQueueIndex = queue.findIndex(
+                ({ id }: QueueItem) => id === currentId
+            );
+            const newIndex = currentQueueIndex + (next ? 1 : -1);
+            const { [newIndex]: { id = null } = {} } = queue;
+
+            if (id) {
+                setActiveQueueItem(id);
+            }
+
+            return !!id;
+        });
+
     useEffect(() => {
         database.set(`users/${getCurrentUserId()}/queue`, queue);
     }, [queue]);
@@ -218,6 +236,7 @@ export const usePlayer = () => {
             clearQueue,
             clearVideo,
             getVideo,
+            goToNextQueueItem,
             toggleQueue,
             toggleScreen,
             closeScreen

@@ -76,7 +76,7 @@ const Player = () => {
 
     const [
         { video, queue, currentId, showQueue, newQueueItems },
-        { setActiveQueueItem, toggleQueue, toggleScreen }
+        { setActiveQueueItem, goToNextQueueItem, toggleQueue, toggleScreen }
     ] = usePlayer();
     const [, { editPlaylistItem }] = usePlaylistItems();
 
@@ -134,16 +134,13 @@ const Player = () => {
     const toggleMute = () => updateState({ isMuted: !isMuted });
 
     const goToVideo = (next: boolean | undefined = true) => {
-        const newIndex = currentQueueIndex + (next ? 1 : -1);
-        const { [newIndex]: { id = null } = {} } = queue;
+        const shouldResetVideo = goToNextQueueItem(next);
 
-        if (id) {
+        if (shouldResetVideo) {
             updateState({
                 currentTime: 0,
                 loaded: 0
             });
-
-            setActiveQueueItem(id);
         }
     };
 
@@ -217,6 +214,12 @@ const Player = () => {
         }
     };
 
+    const handleVideoEnd = () => {
+        if (!isSingleVideo) {
+            goToVideo();
+        }
+    };
+
     useEffect(() => {
         const actions: PlayerSyncHandlers = {
             'seek-time': ({ currentTime }: GenericObject) =>
@@ -286,7 +289,7 @@ const Player = () => {
                 <Screen
                     videoId={videoId}
                     onReady={handleYoutubeIframeReady}
-                    onEnd={!isSingleVideo ? goToVideo : () => {}}
+                    onEnd={handleVideoEnd}
                     onBuffering={handleBuffering}
                     onPlay={handlePlay}
                     onPause={handlePause}

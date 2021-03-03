@@ -53,6 +53,7 @@ const Player = () => {
 
     const [
         {
+            isFullscreen,
             isPlaying,
             isBuffering,
             isMuted,
@@ -64,6 +65,7 @@ const Player = () => {
         },
         setPlayerState
     ] = useMergedState({
+        isFullscreen: false,
         isPlaying: false,
         isBuffering: false,
         isMuted: false,
@@ -76,7 +78,7 @@ const Player = () => {
 
     const [
         { video, queue, currentId, showQueue, newQueueItems },
-        { setActiveQueueItem, goToNextQueueItem, toggleQueue, toggleScreen }
+        { goToNextQueueItem, toggleQueue, toggleScreen }
     ] = usePlayer();
     const [, { editPlaylistItem }] = usePlaylistItems();
 
@@ -89,9 +91,10 @@ const Player = () => {
     } = useDevices();
 
     const {
-        isFullscreen,
         setFullscreenRef,
-        toggleFullscreen
+        subscribeToFullscreen,
+        requestFullscreen,
+        exitFullscreen
     } = useFullscreen();
 
     useKeyPress('ArrowLeft', () => goToVideo(false));
@@ -126,6 +129,8 @@ const Player = () => {
 
         setPlayerState(data);
     };
+
+    const toggleFullscreen = () => updateState({ isFullscreen: !isFullscreen });
 
     const setVolume = (volume: number) => updateState({ volume });
 
@@ -273,6 +278,26 @@ const Player = () => {
     }, [isMaster, showScreen]);
 
     useUpdateEffect(() => {
+        if (!isMaster) {
+            return;
+        }
+
+        if (isFullscreen) {
+            requestFullscreen();
+        } else {
+            exitFullscreen();
+        }
+    }, [isMaster, isFullscreen]);
+
+    useEffect(() => {
+        const unsubscribe = subscribeToFullscreen((isFullscreen: boolean) =>
+            updateState({ isFullscreen })
+        );
+
+        return unsubscribe;
+    }, []);
+
+    useUpdateEffect(() => {
         if (!videoId) {
             youtube.current = null;
         }
@@ -281,7 +306,7 @@ const Player = () => {
     return (
         <div
             className="player__container shadow--2dp"
-            ref={setFullscreenRef}
+            ref={isMaster ? setFullscreenRef : null}
             data-state-fullscreen={isFullscreen ? 'enabled' : 'disabled'}
             data-state-show-queue={showQueue ? 'enabled' : 'disabled'}
         >

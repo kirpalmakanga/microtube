@@ -115,8 +115,7 @@ export const useSocket = (serverUrl: string) => {
 
     const getSocket = () => {
         if (!client.current) {
-            console.log({ serverUrl });
-            client.current = io(serverUrl);
+            client.current = io(serverUrl, { transports: ['websocket'] });
         }
         return client.current;
     };

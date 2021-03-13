@@ -134,6 +134,12 @@ export const usePlayer = () => {
         []
     );
 
+    const clearNewQueueItems = () =>
+        dispatch({
+            type: 'player/UPDATE_DATA',
+            payload: { newQueueItems: 0 }
+        });
+
     const clearQueue = useCallback(
         () =>
             openPrompt({
@@ -162,36 +168,26 @@ export const usePlayer = () => {
     const toggleQueue = () =>
         dispatch((_: Dispatch<Action>, getState: GetState) => {
             const {
-                player: { showQueue }
+                player: { isQueueVisible: currentIsQueueVisible }
             } = getState();
+
+            const isQueueVisible = !currentIsQueueVisible;
 
             dispatch({
                 type: 'player/UPDATE_DATA',
                 payload: {
-                    showQueue: !showQueue,
-                    ...(!showQueue
-                        ? { showScreen: false, newQueueItems: 0 }
+                    isQueueVisible,
+                    ...(!isQueueVisible
+                        ? { isScreenVisible: false, newQueueItems: 0 }
                         : {})
                 }
             });
         });
 
-    const toggleScreen = useCallback(() => {
-        const { showScreen } = player;
-
-        dispatch({
-            type: 'player/UPDATE_DATA',
-            payload: {
-                showScreen: !showScreen,
-                ...(!showScreen ? { showQueue: false } : {})
-            }
-        });
-    }, [player]);
-
     const closeScreen = () =>
         dispatch({
             type: 'player/UPDATE_DATA',
-            payload: { showScreen: false }
+            payload: { isScreenVisible: false }
         });
 
     const { queue, currentId } = player;
@@ -234,11 +230,11 @@ export const usePlayer = () => {
             importVideos,
             removeQueueItem,
             clearQueue,
+            clearNewQueueItems,
             clearVideo,
             getVideo,
             goToNextQueueItem,
             toggleQueue,
-            toggleScreen,
             closeScreen
         }
     ];

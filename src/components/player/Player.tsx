@@ -30,7 +30,8 @@ interface PlayerInnerState {
     isPlayerReady: boolean;
     isPlaying: boolean;
     isBuffering: boolean;
-    showScreen: boolean;
+    isScreenVisible: boolean;
+    isQueueVisible: boolean;
     volume: number;
     loaded: number;
     currentTime: number;
@@ -57,7 +58,8 @@ const Player = () => {
             isPlaying,
             isBuffering,
             isMuted,
-            showScreen,
+            isQueueVisible,
+            isScreenVisible,
             volume,
             loaded,
             currentTime,
@@ -69,7 +71,8 @@ const Player = () => {
         isPlaying: false,
         isBuffering: false,
         isMuted: false,
-        showScreen: false,
+        isQueueVisible: false,
+        isScreenVisible: false,
         volume: 100,
         loaded: 0,
         currentTime: 0,
@@ -77,8 +80,8 @@ const Player = () => {
     });
 
     const [
-        { video, queue, currentId, showQueue, newQueueItems },
-        { goToNextQueueItem, toggleQueue, toggleScreen }
+        { video, queue, currentId, newQueueItems },
+        { goToNextQueueItem }
     ] = usePlayer();
     const [, { editPlaylistItem }] = usePlaylistItems();
 
@@ -100,7 +103,7 @@ const Player = () => {
     useKeyPress('ArrowLeft', () => goToVideo(false));
     useKeyPress('ArrowRight', () => goToVideo(true));
     useKeyPress('m', () => toggleMute());
-    useKeyPress('s', () => handleToggleScreen());
+    useKeyPress('s', () => toggleScreen());
     useKeyPress(' ', () => togglePlay());
 
     const { isMaster } = currentDevice;
@@ -152,18 +155,23 @@ const Player = () => {
     const setPlaybackQuality = (value = 'hd1080') =>
         youtube.current?.setPlaybackQuality(value);
 
-    const handleToggleScreen = useCallback(() => {
-        updateState({ showScreen: !showScreen });
+    const toggleScreen = useCallback(() => {
+        const isVisible = !isScreenVisible;
 
-        if (!isMaster) {
-            synchronizePlayer({
-                action: 'update-state',
-                data: { showScreen: !showScreen }
-            });
-        } else {
-            toggleScreen();
-        }
-    }, [showScreen]);
+        updateState({
+            isScreenVisible: isVisible,
+            ...(isVisible ? { isQueueVisible: false } : {})
+        });
+    }, [isScreenVisible]);
+
+    const toggleQueue = useCallback(() => {
+        const isVisible = !isQueueVisible;
+
+        updateState({
+            isQueueVisible: isVisible,
+            ...(isVisible ? { isScreenVisible: false } : {})
+        });
+    }, [isQueueVisible]);
 
     const handleYoutubeIframeReady = (playerInstance: YouTubePlayer) => {
         youtube.current = playerInstance;
@@ -273,9 +281,9 @@ const Player = () => {
 
     useEffect(() => {
         if (isMaster) {
-            setPlayerState({ showScreen });
+            setPlayerState({ isScreenVisible });
         }
-    }, [isMaster, showScreen]);
+    }, [isMaster, isScreenVisible]);
 
     useUpdateEffect(() => {
         if (!isMaster) {
@@ -308,7 +316,7 @@ const Player = () => {
             className="player__container shadow--2dp"
             ref={isMaster ? setFullscreenRef : null}
             data-state-fullscreen={isFullscreen ? 'enabled' : 'disabled'}
-            data-state-show-queue={showQueue ? 'enabled' : 'disabled'}
+            data-state-show-queue={isQueueVisible ? 'enabled' : 'disabled'}
         >
             {isMaster ? (
                 <Screen
@@ -323,7 +331,7 @@ const Player = () => {
                     onLoadingUpdate={handleLoadingUpdate}
                     onClick={togglePlay}
                     data-state={
-                        isSingleVideo || showScreen || isFullscreen
+                        isSingleVideo || isScreenVisible || isFullscreen
                             ? 'visible'
                             : 'hidden'
                     }
@@ -331,8 +339,10 @@ const Player = () => {
             ) : null}
 
             <Queue
+                isVisible={isQueueVisible}
                 isPlaying={isPlaying}
                 isBuffering={isBuffering}
+                toggleQueue={toggleQueue}
                 togglePlay={togglePlay}
             />
 
@@ -415,8 +425,8 @@ const Player = () => {
                             <Button
                                 className={[
                                     'player__controls-button badge icon-button',
-                                    showQueue ? 'is-active' : '',
-                                    newQueueItems && !showQueue
+                                    isQueueVisible ? 'is-active' : '',
+                                    newQueueItems && !isQueueVisible
                                         ? 'badge--active'
                                         : ''
                                 ].join(' ')}
@@ -424,7 +434,9 @@ const Player = () => {
                                 badge={newQueueItems}
                                 icon="list"
                                 ariaLabel={
-                                    showQueue ? 'Close queue' : 'Open queue'
+                                    isQueueVisible
+                                        ? 'Close queue'
+                                        : 'Open queue'
                                 }
                             />
                         ) : null}
@@ -433,12 +445,14 @@ const Player = () => {
                             <Button
                                 className={[
                                     'player__controls-button icon-button',
-                                    showScreen ? 'is-active' : ''
+                                    isScreenVisible ? 'is-active' : ''
                                 ].join(' ')}
-                                onClick={handleToggleScreen}
+                                onClick={toggleScreen}
                                 icon="screen"
                                 ariaLabel={
-                                    showScreen ? 'Close screen' : 'open screen'
+                                    isScreenVisible
+                                        ? 'Close screen'
+                                        : 'open screen'
                                 }
                             />
                         ) : null}
@@ -457,7 +471,7 @@ const Player = () => {
                             onClick={toggleFullscreen}
                             icon={isFullscreen ? 'close' : 'expand'}
                             ariaLabel={
-                                showScreen
+                                isScreenVisible
                                     ? 'Enable Fullscreen'
                                     : 'Exit Fullscreen'
                             }

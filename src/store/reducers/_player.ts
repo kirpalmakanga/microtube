@@ -4,8 +4,7 @@ import { createReducer, State } from '../helpers';
 export interface PlayerState extends State {
     queue: QueueItem[];
     currentId: string;
-    showQueue: boolean;
-    showScreen: boolean;
+    isQueueVisible: boolean;
     volume: number;
     newQueueItems: number;
     currentTime: number;
@@ -15,8 +14,7 @@ export interface PlayerState extends State {
 export const initialState: PlayerState = {
     queue: [],
     currentId: '',
-    showQueue: false,
-    showScreen: false,
+    isQueueVisible: false,
     volume: 100,
     newQueueItems: 0,
     currentTime: 0,
@@ -49,13 +47,12 @@ export default createReducer(initialState, {
     }),
 
     'player/ADD_QUEUE_ITEMS': (
-        { queue, showQueue, newQueueItems, ...state }: State,
+        { queue, isQueueVisible, newQueueItems, ...state }: State,
         { items = [] }: State
     ) => ({
         ...state,
         queue: [...queue, ...items.map(extractQueueItemData)],
-        newQueueItems: !showQueue ? newQueueItems + items.length : 0,
-        showQueue
+        newQueueItems: !isQueueVisible ? newQueueItems + items.length : 0
     }),
 
     'player/REMOVE_QUEUE_ITEM': (

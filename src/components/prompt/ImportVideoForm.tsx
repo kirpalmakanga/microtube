@@ -40,7 +40,7 @@ export const ImportVideoForm: FunctionComponent<Props> = ({ onSubmit }) => {
             <div className="textfield">
                 <textarea
                     id="videoId"
-                    className="textfield__input"
+                    className="textfield__textarea"
                     value={text}
                     onChange={handleChange}
                     autoFocus

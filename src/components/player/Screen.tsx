@@ -14,6 +14,7 @@ const playerOptions: Options = {
 };
 
 interface Props {
+    isVisible: boolean;
     videoId: string;
     onReady: (playerInstance: YouTubePlayer) => void;
     onBuffering: () => void;
@@ -27,6 +28,7 @@ interface Props {
 }
 
 const Screen: FunctionComponent<Props> = ({
+    isVisible,
     videoId,
     onReady,
     onBuffering,
@@ -35,10 +37,9 @@ const Screen: FunctionComponent<Props> = ({
     onEnd,
     onStateChange,
     onTimeUpdate,
-    onLoadingUpdate,
-    ...props
+    onLoadingUpdate
 }) => (
-    <div className="screen" {...props}>
+    <div className="screen" data-state={isVisible ? 'visible' : 'hidden'}>
         {videoId ? (
             <YoutubePlayer
                 videoId={videoId}

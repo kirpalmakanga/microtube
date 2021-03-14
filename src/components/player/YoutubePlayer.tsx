@@ -258,10 +258,7 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
         window.clearInterval(timeWatcher.current);
         window.clearInterval(loadingWatcher.current);
 
-        if (internalPlayer.current) {
-            internalPlayer.current?.destroy();
-            internalPlayer.current = null;
-        }
+        internalPlayer.current?.destroy();
     }, []);
 
     useEffect(() => {

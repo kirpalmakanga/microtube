@@ -320,6 +320,7 @@ const Player = () => {
         >
             {isMaster ? (
                 <Screen
+                    isVisible={isSingleVideo || isScreenVisible || isFullscreen}
                     videoId={videoId}
                     onReady={handleYoutubeIframeReady}
                     onEnd={handleVideoEnd}
@@ -330,11 +331,6 @@ const Player = () => {
                     onTimeUpdate={handleTimeUpdate}
                     onLoadingUpdate={handleLoadingUpdate}
                     onClick={togglePlay}
-                    data-state={
-                        isSingleVideo || isScreenVisible || isFullscreen
-                            ? 'visible'
-                            : 'hidden'
-                    }
                 />
             ) : null}
 

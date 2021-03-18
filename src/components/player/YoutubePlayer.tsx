@@ -88,7 +88,7 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
     videoId,
     options,
     onReady,
-    onError,
+    onError = () => {},
     onBuffering,
     onPlay = () => {},
     onPause = () => {},
@@ -258,7 +258,7 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
         window.clearInterval(timeWatcher.current);
         window.clearInterval(loadingWatcher.current);
 
-        internalPlayer.current?.destroy();
+        internalPlayer.current = null;
     }, []);
 
     useEffect(() => {

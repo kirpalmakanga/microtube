@@ -1,5 +1,11 @@
-import { io } from 'socket.io-client';
-import { useRef, useState, useEffect, useCallback } from 'react';
+import {
+    useRef,
+    useState,
+    useEffect,
+    useCallback,
+    createContext,
+    useContext
+} from 'react';
 import { GenericObject } from '../../@types/alltypes';
 
 export const useFullscreen = () => {
@@ -108,24 +114,4 @@ export const useUpdateEffect = (callback: () => void, dependencies: any) => {
 
         callback();
     }, dependencies);
-};
-
-export const useSocket = (serverUrl: string) => {
-    const client = useRef<any | null>(null);
-
-    const getSocket = () => {
-        if (!client.current) {
-            client.current = io(serverUrl, { transports: ['websocket'] });
-        }
-        return client.current;
-    };
-
-    return {
-        subscribe: (eventKey: string, callback: (response: any) => void) => {
-            getSocket().on(eventKey, callback);
-        },
-        emit: (eventKey: string, payload: any) => {
-            getSocket().emit(eventKey, payload);
-        }
-    };
 };

@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef, WheelEvent } from 'react';
 
-import { GenericObject, QueueItem } from '../../../@types/alltypes';
+import {
+    GenericObject,
+    QueueItem,
+    PlayerSyncPayload,
+    PlayerSyncHandlers
+} from '../../../@types/alltypes';
 import { YouTubePlayer } from 'youtube-player/dist/types';
 
 import { usePlayer } from '../../store/hooks/player';
@@ -33,18 +38,6 @@ interface PlayerInnerState {
     isScreenVisible: boolean;
     isQueueVisible: boolean;
     volume: number;
-    loaded: number;
-    currentTime: number;
-    seekingTime: number;
-}
-
-interface PlayerSyncPayload {
-    action: string;
-    data: GenericObject;
-}
-
-interface PlayerSyncHandlers {
-    [key: string]: Function;
 }
 
 const Player = () => {
@@ -60,10 +53,7 @@ const Player = () => {
             isMuted,
             isQueueVisible,
             isScreenVisible,
-            volume,
-            loaded,
-            currentTime,
-            seekingTime
+            volume
         },
         setPlayerState
     ] = useMergedState({
@@ -73,10 +63,7 @@ const Player = () => {
         isMuted: false,
         isQueueVisible: false,
         isScreenVisible: false,
-        volume: 100,
-        loaded: 0,
-        currentTime: 0,
-        seekingTime: 0
+        volume: 100
     });
 
     const [
@@ -137,20 +124,10 @@ const Player = () => {
 
     const setVolume = (volume: number) => updateState({ volume });
 
-    const seekTime = (t: number) => updateState({ seekingTime: t });
-
     const toggleMute = () => updateState({ isMuted: !isMuted });
 
-    const goToVideo = (next: boolean | undefined = true) => {
-        const shouldResetVideo = goToNextQueueItem(next);
-
-        if (shouldResetVideo) {
-            updateState({
-                currentTime: 0,
-                loaded: 0
-            });
-        }
-    };
+    const goToVideo = (next: boolean | undefined = true) =>
+        goToNextQueueItem(next);
 
     const setPlaybackQuality = (value = 'hd1080') =>
         youtube.current?.setPlaybackQuality(value);
@@ -201,14 +178,45 @@ const Player = () => {
             isBuffering: false
         });
 
+    const handleSeek = (t: number) => {
+        youtube.current?.seekTo(t, true);
+
+        handlePlay();
+    };
+
     const togglePlay = () => {
         updateState({ isPlaying: !isPlaying, isBuffering: false });
     };
 
-    const handleTimeUpdate = (currentTime: number = 0) =>
-        updateState({ currentTime });
+    const getCurrentTime = () => {
+        if (youtube.current) {
+            const currentTime = youtube.current?.getCurrentTime();
 
-    const handleLoadingUpdate = (loaded: number = 0) => updateState({ loaded });
+            synchronizePlayer({
+                action: 'update-time',
+                data: { currentTime }
+            });
+
+            return currentTime;
+        }
+
+        return null;
+    };
+
+    const getLoadingProgress = () => {
+        if (youtube.current) {
+            const loaded = youtube.current?.getVideoLoadedFraction();
+
+            synchronizePlayer({
+                action: 'update-loading',
+                data: { loaded }
+            });
+
+            return loaded;
+        }
+
+        return null;
+    };
 
     const handleBuffering = () => {
         updateState({ isBuffering: true });
@@ -235,8 +243,6 @@ const Player = () => {
 
     useEffect(() => {
         const actions: PlayerSyncHandlers = {
-            'seek-time': ({ currentTime }: GenericObject) =>
-                seekTime(currentTime),
             'update-state': (state: PlayerInnerState) => setPlayerState(state)
         };
 
@@ -270,14 +276,6 @@ const Player = () => {
             youtube.current?.playVideo();
         }
     }, [isPlaying]);
-
-    useUpdateEffect(() => {
-        youtube.current?.seekTo(seekingTime, true);
-
-        updateState({ currentTime: seekingTime });
-
-        handlePlay();
-    }, [seekingTime]);
 
     useEffect(() => {
         if (isMaster) {
@@ -328,8 +326,6 @@ const Player = () => {
                     onPlay={handlePlay}
                     onPause={handlePause}
                     onStateChange={handleYoutubeIframeStateChange}
-                    onTimeUpdate={handleTimeUpdate}
-                    onLoadingUpdate={handleLoadingUpdate}
                     onClick={togglePlay}
                 />
             ) : null}
@@ -378,11 +374,11 @@ const Player = () => {
 
                     <Info
                         title={title}
-                        currentTime={currentTime}
                         duration={duration}
-                        loaded={loaded}
+                        getCurrentTime={getCurrentTime}
+                        getLoadingProgress={getLoadingProgress}
                         onStartSeeking={handlePause}
-                        onEndSeeking={seekTime}
+                        onEndSeeking={handleSeek}
                     />
 
                     <div className="player__controls">

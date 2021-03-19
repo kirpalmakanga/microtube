@@ -1,27 +1,29 @@
-import { useCallback, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
-import { useAuth } from './auth';
-import { useMergedState, useSocket } from '../../lib/hooks';
+import { useEffect } from 'react';
 
-import { SOCKET_URL } from '../../config/app';
 import { DeviceData, GenericObject } from '../../../@types/alltypes';
+import { useStore } from '..';
+import { subscribe, emit } from '../../lib/socket';
 
 export const useDevices = () => {
-    const [{ id: userId }] = useAuth();
-    const [{ localDeviceId, devices }, setState] = useMergedState({
-        localDeviceId: uuidv4(),
-        devices: []
-    });
-    const { subscribe, emit } = useSocket(SOCKET_URL);
+    const [
+        {
+            user: { id: userId },
+            app: { devices, deviceId }
+        },
+        dispatch
+    ] = useStore();
 
     const connectLocalDevice = () => {
+        console.log('connectLocalDevice');
         const { appCodeName: deviceName } = navigator;
 
-        emit('device:add', { deviceId: localDeviceId, deviceName });
+        emit('device:add', { deviceId, deviceName });
     };
 
     const subscribeToDevicesSync = () =>
-        subscribe('devices:sync', (devices) => setState({ devices }));
+        subscribe('devices:sync', (devices) =>
+            dispatch({ type: 'app/UPDATE_DATA', payload: { devices } })
+        );
 
     const setMasterDevice = (deviceId: string) => {
         const { deviceId: masterDeviceId } =
@@ -38,29 +40,31 @@ export const useDevices = () => {
     const subscribeToPlayerSync = (callback: (response: any) => void) =>
         subscribe('player:sync', callback);
 
-    const availableDevices = devices.filter(
-        ({ deviceId: id }: DeviceData) => id !== localDeviceId
-    );
     const currentDevice = devices.find(
-        ({ deviceId: id }: DeviceData) => id === localDeviceId
+        ({ deviceId: id }: DeviceData) => id === deviceId
     ) || {
         isMaster: true
     };
+
+    const availableDevices = devices.filter(
+        ({ deviceId: id }: DeviceData) => id !== deviceId
+    );
 
     useEffect(() => {
         subscribe('connect', () => {
             emit('room', userId);
 
-            subscribe('disconnect', () => setState({ devices: [] }));
-
             connectLocalDevice();
             subscribeToDevicesSync();
         });
 
-        return () => emit('device:delete', localDeviceId);
+        subscribe('disconnect', () => dispatch({ type: 'app/CLEAR_DEVICES' }));
+
+        return () => emit('device:delete', deviceId);
     }, []);
 
     return {
+        devices: [currentDevice, ...availableDevices],
         currentDevice,
         availableDevices,
         setMasterDevice,

@@ -1,55 +1,117 @@
+import { memo, useEffect, FunctionComponent, SyntheticEvent } from 'react';
+
 import {
-    memo,
-    useState,
-    useCallback,
-    FunctionComponent,
-    SyntheticEvent
-} from 'react';
-import { preventDefault } from '../../lib/helpers';
+    PlayerSyncPayload,
+    PlayerSyncHandlers,
+    GenericObject
+} from '../../../@types/alltypes';
 
 import InfoTime from './controls/InfoTime';
 import InfoProgress from './controls/InfoProgress';
+import { preventDefault, setImmediateInterval } from '../../lib/helpers';
+import { useMergedState, useUpdateEffect } from '../../lib/hooks';
+import { subscribe, emit } from '../../lib/socket';
 
 interface Props {
     title: string;
-    currentTime: number;
     duration: number;
-    loaded: number;
-    onStartSeeking: Function;
-    onEndSeeking: Function;
+    onStartSeeking: () => void;
+    onEndSeeking: (seekingTime: number) => void;
+    getCurrentTime: () => number | null;
+    getLoadingProgress: () => number | null;
 }
 
 const Info: FunctionComponent<Props> = ({
     title,
-    currentTime,
     duration,
-    loaded,
+    getCurrentTime,
+    getLoadingProgress,
     onStartSeeking,
     onEndSeeking
 }) => {
-    const [seekingTime, setSeekingTime] = useState(currentTime);
-    const [isSeeking, setIsSeeking] = useState(false);
+    const [
+        { loaded, currentTime, seekingTime, isSeeking },
+        setState
+    ] = useMergedState({
+        loaded: 0,
+        currentTime: 0,
+        seekingTime: 0,
+        isSeeking: false
+    });
 
     const startSeeking = () => {
         onStartSeeking();
 
-        setIsSeeking(true);
+        setState({ isSeeking: true });
     };
 
     const endSeeking = () => {
-        setIsSeeking(false);
+        setState({ isSeeking: false, currentTime: seekingTime });
 
-        if (seekingTime !== currentTime) {
-            onEndSeeking(seekingTime);
-        }
+        emit('player:sync', {
+            action: 'seek-time',
+            data: { seekingTime }
+        });
+
+        onEndSeeking(seekingTime);
     };
 
     const handleSeeking = ({
         currentTarget: { value: seekingTime }
     }: SyntheticEvent<HTMLInputElement>) =>
-        setSeekingTime(parseInt(seekingTime));
+        setState({ seekingTime: parseInt(seekingTime) });
 
     const time = isSeeking ? seekingTime : currentTime;
+
+    useEffect(() => {
+        const actions: PlayerSyncHandlers = {
+            'seek-time': ({ seekingTime }: GenericObject) =>
+                setState({ seekingTime }),
+            'update-time': ({ currentTime }: GenericObject) =>
+                setState({ currentTime }),
+            'update-loading': ({ loaded }: GenericObject) =>
+                setState({ loaded })
+        };
+
+        subscribe('player:sync', ({ action, data }: PlayerSyncPayload) => {
+            const { [action]: handler } = actions;
+
+            // console.log(action, data);
+
+            if (handler) {
+                handler(data);
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        const timeWatcher = setImmediateInterval(() => {
+            const currentTime = getCurrentTime();
+
+            if (currentTime !== null) {
+                setState({ currentTime });
+            }
+        }, 200);
+
+        const loadingWatcher = setImmediateInterval(() => {
+            const loaded = getLoadingProgress();
+
+            if (loaded !== null) {
+                setState({ loaded });
+            }
+        }, 500);
+
+        return () => {
+            clearInterval(timeWatcher);
+            clearInterval(loadingWatcher);
+        };
+    }, []);
+
+    useUpdateEffect(() => {
+        if (!isSeeking) {
+            onEndSeeking(seekingTime);
+        }
+    }, [isSeeking, seekingTime]);
 
     return (
         <div className="player__info">

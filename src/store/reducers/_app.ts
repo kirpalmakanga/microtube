@@ -1,28 +1,22 @@
+import { v4 as uuidv4 } from 'uuid';
 import { createReducer, State } from '../helpers';
 
 export interface AppState extends State {
-    isLoading: boolean,
-    devices: string[],
-    deviceId: string
+    isLoading: boolean;
+    devices: string[];
+    deviceId: string;
 }
 
 export const initialState: AppState = {
     isLoading: false,
     devices: [],
-    deviceId: ''
+    deviceId: uuidv4()
 };
 
 export default createReducer(initialState, {
-    'app/SET_LOADER': (state: State, { isLoading }: State) => ({ ...state, isLoading }),
-
-    'app/SET_DEVICE_ID': (state: State, { deviceId }: State) => ({
+    'app/UPDATE_DATA': (state: State, data: State) => ({
         ...state,
-        deviceId
-    }),
-
-    'app/SYNC_DEVICES': (state: State, { devices }: State) => ({
-        ...state,
-        devices
+        ...data
     }),
 
     'app/CLEAR_DEVICES': (state: State) => ({

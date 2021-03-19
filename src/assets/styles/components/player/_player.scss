@@ -276,7 +276,7 @@
             &-loaded,
             &-played {
                 z-index: 1;
-                @include transition();
+                // @include transition();
                 backface-visibility: hidden;
 
                 &:not([type='range']) {

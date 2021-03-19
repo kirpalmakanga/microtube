@@ -52,3 +52,12 @@ export interface QueueItem {
 export interface ChannelData {
     id: string;
 }
+
+interface PlayerSyncPayload {
+    action: string;
+    data: GenericObject;
+}
+
+interface PlayerSyncHandlers {
+    [key: string]: Function;
+}

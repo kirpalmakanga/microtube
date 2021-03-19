@@ -22,8 +22,6 @@ interface Props {
     onPause?: () => void;
     onEnd: () => void;
     onStateChange?: (playbackStateId: number) => void;
-    onTimeUpdate: (t: number | undefined) => void;
-    onLoadingUpdate: (t: number | undefined) => void;
     onClick: () => void;
 }
 
@@ -35,9 +33,7 @@ const Screen: FunctionComponent<Props> = ({
     onPlay,
     onPause,
     onEnd,
-    onStateChange,
-    onTimeUpdate,
-    onLoadingUpdate
+    onStateChange
 }) => (
     <div className="screen" data-state={isVisible ? 'visible' : 'hidden'}>
         {videoId ? (
@@ -46,8 +42,6 @@ const Screen: FunctionComponent<Props> = ({
                 options={playerOptions}
                 onReady={onReady}
                 onEnd={onEnd}
-                onTimeUpdate={onTimeUpdate}
-                onLoadingUpdate={onLoadingUpdate}
                 onPlay={onPlay}
                 onPause={onPause}
                 onBuffering={onBuffering}

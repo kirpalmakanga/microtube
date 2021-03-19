@@ -11,8 +11,10 @@ import { usePlayer } from '../../store/hooks/player';
 import { usePlaylistItems } from '../../store/hooks/playlist-items';
 
 interface Props {
+    isVisible: boolean;
     isPlaying: boolean;
     isBuffering: boolean;
+    toggleQueue: () => void;
     togglePlay: () => void;
 }
 
@@ -25,18 +27,23 @@ interface QueueItemData {
 }
 
 const Queue: FunctionComponent<Props> = ({
+    isVisible,
     isPlaying,
     isBuffering,
+    toggleQueue,
     togglePlay
 }) => {
     const [
-        { queue: items, currentId, showQueue },
+        { queue: items, currentId, isQueueVisible },
         {
             subscribeToQueue,
             subscribeToCurrentQueueId,
             setQueue,
+            clearQueue,
             removeQueueItem,
-            setActiveQueueItem
+            setActiveQueueItem,
+            clearNewQueueItems,
+            importVideos
         }
     ] = usePlayer();
 
@@ -63,12 +70,23 @@ const Queue: FunctionComponent<Props> = ({
         return unsubscribe;
     }, []);
 
+    useEffect(() => {
+        if (isVisible) {
+            clearNewQueueItems();
+        }
+    }, [isVisible]);
+
     return (
         <section
             className="queue shadow--2dp"
-            data-state={showQueue ? 'visible' : 'hidden'}
+            data-state={isVisible ? 'visible' : 'hidden'}
         >
-            <QueueHeader />
+            <QueueHeader
+                itemCount={items.length}
+                onClickClose={toggleQueue}
+                onClickImport={importVideos}
+                onClickClear={clearQueue}
+            />
 
             <div className="queue__content">
                 {items.length ? (

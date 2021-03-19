@@ -24,8 +24,6 @@ interface Props {
     onPlay?: () => void;
     onPause?: () => void;
     onEnd: () => void;
-    onTimeUpdate: (t: number | undefined) => void;
-    onLoadingUpdate: (t: number | undefined) => void;
     onStateChange?: (playbackStateId: number) => void;
     // onPlaybackRateChange?: (data: any) => void,
     // onPlaybackQualityChange:(data: any) => void
@@ -88,13 +86,11 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
     videoId,
     options,
     onReady,
-    onError,
+    onError = () => {},
     onBuffering,
     onPlay = () => {},
     onPause = () => {},
     onEnd,
-    onTimeUpdate,
-    onLoadingUpdate,
     onStateChange = () => {}
     // onPlaybackRateChange = noop,
     // onPlaybackQualityChange = noop
@@ -103,55 +99,10 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
         playerVars: { start, end }
     }: any = options;
     const internalPlayer = useRef<YouTubePlayer | null>(null);
-    const currentTime = useRef<number | undefined>(0);
     const timeWatcher = useRef<number>();
-    const currentLoadedPercentage = useRef<number | undefined>(0);
     const loadingWatcher = useRef<number>();
 
-    const updateTime = useCallback(async () => {
-        const time = await internalPlayer.current?.getCurrentTime();
-
-        if (time !== currentTime.current) {
-            currentTime.current = time;
-
-            onTimeUpdate(time);
-        }
-    }, []);
-
-    const watchTime = useCallback(() => {
-        if (timeWatcher.current) {
-            return;
-        }
-
-        updateTime();
-
-        timeWatcher.current = window.setInterval(updateTime, 200);
-    }, []);
-
-    const updateLoading = useCallback(async () => {
-        const loaded = await internalPlayer.current?.getVideoLoadedFraction();
-
-        if (loaded !== currentLoadedPercentage.current) {
-            currentLoadedPercentage.current = loaded;
-
-            onLoadingUpdate(loaded);
-        }
-    }, []);
-
-    const watchLoading = useCallback(() => {
-        if (loadingWatcher.current) {
-            return;
-        }
-
-        updateLoading();
-
-        loadingWatcher.current = window.setInterval(updateLoading, 500);
-    }, []);
-
     const handleIframeReady = useCallback(({ target }) => {
-        watchTime();
-        watchLoading();
-
         onReady(target);
     }, []);
 
@@ -258,17 +209,11 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
         window.clearInterval(timeWatcher.current);
         window.clearInterval(loadingWatcher.current);
 
-        if (internalPlayer.current) {
-            internalPlayer.current?.destroy();
-            internalPlayer.current = null;
-        }
+        internalPlayer.current = null;
     }, []);
 
     useEffect(() => {
         createPlayer();
-
-        onTimeUpdate(0);
-        onLoadingUpdate(0);
 
         return handleUnmounting;
     }, []);

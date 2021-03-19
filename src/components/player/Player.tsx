@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef, WheelEvent } from 'react';
 
-import { GenericObject, QueueItem } from '../../../@types/alltypes';
+import {
+    GenericObject,
+    QueueItem,
+    PlayerSyncPayload,
+    PlayerSyncHandlers
+} from '../../../@types/alltypes';
 import { YouTubePlayer } from 'youtube-player/dist/types';
 
 import { usePlayer } from '../../store/hooks/player';
@@ -30,20 +35,9 @@ interface PlayerInnerState {
     isPlayerReady: boolean;
     isPlaying: boolean;
     isBuffering: boolean;
-    showScreen: boolean;
+    isScreenVisible: boolean;
+    isQueueVisible: boolean;
     volume: number;
-    loaded: number;
-    currentTime: number;
-    seekingTime: number;
-}
-
-interface PlayerSyncPayload {
-    action: string;
-    data: GenericObject;
-}
-
-interface PlayerSyncHandlers {
-    [key: string]: Function;
 }
 
 const Player = () => {
@@ -53,30 +47,28 @@ const Player = () => {
 
     const [
         {
+            isFullscreen,
             isPlaying,
             isBuffering,
             isMuted,
-            showScreen,
-            volume,
-            loaded,
-            currentTime,
-            seekingTime
+            isQueueVisible,
+            isScreenVisible,
+            volume
         },
         setPlayerState
     ] = useMergedState({
+        isFullscreen: false,
         isPlaying: false,
         isBuffering: false,
         isMuted: false,
-        showScreen: false,
-        volume: 100,
-        loaded: 0,
-        currentTime: 0,
-        seekingTime: 0
+        isQueueVisible: false,
+        isScreenVisible: false,
+        volume: 100
     });
 
     const [
-        { video, queue, currentId, showQueue, newQueueItems },
-        { setActiveQueueItem, goToNextQueueItem, toggleQueue, toggleScreen }
+        { video, queue, currentId, newQueueItems },
+        { goToNextQueueItem }
     ] = usePlayer();
     const [, { editPlaylistItem }] = usePlaylistItems();
 
@@ -89,15 +81,16 @@ const Player = () => {
     } = useDevices();
 
     const {
-        isFullscreen,
         setFullscreenRef,
-        toggleFullscreen
+        subscribeToFullscreen,
+        requestFullscreen,
+        exitFullscreen
     } = useFullscreen();
 
     useKeyPress('ArrowLeft', () => goToVideo(false));
     useKeyPress('ArrowRight', () => goToVideo(true));
     useKeyPress('m', () => toggleMute());
-    useKeyPress('s', () => handleToggleScreen());
+    useKeyPress('s', () => toggleScreen());
     useKeyPress(' ', () => togglePlay());
 
     const { isMaster } = currentDevice;
@@ -127,38 +120,35 @@ const Player = () => {
         setPlayerState(data);
     };
 
-    const setVolume = (volume: number) => updateState({ volume });
+    const toggleFullscreen = () => updateState({ isFullscreen: !isFullscreen });
 
-    const seekTime = (t: number) => updateState({ seekingTime: t });
+    const setVolume = (volume: number) => updateState({ volume });
 
     const toggleMute = () => updateState({ isMuted: !isMuted });
 
-    const goToVideo = (next: boolean | undefined = true) => {
-        const shouldResetVideo = goToNextQueueItem(next);
-
-        if (shouldResetVideo) {
-            updateState({
-                currentTime: 0,
-                loaded: 0
-            });
-        }
-    };
+    const goToVideo = (next: boolean | undefined = true) =>
+        goToNextQueueItem(next);
 
     const setPlaybackQuality = (value = 'hd1080') =>
         youtube.current?.setPlaybackQuality(value);
 
-    const handleToggleScreen = useCallback(() => {
-        updateState({ showScreen: !showScreen });
+    const toggleScreen = useCallback(() => {
+        const isVisible = !isScreenVisible;
 
-        if (!isMaster) {
-            synchronizePlayer({
-                action: 'update-state',
-                data: { showScreen: !showScreen }
-            });
-        } else {
-            toggleScreen();
-        }
-    }, [showScreen]);
+        updateState({
+            isScreenVisible: isVisible,
+            ...(isVisible ? { isQueueVisible: false } : {})
+        });
+    }, [isScreenVisible]);
+
+    const toggleQueue = useCallback(() => {
+        const isVisible = !isQueueVisible;
+
+        updateState({
+            isQueueVisible: isVisible,
+            ...(isVisible ? { isScreenVisible: false } : {})
+        });
+    }, [isQueueVisible]);
 
     const handleYoutubeIframeReady = (playerInstance: YouTubePlayer) => {
         youtube.current = playerInstance;
@@ -188,14 +178,45 @@ const Player = () => {
             isBuffering: false
         });
 
+    const handleSeek = (t: number) => {
+        youtube.current?.seekTo(t, true);
+
+        handlePlay();
+    };
+
     const togglePlay = () => {
         updateState({ isPlaying: !isPlaying, isBuffering: false });
     };
 
-    const handleTimeUpdate = (currentTime: number = 0) =>
-        updateState({ currentTime });
+    const getCurrentTime = () => {
+        if (youtube.current) {
+            const currentTime = youtube.current?.getCurrentTime();
 
-    const handleLoadingUpdate = (loaded: number = 0) => updateState({ loaded });
+            synchronizePlayer({
+                action: 'update-time',
+                data: { currentTime }
+            });
+
+            return currentTime;
+        }
+
+        return null;
+    };
+
+    const getLoadingProgress = () => {
+        if (youtube.current) {
+            const loaded = youtube.current?.getVideoLoadedFraction();
+
+            synchronizePlayer({
+                action: 'update-loading',
+                data: { loaded }
+            });
+
+            return loaded;
+        }
+
+        return null;
+    };
 
     const handleBuffering = () => {
         updateState({ isBuffering: true });
@@ -222,8 +243,6 @@ const Player = () => {
 
     useEffect(() => {
         const actions: PlayerSyncHandlers = {
-            'seek-time': ({ currentTime }: GenericObject) =>
-                seekTime(currentTime),
             'update-state': (state: PlayerInnerState) => setPlayerState(state)
         };
 
@@ -258,19 +277,31 @@ const Player = () => {
         }
     }, [isPlaying]);
 
-    useUpdateEffect(() => {
-        youtube.current?.seekTo(seekingTime, true);
-
-        updateState({ currentTime: seekingTime });
-
-        handlePlay();
-    }, [seekingTime]);
-
     useEffect(() => {
         if (isMaster) {
-            setPlayerState({ showScreen });
+            setPlayerState({ isScreenVisible });
         }
-    }, [isMaster, showScreen]);
+    }, [isMaster, isScreenVisible]);
+
+    useUpdateEffect(() => {
+        if (!isMaster) {
+            return;
+        }
+
+        if (isFullscreen) {
+            requestFullscreen();
+        } else {
+            exitFullscreen();
+        }
+    }, [isMaster, isFullscreen]);
+
+    useEffect(() => {
+        const unsubscribe = subscribeToFullscreen((isFullscreen: boolean) =>
+            updateState({ isFullscreen })
+        );
+
+        return unsubscribe;
+    }, []);
 
     useUpdateEffect(() => {
         if (!videoId) {
@@ -281,12 +312,13 @@ const Player = () => {
     return (
         <div
             className="player__container shadow--2dp"
-            ref={setFullscreenRef}
+            ref={isMaster ? setFullscreenRef : null}
             data-state-fullscreen={isFullscreen ? 'enabled' : 'disabled'}
-            data-state-show-queue={showQueue ? 'enabled' : 'disabled'}
+            data-state-show-queue={isQueueVisible ? 'enabled' : 'disabled'}
         >
             {isMaster ? (
                 <Screen
+                    isVisible={isSingleVideo || isScreenVisible || isFullscreen}
                     videoId={videoId}
                     onReady={handleYoutubeIframeReady}
                     onEnd={handleVideoEnd}
@@ -294,20 +326,15 @@ const Player = () => {
                     onPlay={handlePlay}
                     onPause={handlePause}
                     onStateChange={handleYoutubeIframeStateChange}
-                    onTimeUpdate={handleTimeUpdate}
-                    onLoadingUpdate={handleLoadingUpdate}
                     onClick={togglePlay}
-                    data-state={
-                        isSingleVideo || showScreen || isFullscreen
-                            ? 'visible'
-                            : 'hidden'
-                    }
                 />
             ) : null}
 
             <Queue
+                isVisible={isQueueVisible}
                 isPlaying={isPlaying}
                 isBuffering={isBuffering}
+                toggleQueue={toggleQueue}
                 togglePlay={togglePlay}
             />
 
@@ -347,11 +374,11 @@ const Player = () => {
 
                     <Info
                         title={title}
-                        currentTime={currentTime}
                         duration={duration}
-                        loaded={loaded}
+                        getCurrentTime={getCurrentTime}
+                        getLoadingProgress={getLoadingProgress}
                         onStartSeeking={handlePause}
-                        onEndSeeking={seekTime}
+                        onEndSeeking={handleSeek}
                     />
 
                     <div className="player__controls">
@@ -390,8 +417,8 @@ const Player = () => {
                             <Button
                                 className={[
                                     'player__controls-button badge icon-button',
-                                    showQueue ? 'is-active' : '',
-                                    newQueueItems && !showQueue
+                                    isQueueVisible ? 'is-active' : '',
+                                    newQueueItems && !isQueueVisible
                                         ? 'badge--active'
                                         : ''
                                 ].join(' ')}
@@ -399,7 +426,9 @@ const Player = () => {
                                 badge={newQueueItems}
                                 icon="list"
                                 ariaLabel={
-                                    showQueue ? 'Close queue' : 'Open queue'
+                                    isQueueVisible
+                                        ? 'Close queue'
+                                        : 'Open queue'
                                 }
                             />
                         ) : null}
@@ -408,12 +437,14 @@ const Player = () => {
                             <Button
                                 className={[
                                     'player__controls-button icon-button',
-                                    showScreen ? 'is-active' : ''
+                                    isScreenVisible ? 'is-active' : ''
                                 ].join(' ')}
-                                onClick={handleToggleScreen}
+                                onClick={toggleScreen}
                                 icon="screen"
                                 ariaLabel={
-                                    showScreen ? 'Close screen' : 'open screen'
+                                    isScreenVisible
+                                        ? 'Close screen'
+                                        : 'open screen'
                                 }
                             />
                         ) : null}
@@ -432,7 +463,7 @@ const Player = () => {
                             onClick={toggleFullscreen}
                             icon={isFullscreen ? 'close' : 'expand'}
                             ariaLabel={
-                                showScreen
+                                isScreenVisible
                                     ? 'Enable Fullscreen'
                                     : 'Exit Fullscreen'
                             }

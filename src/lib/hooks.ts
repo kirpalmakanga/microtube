@@ -1,43 +1,70 @@
-import { io } from 'socket.io-client';
-import { useRef, useState, useEffect, useCallback } from 'react';
+import {
+    useRef,
+    useState,
+    useEffect,
+    useCallback,
+    createContext,
+    useContext
+} from 'react';
 import { GenericObject } from '../../@types/alltypes';
 
 export const useFullscreen = () => {
     const container = useRef<HTMLElement | null>(null);
-    const [isFullscreen, setIsFullscreen] = useState(false);
+    // const [isFullscreen, setIsFullscreen] = useState(false);
 
-    const setFullscreenRef = useCallback((node) => {
-        const handler = () => {
-            const { ['fullscreenElement']: fullScreenElement } = document;
-            const isFullscreen = fullScreenElement === node;
+    const subscribeToFullscreen = (callback: Function) => {
+        const eventName = 'fullscreenchange';
+        const eventHandler = () => {
+            const isFullscreen =
+                document.fullscreenElement === container.current;
 
-            setIsFullscreen(isFullscreen);
+            // setIsFullscreen(isFullscreen);
+
+            callback(isFullscreen);
         };
+        document.addEventListener(eventName, eventHandler, true);
 
-        if (container.current) {
-            document.removeEventListener('fullscreenchange', handler);
+        return () => document.removeEventListener(eventName, eventHandler);
+    };
 
-            container.current = null;
-        }
+    const setFullscreenRef = (node: HTMLDivElement) =>
+        (container.current = node);
 
-        if (node) {
-            document.addEventListener('fullscreenchange', handler, true);
-        }
+    const requestFullscreen = async () => {
+        try {
+            await container.current?.requestFullscreen();
+        } catch (error) {}
+        // setIsFullscreen(true);
+    };
 
-        container.current = node;
-    }, []);
+    const exitFullscreen = async () => {
+        try {
+            await document.exitFullscreen();
+        } catch (error) {}
+        // setIsFullscreen(false);
+    };
 
-    const toggleFullscreen = useCallback(() => {
-        if (!isFullscreen && container.current) {
-            container.current.requestFullscreen();
-        } else {
-            document.exitFullscreen();
-        }
+    // useEffect(() => {
+    //     const unsubscribe = subscribeToFullscreen(() => {
+    //         const { ['fullscreenElement']: fullscreenElement } = document;
+    //         const isFullscreen = fullscreenElement === container.current;
 
-        setIsFullscreen(!isFullscreen);
-    }, [isFullscreen]);
+    //         setIsFullscreen(isFullscreen);
+    //     });
 
-    return { isFullscreen, setFullscreenRef, toggleFullscreen };
+    //     return () => {
+    //         unsubscribe();
+    //         container.current = null;
+    //     };
+    // }, []);
+
+    return {
+        // isFullscreen,
+        setFullscreenRef,
+        subscribeToFullscreen,
+        requestFullscreen,
+        exitFullscreen
+    };
 };
 
 export const useKeyDown = (key: string, action: () => void) => {
@@ -87,24 +114,4 @@ export const useUpdateEffect = (callback: () => void, dependencies: any) => {
 
         callback();
     }, dependencies);
-};
-
-export const useSocket = (serverUrl: string) => {
-    const client = useRef<any | null>(null);
-
-    const getSocket = () => {
-        if (!client.current) {
-            client.current = io(serverUrl, { transports: ['websocket'] });
-        }
-        return client.current;
-    };
-
-    return {
-        subscribe: (eventKey: string, callback: (response: any) => void) => {
-            getSocket().on(eventKey, callback);
-        },
-        emit: (eventKey: string, payload: any) => {
-            getSocket().emit(eventKey, payload);
-        }
-    };
 };

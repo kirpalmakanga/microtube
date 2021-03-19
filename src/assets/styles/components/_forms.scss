@@ -10,9 +10,9 @@
 }
 
 .textfield {
+    &__textarea,
     &__input {
         font-family: $font-primary;
-        line-height: 50px;
         width: 100%;
         border: none;
         background-color: transparent;
@@ -20,6 +20,12 @@
         &:focus {
             outline: none;
         }
+    }
+    &__textarea {
+        padding: 12px;
+    }
+    &__input {
+        line-height: 50px;
     }
     &__label {
         color: rgba($brand-secondary, 0.3);

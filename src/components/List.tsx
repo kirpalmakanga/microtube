@@ -55,7 +55,7 @@ const List: FunctionComponent<Props> = ({
         if (!isUnmounting.current) {
             setIsLoading(false);
         }
-    }, []);
+    }, [isLoading]);
 
     const handleScroll = throttle(({ scrollOffset }: ListOnScrollProps) => {
         if (!(outerContainer.current && innerContainer.current)) {

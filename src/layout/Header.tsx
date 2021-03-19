@@ -7,10 +7,10 @@ import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';
 
 const Header = () => {
-    const [{ showScreen }, { closeScreen }] = usePlayer();
+    const [{ isScreenVisible }, { closeScreen }] = usePlayer();
 
     const handleCloseScreen = useCallback(
-        () => showScreen && closeScreen(),
+        () => isScreenVisible && closeScreen(),
         []
     );
 

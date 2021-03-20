@@ -4,6 +4,7 @@
     background-color: lighten($brand-primary, 20%);
     width: 100%;
     position: relative;
+    @include no-highlights;
 
     .layout:not(.mobile) &:active,
     .layout:not(.mobile) &:hover {

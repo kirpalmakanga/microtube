@@ -37,6 +37,7 @@ interface PlayerInnerState {
     isBuffering: boolean;
     isScreenVisible: boolean;
     isQueueVisible: boolean;
+    isDevicesSelectorVisible: boolean;
     volume: number;
 }
 
@@ -53,6 +54,7 @@ const Player = () => {
             isMuted,
             isQueueVisible,
             isScreenVisible,
+            isDevicesSelectorVisible,
             volume
         },
         setPlayerState
@@ -63,6 +65,7 @@ const Player = () => {
         isMuted: false,
         isQueueVisible: false,
         isScreenVisible: false,
+        isDevicesSelectorVisible: false,
         volume: 100
     });
 
@@ -108,6 +111,14 @@ const Player = () => {
               title: 'No video.',
               duration: 0
           };
+
+    const handleToggleDevices = () =>
+        setPlayerState({ isDevicesSelectorVisible: !isDevicesSelectorVisible });
+
+    const handleSelectDevice = (deviceId: string) => {
+        setPlayerState({ isDevicesSelectorVisible: false });
+        setMasterDevice(deviceId);
+    };
 
     const handleEditPlaylistItem = () => editPlaylistItem({ id: videoId });
 
@@ -338,6 +349,15 @@ const Player = () => {
                 togglePlay={togglePlay}
             />
 
+            {availableDevices.length && !isSingleVideo ? (
+                <DevicesSelector
+                    isVisible={isDevicesSelectorVisible}
+                    currentDevice={currentDevice}
+                    devices={availableDevices}
+                    onClickItem={handleSelectDevice}
+                />
+            ) : null}
+
             <div className="player shadow--2dp">
                 <div className="player__inner shadow--2dp">
                     <div className="player__controls">
@@ -383,10 +403,14 @@ const Player = () => {
 
                     <div className="player__controls">
                         {availableDevices.length && !isSingleVideo ? (
-                            <DevicesSelector
-                                currentDevice={currentDevice}
-                                devices={availableDevices}
-                                onClickItem={setMasterDevice}
+                            <Button
+                                className={[
+                                    'player__controls-button icon-button',
+                                    isDevicesSelectorVisible ? 'is-active' : ''
+                                ].join(' ')}
+                                icon="devices"
+                                ariaLabel="Devices"
+                                onClick={handleToggleDevices}
                             />
                         ) : null}
 

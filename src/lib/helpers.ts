@@ -1,5 +1,5 @@
 import { SyntheticEvent } from 'react';
-import { ThumbnailsData } from '../../@types/alltypes';
+import { ThumbnailsData, ShareConfig } from '../../@types/alltypes';
 import { format } from 'date-fns';
 
 export const preventDefault = (func = (e: SyntheticEvent) => {}) => (
@@ -238,3 +238,12 @@ export const setImmediateInterval = (callback: Function, delay: number) => {
 
     return setInterval(callback, delay);
 };
+
+export const getVideoURL = (id: string) => `https://youtu.be/${id}`;
+
+export const getPlaylistURL = (id: string) =>
+    `https://youtube.com/playlist?list=${id}`;
+
+export const shareURL = (config: ShareConfig) => navigator.share(config);
+
+export const copyText = (text: string) => navigator.clipboard.writeText(text);

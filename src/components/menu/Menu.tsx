@@ -13,7 +13,7 @@ const Menu: FunctionComponent<Props> = ({
     title,
     isVisible = false,
     onClick,
-    children = [],
+    children = []
 }) => (
     <Fade in={isVisible}>
         <div className="menu" onClick={onClick}>
@@ -26,7 +26,7 @@ const Menu: FunctionComponent<Props> = ({
 
                 <ul className="menu__items">
                     {children.map((child: ReactNode, index: number) => (
-                        <li key="index">{child}</li>
+                        <li key={index}>{child}</li>
                     ))}
                 </ul>
             </div>

@@ -1,46 +1,26 @@
-import { useState, FunctionComponent } from 'react';
-
-import Button from './Button';
+import { FunctionComponent } from 'react';
 
 import { DeviceData } from '../../../../@types/alltypes';
 
+import TranslateY from '../../animations/TranslateY';
 interface Props {
+    isVisible: boolean;
     devices: DeviceData[];
     currentDevice: DeviceData;
     onClickItem: (deviceId: string) => void;
 }
 
 const DevicesSelector: FunctionComponent<Props> = ({
+    isVisible,
     devices,
     currentDevice: { deviceId, deviceName, isMaster },
     onClickItem
 }) => {
-    const [showItems, setShowItems] = useState(false);
-
-    const handleClickItem = (deviceId: string) => () => {
-        setShowItems(false);
-
-        onClickItem && onClickItem(deviceId);
-    };
-
-    const handleToggleItems = () => setShowItems(!showItems);
+    const handleClickItem = (deviceId: string) => () => onClickItem(deviceId);
 
     return (
-        <div className="player__controls-devices">
-            <Button
-                className={[
-                    'player__controls-button icon-button',
-                    showItems ? 'is-active' : ''
-                ].join(' ')}
-                icon="devices"
-                ariaLabel="Devices"
-                onClick={handleToggleItems}
-            />
-
-            <ul
-                className="player__controls-devices-list"
-                data-state={showItems ? 'open' : 'closed'}
-            >
+        <TranslateY in={isVisible} className="player__controls-devices">
+            <ul className="player__controls-devices-list">
                 <li className="device" onClick={handleClickItem(deviceId)}>
                     <span className="device__desc">Current device</span>
                     <span className="device__name">
@@ -61,7 +41,7 @@ const DevicesSelector: FunctionComponent<Props> = ({
                     </li>
                 ))}
             </ul>
-        </div>
+        </TranslateY>
     );
 };
 

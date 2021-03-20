@@ -76,8 +76,6 @@ const Info: FunctionComponent<Props> = ({
         subscribe('player:sync', ({ action, data }: PlayerSyncPayload) => {
             const { [action]: handler } = actions;
 
-            // console.log(action, data);
-
             if (handler) {
                 handler(data);
             }

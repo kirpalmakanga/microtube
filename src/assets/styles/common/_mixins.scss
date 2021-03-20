@@ -10,3 +10,7 @@
         font-style: $font-style;
     }
 }
+
+@mixin no-highlights {
+    -webkit-tap-highlight-color: transparent;
+}

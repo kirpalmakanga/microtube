@@ -45,7 +45,7 @@ const Playlists = () => {
         []
     );
 
-    const handleShare = ({ id, title }: VideoData) => {
+    const handleSharing = ({ id, title }: VideoData) => {
         const url = getVideoURL(id);
 
         if (isMobile()) {
@@ -84,7 +84,7 @@ const Playlists = () => {
                 {
                     title: 'Share',
                     icon: 'share',
-                    onClick: handleShare
+                    onClick: handleSharing
                 },
                 {
                     title: 'Remove from playlist',

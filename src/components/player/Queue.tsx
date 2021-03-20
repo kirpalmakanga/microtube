@@ -9,6 +9,8 @@ import Placeholder from '../Placeholder';
 
 import { usePlayer } from '../../store/hooks/player';
 import { usePlaylistItems } from '../../store/hooks/playlist-items';
+import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
+import { useNotifications } from '../../store/hooks/notifications';
 
 interface Props {
     isVisible: boolean;
@@ -49,6 +51,8 @@ const Queue: FunctionComponent<Props> = ({
 
     const [, { editPlaylistItem }] = usePlaylistItems();
 
+    const [, { openNotification }] = useNotifications();
+
     const handleClickMenu = useCallback(
         (data: QueueItemData, callback: Function) => () => {
             const { title } = data;
@@ -57,6 +61,21 @@ const Queue: FunctionComponent<Props> = ({
         },
         []
     );
+
+    const handleSharing = ({ id, title }: QueueItemData) => {
+        const url = getVideoURL(id);
+
+        if (isMobile()) {
+            shareURL({
+                title,
+                url
+            });
+        } else {
+            copyText(url);
+
+            openNotification('Copied link to clipboard.');
+        }
+    };
 
     useEffect(() => {
         const unsubscribe = subscribeToQueue();
@@ -96,6 +115,11 @@ const Queue: FunctionComponent<Props> = ({
                                 title: 'Save to playlist',
                                 icon: 'folder-add',
                                 onClick: editPlaylistItem
+                            },
+                            {
+                                title: 'Share',
+                                icon: 'share',
+                                onClick: handleSharing
                             },
                             {
                                 title: 'Remove from queue',

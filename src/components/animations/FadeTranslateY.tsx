@@ -21,22 +21,24 @@ interface Props {
 }
 
 const defaultStyle = {
-    transition: `transform ${duration}ms ease-in-out`,
+    transition: `all ${duration}ms ease-in-out`,
+    // transitionProperty: 'opacity, transform',
+    opacity: 0,
     transform: 'translateY(100%)'
 };
 
 const transitionStatuses = {
     [ENTERING]: {},
-    [ENTERED]: { transform: 'translateY(0)' },
+    [ENTERED]: { opacity: 1, transform: 'translateY(0)' },
     [EXITING]: {},
-    [EXITED]: { transform: 'translateY(100%)' },
+    [EXITED]: { opacity: 0, transform: 'translateY(100%)' },
     [UNMOUNTED]: {}
 };
 
-export const Fade: FunctionComponent<Props> = ({
+const Fade: FunctionComponent<Props> = ({
     duration = 150,
-    mountOnEnter = true,
-    unmountOnExit = true,
+    mountOnEnter = false,
+    unmountOnExit = false,
     in: inProp,
     children,
     ...props

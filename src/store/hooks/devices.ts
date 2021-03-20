@@ -14,7 +14,6 @@ export const useDevices = () => {
     ] = useStore();
 
     const connectLocalDevice = () => {
-        console.log('connectLocalDevice');
         const { appCodeName: deviceName } = navigator;
 
         emit('device:add', { deviceId, deviceName });

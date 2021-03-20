@@ -19,8 +19,7 @@ import { useMergedState, useUpdateEffect } from '../../lib/hooks';
 import { subscribe, emit } from '../../lib/socket';
 
 interface Props {
-    isMaster: boolean;
-    isPlaying: boolean;
+    isWatchingDisabled: boolean;
     title: string;
     duration: number;
     onStartSeeking: () => void;
@@ -30,8 +29,7 @@ interface Props {
 }
 
 const Info: FunctionComponent<Props> = ({
-    isMaster,
-    isPlaying,
+    isWatchingDisabled,
     title,
     duration,
     getCurrentTime,
@@ -100,7 +98,9 @@ const Info: FunctionComponent<Props> = ({
     }, []);
 
     useEffect(() => {
-        if (isMaster && isPlaying) {
+        if (isWatchingDisabled) {
+            clearWatchers();
+        } else {
             timeWatcher.current = setImmediateInterval(() => {
                 const currentTime = getCurrentTime();
 
@@ -116,14 +116,12 @@ const Info: FunctionComponent<Props> = ({
                     setState({ loaded });
                 }
             }, 500);
-        } else {
-            clearWatchers();
         }
 
         return () => {
             clearWatchers();
         };
-    }, [isPlaying]);
+    }, [isWatchingDisabled]);
 
     useUpdateEffect(() => {
         if (!isSeeking) {

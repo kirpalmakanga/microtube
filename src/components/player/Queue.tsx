@@ -138,9 +138,9 @@ const Queue: FunctionComponent<Props> = ({
 
                                     let icon = 'play';
 
-                                    // if (isActive && isBuffering) {
-                                    //     icon = 'loading';
-                                    // }
+                                    if (isActive && isBuffering) {
+                                        icon = 'loading';
+                                    }
 
                                     if (isActive && isPlaying) {
                                         icon = 'pause';

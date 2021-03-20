@@ -123,12 +123,12 @@ const Player = () => {
     const handleEditPlaylistItem = () => editPlaylistItem({ id: videoId });
 
     const updateState = (data: GenericObject) => {
+        setPlayerState(data);
+
         synchronizePlayer({
             action: 'update-state',
             data
         });
-
-        setPlayerState(data);
     };
 
     const toggleFullscreen = () => updateState({ isFullscreen: !isFullscreen });
@@ -195,6 +195,8 @@ const Player = () => {
         handlePlay();
     };
 
+    const handleBuffering = () => updateState({ isBuffering: true });
+
     const togglePlay = () => {
         updateState({ isPlaying: !isPlaying, isBuffering: false });
     };
@@ -227,14 +229,6 @@ const Player = () => {
         }
 
         return null;
-    };
-
-    const handleBuffering = () => {
-        updateState({ isBuffering: true });
-
-        if (isMaster) {
-            setPlaybackQuality();
-        }
     };
 
     const handleWheelVolume = ({ deltaY }: WheelEvent<HTMLDivElement>) => {
@@ -374,10 +368,11 @@ const Player = () => {
                             className="player__controls-button icon-button"
                             onClick={videoId ? togglePlay : () => {}}
                             icon={
-                                // isBuffering
-                                //     ? 'loading'
-                                //     :
-                                isPlaying ? 'pause' : 'play'
+                                isBuffering
+                                    ? 'loading'
+                                    : isPlaying
+                                    ? 'pause'
+                                    : 'play'
                             }
                             ariaLabel={isPlaying ? 'Pause video' : 'Play video'}
                         />
@@ -393,8 +388,9 @@ const Player = () => {
                     </div>
 
                     <Info
-                        isMaster={isMaster}
-                        isPlaying={isPlaying}
+                        isWatchingDisabled={
+                            isBuffering || !isPlaying || !isMaster
+                        }
                         title={title}
                         duration={duration}
                         getCurrentTime={getCurrentTime}

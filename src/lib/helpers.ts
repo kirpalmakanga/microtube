@@ -233,7 +233,10 @@ export const loadScript = (src: string) => {
     });
 };
 
-export const setImmediateInterval = (callback: Function, delay: number) => {
+export const setImmediateInterval = (
+    callback: Function,
+    delay: number
+): number => {
     callback();
 
     return setInterval(callback, delay);

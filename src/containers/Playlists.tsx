@@ -42,7 +42,7 @@ const Playlists = () => {
         []
     );
 
-    const handleShare = ({ id, title }: PlaylistData) => {
+    const handleSharing = ({ id, title }: PlaylistData) => {
         const url = getPlaylistURL(id);
 
         if (isMobile()) {
@@ -84,7 +84,7 @@ const Playlists = () => {
                 {
                     title: 'Share',
                     icon: 'share',
-                    onClick: handleShare
+                    onClick: handleSharing
                 },
                 ...(!channelId
                     ? [

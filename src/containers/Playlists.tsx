@@ -9,6 +9,8 @@ import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 import PlaylistCard from '../components/cards/PlaylistCard';
 import MenuWrapper from '../components/menu/MenuWrapper';
+import { copyText, getPlaylistURL, isMobile, shareURL } from '../lib/helpers';
+import { useNotifications } from '../store/hooks/notifications';
 
 const Playlists = () => {
     const { channelId } = useParams();
@@ -25,6 +27,8 @@ const Playlists = () => {
         }
     ] = usePlaylists(channelId);
 
+    const [, { openNotification }] = useNotifications();
+
     const handleClickCard = useCallback(
         ({ id }: PlaylistData) => () => navigate(`/playlist/${id}`),
         []
@@ -37,6 +41,21 @@ const Playlists = () => {
         },
         []
     );
+
+    const handleShare = ({ id, title }: PlaylistData) => {
+        const url = getPlaylistURL(id);
+
+        if (isMobile()) {
+            shareURL({
+                title,
+                url
+            });
+        } else {
+            copyText(url);
+
+            openNotification('Copied link to clipboard.');
+        }
+    };
 
     useEffect(() => clearPlaylists, [channelId]);
 
@@ -61,6 +80,11 @@ const Playlists = () => {
                     title: 'Launch playlist',
                     icon: 'play',
                     onClick: launchPlaylist
+                },
+                {
+                    title: 'Share',
+                    icon: 'share',
+                    onClick: handleShare
                 },
                 ...(!channelId
                     ? [

@@ -61,3 +61,8 @@ interface PlayerSyncPayload {
 interface PlayerSyncHandlers {
     [key: string]: Function;
 }
+
+interface ShareConfig {
+    title: string;
+    url: string;
+}

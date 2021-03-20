@@ -9,6 +9,8 @@ import VideoCard from '../components/cards/VideoCard';
 import MenuWrapper from '../components/menu/MenuWrapper';
 import { usePlayer } from '../store/hooks/player';
 import { VideoData } from '../../@types/alltypes';
+import { copyText, getVideoURL, isMobile, shareURL } from '../lib/helpers';
+import { useNotifications } from '../store/hooks/notifications';
 
 const Playlists = () => {
     const { playlistId } = useParams();
@@ -27,6 +29,8 @@ const Playlists = () => {
 
     const [, { queueItem }] = usePlayer();
 
+    const [, { openNotification }] = useNotifications();
+
     const handleClickCard = useCallback(
         ({ id }: VideoData) => () => navigate(`/video/${id}`),
         []
@@ -40,6 +44,21 @@ const Playlists = () => {
         },
         []
     );
+
+    const handleShare = ({ id, title }: VideoData) => {
+        const url = getVideoURL(id);
+
+        if (isMobile()) {
+            shareURL({
+                title,
+                url
+            });
+        } else {
+            copyText(url);
+
+            openNotification('Copied link to clipboard.');
+        }
+    };
 
     useEffect(() => {
         getPlaylistTitle(playlistId);
@@ -57,13 +76,16 @@ const Playlists = () => {
                     icon: 'circle-add',
                     onClick: queueItem
                 },
-
                 {
                     title: 'Save to playlist',
                     icon: 'folder-add',
                     onClick: editPlaylistItem
                 },
-
+                {
+                    title: 'Share',
+                    icon: 'share',
+                    onClick: handleShare
+                },
                 {
                     title: 'Remove from playlist',
                     icon: 'delete',

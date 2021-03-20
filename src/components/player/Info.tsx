@@ -100,10 +100,7 @@ const Info: FunctionComponent<Props> = ({
     }, []);
 
     useEffect(() => {
-        if (!isMaster) {
-            return;
-        }
-        if (isPlaying) {
+        if (isMaster && isPlaying) {
             timeWatcher.current = setImmediateInterval(() => {
                 const currentTime = getCurrentTime();
 

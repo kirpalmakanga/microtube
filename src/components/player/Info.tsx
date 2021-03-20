@@ -1,4 +1,10 @@
-import { memo, useEffect, FunctionComponent, SyntheticEvent } from 'react';
+import {
+    memo,
+    useRef,
+    useEffect,
+    FunctionComponent,
+    SyntheticEvent
+} from 'react';
 
 import {
     PlayerSyncPayload,
@@ -13,6 +19,8 @@ import { useMergedState, useUpdateEffect } from '../../lib/hooks';
 import { subscribe, emit } from '../../lib/socket';
 
 interface Props {
+    isMaster: boolean;
+    isPlaying: boolean;
     title: string;
     duration: number;
     onStartSeeking: () => void;
@@ -22,6 +30,8 @@ interface Props {
 }
 
 const Info: FunctionComponent<Props> = ({
+    isMaster,
+    isPlaying,
     title,
     duration,
     getCurrentTime,
@@ -29,6 +39,8 @@ const Info: FunctionComponent<Props> = ({
     onStartSeeking,
     onEndSeeking
 }) => {
+    const timeWatcher = useRef<number | null>(null);
+    const loadingWatcher = useRef<number | null>(null);
     const [
         { loaded, currentTime, seekingTime, isSeeking },
         setState
@@ -61,6 +73,11 @@ const Info: FunctionComponent<Props> = ({
     }: SyntheticEvent<HTMLInputElement>) =>
         setState({ seekingTime: parseInt(seekingTime) });
 
+    const clearWatchers = () => {
+        if (timeWatcher.current) clearInterval(timeWatcher.current);
+        if (loadingWatcher.current) clearInterval(loadingWatcher.current);
+    };
+
     const time = isSeeking ? seekingTime : currentTime;
 
     useEffect(() => {
@@ -83,27 +100,33 @@ const Info: FunctionComponent<Props> = ({
     }, []);
 
     useEffect(() => {
-        const timeWatcher = setImmediateInterval(() => {
-            const currentTime = getCurrentTime();
+        if (!isMaster) {
+            return;
+        }
+        if (isPlaying) {
+            timeWatcher.current = setImmediateInterval(() => {
+                const currentTime = getCurrentTime();
 
-            if (currentTime !== null) {
-                setState({ currentTime });
-            }
-        }, 200);
+                if (currentTime !== null) {
+                    setState({ currentTime });
+                }
+            }, 200);
 
-        const loadingWatcher = setImmediateInterval(() => {
-            const loaded = getLoadingProgress();
+            loadingWatcher.current = setImmediateInterval(() => {
+                const loaded = getLoadingProgress();
 
-            if (loaded !== null) {
-                setState({ loaded });
-            }
-        }, 500);
+                if (loaded !== null) {
+                    setState({ loaded });
+                }
+            }, 500);
+        } else {
+            clearWatchers();
+        }
 
         return () => {
-            clearInterval(timeWatcher);
-            clearInterval(loadingWatcher);
+            clearWatchers();
         };
-    }, []);
+    }, [isPlaying]);
 
     useUpdateEffect(() => {
         if (!isSeeking) {

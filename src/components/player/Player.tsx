@@ -372,7 +372,7 @@ const Player = () => {
 
                         <Button
                             className="player__controls-button icon-button"
-                            onClick={togglePlay}
+                            onClick={videoId ? togglePlay : () => {}}
                             icon={
                                 // isBuffering
                                 //     ? 'loading'
@@ -393,6 +393,8 @@ const Player = () => {
                     </div>
 
                     <Info
+                        isMaster={isMaster}
+                        isPlaying={isPlaying}
                         title={title}
                         duration={duration}
                         getCurrentTime={getCurrentTime}

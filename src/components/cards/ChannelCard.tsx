@@ -50,11 +50,7 @@ const SubscriptionCard: FunctionComponent<Props> = ({
             {isUnsubscribed ? (
                 <Button title="Subscribe" icon="check" onClick={subscribe} />
             ) : (
-                <Button
-                    title="Queue playlist"
-                    icon="error"
-                    onClick={unsubscribe}
-                />
+                <Button icon="error" onClick={unsubscribe} />
             )}
         </CardButtons>
     </CardContainer>

@@ -100,6 +100,12 @@ $header-height: 50px;
         position: relative;
         height: $header-height;
 
+        &.avatar {
+            .image {
+                border-radius: 50%;
+            }
+        }
+
         .layout__header-row & {
             padding: 0 12px;
             &:last-child {

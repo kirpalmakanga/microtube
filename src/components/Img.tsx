@@ -1,5 +1,6 @@
 import { useState, useEffect, FunctionComponent } from 'react';
 import Fade from './animations/Fade';
+import Icon from './Icon';
 
 interface Props {
     src: string;
@@ -34,10 +35,15 @@ const Img: FunctionComponent<Props> = ({
     }, [src]);
 
     return (
-        <figure className="image">
+        <span className="image">
+            <Fade in={isLoading} duration={300}>
+                <span className="image__placeholder">
+                    <Icon name="image" />
+                </span>
+            </Fade>
             <Fade in={!isLoading} duration={300}>
                 {background ? (
-                    <div
+                    <span
                         className="image__background"
                         style={{ backgroundImage: `url(${src})` }}
                     />
@@ -45,7 +51,7 @@ const Img: FunctionComponent<Props> = ({
                     <img src={src} alt={alt} />
                 )}
             </Fade>
-        </figure>
+        </span>
     );
 };
 

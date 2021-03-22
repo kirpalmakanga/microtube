@@ -36,11 +36,6 @@ const Img: FunctionComponent<Props> = ({
 
     return (
         <span className="image">
-            <Fade in={isLoading} duration={300}>
-                <span className="image__placeholder">
-                    <Icon name="image" />
-                </span>
-            </Fade>
             <Fade in={!isLoading} duration={300}>
                 {background ? (
                     <span
@@ -50,6 +45,12 @@ const Img: FunctionComponent<Props> = ({
                 ) : (
                     <img src={src} alt={alt} />
                 )}
+            </Fade>
+
+            <Fade in={isLoading} duration={300}>
+                <span className="image__placeholder">
+                    <Icon name="image" />
+                </span>
             </Fade>
         </span>
     );

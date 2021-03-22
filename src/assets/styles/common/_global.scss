@@ -107,7 +107,11 @@ input {
     display: inline-block;
     position: relative;
     margin: 0;
-    background-color: lighten($brand-primary, 30%);
+
+    &,
+    &__placeholder {
+        background-color: lighten($brand-primary, 30%);
+    }
 
     &__background {
         top: 0;
@@ -120,8 +124,7 @@ input {
         background-size: cover;
     }
 
-    &__placeholder,
-    &__loader {
+    &__placeholder {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -131,7 +134,7 @@ input {
         align-items: center;
         justify-content: center;
         fill: $white;
-        background-color: inherit;
+        // background-color: inherit;
         .icon {
             width: 36px;
             height: 36px;

@@ -30,7 +30,7 @@ const Store: FunctionComponent = ({ children }) => {
         const { player, search }: StorableState = state;
 
         saveState({
-            player: omit(player, ['newQueueItems', 'video']),
+            player: omit(player, ['queue', 'newQueueItems', 'video']),
             search: pick(search, ['forMine'])
         });
     }, [state]);

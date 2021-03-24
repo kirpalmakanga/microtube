@@ -1,11 +1,5 @@
-import {
-    useRef,
-    useState,
-    useEffect,
-    useCallback,
-    createContext,
-    useContext
-} from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import isEqual from 'lodash/isEqual';
 import { GenericObject } from '../../@types/alltypes';
 
 export const useFullscreen = () => {

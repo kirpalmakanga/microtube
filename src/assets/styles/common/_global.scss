@@ -104,8 +104,14 @@ input {
 }
 
 .image {
+    display: inline-block;
     position: relative;
     margin: 0;
+
+    &,
+    &__placeholder {
+        background-color: lighten($brand-primary, 30%);
+    }
 
     &__background {
         top: 0;
@@ -118,7 +124,7 @@ input {
         background-size: cover;
     }
 
-    &__loader {
+    &__placeholder {
         position: absolute;
         top: 0;
         bottom: 0;
@@ -128,15 +134,15 @@ input {
         align-items: center;
         justify-content: center;
         fill: $white;
-        background-color: inherit;
-        svg {
-            width: 24px;
-            height: 24px;
+        // background-color: inherit;
+        .icon {
+            width: 36px;
+            height: 36px;
         }
     }
 
-    img[src=''] {
-        opacity: 0;
+    img {
+        display: block;
     }
 }
 

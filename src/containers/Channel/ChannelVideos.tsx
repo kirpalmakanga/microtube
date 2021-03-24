@@ -10,6 +10,8 @@ import { VideoData } from '../../../@types/alltypes';
 import { useChannel } from '../../store/hooks/channel';
 import { usePlaylistItems } from '../../store/hooks/playlist-items';
 import { usePlayer } from '../../store/hooks/player';
+import { useNotifications } from '../../store/hooks/notifications';
+import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 
 const ChannelVideos = () => {
     const { channelId } = useParams();
@@ -21,6 +23,7 @@ const ChannelVideos = () => {
     ] = useChannel(channelId);
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
+    const [, { openNotification }] = useNotifications();
 
     const handleGetChannelVideos = useCallback(
         () => getChannelVideos(channelId),
@@ -41,6 +44,21 @@ const ChannelVideos = () => {
         []
     );
 
+    const handleSharing = ({ id, title }: VideoData) => {
+        const url = getVideoURL(id);
+
+        if (isMobile()) {
+            shareURL({
+                title,
+                url
+            });
+        } else {
+            copyText(url);
+
+            openNotification('Copied link to clipboard.');
+        }
+    };
+
     useEffect(() => clearChannelVideos, []);
 
     return totalResults === 0 ? (
@@ -53,11 +71,15 @@ const ChannelVideos = () => {
                     icon: 'circle-add',
                     onClick: queueItem
                 },
-
                 {
                     title: `Save to playlist`,
                     icon: 'folder-add',
                     onClick: editPlaylistItem
+                },
+                {
+                    title: 'Share',
+                    icon: 'share',
+                    onClick: handleSharing
                 }
             ]}
         >

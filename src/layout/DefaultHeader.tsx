@@ -7,6 +7,7 @@ import Button from '../components/Button';
 
 import useAppTitle from '../store/hooks/app-title';
 import { useAuth } from '../store/hooks/auth';
+import Img from '../components/Img';
 
 const DefaultHeader = () => {
     const { pathname } = useLocation();
@@ -73,11 +74,11 @@ const DefaultHeader = () => {
                 ) : null}
                 <div className="navigation__menu">
                     <Button
-                        className="navigation__link icon-button"
+                        className="navigation__link icon-buttona avatar"
                         onClick={handleClickUser}
                         icon={!isSignedIn ? 'user' : ''}
                     >
-                        {picture ? <img src={picture} alt="avatar" /> : null}
+                        {picture ? <Img src={picture} alt="avatar" /> : null}
                     </Button>
                     <Fade in={isSignedIn && isMenuOpen}>
                         <div className="navigation__menu__content">

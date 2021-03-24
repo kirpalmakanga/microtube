@@ -43,13 +43,6 @@
 
     &__controls {
         display: flex;
-        width: 50%;
-        order: 1;
-
-        @media screen and (min-width: 480px) {
-            width: initial;
-            order: initial;
-        }
 
         &-button {
             @include transition();
@@ -61,16 +54,22 @@
             height: 50px;
             border-radius: 0;
 
-            &.is-active {
-                background-color: lighten($brand-primary, 20%);
-            }
+            order: 1;
 
             @media screen and (min-width: 480px) {
                 width: 50px;
+                order: initial;
+            }
+
+            &.is-active {
+                background-color: lighten($brand-primary, 10%);
+            }
+
+            @media screen and (min-width: 480px) {
                 flex: initial;
 
                 &:hover {
-                    background-color: lighten($brand-primary, 20%);
+                    background-color: lighten($brand-primary, 10%);
                 }
             }
 

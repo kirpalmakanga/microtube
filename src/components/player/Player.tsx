@@ -354,38 +354,36 @@ const Player = () => {
 
             <div className="player shadow--2dp">
                 <div className="player__inner shadow--2dp">
-                    <div className="player__controls">
-                        {!isSingleVideo ? (
-                            <Button
-                                className="player__controls-button icon-button"
-                                onClick={() => goToVideo(false)}
-                                icon="chevron-left"
-                                ariaLabel="Go to previous video"
-                            />
-                        ) : null}
-
+                    {!isSingleVideo ? (
                         <Button
                             className="player__controls-button icon-button"
-                            onClick={videoId ? togglePlay : () => {}}
-                            icon={
-                                isBuffering
-                                    ? 'loading'
-                                    : isPlaying
-                                    ? 'pause'
-                                    : 'play'
-                            }
-                            ariaLabel={isPlaying ? 'Pause video' : 'Play video'}
+                            onClick={() => goToVideo(false)}
+                            icon="chevron-left"
+                            ariaLabel="Go to previous video"
                         />
+                    ) : null}
 
-                        {!isSingleVideo ? (
-                            <Button
-                                className="player__controls-button icon-button"
-                                onClick={() => goToVideo(true)}
-                                icon="chevron-right"
-                                ariaLabel="Go to next video"
-                            />
-                        ) : null}
-                    </div>
+                    <Button
+                        className="player__controls-button icon-button"
+                        onClick={videoId ? togglePlay : () => {}}
+                        icon={
+                            isBuffering
+                                ? 'loading'
+                                : isPlaying
+                                ? 'pause'
+                                : 'play'
+                        }
+                        ariaLabel={isPlaying ? 'Pause video' : 'Play video'}
+                    />
+
+                    {!isSingleVideo ? (
+                        <Button
+                            className="player__controls-button icon-button"
+                            onClick={() => goToVideo(true)}
+                            icon="chevron-right"
+                            ariaLabel="Go to next video"
+                        />
+                    ) : null}
 
                     <Info
                         isWatchingDisabled={
@@ -399,98 +397,85 @@ const Player = () => {
                         onEndSeeking={handleSeek}
                     />
 
-                    <div className="player__controls">
-                        {availableDevices.length && !isSingleVideo ? (
-                            <Button
-                                className={[
-                                    'player__controls-button icon-button',
-                                    isDevicesSelectorVisible ? 'is-active' : ''
-                                ].join(' ')}
-                                icon="devices"
-                                ariaLabel="Devices"
-                                onClick={handleToggleDevices}
-                            />
-                        ) : null}
+                    {availableDevices.length && !isSingleVideo ? (
+                        <Button
+                            className={[
+                                'player__controls-button icon-button',
+                                isDevicesSelectorVisible ? 'is-active' : ''
+                            ].join(' ')}
+                            icon="devices"
+                            ariaLabel="Devices"
+                            onClick={handleToggleDevices}
+                        />
+                    ) : null}
 
-                        {!isMobile() && videoId ? (
-                            <div
-                                className="player__controls-volume"
-                                onWheel={handleWheelVolume}
-                            >
-                                <Button
-                                    className="player__controls-button icon-button"
-                                    onClick={toggleMute}
-                                    icon={
-                                        volume === 0
-                                            ? 'volume-off'
-                                            : 'volume-up'
-                                    }
-                                    ariaLabel={volume === 0 ? 'Unmute' : 'Mute'}
-                                />
-
-                                <VolumeRange
-                                    value={volume}
-                                    onChange={setVolume}
-                                />
-                            </div>
-                        ) : null}
-
-                        {!isSingleVideo ? (
-                            <Button
-                                className={[
-                                    'player__controls-button badge icon-button',
-                                    isQueueVisible ? 'is-active' : '',
-                                    newQueueItems && !isQueueVisible
-                                        ? 'badge--active'
-                                        : ''
-                                ].join(' ')}
-                                onClick={toggleQueue}
-                                badge={newQueueItems}
-                                icon="list"
-                                ariaLabel={
-                                    isQueueVisible
-                                        ? 'Close queue'
-                                        : 'Open queue'
-                                }
-                            />
-                        ) : null}
-
-                        {!isSingleVideo && !isFullscreen ? (
-                            <Button
-                                className={[
-                                    'player__controls-button icon-button',
-                                    isScreenVisible ? 'is-active' : ''
-                                ].join(' ')}
-                                onClick={toggleScreen}
-                                icon="screen"
-                                ariaLabel={
-                                    isScreenVisible
-                                        ? 'Close screen'
-                                        : 'open screen'
-                                }
-                            />
-                        ) : null}
-
-                        {isSingleVideo ? (
+                    {!isMobile() && videoId ? (
+                        <div
+                            className="player__controls-volume"
+                            onWheel={handleWheelVolume}
+                        >
                             <Button
                                 className="player__controls-button icon-button"
-                                onClick={handleEditPlaylistItem}
-                                icon="folder-add"
-                                ariaLabel="Save to playlist"
-                            ></Button>
-                        ) : null}
+                                onClick={toggleMute}
+                                icon={volume === 0 ? 'volume-off' : 'volume-up'}
+                                ariaLabel={volume === 0 ? 'Unmute' : 'Mute'}
+                            />
 
+                            <VolumeRange value={volume} onChange={setVolume} />
+                        </div>
+                    ) : null}
+
+                    {!isSingleVideo ? (
                         <Button
-                            className="player__controls-button icon-button"
-                            onClick={toggleFullscreen}
-                            icon={isFullscreen ? 'close' : 'expand'}
+                            className={[
+                                'player__controls-button badge icon-button',
+                                isQueueVisible ? 'is-active' : '',
+                                newQueueItems && !isQueueVisible
+                                    ? 'badge--active'
+                                    : ''
+                            ].join(' ')}
+                            onClick={toggleQueue}
+                            badge={newQueueItems}
+                            icon="list"
                             ariaLabel={
-                                isScreenVisible
-                                    ? 'Enable Fullscreen'
-                                    : 'Exit Fullscreen'
+                                isQueueVisible ? 'Close queue' : 'Open queue'
                             }
                         />
-                    </div>
+                    ) : null}
+
+                    {!isSingleVideo && !isFullscreen ? (
+                        <Button
+                            className={[
+                                'player__controls-button icon-button',
+                                isScreenVisible ? 'is-active' : ''
+                            ].join(' ')}
+                            onClick={toggleScreen}
+                            icon="screen"
+                            ariaLabel={
+                                isScreenVisible ? 'Close screen' : 'open screen'
+                            }
+                        />
+                    ) : null}
+
+                    {isSingleVideo ? (
+                        <Button
+                            className="player__controls-button icon-button"
+                            onClick={handleEditPlaylistItem}
+                            icon="folder-add"
+                            ariaLabel="Save to playlist"
+                        ></Button>
+                    ) : null}
+
+                    <Button
+                        className="player__controls-button icon-button"
+                        onClick={toggleFullscreen}
+                        icon={isFullscreen ? 'close' : 'expand'}
+                        ariaLabel={
+                            isScreenVisible
+                                ? 'Enable Fullscreen'
+                                : 'Exit Fullscreen'
+                        }
+                    />
                 </div>
             </div>
         </div>

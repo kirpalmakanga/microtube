@@ -6,7 +6,7 @@ import reactRefresh from '@vitejs/plugin-react-refresh';
 export default defineConfig({
     server: { port: 8080 },
     esbuild: {
-        jsxInject: `import React from 'react'`,
+        jsxInject: `import React from 'react'`
     },
     plugins: [
         reactRefresh(),
@@ -23,11 +23,11 @@ export default defineConfig({
                     {
                         src: '/icon-512x512.png',
                         sizes: '512x512',
-                        type: 'image/png',
-                    },
+                        type: 'image/png'
+                    }
                 ],
-                splash_pages: null,
-            },
-        }),
-    ],
+                splash_pages: null
+            }
+        })
+    ]
 });

@@ -26,32 +26,36 @@ export const usePlayer = () => {
         return __DEV__ ? 'dev' : id;
     }, [user]);
 
+    const queuePath = `users/${getCurrentUserId()}/queue`;
+    const currentIdPath = `users/${getCurrentUserId()}/currentId`;
+
+    const { queue, currentId } = player;
+
     const subscribeToQueue = useCallback(() => {
-        const path = `users/${getCurrentUserId()}/queue`;
+        const unsubscribePromise = database.subscribe(
+            queuePath,
+            (queue = []) => {
+                dispatch((_: Dispatch<Action>, getState: GetState) => {
+                    const {
+                        player: { queue: previousQueue }
+                    } = getState();
 
-        const unsubscribePromise = database.subscribe(path, (queue = []) => {
-            dispatch((_: Dispatch<Action>, getState: GetState) => {
-                const {
-                    player: { queue: previousQueue }
-                } = getState();
-
-                if (!isEqual(queue, previousQueue)) {
-                    dispatch({
-                        type: 'player/UPDATE_DATA',
-                        payload: { queue }
-                    });
-                }
-            });
-        });
+                    if (!isEqual(queue, previousQueue)) {
+                        dispatch({
+                            type: 'player/UPDATE_DATA',
+                            payload: { queue }
+                        });
+                    }
+                });
+            }
+        );
 
         return async () => (await unsubscribePromise)();
     }, []);
 
     const subscribeToCurrentQueueId = useCallback(() => {
-        const path = `users/${getCurrentUserId()}/currentId`;
-
         const unsubscribePromise = database.subscribe(
-            path,
+            currentIdPath,
             (currentId = '') => {
                 dispatch((_: Dispatch<Action>, getState: GetState) => {
                     const {
@@ -71,23 +75,27 @@ export const usePlayer = () => {
         return async () => (await unsubscribePromise)();
     }, []);
 
-    const setQueue = (queue: QueueItem[]) =>
+    const setQueue = (queue: QueueItem[]) => {
         dispatch({ type: 'player/UPDATE_DATA', payload: { queue } });
 
-    const queueItems = useCallback((newItems: QueueItem[]) => {
-        const { queue } = player;
+        database.set(queuePath, queue);
+    };
 
-        const items = newItems.filter(
-            ({ id }: QueueItem) =>
-                !queue.find(
-                    ({ id: queueItemId }: QueueItem) => queueItemId === id
-                )
-        );
+    const queueItems = useCallback(
+        (newItems: QueueItem[]) => {
+            const items = newItems.filter(
+                ({ id }: QueueItem) =>
+                    !queue.find(
+                        ({ id: queueItemId }: QueueItem) => queueItemId === id
+                    )
+            );
 
-        dispatch({ type: 'player/ADD_QUEUE_ITEMS', payload: { items } });
+            setQueue([...queue, ...items]);
 
-        return items;
-    }, []);
+            return items;
+        },
+        [queue]
+    );
 
     const queueItem = (data: QueueItem) => queueItems([data]);
 
@@ -96,6 +104,8 @@ export const usePlayer = () => {
             type: 'player/UPDATE_DATA',
             payload: { currentId }
         });
+
+        database.set(currentIdPath, currentId);
     }, []);
 
     const queueVideos = async (ids: string[]) => {
@@ -129,9 +139,9 @@ export const usePlayer = () => {
         });
 
     const removeQueueItem = useCallback(
-        ({ id }) =>
-            dispatch({ type: 'player/REMOVE_QUEUE_ITEM', payload: { id } }),
-        []
+        ({ id: targetId }) =>
+            setQueue(queue.filter(({ id }: QueueItem) => id !== targetId)),
+        [queue]
     );
 
     const clearNewQueueItems = () =>
@@ -146,9 +156,20 @@ export const usePlayer = () => {
                 headerText: 'Clear queue ?',
                 confirmText: 'Clear',
                 cancelText: 'Cancel',
-                callback: () => dispatch({ type: 'player/CLEAR_QUEUE' })
+                callback: () => {
+                    const clearedQueue: QueueItem[] = queue.filter(
+                        ({ id }: QueueItem) => id === currentId
+                    );
+
+                    dispatch({
+                        type: 'player/UPDATE_DATA',
+                        payload: { queue: clearedQueue }
+                    });
+
+                    database.set(queuePath, clearedQueue);
+                }
             }),
-        []
+        [queue, currentId]
     );
 
     const clearVideo = () => dispatch({ type: 'player/CLEAR_VIDEO' });
@@ -190,8 +211,6 @@ export const usePlayer = () => {
             payload: { isScreenVisible: false }
         });
 
-    const { queue, currentId } = player;
-
     const goToNextQueueItem = (next: boolean | undefined = true) =>
         dispatch((_: Dispatch<Action>, getState: GetState) => {
             const {
@@ -209,14 +228,6 @@ export const usePlayer = () => {
 
             return !!id;
         });
-
-    useEffect(() => {
-        database.set(`users/${getCurrentUserId()}/queue`, queue);
-    }, [queue]);
-
-    useEffect(() => {
-        database.set(`users/${getCurrentUserId()}/currentId`, currentId);
-    }, [currentId]);
 
     return [
         player,

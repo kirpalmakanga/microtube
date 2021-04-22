@@ -34,6 +34,6 @@ export default {
 
         onValue(reference, handler);
 
-        return () => off(ref, 'value', handler);
+        return () => off(reference, 'value', handler);
     }
 };

@@ -1,12 +1,12 @@
 class Database {
-    db = null;
+    client = null;
 
     init = async () => {
-        if (!this.db) {
+        if (!this.client) {
             try {
-                const { db } = await import('./init');
+                const { default: client } = await import('./init');
 
-                this.db = db;
+                this.client = client;
             } catch (error) {
                 console.error(new Error('Database connection failed'));
                 console.error(error);
@@ -17,47 +17,25 @@ class Database {
     signIn = async (idToken, accessToken) => {
         await this.init();
 
-        const credential = this.db.auth.GoogleAuthProvider.credential(
-            idToken,
-            accessToken
-        );
-
-        return this.db.auth().signInWithCredential(credential);
+        return this.client.signIn(idToken, accessToken);
     };
 
     signOut = async () => {
         await this.init();
 
-        this.db.auth().signOut();
-    };
-
-    getRef = async (path) => {
-        await this.init();
-
-        return this.db.database().ref(path);
-    };
-
-    get = async (path) => {
-        const ref = await this.getRef(path);
-        const snapshot = ref.once('value');
-
-        return snapshot.val();
+        this.client.signOut();
     };
 
     set = async (path, data) => {
-        const ref = await this.getRef(path);
+        await this.init();
 
-        return ref.set(data);
+        return this.client.set(path, data);
     };
 
     subscribe = async (path, callback = () => {}) => {
-        const ref = await this.getRef(path);
+        await this.init();
 
-        const handler = (snapshot) => callback(snapshot.val() || undefined);
-
-        ref.on('value', handler);
-
-        return () => ref.off('value', handler);
+        return this.client.subscribe(path, callback);
     };
 }
 

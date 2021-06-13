@@ -22,10 +22,8 @@ const Tabs: FunctionComponent<TabsProps> = ({ children }) => (
 
 const Channel = () => {
     const { channelId } = useParams();
-    const [
-        { channelTitle, thumbnails },
-        { getChannel, clearChannelData }
-    ] = useChannel(channelId);
+    const [{ channelTitle, thumbnails }, { getChannel, clearChannelData }] =
+        useChannel(channelId);
 
     useEffect(() => {
         getChannel(channelId);

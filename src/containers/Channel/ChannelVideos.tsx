@@ -17,10 +17,8 @@ const ChannelVideos = () => {
     const { channelId } = useParams();
     const navigate = useNavigate();
 
-    const [
-        { items, totalResults },
-        { getChannelVideos, clearChannelVideos }
-    ] = useChannel(channelId);
+    const [{ items, totalResults }, { getChannelVideos, clearChannelVideos }] =
+        useChannel(channelId);
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
     const [, { openNotification }] = useNotifications();
@@ -31,7 +29,9 @@ const ChannelVideos = () => {
     );
 
     const handleClickCard = useCallback(
-        ({ id }: VideoData) => () => navigate(`/video/${id}`),
+        ({ id }: VideoData) =>
+            () =>
+                navigate(`/video/${id}`),
         []
     );
 

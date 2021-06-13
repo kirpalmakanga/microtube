@@ -8,7 +8,7 @@ import Placeholder from '../components/Placeholder';
 import VideoCard from '../components/cards/VideoCard';
 import MenuWrapper from '../components/menu/MenuWrapper';
 import { usePlayer } from '../store/hooks/player';
-import { VideoData } from '../../@types/alltypes';
+import { PlaylistItemData } from '../../@types/alltypes';
 import { copyText, getVideoURL, isMobile, shareURL } from '../lib/helpers';
 import { useNotifications } from '../store/hooks/notifications';
 
@@ -32,12 +32,14 @@ const Playlists = () => {
     const [, { openNotification }] = useNotifications();
 
     const handleClickCard = useCallback(
-        ({ id }: VideoData) => () => navigate(`/video/${id}`),
+        ({ id }: PlaylistItemData) =>
+            () =>
+                navigate(`/video/${id}`),
         []
     );
 
     const handleClickMenu = useCallback(
-        (data: VideoData, callback: Function) => () => {
+        (data: PlaylistItemData, callback: Function) => () => {
             const { title } = data;
 
             callback(data, title);
@@ -45,7 +47,7 @@ const Playlists = () => {
         []
     );
 
-    const handleSharing = ({ id, title }: VideoData) => {
+    const handleSharing = ({ id, title }: PlaylistItemData) => {
         const url = getVideoURL(id);
 
         if (isMobile()) {
@@ -96,8 +98,8 @@ const Playlists = () => {
             {(openMenu) => (
                 <List
                     items={items}
-                    itemKey={({ id }: VideoData) => id}
-                    renderItem={(data: VideoData) => (
+                    itemKey={({ id }: PlaylistItemData) => id}
+                    renderItem={(data: PlaylistItemData) => (
                         <VideoCard
                             {...data}
                             onClick={handleClickCard(data)}

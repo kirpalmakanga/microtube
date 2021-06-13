@@ -189,7 +189,7 @@ const Player = () => {
             isBuffering: false
         });
 
-    const handleSeek = (t: number) => {
+    const handleSeeking = (t: number) => {
         youtube.current?.seekTo(t, true);
 
         handlePlay();
@@ -394,7 +394,7 @@ const Player = () => {
                         getCurrentTime={getCurrentTime}
                         getLoadingProgress={getLoadingProgress}
                         onStartSeeking={handlePause}
-                        onEndSeeking={handleSeek}
+                        onEndSeeking={handleSeeking}
                     />
 
                     {availableDevices.length && !isSingleVideo ? (

@@ -10,12 +10,9 @@ export const useAuth = () => {
     const [, { openNotification }] = useNotifications();
 
     const getUserData = useCallback(async () => {
-        const {
-            isSignedIn,
-            idToken,
-            accessToken,
-            ...data
-        } = await api.getSignedInUser();
+        const { isSignedIn, idToken, accessToken, ...data } =
+            await api.getSignedInUser();
+
         let id = '';
 
         if (isSignedIn) {

@@ -5,7 +5,7 @@ import { usePlaylists } from './playlists';
 import { useNotifications } from './notifications';
 import { usePrompt } from './prompt';
 
-import { PlaylistData, VideoData } from '../../../@types/alltypes';
+import { PlaylistData, PlaylistItemData } from '../../../@types/alltypes';
 
 import * as api from '../../api/youtube';
 import { Action, Dispatch, GetState } from '../helpers';
@@ -28,6 +28,10 @@ export const usePlaylistItems = (playlistId?: string) => {
     const getPlaylistItems = () =>
         dispatch(async (dispatch: Dispatch<Action>, getState: GetState) => {
             try {
+                if (!playlistId) {
+                    throw new Error('playlistId is required');
+                }
+
                 const {
                     playlistItems: { nextPageToken: pageToken, hasNextPage }
                 } = getState();
@@ -67,7 +71,7 @@ export const usePlaylistItems = (playlistId?: string) => {
         }
     };
 
-    const editPlaylistItem = ({ id: videoId }: VideoData) => {
+    const editPlaylistItem = ({ id: videoId }: PlaylistItemData) => {
         openPrompt({
             mode: 'playlists',
             headerText: 'Save to playlist',
@@ -101,7 +105,7 @@ export const usePlaylistItems = (playlistId?: string) => {
         playlistItemId,
         playlistId,
         title
-    }: VideoData) => {
+    }: PlaylistItemData) => {
         openPrompt({
             headerText: `Remove "${title}" ?`,
             cancelText: 'Cancel',

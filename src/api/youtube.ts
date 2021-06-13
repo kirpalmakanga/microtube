@@ -1,6 +1,11 @@
+import { ChannelData, GenericObject, VideoData } from '../../@types/alltypes';
 import { API_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SCOPE } from '../config/api';
 import { parseVideoData, parsePlaylistData, parseChannelData } from './parsers';
 import { loadScript, parseVideoId, pick } from '../lib/helpers';
+
+interface SearchResultItem {
+    id: { videoId: string };
+}
 
 const ITEMS_PER_REQUEST = 50;
 
@@ -10,7 +15,7 @@ const loadAPI = async () => {
     return window.gapi;
 };
 
-const getService = async (service) => {
+const getService = async (service: string) => {
     const gapi = await loadAPI();
 
     if (!gapi[service]) {
@@ -54,10 +59,8 @@ export const getSignedInUser = async () => {
         };
     }
 
-    const {
-        id_token: idToken = '',
-        access_token: accessToken = ''
-    } = isSignedIn ? currentUser.getAuthResponse(true) : {};
+    const { id_token: idToken = '', access_token: accessToken = '' } =
+        isSignedIn ? currentUser.getAuthResponse(true) : {};
 
     return {
         ...user,
@@ -81,7 +84,7 @@ export const signOut = async () => {
     return auth.signOut();
 };
 
-function removeEmptyParams(params = {}) {
+function removeEmptyParams(params: GenericObject) {
     for (const p in params) {
         if (!params[p]) {
             delete params[p];
@@ -90,13 +93,22 @@ function removeEmptyParams(params = {}) {
     return params;
 }
 
-const request = async (method = '', path = '', params = {}, body) => {
+const request = async (
+    method: string,
+    path: string,
+    params?: GenericObject,
+    body?: Object
+) => {
     const client = await getService('client');
 
     const { result } = await client.request({
         method,
         path: `/youtube/v3/${path}`,
-        params: removeEmptyParams(params),
+        ...(params
+            ? {
+                  params: removeEmptyParams(params)
+              }
+            : {}),
         ...(body ? { body } : {})
     });
 
@@ -105,7 +117,15 @@ const request = async (method = '', path = '', params = {}, body) => {
 
 /* Videos */
 
-export async function searchVideos({ query, forMine, pageToken }) {
+export async function searchVideos({
+    query,
+    forMine,
+    pageToken
+}: {
+    query: string;
+    forMine: boolean;
+    pageToken: string;
+}) {
     const {
         items: searchResults,
         nextPageToken,
@@ -122,7 +142,9 @@ export async function searchVideos({ query, forMine, pageToken }) {
     let items = [];
 
     if (searchResults.length) {
-        const videoIds = searchResults.map(({ id }) => id.videoId);
+        const videoIds = searchResults.map(
+            ({ id: { videoId } }: SearchResultItem) => videoId
+        );
 
         items = await getVideosFromIds(videoIds);
     }
@@ -143,7 +165,7 @@ export async function getVideo(urlOrId = '') {
     return parseVideoData(items[0]);
 }
 
-export async function getVideosFromIds(ids = []) {
+export async function getVideosFromIds(ids: string[]) {
     const { items } = await request('GET', 'videos', {
         part: 'contentDetails, snippet, status',
         id: ids.join(','),
@@ -160,7 +182,12 @@ export async function getPlaylists({
     mine = false,
     channelId = '',
     ids = []
-} = {}) {
+}: {
+    pageToken?: string;
+    mine?: boolean;
+    channelId?: string;
+    ids?: string[];
+}) {
     const {
         items,
         nextPageToken,
@@ -202,7 +229,13 @@ export async function getAllPlaylists({ mine = false } = {}) {
     };
 }
 
-export async function createPlaylist({ title, privacyStatus }) {
+export async function createPlaylist({
+    title,
+    privacyStatus
+}: {
+    title: string;
+    privacyStatus: string;
+}) {
     const data = await request(
         'POST',
         'playlists',
@@ -222,13 +255,13 @@ export async function createPlaylist({ title, privacyStatus }) {
     return parsePlaylistData(data);
 }
 
-export async function removePlaylist(id) {
+export async function removePlaylist(id: string) {
     return request('DELETE', 'playlists', {
         id
     });
 }
 
-export async function getPlaylistTitle(id) {
+export async function getPlaylistTitle(id: string) {
     const { items } = await request('GET', 'playlists', {
         id,
         part: 'snippet'
@@ -241,7 +274,13 @@ export async function getPlaylistTitle(id) {
     return title;
 }
 
-export async function getPlaylistItems({ pageToken = '', playlistId }) {
+export async function getPlaylistItems({
+    pageToken = '',
+    playlistId
+}: {
+    pageToken?: string;
+    playlistId: string;
+}) {
     const {
         items: playlistItems,
         nextPageToken,
@@ -261,12 +300,14 @@ export async function getPlaylistItems({ pageToken = '', playlistId }) {
                 snippet: {
                     resourceId: { videoId }
                 }
+            }: {
+                snippet: { resourceId: { videoId: string } };
             }) => videoId
         );
 
         const videos = await getVideosFromIds(videoIds);
 
-        items = videos.map((data, index) => ({
+        items = videos.map((data: VideoData, index: number) => ({
             ...data,
             playlistId,
             playlistItemId: playlistItems[index].id
@@ -280,7 +321,7 @@ export async function getPlaylistItems({ pageToken = '', playlistId }) {
     };
 }
 
-export async function addPlaylistItem(playlistId, videoId) {
+export async function addPlaylistItem(playlistId: string, videoId: string) {
     const data = await request(
         'POST',
         'playlistItems',
@@ -299,13 +340,13 @@ export async function addPlaylistItem(playlistId, videoId) {
     return parseVideoData(data);
 }
 
-export async function removePlaylistItem(id) {
+export async function removePlaylistItem(id: string) {
     return request('DELETE', 'playlistItems', {
         id
     });
 }
 /* Subscriptions */
-async function getChannelsFromIds(ids) {
+async function getChannelsFromIds(ids: string[]) {
     const { items } = await request('GET', 'channels', {
         part: 'snippet',
         id: ids.join(','),
@@ -335,36 +376,40 @@ export async function getSubscriptions({ pageToken = '', mine = false }) {
             snippet: {
                 resourceId: { channelId }
             }
+        }: {
+            snippet: {
+                resourceId: { channelId: string };
+            };
         }) => channelId
     );
 
     const channels = await getChannelsFromIds(channelIds);
 
     return {
-        items: channels.map((data) => {
-            const index = subscriptions.findIndex(
+        items: channels.map((data: ChannelData) => {
+            const matchingSubscription = subscriptions.find(
                 ({
                     snippet: {
                         resourceId: { channelId }
                     }
+                }: {
+                    snippet: {
+                        resourceId: { channelId: string };
+                    };
                 }) => channelId === data.id
             );
 
-            const matchingSubscription = subscriptions[index];
-
-            const subscriptionProps = matchingSubscription
-                ? {
-                      subscriptionId: matchingSubscription.id,
-                      ...pick(subscriptions[index].contentDetails, [
-                          'totalItemCount',
-                          'newItemCount'
-                      ])
-                  }
-                : {};
-
             return {
                 ...data,
-                ...subscriptionProps,
+                ...(matchingSubscription.id
+                    ? {
+                          subscriptionId: matchingSubscription.id,
+                          ...pick(matchingSubscription.contentDetails, [
+                              'totalItemCount',
+                              'newItemCount'
+                          ])
+                      }
+                    : {}),
                 isUnsubscribed: false
             };
         }),
@@ -374,7 +419,7 @@ export async function getSubscriptions({ pageToken = '', mine = false }) {
 }
 
 /* Channels */
-export async function getChannel(id) {
+export async function getChannel(id: string) {
     const { items } = await request('GET', 'channels', {
         id,
         part: 'snippet, contentDetails'
@@ -391,7 +436,13 @@ export async function getChannel(id) {
     return { channelTitle, description, thumbnails };
 }
 
-export async function getChannelVideos({ channelId, pageToken }) {
+export async function getChannelVideos({
+    channelId,
+    pageToken
+}: {
+    channelId: string;
+    pageToken: string;
+}) {
     const { items, nextPageToken, pageInfo } = await request('GET', 'search', {
         part: 'snippet',
         type: 'video',
@@ -401,7 +452,9 @@ export async function getChannelVideos({ channelId, pageToken }) {
         maxResults: ITEMS_PER_REQUEST
     });
 
-    const videoIds = items.map(({ id: { videoId } }) => videoId);
+    const videoIds = items.map(
+        ({ id: { videoId } }: SearchResultItem) => videoId
+    );
 
     const videos = await getVideosFromIds(videoIds);
 
@@ -412,7 +465,7 @@ export async function getChannelVideos({ channelId, pageToken }) {
     };
 }
 
-export async function subscribeToChannel(channelId) {
+export async function subscribeToChannel(channelId: string) {
     return request(
         'POST',
         'subscriptions',
@@ -428,6 +481,6 @@ export async function subscribeToChannel(channelId) {
     );
 }
 
-export async function unsubscribeFromChannel(id) {
+export async function unsubscribeFromChannel(id: string) {
     return request('DELETE', 'subscriptions', { id });
 }

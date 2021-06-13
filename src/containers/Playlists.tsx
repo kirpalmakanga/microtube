@@ -30,7 +30,9 @@ const Playlists = () => {
     const [, { openNotification }] = useNotifications();
 
     const handleClickCard = useCallback(
-        ({ id }: PlaylistData) => () => navigate(`/playlist/${id}`),
+        ({ id }: PlaylistData) =>
+            () =>
+                navigate(`/playlist/${id}`),
         []
     );
     const handleClickMenu = useCallback(

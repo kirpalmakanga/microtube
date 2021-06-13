@@ -39,15 +39,13 @@ const Info: FunctionComponent<Props> = ({
 }) => {
     const timeWatcher = useRef<number | null>(null);
     const loadingWatcher = useRef<number | null>(null);
-    const [
-        { loaded, currentTime, seekingTime, isSeeking },
-        setState
-    ] = useMergedState({
-        loaded: 0,
-        currentTime: 0,
-        seekingTime: 0,
-        isSeeking: false
-    });
+    const [{ loaded, currentTime, seekingTime, isSeeking }, setState] =
+        useMergedState({
+            loaded: 0,
+            currentTime: 0,
+            seekingTime: 0,
+            isSeeking: false
+        });
 
     const startSeeking = () => {
         onStartSeeking();
@@ -70,6 +68,24 @@ const Info: FunctionComponent<Props> = ({
         currentTarget: { value: seekingTime }
     }: SyntheticEvent<HTMLInputElement>) =>
         setState({ seekingTime: parseInt(seekingTime) });
+
+    const startWatchers = () => {
+        timeWatcher.current = setImmediateInterval(() => {
+            const currentTime = getCurrentTime();
+
+            if (currentTime !== null) {
+                setState({ currentTime });
+            }
+        }, 200);
+
+        loadingWatcher.current = setImmediateInterval(() => {
+            const loaded = getLoadingProgress();
+
+            if (loaded !== null) {
+                setState({ loaded });
+            }
+        }, 500);
+    };
 
     const clearWatchers = () => {
         if (timeWatcher.current) clearInterval(timeWatcher.current);
@@ -110,11 +126,7 @@ const Info: FunctionComponent<Props> = ({
             }, 200);
 
             loadingWatcher.current = setImmediateInterval(() => {
-                const loaded = getLoadingProgress();
-
-                if (loaded !== null) {
-                    setState({ loaded });
-                }
+                startWatchers();
             }, 500);
         }
 

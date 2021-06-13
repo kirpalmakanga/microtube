@@ -15,10 +15,8 @@ import MenuWrapper from '../components/menu/MenuWrapper';
 const Search = () => {
     const navigate = useNavigate();
     const { query } = useParams();
-    const [
-        { items, totalResults, forMine },
-        { searchVideos, clearSearch }
-    ] = useSearch();
+    const [{ items, totalResults, forMine }, { searchVideos, clearSearch }] =
+        useSearch();
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
 
@@ -29,7 +27,9 @@ const Search = () => {
     const handleSearchVideos = () => searchVideos(query);
 
     const handleClickCard = useCallback(
-        ({ id }: VideoData) => () => navigate(`/video/${id}`),
+        ({ id }: VideoData) =>
+            () =>
+                navigate(`/video/${id}`),
         []
     );
 

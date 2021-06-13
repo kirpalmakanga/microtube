@@ -32,7 +32,9 @@ const DefaultHeader = () => {
         <div className="layout__header-row">
             {pathname !== '/' && pathname !== '/login' ? (
                 <Button
-                    onClick={() => navigate(-1)}
+                    onClick={() =>
+                        navigate(-(pathname.endsWith('/videos') ? 2 : 1))
+                    }
                     className="layout__back-button icon-button"
                     aria-label="Go to homepage"
                 >

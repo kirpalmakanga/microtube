@@ -13,7 +13,6 @@
         "react": "^17.0.2",
         "react-beautiful-dnd": "^13.1.0",
         "react-dom": "^17.0.2",
-        "react-fastclick": "^3.0.2",
         "react-helmet": "^6.1.0",
         "react-router-dom": "^6.0.0-beta.0",
         "react-transition-group": "^4.4.1",

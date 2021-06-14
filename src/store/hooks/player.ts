@@ -10,7 +10,7 @@ import { QueueItem } from '../../../@types/alltypes';
 import { __DEV__ } from '../../config/app';
 
 import * as api from '../../api/youtube';
-import database from '../../api/database';
+import { saveData, subscribeToData } from '../../api/database';
 
 import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
 import { Action, Dispatch, GetState } from '../helpers';
@@ -32,29 +32,26 @@ export const usePlayer = () => {
     const { queue, currentId } = player;
 
     const subscribeToQueue = useCallback(() => {
-        const unsubscribePromise = database.subscribe(
-            queuePath,
-            (queue = []) => {
-                dispatch((_: Dispatch<Action>, getState: GetState) => {
-                    const {
-                        player: { queue: previousQueue }
-                    } = getState();
+        const unsubscribePromise = subscribeToData(queuePath, (queue = []) => {
+            dispatch((_: Dispatch<Action>, getState: GetState) => {
+                const {
+                    player: { queue: previousQueue }
+                } = getState();
 
-                    if (!isEqual(queue, previousQueue)) {
-                        dispatch({
-                            type: 'player/UPDATE_DATA',
-                            payload: { queue }
-                        });
-                    }
-                });
-            }
-        );
+                if (!isEqual(queue, previousQueue)) {
+                    dispatch({
+                        type: 'player/UPDATE_DATA',
+                        payload: { queue }
+                    });
+                }
+            });
+        });
 
         return async () => (await unsubscribePromise)();
     }, []);
 
     const subscribeToCurrentQueueId = useCallback(() => {
-        const unsubscribePromise = database.subscribe(
+        const unsubscribePromise = subscribeToData(
             currentIdPath,
             (currentId = '') => {
                 dispatch((_: Dispatch<Action>, getState: GetState) => {
@@ -78,7 +75,7 @@ export const usePlayer = () => {
     const setQueue = (queue: QueueItem[]) => {
         dispatch({ type: 'player/UPDATE_DATA', payload: { queue } });
 
-        database.set(queuePath, queue);
+        saveData(queuePath, queue);
     };
 
     const queueItems = useCallback(
@@ -105,7 +102,7 @@ export const usePlayer = () => {
             payload: { currentId }
         });
 
-        database.set(currentIdPath, currentId);
+        saveData(currentIdPath, currentId);
     }, []);
 
     const queueVideos = async (ids: string[]) => {
@@ -166,7 +163,7 @@ export const usePlayer = () => {
                         payload: { queue: clearedQueue }
                     });
 
-                    database.set(queuePath, clearedQueue);
+                    saveData(queuePath, clearedQueue);
                 }
             }),
         [queue, currentId]

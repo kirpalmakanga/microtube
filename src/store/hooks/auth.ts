@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useStore } from '..';
 
 import * as api from '../../api/youtube';
-import database from '../../api/database';
+import { signIntoDatabase, signOutOfDatabase } from '../../api/database';
 import { useNotifications } from './notifications';
 
 export const useAuth = () => {
@@ -18,7 +18,7 @@ export const useAuth = () => {
         if (isSignedIn) {
             let {
                 user: { uid }
-            } = await database.signIn(idToken, accessToken);
+            } = await signIntoDatabase(idToken, accessToken);
 
             id = uid;
         }
@@ -59,7 +59,7 @@ export const useAuth = () => {
     const signOut = async () => {
         try {
             await api.signOut();
-            await database.signOut();
+            await signOutOfDatabase();
 
             dispatch({ type: 'user/SIGN_OUT' });
         } catch (error) {

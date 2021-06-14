@@ -13,35 +13,31 @@ import { FIREBASE_CONFIG } from '../config/api';
 
 initializeApp(FIREBASE_CONFIG);
 
-class Database {
-    async signIn(idToken: string, accessToken: string) {
-        const auth = getAuth();
-        const credential = GoogleAuthProvider.credential(idToken, accessToken);
+export const signIntoDatabase = (idToken: string, accessToken: string) => {
+    const auth = getAuth();
+    const credential = GoogleAuthProvider.credential(idToken, accessToken);
 
-        return signInWithCredential(auth, credential);
-    }
+    return signInWithCredential(auth, credential);
+};
 
-    async signOut() {
-        const auth = getAuth();
+export const signOutOfDatabase = () => {
+    const auth = getAuth();
 
-        return signOut(auth);
-    }
+    return signOut(auth);
+};
 
-    async set(path: string, data: string | object) {
-        const db = getDatabase();
+export const saveData = async (path: string, data: string | object) => {
+    const db = getDatabase();
 
-        return set(ref(db, path), data);
-    }
+    return set(ref(db, path), data);
+};
 
-    async subscribe(path: string, callback: Function) {
-        const reference = ref(getDatabase(), path);
-        const handler = (snapshot: DataSnapshot) =>
-            callback(snapshot.val() || undefined);
+export const subscribeToData = async (path: string, callback: Function) => {
+    const reference = ref(getDatabase(), path);
+    const handler = (snapshot: DataSnapshot) =>
+        callback(snapshot.val() || undefined);
 
-        onValue(reference, handler);
+    onValue(reference, handler);
 
-        return () => off(reference, 'value', handler);
-    }
-}
-
-export default new Database();
+    return () => off(reference, 'value', handler);
+};

@@ -1,18 +1,45 @@
+import { ThumbnailsData } from '../../@types/alltypes';
 import { parseDuration } from '../lib/helpers';
 
-export const parseVideoData = ({
-    id = '',
-    contentDetails: { duration = '' } = {},
+interface YoutubeVideoData {
+    id: string;
+    contentDetails: { duration: string };
     snippet: {
-        title = '',
-        description = '',
-        thumbnails = {},
-        channelId = '',
-        channelTitle = '',
-        publishedAt = ''
-    } = {},
-    status: { privacyStatus = 'deleted' } = {}
-}) => ({
+        title: string;
+        description: string;
+        thumbnails: ThumbnailsData;
+        channelId: string;
+        channelTitle: string;
+        publishedAt: string;
+    };
+    status: { privacyStatus: string };
+}
+
+interface YoutubePlaylistData {
+    id: string;
+    contentDetails: { itemCount: number };
+    snippet: { title: string; thumbnails: ThumbnailsData };
+    status: { privacyStatus: string };
+}
+
+interface YoutubeChannelData {
+    id: string;
+    snippet: { title: string; thumbnails: ThumbnailsData };
+}
+
+export const parseVideoData = ({
+    id,
+    contentDetails: { duration },
+    snippet: {
+        title,
+        description,
+        thumbnails,
+        channelId,
+        channelTitle,
+        publishedAt
+    },
+    status: { privacyStatus = 'deleted' }
+}: YoutubeVideoData) => ({
     id,
     title,
     description,
@@ -26,10 +53,10 @@ export const parseVideoData = ({
 
 export const parsePlaylistData = ({
     id,
-    contentDetails: { itemCount = 0 } = {},
+    contentDetails: { itemCount = 0 },
     snippet: { title, thumbnails },
     status: { privacyStatus }
-}) => ({
+}: YoutubePlaylistData) => ({
     id,
     title,
     thumbnails,
@@ -37,7 +64,10 @@ export const parsePlaylistData = ({
     privacyStatus
 });
 
-export const parseChannelData = ({ id, snippet: { title, thumbnails } }) => ({
+export const parseChannelData = ({
+    id,
+    snippet: { title, thumbnails }
+}: YoutubeChannelData) => ({
     id,
     title,
     thumbnails

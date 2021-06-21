@@ -21,23 +21,20 @@ const QueueItem: FunctionComponent<Props> = ({
     icon
 }) => (
     <div
-        className={[
-            'queue__item shadow--2dp',
-            isActive ? 'queue__item--active' : ''
-        ].join(' ')}
+        className={`QueueItem shadow--2dp ${isActive ? 'is-active' : ''}`}
         onClick={onClick}
         onContextMenu={onContextMenu}
     >
-        <div className="queue__item-button icon-button">
+        <div className="QueueItem__Button icon-button">
             <Icon name={icon} />
         </div>
 
-        <div className="queue__item-title">{title}</div>
+        <div className="QueueItem__Title">{title}</div>
 
-        <div className="queue__item-duration">{formatTime(duration)}</div>
+        <div className="QueueItem__Duration">{formatTime(duration)}</div>
 
         <button
-            className="queue__item-button icon-button"
+            className="QueueItem__Button icon-button"
             onClick={stopPropagation(onContextMenu)}
         >
             <Icon name="more" />

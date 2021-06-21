@@ -142,13 +142,13 @@ const Info: FunctionComponent<Props> = ({
     }, [isSeeking, seekingTime]);
 
     return (
-        <div className="player__info">
+        <div className="PlayerInfo">
             <InfoProgress
                 percentElapsed={duration ? time / duration : 0}
                 percentLoaded={loaded}
             />
 
-            <div className="player__info-title">{title}</div>
+            <div className="PlayerInfo__Title">{title}</div>
 
             <InfoTime time={time} duration={duration} />
 
@@ -157,9 +157,9 @@ const Info: FunctionComponent<Props> = ({
             </label>
 
             <input
-                aria-label="Seek time"
                 id="seek-time"
-                className="player__info-progress-loaded"
+                className="PlayerInfo__Seek"
+                aria-label="Seek time"
                 type="range"
                 min="0"
                 max={duration}

@@ -5,6 +5,9 @@
 @import 'common/_helpers';
 @import 'common/_global';
 
+@import 'layouts/_header';
+@import 'layouts/_content';
+
 @import 'components/_prompt';
 @import 'components/_buttons';
 @import 'components/_dropdown';
@@ -12,7 +15,6 @@
 @import 'components/_forms';
 @import 'components/_tabs';
 @import 'components/_list';
-@import 'components/_modal';
 @import 'components/_notifications';
 @import 'components/_channel';
 @import 'components/_menu';
@@ -20,8 +22,3 @@
 @import 'components/player/_player';
 @import 'components/player/_queue';
 @import 'components/player/_screen';
-
-@import 'components/_range';
-
-@import 'layouts/_header';
-@import 'layouts/_content';

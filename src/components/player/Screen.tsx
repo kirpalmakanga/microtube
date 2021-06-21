@@ -35,7 +35,7 @@ const Screen: FunctionComponent<Props> = ({
     onEnd,
     onStateChange
 }) => (
-    <div className="screen" data-state={isVisible ? 'visible' : 'hidden'}>
+    <div className={`screen ${isVisible ? 'is-visible' : ''}`}>
         {videoId ? (
             <YoutubePlayer
                 videoId={videoId}

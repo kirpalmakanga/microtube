@@ -12,11 +12,11 @@ const Progress: FunctionComponent<Props> = ({
     percentLoaded
 }) => {
     return (
-        <div className="player__info-progress">
-            <div className="player__info-progress-gutter">
+        <div className="PlayerInfoProgress">
+            <div className="PlayerInfoProgress__Gutter">
                 {percentLoaded ? (
                     <div
-                        className="player__info-progress-loaded"
+                        className="PlayerInfoProgress__Gutter__Loaded"
                         style={{
                             transform: `translateX(${formatPercent(
                                 percentLoaded
@@ -27,7 +27,7 @@ const Progress: FunctionComponent<Props> = ({
 
                 {percentElapsed ? (
                     <div
-                        className="player__info-progress-played"
+                        className="PlayerInfoProgress__Gutter__Played"
                         style={{
                             opacity: percentElapsed ? 1 : 0,
                             transform: `translateX(${formatPercent(

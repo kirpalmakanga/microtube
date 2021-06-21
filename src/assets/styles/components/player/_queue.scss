@@ -1,4 +1,4 @@
-.queue {
+.Queue {
     overflow: hidden;
     background-color: lighten($brand-primary, 20%);
     @include transition(transform);
@@ -9,29 +9,21 @@
     bottom: 100px;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 -2px 2px 0 rgba($brand-primary, 0.14),
+        0 3px 1px -2px rgba($brand-primary, 0.2),
+        0 1px 5px 0 rgba($brand-primary, 0.12);
+    transform: translateY(calc(100% + 100px));
 
     @media screen and (min-width: 480px) {
         bottom: 50px;
+        transform: translateY(calc(100% + 50px));
     }
 
-    &[data-state='hidden'] {
-        transform: translateY(calc(100% + 100px));
-
-        @media screen and (min-width: 480px) {
-            transform: translateY(calc(100% + 50px));
-        }
-    }
-
-    &[data-state='visible'] {
+    &.is-visible {
         transform: translate(0);
     }
 
-    &__header {
-        background-color: $brand-primary;
-        height: 50px;
-    }
-
-    &__content {
+    &__Content {
         position: relative;
         flex: 1;
         overflow: hidden;
@@ -39,87 +31,88 @@
         flex-direction: column;
     }
 
-    &__items {
+    &__Items {
         position: relative;
         overflow-x: hidden;
         overflow-y: scroll;
         flex: 1;
+        & > [draggable] {
+            height: 50px;
+        }
+    }
+}
+
+.QueueItem {
+    height: 50px;
+    @include transition(background-color, 0.2s, ease-out);
+    border-bottom: 2px solid rgba($brand-primary, 0.5);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    background-color: lighten($brand-primary, 20%);
+
+    &:active {
+        cursor: grabbing;
     }
 
-    &__items > [draggable],
-    &__item {
-        height: 50px;
+    @media screen and (min-width: 480px) {
+        &:hover {
+            background-color: lighten($brand-primary, 30%);
+        }
     }
 
-    &__item {
-        @include transition(background-color, 0.2s, ease-out);
-        border-bottom: 2px solid rgba($brand-primary, 0.5);
+    &__Title,
+    &__Duration {
+        text-transform: uppercase;
+        font-size: 12px;
+        font-family: $font-primary;
+        padding: 15px 15px 15px 0px;
+
+        @media screen and (min-width: 480px) {
+            font-size: 16px;
+        }
+    }
+
+    &__Title {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        flex: 1;
+        font-weight: 500;
+    }
+
+    &__Button {
+        padding: 0;
+        background-color: transparent;
+        fill: $brand-secondary;
         display: flex;
         align-items: center;
+        justify-content: center;
+        border: none;
+        height: 48px;
+        width: 40px;
         cursor: pointer;
-        -webkit-tap-highlight-color: transparent;
-        position: relative;
-        background-color: lighten($brand-primary, 20%);
-        // min-height: 50px;
 
-        &:active {
-            cursor: grabbing;
-        }
-        @media screen and (min-width: 480px) {
-            &:hover {
-                background-color: lighten($brand-primary, 30%);
-            }
-        }
-
-        &-title,
-        &-duration {
-            text-transform: uppercase;
-            font-size: 12px;
-            font-family: $font-primary;
-            padding: 15px 15px 15px 0px;
-
+        svg {
+            height: 22px;
+            width: 22px;
             @media screen and (min-width: 480px) {
-                font-size: 16px;
+                height: 24px;
+                width: 24px;
             }
         }
 
-        &-title {
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-            flex: 1;
-            font-weight: 500;
-        }
-
-        &-button {
-            padding: 0;
-            background-color: transparent;
-            fill: $brand-secondary;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: none;
-            height: 48px;
-            width: 40px;
-            cursor: pointer;
-
-            svg {
-                height: 22px;
-                width: 22px;
-                @media screen and (min-width: 480px) {
-                    height: 24px;
-                    width: 24px;
-                }
-            }
-
-            &:focus {
-                outline: none;
-            }
+        &:focus {
+            outline: none;
         }
     }
 
-    &__item--active,
-    &__item--active:hover {
-        background-color: lighten($brand-primary, 40%);
+    &.is-active {
+        &,
+        &:hover {
+            background-color: lighten($brand-primary, 40%);
+        }
     }
 }

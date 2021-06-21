@@ -19,7 +19,7 @@ const getService = async (service: string) => {
     const gapi = await loadAPI();
 
     if (!gapi[service]) {
-        await new Promise((callback) => gapi.load(service, { callback }));
+        await new Promise((resolve) => gapi.load(service, resolve));
     }
 
     return gapi[service];
@@ -28,12 +28,10 @@ const getService = async (service: string) => {
 const getAuthInstance = async () => {
     const auth2 = await getService('auth2');
 
-    const params = {
+    return auth2.init({
         clientId: GOOGLE_CLIENT_ID,
         scope: GOOGLE_CLIENT_SCOPE
-    };
-
-    return auth2.init(params);
+    });
 };
 
 export const getSignedInUser = async () => {

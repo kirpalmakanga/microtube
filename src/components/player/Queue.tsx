@@ -36,7 +36,7 @@ const Queue: FunctionComponent<Props> = ({
     togglePlay
 }) => {
     const [
-        { queue: items, currentId, isQueueVisible },
+        { queue: items, currentId },
         {
             subscribeToQueue,
             subscribeToCurrentQueueId,
@@ -97,8 +97,7 @@ const Queue: FunctionComponent<Props> = ({
 
     return (
         <section
-            className="queue shadow--2dp"
-            data-state={isVisible ? 'visible' : 'hidden'}
+            className={`Queue shadow--2dp ${isVisible ? 'is-visible' : ''}`}
         >
             <QueueHeader
                 itemCount={items.length}
@@ -107,7 +106,7 @@ const Queue: FunctionComponent<Props> = ({
                 onClickClear={clearQueue}
             />
 
-            <div className="queue__content">
+            <div className="Queue__Content">
                 {items.length ? (
                     <MenuWrapper
                         menuItems={[
@@ -130,7 +129,7 @@ const Queue: FunctionComponent<Props> = ({
                     >
                         {(openMenu) => (
                             <DraggableList
-                                className="queue__items"
+                                className="Queue__Items"
                                 items={items}
                                 renderItem={(data: QueueItemData) => {
                                     const { id } = data;

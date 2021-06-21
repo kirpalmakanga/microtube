@@ -7,6 +7,11 @@
     right: 0;
     bottom: 100px;
     display: flex;
+    transform: translateY(100%);
+
+    @media screen and (min-width: 480px) {
+        bottom: 50px;
+    }
 
     & > div {
         flex: 1;
@@ -22,17 +27,8 @@
         }
     }
 
-    &[data-state='hidden'] {
-        transform: translateY(100%);
-        visibility: hidden;
-    }
-
-    &[data-state='visible'] {
+    &.is-visible {
         transform: translate(0);
-    }
-
-    @media screen and (min-width: 480px) {
-        bottom: 50px;
     }
 
     [data-state-fullscreen='enabled'] & {

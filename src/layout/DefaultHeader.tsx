@@ -83,7 +83,7 @@ const DefaultHeader = () => {
                         {picture ? <Img src={picture} alt="avatar" /> : null}
                     </Button>
                     <Fade in={isSignedIn && isMenuOpen}>
-                        <div className="navigation__menu__content">
+                        <div className="navigation__menu__content shadow--2dp">
                             <p className="navigation__menu__content__text">
                                 {name}
                             </p>

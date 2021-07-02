@@ -2,20 +2,20 @@ import { SyntheticEvent } from 'react';
 import { ThumbnailsData, ShareConfig } from '../../@types/alltypes';
 import { format } from 'date-fns';
 
-export const preventDefault = (func = (e: SyntheticEvent) => {}) => (
-    e: SyntheticEvent
-) => {
-    e.preventDefault();
+export const preventDefault =
+    (func = (e: SyntheticEvent) => {}) =>
+    (e: SyntheticEvent) => {
+        e.preventDefault();
 
-    func(e);
-};
+        func(e);
+    };
 
-export const stopPropagation = (func = (e: SyntheticEvent) => {}) => (
-    e: SyntheticEvent
-) => {
-    e.stopPropagation();
-    func && func(e);
-};
+export const stopPropagation =
+    (func = (e: SyntheticEvent) => {}) =>
+    (e: SyntheticEvent) => {
+        e.stopPropagation();
+        func && func(e);
+    };
 
 export const getThumbnails = (
     thumbnails: ThumbnailsData,
@@ -181,9 +181,8 @@ export const pick = (obj: { [key: string]: unknown }, whitelist: string[]) => {
 
         return result;
     }
-    {
-        return obj;
-    }
+
+    return obj;
 };
 
 export const omit = (obj: { [key: string]: unknown }, blacklist: string[]) => {
@@ -200,7 +199,8 @@ export const omit = (obj: { [key: string]: unknown }, blacklist: string[]) => {
 
 export const wrapURLs = (text: string) => {
     // http://, https://, ftp://
-    const urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
+    const urlPattern =
+        /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
 
     // www. sans http:// or https://
     const pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;

@@ -88,8 +88,14 @@ const Info: FunctionComponent<Props> = ({
     };
 
     const clearWatchers = () => {
-        if (timeWatcher.current) clearInterval(timeWatcher.current);
-        if (loadingWatcher.current) clearInterval(loadingWatcher.current);
+        if (timeWatcher.current) {
+            clearInterval(timeWatcher.current);
+            timeWatcher.current = null;
+        }
+        if (loadingWatcher.current) {
+            clearInterval(loadingWatcher.current);
+            loadingWatcher.current = null;
+        }
     };
 
     const time = isSeeking ? seekingTime : currentTime;
@@ -117,17 +123,7 @@ const Info: FunctionComponent<Props> = ({
         if (isWatchingDisabled) {
             clearWatchers();
         } else {
-            timeWatcher.current = setImmediateInterval(() => {
-                const currentTime = getCurrentTime();
-
-                if (currentTime !== null) {
-                    setState({ currentTime });
-                }
-            }, 200);
-
-            loadingWatcher.current = setImmediateInterval(() => {
-                startWatchers();
-            }, 500);
+            startWatchers();
         }
 
         return () => {

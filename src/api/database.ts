@@ -13,6 +13,8 @@ import { FIREBASE_CONFIG } from '../config/api';
 
 initializeApp(FIREBASE_CONFIG);
 
+const getRef = (path: string) => ref(getDatabase(), path);
+
 export const signIntoDatabase = (idToken: string, accessToken: string) => {
     const auth = getAuth();
     const credential = GoogleAuthProvider.credential(idToken, accessToken);
@@ -26,18 +28,18 @@ export const signOutOfDatabase = () => {
     return signOut(auth);
 };
 
-export const saveData = async (path: string, data: string | object) => {
-    const db = getDatabase();
+export const saveData = async (path: string, data: string | object) =>
+    set(getRef(path), data);
 
-    return set(ref(db, path), data);
-};
-
-export const subscribeToData = async (path: string, callback: Function) => {
-    const reference = ref(getDatabase(), path);
+export const subscribeToData = (path: string, callback: Function) => {
+    const reference = getRef(path);
     const handler = (snapshot: DataSnapshot) =>
         callback(snapshot.val() || undefined);
 
     onValue(reference, handler);
 
-    return () => off(reference, 'value', handler);
+    return () => {
+        console.log('unsubscribe');
+        off(reference, 'value', handler);
+    };
 };

@@ -31,29 +31,28 @@ export const usePlayer = () => {
 
     const { queue, currentId } = player;
 
-    const subscribeToQueue = useCallback(() => {
-        const unsubscribePromise = subscribeToData(queuePath, (queue = []) => {
-            dispatch((_: Dispatch<Action>, getState: GetState) => {
-                const {
-                    player: { queue: previousQueue }
-                } = getState();
+    const subscribeToQueue = useCallback(
+        () =>
+            subscribeToData(queuePath, (queue = []) =>
+                dispatch((_: Dispatch<Action>, getState: GetState) => {
+                    const {
+                        player: { queue: previousQueue }
+                    } = getState();
 
-                if (!isEqual(queue, previousQueue)) {
-                    dispatch({
-                        type: 'player/UPDATE_DATA',
-                        payload: { queue }
-                    });
-                }
-            });
-        });
+                    if (!isEqual(queue, previousQueue)) {
+                        dispatch({
+                            type: 'player/UPDATE_DATA',
+                            payload: { queue }
+                        });
+                    }
+                })
+            ),
+        []
+    );
 
-        return async () => (await unsubscribePromise)();
-    }, []);
-
-    const subscribeToCurrentQueueId = useCallback(() => {
-        const unsubscribePromise = subscribeToData(
-            currentIdPath,
-            (currentId = '') => {
+    const subscribeToCurrentQueueId = useCallback(
+        () =>
+            subscribeToData(currentIdPath, (currentId = '') =>
                 dispatch((_: Dispatch<Action>, getState: GetState) => {
                     const {
                         player: { currentId: previousCurrentId }
@@ -65,12 +64,10 @@ export const usePlayer = () => {
                             payload: { currentId }
                         });
                     }
-                });
-            }
-        );
-
-        return async () => (await unsubscribePromise)();
-    }, []);
+                })
+            ),
+        []
+    );
 
     const setQueue = (queue: QueueItem[]) => {
         dispatch({ type: 'player/UPDATE_DATA', payload: { queue } });

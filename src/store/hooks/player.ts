@@ -150,18 +150,10 @@ export const usePlayer = () => {
                 headerText: 'Clear queue ?',
                 confirmText: 'Clear',
                 cancelText: 'Cancel',
-                callback: () => {
-                    const clearedQueue: QueueItem[] = queue.filter(
-                        ({ id }: QueueItem) => id === currentId
-                    );
-
-                    dispatch({
-                        type: 'player/UPDATE_DATA',
-                        payload: { queue: clearedQueue }
-                    });
-
-                    saveData(queuePath, clearedQueue);
-                }
+                callback: () =>
+                    setQueue(
+                        queue.filter(({ id }: QueueItem) => id === currentId)
+                    )
             }),
         [queue, currentId]
     );

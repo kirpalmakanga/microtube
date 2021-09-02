@@ -77,8 +77,10 @@ $contrast: 5% !default;
     &::-webkit-slider-thumb {
         @include thumb();
         -webkit-appearance: none;
-        margin-top: ((-$track-border-width * 2 + $track-height) / 2) -
-            ($thumb-height / 2);
+        margin-top: calc(
+            (-#{$track-border-width} * 2 + #{$track-height}) / 2 - #{$thumb-height} /
+                2
+        );
     }
 
     &:focus::-webkit-slider-runnable-track {

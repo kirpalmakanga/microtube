@@ -131,12 +131,6 @@ const Info: FunctionComponent<Props> = ({
         };
     }, [isWatchingDisabled]);
 
-    useUpdateEffect(() => {
-        if (!isSeeking) {
-            onEndSeeking(seekingTime);
-        }
-    }, [isSeeking, seekingTime]);
-
     return (
         <div className="PlayerInfo">
             <InfoProgress

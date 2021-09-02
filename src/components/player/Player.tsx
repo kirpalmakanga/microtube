@@ -69,10 +69,9 @@ const Player = () => {
         volume: 100
     });
 
-    const [
-        { video, queue, currentId, newQueueItems },
-        { goToNextQueueItem }
-    ] = usePlayer();
+    const [{ video, queue, currentId, newQueueItems }, { goToNextQueueItem }] =
+        usePlayer();
+
     const [, { editPlaylistItem }] = usePlaylistItems();
 
     const {
@@ -104,7 +103,11 @@ const Player = () => {
 
     const isSingleVideo = !!video.id;
 
-    const { id: videoId, title, duration } = video.id
+    const {
+        id: videoId,
+        title,
+        duration
+    } = video.id
         ? video
         : queue[currentQueueIndex] || {
               id: '',
@@ -189,8 +192,8 @@ const Player = () => {
             isBuffering: false
         });
 
-    const handleSeeking = (t: number) => {
-        youtube.current?.seekTo(t, true);
+    const handleSeeking = (currentTime: number) => {
+        youtube.current?.seekTo(currentTime, true);
 
         handlePlay();
     };

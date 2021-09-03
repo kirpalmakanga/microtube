@@ -24,7 +24,7 @@ const rowHeight = isMobile() ? 3 : 6;
 interface Props {
     className?: string;
     items: unknown[];
-    itemSize?: number;
+    itemSize?: (containerHeight: number) => number;
     renderItem: (data: any) => ReactNode;
     itemKey?: (data?: any) => Key;
     loadMoreItems: Function;
@@ -80,7 +80,8 @@ const List: FunctionComponent<Props> = ({
     );
 
     const _itemSize = useCallback(
-        (containerHeight) => itemSize ?? containerHeight / rowHeight,
+        (containerHeight) =>
+            itemSize(containerHeight) ?? containerHeight / rowHeight,
         []
     );
 

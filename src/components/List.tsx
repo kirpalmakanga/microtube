@@ -81,7 +81,7 @@ const List: FunctionComponent<Props> = ({
 
     const _itemSize = useCallback(
         (containerHeight) =>
-            itemSize(containerHeight) ?? containerHeight / rowHeight,
+            itemSize ? itemSize(containerHeight) : containerHeight / rowHeight,
         []
     );
 

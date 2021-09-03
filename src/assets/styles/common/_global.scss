@@ -106,6 +106,7 @@ input {
 .image {
     display: inline-block;
     position: relative;
+    overflow: hidden;
     margin: 0;
 
     &,
@@ -143,6 +144,9 @@ input {
 
     img {
         display: block;
+        text-indent: 100%;
+        white-space: nowrap;
+        overflow: hidden;
     }
 }
 

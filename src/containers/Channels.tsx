@@ -9,10 +9,7 @@ import { ChannelData } from '../../@types/alltypes';
 
 const Subscriptions = () => {
     const navigate = useNavigate();
-    const [
-        { items, totalResults },
-        { getSubscriptions, subscribeToChannel, unsubscribeFromChannel }
-    ] = useSubscriptions();
+    const [{ items, totalResults }, { getSubscriptions }] = useSubscriptions();
 
     return totalResults === 0 ? (
         <Placeholder
@@ -26,19 +23,12 @@ const Subscriptions = () => {
             itemKey={({ id }: ChannelData) => id}
             loadMoreItems={getSubscriptions}
             renderItem={(data) => {
-                const { id, title, subscriptionId } = data;
-
-                const handleSubscribeToChannel = () => subscribeToChannel(id);
-
-                const handleUnsubscribeFromChannel = () =>
-                    unsubscribeFromChannel(subscriptionId, title);
+                const { id } = data;
 
                 return (
                     <ChannelCard
                         {...data}
                         goToChannel={() => navigate(`/channel/${id}`)}
-                        subscribe={handleSubscribeToChannel}
-                        unsubscribe={handleUnsubscribeFromChannel}
                     />
                 );
             }}

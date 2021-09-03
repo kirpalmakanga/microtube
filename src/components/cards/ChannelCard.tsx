@@ -8,28 +8,20 @@ import CardContainer from './CardContainer';
 import CardContent from './CardContent';
 import CardContentInner from './CardContentInner';
 import CardThumbnail from './CardThumbnail';
-import CardButtons from './CardButtons';
-import Button from './CardButton';
 import Title from './CardTitle';
 
 interface Props {
     title: string;
     thumbnails: ThumbnailsData;
-    isUnsubscribed: boolean;
     totalItemCount: number;
     goToChannel: () => void;
-    unsubscribe: () => void;
-    subscribe: () => void;
 }
 
 const SubscriptionCard: FunctionComponent<Props> = ({
     title,
     thumbnails,
-    isUnsubscribed,
     totalItemCount,
-    goToChannel,
-    unsubscribe,
-    subscribe
+    goToChannel
 }) => (
     <CardContainer>
         <CardContent onClick={goToChannel}>
@@ -45,14 +37,6 @@ const SubscriptionCard: FunctionComponent<Props> = ({
                 <Title>{title}</Title>
             </CardContentInner>
         </CardContent>
-
-        <CardButtons>
-            {isUnsubscribed ? (
-                <Button title="Subscribe" icon="check" onClick={subscribe} />
-            ) : (
-                <Button icon="error" onClick={unsubscribe} />
-            )}
-        </CardButtons>
     </CardContainer>
 );
 

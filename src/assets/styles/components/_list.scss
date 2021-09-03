@@ -9,7 +9,7 @@ $gutter: 16px;
     &__loading {
         @include transition(opacity);
         opacity: 0;
-        padding: 8px 0;
+        padding: 1rem 0;
         display: flex;
         flex: 1;
         fill: $brand-secondary;
@@ -21,8 +21,8 @@ $gutter: 16px;
         }
 
         svg {
-            height: 48px;
-            width: 48px;
+            height: 2rem;
+            width: 2rem;
         }
     }
 }

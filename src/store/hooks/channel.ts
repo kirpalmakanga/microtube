@@ -3,10 +3,12 @@ import * as api from '../../api/youtube';
 import { useStore } from '..';
 import { useNotifications } from './notifications';
 import { Action, Dispatch, GetState } from '../helpers';
+import { usePrompt } from './prompt';
 
 export const useChannel = (channelId: string) => {
     const [{ channel }, dispatch] = useStore();
     const [, { openNotification }] = useNotifications();
+    const [, { openPrompt }] = usePrompt();
 
     const getChannel = async () => {
         try {
@@ -42,8 +44,49 @@ export const useChannel = (channelId: string) => {
 
     const clearChannelVideos = () => dispatch({ type: 'channel/CLEAR_ITEMS' });
 
+    const toggleSubscription = async () => {
+        const { channelTitle, subscriptionId } = channel;
+
+        if (subscriptionId) {
+            openPrompt({
+                headerText: `Unsubscribe from ${channelTitle}`,
+                confirmText: 'OK',
+                cancelText: 'Cancel',
+                async callback() {
+                    try {
+                        dispatch({
+                            type: 'channel/UPDATE_DATA',
+                            payload: { subscriptionId: '' }
+                        });
+
+                        await api.unsubscribeFromChannel(subscriptionId);
+                    } catch (error) {
+                        openNotification('Error unsubscribing to channel.');
+                    }
+                }
+            });
+        } else {
+            try {
+                const subscriptionId = await api.subscribeToChannel(channelId);
+
+                dispatch({
+                    type: 'channel/UPDATE_DATA',
+                    payload: { subscriptionId }
+                });
+            } catch (error) {
+                openNotification('Error subscribing to channel.');
+            }
+        }
+    };
+
     return [
         channel,
-        { getChannel, clearChannelData, getChannelVideos, clearChannelVideos }
+        {
+            getChannel,
+            clearChannelData,
+            getChannelVideos,
+            clearChannelVideos,
+            toggleSubscription
+        }
     ];
 };

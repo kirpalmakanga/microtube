@@ -431,7 +431,15 @@ export async function getChannel(id: string) {
         snippet: { title: channelTitle, thumbnails, description }
     } = items[0];
 
-    return { channelTitle, description, thumbnails };
+    const {
+        items: [{ id: subscriptionId } = { id: '' }]
+    } = await request('GET', 'subscriptions', {
+        mine: true,
+        forChannelId: id,
+        part: 'id'
+    });
+
+    return { channelTitle, subscriptionId, description, thumbnails };
 }
 
 export async function getChannelVideos({
@@ -464,7 +472,7 @@ export async function getChannelVideos({
 }
 
 export async function subscribeToChannel(channelId: string) {
-    return request(
+    const { id } = await request(
         'POST',
         'subscriptions',
         { part: 'snippet' },
@@ -477,6 +485,8 @@ export async function subscribeToChannel(channelId: string) {
             }
         }
     );
+
+    return id;
 }
 
 export async function unsubscribeFromChannel(id: string) {

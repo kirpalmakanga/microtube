@@ -23,6 +23,23 @@
     &__details {
         &-title {
             font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            @include transition();
+            background-color: $brand-primary;
+            color: $white;
+            border: none;
+            cursor: pointer;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-family: $font-primary;
+
+            &:hover {
+                background-color: lighten($brand-primary, 10%);
+            }
         }
     }
 

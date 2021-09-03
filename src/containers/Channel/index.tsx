@@ -1,10 +1,11 @@
 import { useEffect, FunctionComponent, ReactNode } from 'react';
-import { Outlet, NavLink, useParams, useLocation } from 'react-router-dom';
+import { Outlet, NavLink, useParams } from 'react-router-dom';
 
 import { getThumbnails } from '../../lib/helpers';
 
 import Img from '../../components/Img';
 import { useChannel } from '../../store/hooks/channel';
+import Button from '../../components/Button';
 
 interface TabsProps {
     children: ReactNode[];
@@ -22,8 +23,10 @@ const Tabs: FunctionComponent<TabsProps> = ({ children }) => (
 
 const Channel = () => {
     const { channelId } = useParams();
-    const [{ channelTitle, thumbnails }, { getChannel, clearChannelData }] =
-        useChannel(channelId);
+    const [
+        { channelTitle, thumbnails, subscriptionId },
+        { getChannel, clearChannelData, toggleSubscription }
+    ] = useChannel(channelId);
 
     useEffect(() => {
         getChannel(channelId);
@@ -46,6 +49,13 @@ const Channel = () => {
                         <div className="channel__details-title">
                             {channelTitle}
                         </div>
+
+                        <Button
+                            title={
+                                subscriptionId ? 'Unsubscribe' : 'Subscribed'
+                            }
+                            onClick={toggleSubscription}
+                        />
                     </div>
                 </div>
 

@@ -8,7 +8,7 @@ const ChannelAbout = () => {
     const [{ description }] = useChannel(channelId);
 
     return (
-        <div style={{ paddingLeft: '20px', paddingRight: '20px' }}>
+        <div className="channel__description">
             {description
                 ? wrapURLs(description)
                       .split('\n')

@@ -12,7 +12,9 @@ const ChannelAbout = () => {
             {description
                 ? wrapURLs(description)
                       .split('\n')
-                      .filter(Boolean)
+                      .filter(
+                          (text) => typeof text === 'string' && !!text.trim()
+                      )
                       .map((line: string, index: number) => (
                           <p
                               key={index}

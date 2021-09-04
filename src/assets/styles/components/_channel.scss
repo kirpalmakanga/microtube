@@ -53,6 +53,12 @@
 
     &__description {
         padding: 1rem;
+
+        p {
+            &:not(:last-child) {
+                margin-bottom: 1rem;
+            }
+        }
     }
 }
 

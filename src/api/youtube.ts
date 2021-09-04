@@ -431,8 +431,6 @@ export async function getChannel(id: string) {
         snippet: { title: channelTitle, thumbnails, description }
     } = items[0];
 
-    console.log(description);
-
     const {
         items: [{ id: subscriptionId } = { id: '' }]
     } = await request('GET', 'subscriptions', {

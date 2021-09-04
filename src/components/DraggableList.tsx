@@ -1,4 +1,10 @@
-import { useRef, FunctionComponent, ReactNode } from 'react';
+import {
+    useRef,
+    FunctionComponent,
+    ReactNode,
+    MutableRefObject,
+    RefObject
+} from 'react';
 import {
     DragDropContext,
     Droppable,
@@ -6,6 +12,21 @@ import {
     DropResult
 } from 'react-beautiful-dnd';
 import { useOnScreen } from '../lib/hooks';
+
+type CombinedRefs =
+    | MutableRefObject<HTMLElement>
+    | ((element?: HTMLElement | null | undefined) => any);
+
+interface ListProps {
+    className: string;
+    items: any[];
+    renderItem: (...args: any[]) => ReactNode;
+    onReorderItems: (updatedItems: any[]) => void;
+}
+interface ListItemProps {
+    index: number;
+    children: (isVisible: boolean) => ReactNode;
+}
 
 const reorder = (
     list: unknown[],
@@ -20,29 +41,21 @@ const reorder = (
     return result;
 };
 
-interface ListProps {
-    className: string;
-    items: any[];
-    renderItem: (...args: any[]) => ReactNode;
-    onReorderItems: (updatedItems: any[]) => void;
-}
-
-interface ListItemProps {
-    index: number;
-    children: (isVisible: boolean) => ReactNode;
-}
-
 const DraggableListItem: FunctionComponent<ListItemProps> = ({
     index,
     children
 }: ListItemProps) => {
-    const visibilityRef: any = useRef<HTMLElement | null>();
+    const visibilityRef: RefObject<HTMLElement> = useRef<HTMLElement>(null);
     const isVisible: boolean = useOnScreen(visibilityRef);
     const combinedRef =
-        (innerRef: (element?: HTMLElement | null | undefined) => any) =>
+        (...refs: CombinedRefs[]) =>
         (el: HTMLElement | null) => {
-            innerRef(el);
-            visibilityRef.current = el;
+            if (el) {
+                for (const ref of refs) {
+                    if (typeof ref === 'function') ref(el);
+                    else ref.current = el;
+                }
+            }
         };
 
     return (
@@ -53,7 +66,7 @@ const DraggableListItem: FunctionComponent<ListItemProps> = ({
         >
             {({ innerRef, draggableProps, dragHandleProps }) => (
                 <div
-                    ref={combinedRef(innerRef)}
+                    ref={combinedRef(visibilityRef, innerRef)}
                     {...draggableProps}
                     {...dragHandleProps}
                     style={{

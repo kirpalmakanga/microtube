@@ -87,7 +87,9 @@ const ChannelVideos = () => {
                 <List
                     items={items}
                     loadMoreItems={handleGetChannelVideos}
-                    itemSize={(containerHeight) => containerHeight / 5}
+                    itemSize={(containerHeight) =>
+                        containerHeight / (isMobile() ? 2 : 5)
+                    }
                     itemKey={({ id }: VideoData) => id}
                     renderItem={(data: VideoData) => (
                         <VideoCard

@@ -39,7 +39,6 @@ export const subscribeToData = (path: string, callback: Function) => {
     onValue(reference, handler);
 
     return () => {
-        console.log('unsubscribe');
         off(reference, 'value', handler);
     };
 };

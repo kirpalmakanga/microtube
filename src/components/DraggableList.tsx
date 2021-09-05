@@ -1,21 +1,12 @@
-import {
-    useRef,
-    FunctionComponent,
-    ReactNode,
-    MutableRefObject,
-    RefObject
-} from 'react';
+import { useRef, FunctionComponent, ReactNode, MutableRefObject } from 'react';
 import {
     DragDropContext,
     Droppable,
     Draggable,
     DropResult
 } from 'react-beautiful-dnd';
+import { combinedRef } from '../lib/helpers';
 import { useOnScreen } from '../lib/hooks';
-
-type CombinedRefs =
-    | MutableRefObject<HTMLElement | null>
-    | ((element?: HTMLElement | null | undefined) => any);
 
 interface ListProps {
     className: string;
@@ -45,19 +36,8 @@ const DraggableListItem: FunctionComponent<ListItemProps> = ({
     index,
     children
 }: ListItemProps) => {
-    const visibilityRef: MutableRefObject<HTMLElement | null> =
-        useRef<HTMLElement | null>(null);
-    const isVisible: boolean = useOnScreen(visibilityRef);
-    const combinedRef =
-        (...refs: CombinedRefs[]) =>
-        (el: HTMLElement | null) => {
-            if (el) {
-                for (const ref of refs) {
-                    if (typeof ref === 'function') ref(el);
-                    else ref.current = el;
-                }
-            }
-        };
+    const visibilityRef = useRef<HTMLElement | null>(null);
+    const isVisible = useOnScreen(visibilityRef);
 
     return (
         <Draggable

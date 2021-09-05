@@ -1,4 +1,4 @@
-import { SyntheticEvent } from 'react';
+import { SyntheticEvent, MutableRefObject } from 'react';
 import { ThumbnailsData, ShareConfig } from '../../@types/alltypes';
 import { format } from 'date-fns';
 
@@ -250,3 +250,18 @@ export const getPlaylistURL = (id: string) =>
 export const shareURL = (config: ShareConfig) => navigator.share(config);
 
 export const copyText = (text: string) => navigator.clipboard.writeText(text);
+
+type CombinedRefs =
+    | MutableRefObject<HTMLElement | null>
+    | ((element?: HTMLElement | null | undefined) => any);
+
+export const combinedRef =
+    (...refs: CombinedRefs[]) =>
+    (el: HTMLElement | null) => {
+        if (el) {
+            for (const ref of refs) {
+                if (typeof ref === 'function') ref(el);
+                else ref.current = el;
+            }
+        }
+    };

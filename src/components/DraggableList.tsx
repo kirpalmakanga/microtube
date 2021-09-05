@@ -1,4 +1,4 @@
-import { useRef, FunctionComponent, ReactNode, MutableRefObject } from 'react';
+import { useRef, FunctionComponent, ReactNode } from 'react';
 import {
     DragDropContext,
     Droppable,

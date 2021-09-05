@@ -14,7 +14,7 @@ import {
 import { useOnScreen } from '../lib/hooks';
 
 type CombinedRefs =
-    | MutableRefObject<HTMLElement>
+    | MutableRefObject<HTMLElement | null>
     | ((element?: HTMLElement | null | undefined) => any);
 
 interface ListProps {
@@ -45,7 +45,8 @@ const DraggableListItem: FunctionComponent<ListItemProps> = ({
     index,
     children
 }: ListItemProps) => {
-    const visibilityRef: RefObject<HTMLElement> = useRef<HTMLElement>(null);
+    const visibilityRef: MutableRefObject<HTMLElement | null> =
+        useRef<HTMLElement | null>(null);
     const isVisible: boolean = useOnScreen(visibilityRef);
     const combinedRef =
         (...refs: CombinedRefs[]) =>

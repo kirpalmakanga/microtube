@@ -24,7 +24,7 @@ const rowHeight = isMobile() ? 3 : 6;
 interface Props {
     className?: string;
     items: unknown[];
-    itemSize?: (containerHeight: number) => number;
+    itemSize?: number | ((containerHeight: number) => number);
     renderItem: (data: any) => ReactNode;
     itemKey?: (data?: any) => Key;
     loadMoreItems: Function;
@@ -66,6 +66,7 @@ const List: FunctionComponent<Props> = ({
             scrollOffset + outerContainer.current.offsetHeight;
 
         if (scrollPosition >= innerContainer.current.offsetHeight - 1) {
+            console.log('endOfScroll');
             _loadMoreItems();
         }
     }, 10);
@@ -79,11 +80,17 @@ const List: FunctionComponent<Props> = ({
         []
     );
 
-    const _itemSize = useCallback(
-        (containerHeight) =>
-            itemSize ? itemSize(containerHeight) : containerHeight / rowHeight,
-        []
-    );
+    const _itemSize = useCallback((containerHeight: number): number => {
+        switch (typeof itemSize) {
+            case 'function':
+                return itemSize(containerHeight);
+            case 'number':
+                return itemSize;
+
+            default:
+                return containerHeight / rowHeight;
+        }
+    }, []);
 
     const _itemKey = useCallback(
         (index, list) => (list[index] ? itemKey(list[index]) : index),
@@ -117,7 +124,7 @@ const List: FunctionComponent<Props> = ({
         <AutoSizer>
             {({ height, width }) => (
                 <FixedSizeList
-                    className={`list ${className}`.trim()}
+                    className={['list', className].filter(Boolean).join(' ')}
                     height={height}
                     width={width}
                     outerRef={outerContainer}
@@ -126,7 +133,7 @@ const List: FunctionComponent<Props> = ({
                     itemData={[...items]}
                     itemCount={isLoading ? items.length + 1 : items.length}
                     itemSize={_itemSize(height)}
-                    onScroll={handleScroll}
+                    onScroll={items.length ? handleScroll : undefined}
                 >
                     {Row}
                 </FixedSizeList>

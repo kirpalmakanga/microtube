@@ -17,6 +17,8 @@ const Prompt: FunctionComponent = () => {
         { closePrompt }
     ] = usePrompt();
 
+    const isMode = (...args: String[]) => args.includes(mode);
+
     const handleConfirm = (data?: unknown) => {
         closePrompt();
 
@@ -55,15 +57,15 @@ const Prompt: FunctionComponent = () => {
                     <span>{headerText}</span>
                 </header>
 
-                {mode === 'import' ? (
+                {isMode('import', 'playlists') ? (
                     <div className="dialog__content">
-                        <ImportVideoForm onSubmit={handleConfirm} />
-                    </div>
-                ) : null}
+                        {isMode('import') ? (
+                            <ImportVideoForm onSubmit={handleConfirm} />
+                        ) : null}
 
-                {mode === 'playlists' ? (
-                    <div className="dialog__content">
-                        <PlaylistManager onClickItem={handleConfirm} />
+                        {isMode('playlists') ? (
+                            <PlaylistManager onClickItem={handleConfirm} />
+                        ) : null}
                     </div>
                 ) : null}
 

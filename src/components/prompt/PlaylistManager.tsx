@@ -120,7 +120,6 @@ export const PlaylistManager: FunctionComponent<Props> = ({ onClickItem }) => {
                     itemKey={({ id }) => id}
                     loadMoreItems={getPlaylists}
                     renderItem={renderOption}
-                    itemSize={54}
                 />
             </div>
         </div>

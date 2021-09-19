@@ -40,11 +40,7 @@ const DraggableListItem: FunctionComponent<ListItemProps> = ({
     const isVisible = useOnScreen(visibilityRef);
 
     return (
-        <Draggable
-            key={`draggable${index}`}
-            draggableId={`draggable${index}`}
-            index={index}
-        >
+        <Draggable draggableId={`draggable${index}`} index={index}>
             {({ innerRef, draggableProps, dragHandleProps }) => (
                 <div
                     ref={combinedRef(visibilityRef, innerRef)}
@@ -102,7 +98,10 @@ const DraggableList: FunctionComponent<ListProps> = ({
                 {({ innerRef, placeholder }) => (
                     <div className={className} ref={getContainer(innerRef)}>
                         {items.map((props, index) => (
-                            <DraggableListItem index={index}>
+                            <DraggableListItem
+                                index={index}
+                                key={`draggable${index}`}
+                            >
                                 {(isVisible) =>
                                     isVisible ? renderItem(props) : null
                                 }

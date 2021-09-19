@@ -132,13 +132,9 @@
     .list {
         flex: 1;
         &__item {
-            height: 54px;
             &:not(:last-child) {
                 border-bottom: 1px solid lighten($brand-primary, 20%);
             }
-        }
-        &__loading .icon {
-            color: $brand-primary;
         }
     }
 

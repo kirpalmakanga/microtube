@@ -12,7 +12,6 @@ $gutter: 16px;
         padding: 1rem 0;
         display: flex;
         flex: 1;
-        fill: $brand-secondary;
         align-items: center;
         justify-content: center;
 
@@ -20,7 +19,8 @@ $gutter: 16px;
             opacity: 1;
         }
 
-        svg {
+        .icon {
+            color: $white;
             height: 2rem;
             width: 2rem;
         }

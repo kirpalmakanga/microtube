@@ -25,8 +25,6 @@ interface Props {
     onPause?: () => void;
     onEnd: () => void;
     onStateChange?: (playbackStateId: number) => void;
-    // onPlaybackRateChange?: (data: any) => void,
-    // onPlaybackQualityChange:(data: any) => void
 }
 
 interface NewOptions {
@@ -141,8 +139,6 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
                         return;
                 }
             }
-            // playbackRateChange: onPlaybackRateChange,
-            // playbackQualityChange: onPlaybackQualityChange
         };
 
         try {

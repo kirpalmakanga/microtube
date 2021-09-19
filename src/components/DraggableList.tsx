@@ -5,16 +5,18 @@ import {
     Draggable,
     DropResult
 } from 'react-beautiful-dnd';
-import { combinedRef } from '../lib/helpers';
+import { combinedRef, omit } from '../lib/helpers';
 import { useOnScreen } from '../lib/hooks';
 
 interface ListProps {
     className: string;
     items: any[];
     renderItem: (...args: any[]) => ReactNode;
+    getItemId: (props: any) => string;
     onReorderItems: (updatedItems: any[]) => void;
 }
 interface ListItemProps {
+    draggableId: string;
     index: number;
     children: (isVisible: boolean) => ReactNode;
 }
@@ -33,27 +35,32 @@ const reorder = (
 };
 
 const DraggableListItem: FunctionComponent<ListItemProps> = ({
+    draggableId,
     index,
     children
 }: ListItemProps) => {
     const visibilityRef = useRef<HTMLElement | null>(null);
-    const isVisible = useOnScreen(visibilityRef);
 
     return (
-        <Draggable draggableId={`draggable${index}`} index={index}>
-            {({ innerRef, draggableProps, dragHandleProps }) => (
-                <div
-                    ref={combinedRef(visibilityRef, innerRef)}
-                    {...draggableProps}
-                    {...dragHandleProps}
-                    style={{
-                        transition: 'opacity 0.3s ease-out',
-                        opacity: isVisible ? 1 : 0
-                    }}
-                >
-                    {children(isVisible)}
-                </div>
-            )}
+        <Draggable key={draggableId} draggableId={draggableId} index={index}>
+            {({ innerRef, draggableProps, dragHandleProps }) => {
+                const isVisible = useOnScreen(visibilityRef);
+
+                return (
+                    <div
+                        ref={combinedRef(visibilityRef, innerRef)}
+                        {...draggableProps}
+                        {...dragHandleProps}
+                        style={{
+                            ...draggableProps.style,
+                            transition: 'opacity 0.3s ease-out',
+                            opacity: isVisible ? 1 : 0
+                        }}
+                    >
+                        {children(isVisible)}
+                    </div>
+                );
+            }}
         </Draggable>
     );
 };
@@ -62,17 +69,9 @@ const DraggableList: FunctionComponent<ListProps> = ({
     className,
     items = [],
     renderItem,
+    getItemId,
     onReorderItems
 }) => {
-    const containerRef = useRef<HTMLDivElement | null>();
-
-    const getContainer =
-        (innerRef: (el: HTMLDivElement) => void) => (el: HTMLDivElement) => {
-            innerRef(el);
-
-            containerRef.current = el;
-        };
-
     const onDragEnd = (result: DropResult) => {
         if (!result.destination) {
             return;
@@ -95,12 +94,16 @@ const DraggableList: FunctionComponent<ListProps> = ({
     return items.length ? (
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppable">
-                {({ innerRef, placeholder }) => (
-                    <div className={className} ref={getContainer(innerRef)}>
+                {({ innerRef, droppableProps, placeholder }) => (
+                    <div
+                        className={className}
+                        ref={innerRef}
+                        {...droppableProps}
+                    >
                         {items.map((props, index) => (
                             <DraggableListItem
+                                draggableId={`draggable-${getItemId(props)}`}
                                 index={index}
-                                key={`draggable${index}`}
                             >
                                 {(isVisible) =>
                                     isVisible ? renderItem(props) : null

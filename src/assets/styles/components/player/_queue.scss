@@ -46,8 +46,6 @@
     height: 50px;
     @include transition(background-color, 0.2s, ease-out);
     border-bottom: 2px solid rgba($brand-primary, 0.5);
-    display: flex;
-    align-items: center;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     position: relative;
@@ -61,6 +59,17 @@
         &:hover {
             background-color: lighten($brand-primary, 30%);
         }
+    }
+
+    &,
+    &__Content {
+        display: flex;
+        align-items: center;
+    }
+
+    &__Content {
+        flex: 1;
+        overflow: hidden;
     }
 
     &__Title,
@@ -106,6 +115,14 @@
 
         &:focus {
             outline: none;
+        }
+
+        &.is-drag {
+            cursor: grab;
+
+            &:active {
+                cursor: grabbing;
+            }
         }
     }
 

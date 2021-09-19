@@ -162,6 +162,7 @@ const Queue: FunctionComponent<Props> = ({
                                         />
                                     );
                                 }}
+                                getItemId={({ id }: QueueItemData) => id}
                                 onReorderItems={setQueue}
                             />
                         )}

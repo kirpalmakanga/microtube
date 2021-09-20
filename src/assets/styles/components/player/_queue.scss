@@ -38,6 +38,10 @@
         flex: 1;
         & > [draggable] {
             height: 50px;
+
+            &:not(:last-child) .QueueItem {
+                border-bottom: 2px solid rgba($brand-primary, 0.5);
+            }
         }
     }
 }
@@ -45,7 +49,6 @@
 .QueueItem {
     @include transition(background-color, 0.2s, ease-out);
     height: 50px;
-    border-bottom: 2px solid rgba($brand-primary, 0.5);
     -webkit-tap-highlight-color: transparent;
     position: relative;
     background-color: lighten($brand-primary, 20%);

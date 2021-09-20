@@ -15,7 +15,7 @@ import {
 import InfoTime from './controls/InfoTime';
 import InfoProgress from './controls/InfoProgress';
 import { preventDefault, setImmediateInterval } from '../../lib/helpers';
-import { useMergedState, useUpdateEffect } from '../../lib/hooks';
+import { useMergedState } from '../../lib/hooks';
 import { subscribe, emit } from '../../lib/socket';
 
 interface Props {

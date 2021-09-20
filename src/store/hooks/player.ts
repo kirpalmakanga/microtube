@@ -84,7 +84,7 @@ export const usePlayer = () => {
                     )
             );
 
-            setQueue([...queue, ...items]);
+            dispatch({ type: 'player/ADD_QUEUE_ITEMS', payload: { items } });
 
             return items;
         },

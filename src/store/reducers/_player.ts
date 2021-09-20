@@ -26,7 +26,10 @@ export const initialState: PlayerState = {
     }
 };
 
-const isActiveItem = (videoId: string) => ({ id }: QueueItem) => id === videoId;
+const isActiveItem =
+    (videoId: string) =>
+    ({ id }: QueueItem) =>
+        id === videoId;
 
 const extractQueueItemData = ({
     id,

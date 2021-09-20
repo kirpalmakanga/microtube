@@ -27,16 +27,15 @@ const reorder = (
     destinationIndex: number
 ) => {
     const result = [...list];
-    const [removed] = result.splice(sourceIndex, 1);
 
-    result.splice(destinationIndex, 0, removed);
+    result.splice(destinationIndex, 0, ...result.splice(sourceIndex, 1));
 
     return result;
 };
 
 const DraggableListItem: FunctionComponent<ListItemProps> = ({
-    draggableId,
     index,
+    draggableId,
     children
 }: ListItemProps) => {
     const visibilityRef = useRef<HTMLElement | null>(null);
@@ -53,8 +52,12 @@ const DraggableListItem: FunctionComponent<ListItemProps> = ({
                         {...dragHandleProps}
                         style={{
                             ...draggableProps.style,
-                            transition: 'opacity 0.3s ease-out',
-                            opacity: isVisible ? 1 : 0
+                            ...(draggableProps.style?.transition
+                                ? {}
+                                : {
+                                      transition: 'opacity 0.3s ease-out',
+                                      opacity: isVisible ? 1 : 0
+                                  })
                         }}
                     >
                         {children(isVisible)}
@@ -82,13 +85,11 @@ const DraggableList: FunctionComponent<ListProps> = ({
             destination: { index: destinationIndex }
         } = result;
 
-        if (sourceIndex === destinationIndex) {
-            return;
+        if (sourceIndex !== destinationIndex) {
+            const updatedItems = reorder(items, sourceIndex, destinationIndex);
+
+            onReorderItems(updatedItems);
         }
-
-        const updatedItems = reorder(items, sourceIndex, destinationIndex);
-
-        onReorderItems(updatedItems);
     };
 
     return items.length ? (
@@ -100,16 +101,21 @@ const DraggableList: FunctionComponent<ListProps> = ({
                         ref={innerRef}
                         {...droppableProps}
                     >
-                        {items.map((props, index) => (
-                            <DraggableListItem
-                                draggableId={`draggable-${getItemId(props)}`}
-                                index={index}
-                            >
-                                {(isVisible) =>
-                                    isVisible ? renderItem(props) : null
-                                }
-                            </DraggableListItem>
-                        ))}
+                        {items.map((props, index) => {
+                            const id = getItemId(props);
+
+                            return (
+                                <DraggableListItem
+                                    key={`draggable-${id}`}
+                                    draggableId={`draggable-${id}`}
+                                    index={index}
+                                >
+                                    {(isVisible) =>
+                                        isVisible ? renderItem(props) : null
+                                    }
+                                </DraggableListItem>
+                            );
+                        })}
                         {placeholder}
                     </div>
                 )}

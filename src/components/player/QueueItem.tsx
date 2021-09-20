@@ -34,13 +34,13 @@ const QueueItem: FunctionComponent<Props> = ({
 
             <div className="QueueItem__Duration">{formatTime(duration)}</div>
         </div>
-        {/* 
-        <button
+
+        <div
             className="QueueItem__Button icon-button is-drag"
             onContextMenu={preventDefault()}
         >
             <Icon name="drag" />
-        </button> */}
+        </div>
 
         <button
             className="QueueItem__Button icon-button"

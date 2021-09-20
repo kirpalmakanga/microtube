@@ -392,6 +392,7 @@ const Player = () => {
                         isWatchingDisabled={
                             isBuffering || !isPlaying || !isMaster
                         }
+                        videoId={videoId}
                         title={title}
                         duration={duration}
                         getCurrentTime={getCurrentTime}

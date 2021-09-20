@@ -15,11 +15,12 @@ import {
 import InfoTime from './controls/InfoTime';
 import InfoProgress from './controls/InfoProgress';
 import { preventDefault, setImmediateInterval } from '../../lib/helpers';
-import { useMergedState } from '../../lib/hooks';
+import { useMergedState, useUpdateEffect } from '../../lib/hooks';
 import { subscribe, emit } from '../../lib/socket';
 
 interface Props {
     isWatchingDisabled: boolean;
+    videoId: string;
     title: string;
     duration: number;
     onStartSeeking: () => void;
@@ -30,6 +31,7 @@ interface Props {
 
 const Info: FunctionComponent<Props> = ({
     isWatchingDisabled,
+    videoId,
     title,
     duration,
     getCurrentTime,
@@ -130,6 +132,10 @@ const Info: FunctionComponent<Props> = ({
             clearWatchers();
         };
     }, [isWatchingDisabled]);
+
+    useUpdateEffect(() => {
+        setState({ currentTime: 0, loaded: 0, seekingTime: 0 });
+    }, [videoId]);
 
     return (
         <div className="PlayerInfo">

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useStore } from '..';
 import { delay } from '../../lib/helpers';
-import { Action, Dispatch, GetState } from '../helpers';
+import { GetState } from '../helpers';
 
 export const useNotifications = () => {
     const [{ notifications }, dispatch] = useStore();

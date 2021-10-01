@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { useStore } from '..';
 import { usePlaylists } from './playlists';
 import { useNotifications } from './notifications';
@@ -8,7 +6,7 @@ import { usePrompt } from './prompt';
 import { PlaylistData, PlaylistItemData } from '../../../@types/alltypes';
 
 import * as api from '../../api/youtube';
-import { Action, Dispatch, GetState } from '../helpers';
+import { GetState } from '../helpers';
 
 export const usePlaylistItems = (playlistId?: string) => {
     const [{ playlistItems }, dispatch] = useStore();

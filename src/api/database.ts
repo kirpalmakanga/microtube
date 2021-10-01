@@ -15,18 +15,13 @@ initializeApp(FIREBASE_CONFIG);
 
 const getRef = (path: string) => ref(getDatabase(), path);
 
-export const signIntoDatabase = (idToken: string, accessToken: string) => {
-    const auth = getAuth();
-    const credential = GoogleAuthProvider.credential(idToken, accessToken);
+export const signIntoDatabase = (idToken: string, accessToken: string) =>
+    signInWithCredential(
+        getAuth(),
+        GoogleAuthProvider.credential(idToken, accessToken)
+    );
 
-    return signInWithCredential(auth, credential);
-};
-
-export const signOutOfDatabase = () => {
-    const auth = getAuth();
-
-    return signOut(auth);
-};
+export const signOutOfDatabase = () => signOut(getAuth());
 
 export const saveData = async (path: string, data: string | object) =>
     set(getRef(path), data);
@@ -38,7 +33,5 @@ export const subscribeToData = (path: string, callback: Function) => {
 
     onValue(reference, handler);
 
-    return () => {
-        off(reference, 'value', handler);
-    };
+    return () => off(reference, 'value', handler);
 };

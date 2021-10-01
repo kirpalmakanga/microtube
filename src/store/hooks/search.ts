@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
 import { useStore } from '..';
 import * as api from '../../api/youtube';
-import { Action, Dispatch, GetState } from '../helpers';
+import { GetState } from '../helpers';
 import { useNotifications } from './notifications';
 
 export const useSearch = () => {

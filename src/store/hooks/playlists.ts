@@ -4,7 +4,7 @@ import * as api from '../../api/youtube';
 import { usePlayer } from './player';
 import { usePrompt } from './prompt';
 import { PlaylistData } from '../../../@types/alltypes';
-import { Action, Dispatch, GetState } from '../helpers';
+import { GetState } from '../helpers';
 
 export const usePlaylists = (channelId?: string) => {
     const [{ playlists }, dispatch] = useStore();

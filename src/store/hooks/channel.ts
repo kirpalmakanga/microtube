@@ -23,7 +23,7 @@ export const useChannel = (channelId: string) => {
     const clearChannelData = () => dispatch({ type: 'channel/CLEAR_DATA' });
 
     const getChannelVideos = () =>
-        dispatch(async (dispatch: Dispatch<Action>, getState: GetState) => {
+        dispatch(async (getState: GetState) => {
             try {
                 const {
                     channel: { nextPageToken: pageToken, hasNextPage }

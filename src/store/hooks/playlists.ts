@@ -45,7 +45,7 @@ export const usePlaylists = (channelId?: string) => {
     const launchPlaylist = (data: PlaylistData) => queuePlaylist(data, true);
 
     const getPlaylists = () =>
-        dispatch(async (dispatch: Dispatch<Action>, getState: GetState) => {
+        dispatch(async (getState: GetState) => {
             try {
                 const {
                     playlists: { nextPageToken: pageToken, hasNextPage }

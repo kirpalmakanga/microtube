@@ -26,21 +26,20 @@ export interface RootState {
 type Reducer = (state: State, action: Action) => object;
 type RootReducer = (state: State, action: Action) => RootState;
 export type Dispatch<Action> = (action: Action) => void;
-type Thunk = (dispatch: Dispatch<Action>, getState: Function) => void;
+type Thunk = (getState: Function) => void;
 export type GetState = () => RootState;
 
-export const createReducer = (
-    initialState: State,
-    handlers: Handlers
-): Reducer => (state: State, { type, payload = {} }: Action) => {
-    const { [type]: handler } = handlers;
+export const createReducer =
+    (initialState: State, handlers: Handlers): Reducer =>
+    (state: State, { type, payload = {} }: Action) => {
+        const { [type]: handler } = handlers;
 
-    if (typeof handler === 'function') {
-        return handler(state, payload);
-    }
+        if (typeof handler === 'function') {
+            return handler(state, payload);
+        }
 
-    return { ...initialState, ...state };
-};
+        return { ...initialState, ...state };
+    };
 
 export const useRootReducer = (
     reducer: Reducer,
@@ -50,10 +49,10 @@ export const useRootReducer = (
 
     const stateRef = useRef(state);
     const getState = useCallback(() => stateRef.current, [state]);
-    const reduce = useCallback((action) => reducer(getState(), action), [
-        reducer,
-        getState
-    ]);
+    const reduce = useCallback(
+        (action) => reducer(getState(), action),
+        [reducer, getState]
+    );
     const setState = useCallback(
         (action) => {
             stateRef.current = reduce(action);
@@ -65,7 +64,7 @@ export const useRootReducer = (
     const asyncDispatch: Dispatch<Action> = useCallback(
         (action: Action | Thunk) => {
             if (typeof action === 'function') {
-                return action(asyncDispatch, getState);
+                return action(getState);
             }
             return setState(action);
         },
@@ -75,15 +74,14 @@ export const useRootReducer = (
     return [state, asyncDispatch];
 };
 
-export const combineReducers = (slices: Slices): RootReducer => (
-    rootState: RootState,
-    action: Action
-) => {
-    const result = { ...rootState };
+export const combineReducers =
+    (slices: Slices): RootReducer =>
+    (rootState: RootState, action: Action) => {
+        const result = { ...rootState };
 
-    for (const [namespace, reducer] of Object.entries(slices)) {
-        result[namespace] = reducer(result[namespace], action);
-    }
+        for (const [namespace, reducer] of Object.entries(slices)) {
+            result[namespace] = reducer(result[namespace], action);
+        }
 
-    return result;
-};
+        return result;
+    };

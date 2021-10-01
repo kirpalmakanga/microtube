@@ -26,7 +26,7 @@ export const usePlaylistItems = (playlistId?: string) => {
     };
 
     const getPlaylistItems = () =>
-        dispatch(async (dispatch: Dispatch<Action>, getState: GetState) => {
+        dispatch(async (getState: GetState) => {
             try {
                 if (!playlistId) {
                     throw new Error('playlistId is required');

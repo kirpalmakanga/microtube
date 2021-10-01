@@ -9,7 +9,7 @@ export const useSearch = () => {
     const [, { openNotification }] = useNotifications();
 
     const searchVideos = (query: string) =>
-        dispatch(async (dispatch: Dispatch<Action>, getState: GetState) => {
+        dispatch(async (getState: GetState) => {
             try {
                 const {
                     search: { hasNextPage, forMine, nextPageToken: pageToken }

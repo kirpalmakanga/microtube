@@ -9,7 +9,7 @@ export const useSubscriptions = () => {
     const [, { openNotification }] = useNotifications();
 
     const getSubscriptions = (channelId: string) =>
-        dispatch(async (dispatch: Dispatch<Action>, getState: GetState) => {
+        dispatch(async (getState: GetState) => {
             try {
                 const {
                     subscriptions: { nextPageToken: pageToken, hasNextPage }

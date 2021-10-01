@@ -16,7 +16,7 @@ export const useNotifications = () => {
 
     const openNotification = useCallback(
         (message) =>
-            dispatch(async (dispatch: Dispatch<Action>, getState: GetState) => {
+            dispatch(async (getState: GetState) => {
                 dispatch({
                     type: 'notifications/OPEN',
                     payload: { message }

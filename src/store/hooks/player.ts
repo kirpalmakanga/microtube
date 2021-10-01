@@ -34,7 +34,7 @@ export const usePlayer = () => {
     const subscribeToQueue = useCallback(
         () =>
             subscribeToData(queuePath, (queue = []) =>
-                dispatch((_: Dispatch<Action>, getState: GetState) => {
+                dispatch((getState: GetState) => {
                     const {
                         player: { queue: currentQueue }
                     } = getState();
@@ -53,7 +53,7 @@ export const usePlayer = () => {
     const subscribeToCurrentQueueId = useCallback(
         () =>
             subscribeToData(currentIdPath, (currentId = '') =>
-                dispatch((_: Dispatch<Action>, getState: GetState) => {
+                dispatch((getState: GetState) => {
                     const {
                         player: { currentId: previousCurrentId }
                     } = getState();
@@ -84,7 +84,7 @@ export const usePlayer = () => {
                     )
             );
 
-            dispatch((_: Dispatch<Action>, getState: GetState) => {
+            dispatch((getState: GetState) => {
                 const {
                     player: { queue: currentQueue, newQueueItems }
                 } = getState();
@@ -194,7 +194,7 @@ export const usePlayer = () => {
     }, []);
 
     const toggleQueue = () =>
-        dispatch((_: Dispatch<Action>, getState: GetState) => {
+        dispatch((getState: GetState) => {
             const {
                 player: { isQueueVisible: currentIsQueueVisible }
             } = getState();
@@ -219,7 +219,7 @@ export const usePlayer = () => {
         });
 
     const goToNextQueueItem = (next: boolean | undefined = true) =>
-        dispatch((_: Dispatch<Action>, getState: GetState) => {
+        dispatch((getState: GetState) => {
             const {
                 player: { queue, currentId }
             } = getState();

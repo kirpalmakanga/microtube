@@ -49,6 +49,37 @@ const Info: FunctionComponent<Props> = ({
             isSeeking: false
         });
 
+    const clearWatchers = () => {
+        if (timeWatcher.current) {
+            clearInterval(timeWatcher.current);
+            timeWatcher.current = null;
+        }
+        if (loadingWatcher.current) {
+            clearInterval(loadingWatcher.current);
+            loadingWatcher.current = null;
+        }
+    };
+
+    const startWatchers = () => {
+        clearWatchers();
+
+        timeWatcher.current = setImmediateInterval(() => {
+            const currentTime = getCurrentTime();
+
+            if (currentTime !== null) {
+                setState({ currentTime });
+            }
+        }, 200);
+
+        loadingWatcher.current = setImmediateInterval(() => {
+            const loaded = getLoadingProgress();
+
+            if (loaded !== null) {
+                setState({ loaded });
+            }
+        }, 500);
+    };
+
     const startSeeking = () => {
         onStartSeeking();
 
@@ -70,35 +101,6 @@ const Info: FunctionComponent<Props> = ({
         currentTarget: { value: seekingTime }
     }: SyntheticEvent<HTMLInputElement>) =>
         setState({ seekingTime: parseInt(seekingTime) });
-
-    const startWatchers = () => {
-        timeWatcher.current = setImmediateInterval(() => {
-            const currentTime = getCurrentTime();
-
-            if (currentTime !== null) {
-                setState({ currentTime });
-            }
-        }, 200);
-
-        loadingWatcher.current = setImmediateInterval(() => {
-            const loaded = getLoadingProgress();
-
-            if (loaded !== null) {
-                setState({ loaded });
-            }
-        }, 500);
-    };
-
-    const clearWatchers = () => {
-        if (timeWatcher.current) {
-            clearInterval(timeWatcher.current);
-            timeWatcher.current = null;
-        }
-        if (loadingWatcher.current) {
-            clearInterval(loadingWatcher.current);
-            loadingWatcher.current = null;
-        }
-    };
 
     const time = isSeeking ? seekingTime : currentTime;
 

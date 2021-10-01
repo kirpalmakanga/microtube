@@ -25,7 +25,6 @@ export interface RootState {
 
 type Reducer = (state: State, action: Action) => object;
 type RootReducer = (state: State, action: Action) => RootState;
-export type Dispatch<Action> = (action: Action) => void;
 type Thunk = (getState: Function) => void;
 export type GetState = () => RootState;
 
@@ -61,7 +60,7 @@ export const useRootReducer = (
         [state, dispatch]
     );
 
-    const asyncDispatch: Dispatch<Action> = useCallback(
+    const asyncDispatch = useCallback(
         (action: Action | Thunk) => {
             if (typeof action === 'function') {
                 return action(getState);

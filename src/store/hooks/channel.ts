@@ -2,7 +2,7 @@ import * as api from '../../api/youtube';
 
 import { useStore } from '..';
 import { useNotifications } from './notifications';
-import { Action, Dispatch, GetState } from '../helpers';
+import { GetState } from '../helpers';
 import { usePrompt } from './prompt';
 
 export const useChannel = (channelId: string) => {

@@ -13,7 +13,7 @@ import * as api from '../../api/youtube';
 import { saveData, subscribeToData } from '../../api/database';
 
 import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
-import { Action, Dispatch, GetState } from '../helpers';
+import { GetState } from '../helpers';
 
 export const usePlayer = () => {
     const [{ user, player }, dispatch] = useStore();

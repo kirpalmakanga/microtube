@@ -36,10 +36,10 @@ export const usePlayer = () => {
             subscribeToData(queuePath, (queue = []) =>
                 dispatch((_: Dispatch<Action>, getState: GetState) => {
                     const {
-                        player: { queue: previousQueue }
+                        player: { queue: currentQueue }
                     } = getState();
 
-                    if (!isEqual(queue, previousQueue)) {
+                    if (!isEqual(queue, currentQueue)) {
                         dispatch({
                             type: 'player/UPDATE_DATA',
                             payload: { queue }
@@ -84,7 +84,23 @@ export const usePlayer = () => {
                     )
             );
 
-            dispatch({ type: 'player/ADD_QUEUE_ITEMS', payload: { items } });
+            dispatch((_: Dispatch<Action>, getState: GetState) => {
+                const {
+                    player: { queue: currentQueue, newQueueItems }
+                } = getState();
+
+                const queue = [...currentQueue, ...items];
+
+                dispatch({
+                    type: 'player/UPDATE_DATA',
+                    payload: {
+                        queue,
+                        newQueueItems: newQueueItems + items.length
+                    }
+                });
+
+                saveData(queuePath, queue);
+            });
 
             return items;
         },
@@ -133,9 +149,14 @@ export const usePlayer = () => {
         });
 
     const removeQueueItem = useCallback(
-        ({ id: targetId }) =>
-            setQueue(queue.filter(({ id }: QueueItem) => id !== targetId)),
-        [queue]
+        ({ id: targetId }) => {
+            setQueue(queue.filter(({ id }: QueueItem) => id !== targetId));
+
+            if (targetId === currentId) {
+                saveData(currentIdPath, '');
+            }
+        },
+        [queue, currentId]
     );
 
     const clearNewQueueItems = () =>

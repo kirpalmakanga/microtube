@@ -49,15 +49,6 @@ export default createReducer(initialState, {
         ...payload
     }),
 
-    'player/ADD_QUEUE_ITEMS': (
-        { queue, isQueueVisible, newQueueItems, ...state }: State,
-        { items = [] }: State
-    ) => ({
-        ...state,
-        queue: [...queue, ...items.map(extractQueueItemData)],
-        newQueueItems: !isQueueVisible ? newQueueItems + items.length : 0
-    }),
-
     'player/REMOVE_QUEUE_ITEM': (
         { queue, currentId, ...state }: State,
         { id }: State

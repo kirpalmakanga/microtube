@@ -99,9 +99,7 @@ export const formatTime = (t: number) => {
 
     const units = [minutes, seconds];
 
-    if (hours) {
-        units.unshift(hours);
-    }
+    if (hours) units.unshift(hours);
 
     return units.map((unit) => `${unit}`.padStart(2, '0')).join(':');
 };
@@ -145,15 +143,13 @@ export const throttle = (callback: (...args: any[]) => void, delay = 50) => {
     let lastCall = 0;
 
     return (...args: any[]) => {
-        const now = new Date().getTime();
+        const now = Date.now();
 
-        if (now - lastCall < delay) {
-            return;
+        if (now - lastCall >= delay) {
+            lastCall = now;
+
+            callback(...args);
         }
-
-        lastCall = now;
-
-        return callback(...args);
     };
 };
 
@@ -174,9 +170,7 @@ export const pick = (obj: { [key: string]: unknown }, whitelist: string[]) => {
         for (const key of whitelist) {
             const { [key]: value } = obj;
 
-            if (value) {
-                result[key] = value;
-            }
+            if (value) result[key] = value;
         }
 
         return result;
@@ -189,9 +183,7 @@ export const omit = (obj: { [key: string]: unknown }, blacklist: string[]) => {
     const result: { [key: string]: unknown } = {};
 
     for (const key in obj) {
-        if (!blacklist.includes(key)) {
-            result[key] = obj[key];
-        }
+        if (!blacklist.includes(key)) result[key] = obj[key];
     }
 
     return result;
@@ -234,12 +226,12 @@ export const loadScript = (src: string) => {
 };
 
 export const setImmediateInterval = (
-    callback: Function,
-    delay: number
+    handler: Function,
+    timeout: number
 ): number => {
-    callback();
+    handler();
 
-    return setInterval(callback, delay);
+    return setInterval(handler, timeout);
 };
 
 export const getVideoURL = (id: string) => `https://youtu.be/${id}`;

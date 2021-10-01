@@ -66,7 +66,6 @@ const List: FunctionComponent<Props> = ({
             scrollOffset + outerContainer.current.offsetHeight;
 
         if (scrollPosition >= innerContainer.current.offsetHeight - 1) {
-            console.log('endOfScroll');
             _loadMoreItems();
         }
     }, 10);

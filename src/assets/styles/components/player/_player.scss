@@ -261,6 +261,7 @@
 
         &__Loaded,
         &__Played {
+            @include transition(transform);
             transform: translateX(-100%);
             backface-visibility: hidden;
             position: absolute;

@@ -9,15 +9,11 @@ import { GenericObject } from '../../@types/alltypes';
 
 export const useFullscreen = () => {
     const container = useRef<HTMLElement | null>(null);
-    // const [isFullscreen, setIsFullscreen] = useState(false);
-
     const subscribeToFullscreen = (callback: Function) => {
         const eventName = 'fullscreenchange';
         const eventHandler = () => {
             const isFullscreen =
                 document.fullscreenElement === container.current;
-
-            // setIsFullscreen(isFullscreen);
 
             callback(isFullscreen);
         };
@@ -33,32 +29,15 @@ export const useFullscreen = () => {
         try {
             await container.current?.requestFullscreen();
         } catch (error) {}
-        // setIsFullscreen(true);
     };
 
     const exitFullscreen = async () => {
         try {
             await document.exitFullscreen();
         } catch (error) {}
-        // setIsFullscreen(false);
     };
 
-    // useEffect(() => {
-    //     const unsubscribe = subscribeToFullscreen(() => {
-    //         const { ['fullscreenElement']: fullscreenElement } = document;
-    //         const isFullscreen = fullscreenElement === container.current;
-
-    //         setIsFullscreen(isFullscreen);
-    //     });
-
-    //     return () => {
-    //         unsubscribe();
-    //         container.current = null;
-    //     };
-    // }, []);
-
     return {
-        // isFullscreen,
         setFullscreenRef,
         subscribeToFullscreen,
         requestFullscreen,
@@ -68,23 +47,23 @@ export const useFullscreen = () => {
 
 export const useKeyDown = (key: string, action: () => void) => {
     useEffect(() => {
-        const onKeydown = ({ key: eventKey }: KeyboardEvent) =>
+        const listener = ({ key: eventKey }: KeyboardEvent) =>
             eventKey === key && action();
 
-        window.addEventListener('keydown', onKeydown);
+        window.addEventListener('keydown', listener);
 
-        return () => window.removeEventListener('keydown', onKeydown);
+        return () => window.removeEventListener('keydown', listener);
     }, []);
 };
 
 export const useKeyPress = (key: string, action: () => void) => {
     useEffect(() => {
-        const onKeyup = ({ key: eventKey }: KeyboardEvent) =>
+        const listener = ({ key: eventKey }: KeyboardEvent) =>
             eventKey === key && action();
 
-        window.addEventListener('keyup', onKeyup);
+        window.addEventListener('keyup', listener);
 
-        return () => window.removeEventListener('keyup', onKeyup);
+        return () => window.removeEventListener('keyup', listener);
     }, []);
 };
 
@@ -105,13 +84,8 @@ export const useUpdateEffect = (callback: () => void, dependencies: any) => {
     const isFirstRun = useRef(true);
 
     useEffect(() => {
-        if (isFirstRun.current) {
-            isFirstRun.current = false;
-
-            return;
-        }
-
-        callback();
+        if (isFirstRun.current) isFirstRun.current = false;
+        else callback();
     }, dependencies);
 };
 
@@ -131,14 +105,10 @@ export const useOnScreen = (
             }
         );
 
-        if (ref.current) {
-            observer.observe(ref.current);
-        }
+        if (ref.current) observer.observe(ref.current);
 
         return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
-            }
+            if (ref.current) observer.unobserve(ref.current);
         };
     }, []);
 

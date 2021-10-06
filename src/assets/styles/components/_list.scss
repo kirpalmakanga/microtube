@@ -1,14 +1,37 @@
 $gutter: 16px;
 
 .list {
+    &-wrapper {
+        flex: 1;
+        position: relative;
+
+        &__loading {
+            background-color: lighten($brand-primary, 20%);
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .icon {
+                color: $white;
+                height: 2rem;
+                width: 2rem;
+            }
+        }
+    }
     &__item {
         display: flex;
-        border-bottom: 1px solid $brand-primary;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid $brand-primary;
+        }
     }
 
     &__loading {
-        @include transition(opacity);
-        opacity: 0;
         padding: 1rem 0;
         display: flex;
         flex: 1;

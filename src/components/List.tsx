@@ -117,9 +117,7 @@ const List: FunctionComponent<Props> = ({
         };
     }, []);
 
-    return isLoading && !items.length ? (
-        renderLoader()
-    ) : (
+    return (
         <AutoSizer>
             {({ height, width }) => (
                 <FixedSizeList

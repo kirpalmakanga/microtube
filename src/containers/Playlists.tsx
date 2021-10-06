@@ -18,13 +18,7 @@ const Playlists = () => {
 
     const [
         { items, totalResults },
-        {
-            getPlaylists,
-            removePlaylist,
-            queuePlaylist,
-            launchPlaylist,
-            clearPlaylists
-        }
+        { getPlaylists, removePlaylist, queuePlaylist, launchPlaylist }
     ] = usePlaylists(channelId);
 
     const [, { openNotification }] = useNotifications();
@@ -58,8 +52,6 @@ const Playlists = () => {
             openNotification('Copied link to clipboard.');
         }
     };
-
-    useEffect(() => clearPlaylists, [channelId]);
 
     return totalResults === 0 ? (
         <Placeholder

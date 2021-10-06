@@ -3,6 +3,7 @@
     "version": "1.14.0",
     "scripts": {
         "dev": "vite",
+        "dev:api": "npm --prefix ../microtube-socket run start:dev",
         "build": "vite build",
         "serve": "vite preview"
     },

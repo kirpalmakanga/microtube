@@ -143,26 +143,29 @@ const Player = () => {
     const goToVideo = (next: boolean | undefined = true) =>
         goToNextQueueItem(next);
 
-    const setPlaybackQuality = (value = 'hd1080') =>
-        youtube.current?.setPlaybackQuality(value);
-
     const toggleScreen = useCallback(() => {
         const isVisible = !isScreenVisible;
 
         updateState({
             isScreenVisible: isVisible,
-            ...(isVisible ? { isQueueVisible: false } : {})
+            ...(isVisible && !availableDevices.length
+                ? { isQueueVisible: false }
+                : {})
         });
-    }, [isScreenVisible]);
+    }, [isScreenVisible, availableDevices.length]);
 
     const toggleQueue = useCallback(() => {
         const isVisible = !isQueueVisible;
 
-        updateState({
+        console.log(availableDevices.length);
+
+        setPlayerState({
             isQueueVisible: isVisible,
-            ...(isVisible ? { isScreenVisible: false } : {})
+            ...(isVisible && !availableDevices.length
+                ? { isScreenVisible: false }
+                : {})
         });
-    }, [isQueueVisible]);
+    }, [isQueueVisible, availableDevices.length]);
 
     const handleYoutubeIframeReady = (playerInstance: YouTubePlayer) => {
         youtube.current = playerInstance;
@@ -429,7 +432,8 @@ const Player = () => {
                         </div>
                     ) : null}
 
-                    {!isSingleVideo ? (
+                    {!isSingleVideo &&
+                    (!availableDevices.length || !isMaster) ? (
                         <Button
                             className={[
                                 'player__controls-button badge icon-button',

@@ -12,8 +12,8 @@ interface ChannelState {
     };
     items: object[];
     nextPageToken: string;
-    hasNextPage: true;
-    totalResults: null;
+    hasNextPage: boolean;
+    totalResults: number | null;
 }
 
 export const initialState: ChannelState = {

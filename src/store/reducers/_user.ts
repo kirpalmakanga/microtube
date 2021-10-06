@@ -23,11 +23,3 @@ const reducer = createReducer(initialState, {
 });
 
 export default reducer;
-
-// export const UserContext = createContext(initialState);
-
-// export const UserContextProvider = ({ children }) => {
-//     return <UserContext.Provider>{children}</UserContext.Provider>
-// };
-
-// export const UserContextConsumer = UserContext.Consumer;

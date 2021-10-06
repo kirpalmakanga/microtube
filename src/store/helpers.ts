@@ -60,7 +60,7 @@ export const useRootReducer = (
         [state, dispatch]
     );
 
-    const asyncDispatch = useCallback(
+    const thunkDispatch = useCallback(
         (action: Action | Thunk) => {
             if (typeof action === 'function') {
                 return action(getState);
@@ -70,7 +70,7 @@ export const useRootReducer = (
         [getState, setState]
     );
 
-    return [state, asyncDispatch];
+    return [state, thunkDispatch];
 };
 
 export const combineReducers =

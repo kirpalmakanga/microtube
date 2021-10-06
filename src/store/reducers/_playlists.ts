@@ -3,9 +3,9 @@ import { createReducer, State } from '../helpers';
 
 interface PlaylistsState extends State {
     items: PlaylistData[];
-    nextPageToken: '';
-    totalResults: null;
-    hasNextPage: true;
+    nextPageToken: String;
+    totalResults: number | null;
+    hasNextPage: boolean;
 }
 
 export const initialState: PlaylistsState = {

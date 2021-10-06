@@ -3,9 +3,9 @@ import { ChannelData } from '../../../@types/alltypes';
 
 interface SubscriptionsState extends State {
     items: ChannelData[];
-    nextPageToken: '';
-    totalResults: null;
-    hasNextPage: true;
+    nextPageToken: String;
+    totalResults: number | null;
+    hasNextPage: boolean;
 }
 
 export const initialState: SubscriptionsState = {

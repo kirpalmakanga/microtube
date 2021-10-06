@@ -34,8 +34,8 @@ const Router = () => (
 
         <AuthRoute path="/subscriptions" element={<Channels />} />
 
-        <AuthRoute path="/channel/:channelId/*" element={<Channel />}>
-            <Route path="" element={<Navigate to="videos" />} />
+        <AuthRoute path="/channel/:channelId" element={<Channel />}>
+            <Route index element={<Navigate to="videos" />} />
 
             <Route path="videos" element={<ChannelVideos />} />
 

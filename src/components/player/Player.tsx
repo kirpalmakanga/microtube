@@ -157,8 +157,6 @@ const Player = () => {
     const toggleQueue = useCallback(() => {
         const isVisible = !isQueueVisible;
 
-        console.log(availableDevices.length);
-
         setPlayerState({
             isQueueVisible: isVisible,
             ...(isVisible && !availableDevices.length

@@ -1,21 +1,16 @@
-import {
-    memo,
-    useRef,
-    useEffect,
-    FunctionComponent,
-    SyntheticEvent
-} from 'react';
+import { Component, createEffect, onMount, onCleanup } from 'solid-js';
+import { createStore } from 'solid-js/store';
 
 import {
     PlayerSyncPayload,
     PlayerSyncHandlers,
-    GenericObject
+    GenericObject,
+    HTMLElementEvent
 } from '../../../@types/alltypes';
 
 import InfoTime from './controls/InfoTime';
 import InfoProgress from './controls/InfoProgress';
 import { preventDefault, setImmediateInterval } from '../../lib/helpers';
-import { useMergedState, useUpdateEffect } from '../../lib/hooks';
 import { subscribe, emit } from '../../lib/socket';
 
 interface Props {
@@ -29,7 +24,7 @@ interface Props {
     getLoadingProgress: () => number | null;
 }
 
-const Info: FunctionComponent<Props> = ({
+const Info: Component<Props> = ({
     isWatchingDisabled,
     videoId,
     title,
@@ -39,10 +34,11 @@ const Info: FunctionComponent<Props> = ({
     onStartSeeking,
     onEndSeeking
 }) => {
-    const timeWatcher = useRef<number | null>(null);
-    const loadingWatcher = useRef<number | null>(null);
+    let timeWatcher: number | null;
+    let loadingWatcher: number | null;
+
     const [{ loaded, currentTime, seekingTime, isSeeking }, setState] =
-        useMergedState({
+        createStore({
             loaded: 0,
             currentTime: 0,
             seekingTime: 0,
@@ -50,20 +46,20 @@ const Info: FunctionComponent<Props> = ({
         });
 
     const clearWatchers = () => {
-        if (timeWatcher.current) {
-            clearInterval(timeWatcher.current);
-            timeWatcher.current = null;
+        if (timeWatcher) {
+            clearInterval(timeWatcher);
+            timeWatcher = null;
         }
-        if (loadingWatcher.current) {
-            clearInterval(loadingWatcher.current);
-            loadingWatcher.current = null;
+        if (loadingWatcher) {
+            clearInterval(loadingWatcher);
+            loadingWatcher = null;
         }
     };
 
     const startWatchers = () => {
         clearWatchers();
 
-        timeWatcher.current = setImmediateInterval(() => {
+        timeWatcher = setImmediateInterval(() => {
             const currentTime = getCurrentTime();
 
             if (currentTime !== null) {
@@ -71,7 +67,7 @@ const Info: FunctionComponent<Props> = ({
             }
         }, 200);
 
-        loadingWatcher.current = setImmediateInterval(() => {
+        loadingWatcher = setImmediateInterval(() => {
             const loaded = getLoadingProgress();
 
             if (loaded !== null) {
@@ -99,12 +95,28 @@ const Info: FunctionComponent<Props> = ({
 
     const handleSeeking = ({
         currentTarget: { value: seekingTime }
-    }: SyntheticEvent<HTMLInputElement>) =>
+    }: HTMLElementEvent<HTMLInputElement>) =>
         setState({ seekingTime: parseInt(seekingTime) });
 
     const time = isSeeking ? seekingTime : currentTime;
 
-    useEffect(() => {
+    createEffect(() => {
+        setState({ currentTime: 0, loaded: 0, seekingTime: 0 });
+
+        return videoId;
+    });
+
+    createEffect(() => {
+        if (isWatchingDisabled) {
+            clearWatchers();
+        } else {
+            startWatchers();
+        }
+
+        return isWatchingDisabled;
+    });
+
+    onMount(() => {
         const actions: PlayerSyncHandlers = {
             'seek-time': ({ seekingTime }: GenericObject) =>
                 setState({ seekingTime }),
@@ -121,23 +133,9 @@ const Info: FunctionComponent<Props> = ({
                 handler(data);
             }
         });
-    }, []);
+    });
 
-    useEffect(() => {
-        if (isWatchingDisabled) {
-            clearWatchers();
-        } else {
-            startWatchers();
-        }
-
-        return () => {
-            clearWatchers();
-        };
-    }, [isWatchingDisabled]);
-
-    useUpdateEffect(() => {
-        setState({ currentTime: 0, loaded: 0, seekingTime: 0 });
-    }, [videoId]);
+    onCleanup(clearWatchers);
 
     return (
         <div className="PlayerInfo">
@@ -170,4 +168,4 @@ const Info: FunctionComponent<Props> = ({
     );
 };
 
-export default memo(Info);
+export default Info;

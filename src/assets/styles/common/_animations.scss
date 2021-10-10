@@ -18,3 +18,30 @@
 .rotating {
     animation: rotating 2s linear infinite;
 }
+
+.fade-enter-active,
+.fade-exit-active {
+    transition: opacity 0.3s;
+}
+.fade-enter,
+.fade-exit-to {
+    opacity: 0;
+}
+
+.slide-up-enter-active,
+.slide-up-exit-active {
+    transition: transform 0.3s;
+}
+.slide-up-enter,
+.slide-up-exit-to {
+    transform: translateY(100%);
+}
+
+.slide-down-enter-active,
+.slide-down-exit-active {
+    transition: transform 0.3s;
+}
+.slide-down-enter,
+.slide-down-exit-to {
+    transform: translateY(-100%);
+}

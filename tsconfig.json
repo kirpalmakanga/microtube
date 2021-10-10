@@ -7,14 +7,9 @@
         "module": "esnext",
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
-        "jsx": "react-jsx",
+        "jsx": "preserve",
+        "jsxImportSource": "solid-js",
         "experimentalDecorators": true
     },
-    "exclude": [
-        "node_modules",
-        "dist",
-        "poi.config.js",
-        "./**/*.js",
-        "./**/*.jsx"
-    ]
+    "exclude": ["node_modules", "dist", "./**/*.js", "./**/*.jsx"]
 }

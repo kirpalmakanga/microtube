@@ -1,15 +1,15 @@
-import { FunctionComponent } from 'react';
+import { Component } from 'solid-js';
 
 interface Props {
     name: string;
     className?: string;
 }
 
-const Icon: FunctionComponent<Props> = ({ name, className = '' }) =>
+const Icon: Component<Props> = ({ name, className = '' }: Props) =>
     name ? (
         <span className={['icon', className].join(' ')}>
             <svg>
-                <use xlinkHref={`#icon-${name}`} />
+                <use href={`#icon-${name}`} />
             </svg>
         </span>
     ) : null;

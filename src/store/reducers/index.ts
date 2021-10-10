@@ -1,4 +1,4 @@
-import { combineReducers } from '../helpers';
+// import { combineReducers } from '../helpers';
 import app, { initialState as appInitialState } from './_app';
 import user, { initialState as userInitialState } from './_user';
 import player, { initialState as playerInitialState } from './_player';
@@ -29,15 +29,15 @@ export const rootInitialState = {
     prompt: promptInitialState
 };
 
-export default combineReducers({
-    app,
-    user,
-    player,
-    playlists,
-    playlistItems,
-    channel,
-    subscriptions,
-    search,
-    notifications,
-    prompt
-});
+// export default combineReducers({
+//     app,
+//     user,
+//     player,
+//     playlists,
+//     playlistItems,
+//     channel,
+//     subscriptions,
+//     search,
+//     notifications,
+//     prompt
+// });

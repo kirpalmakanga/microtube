@@ -1,10 +1,10 @@
-import { FunctionComponent } from 'react';
-import { Helmet } from 'react-helmet';
+import { Component } from 'solid-js';
+import { Title } from 'solid-meta';
 import { QueueItem } from '../../@types/alltypes';
 import useAppTitle from '../store/hooks/app-title';
 import { usePlayer } from '../store/hooks/player';
 
-const Head: FunctionComponent = () => {
+const Head: Component = () => {
     let title = useAppTitle();
     const [{ queue, video, currentId }] = usePlayer();
 
@@ -16,7 +16,7 @@ const Head: FunctionComponent = () => {
         title = `Microtube | ${currentVideoTitle}`;
     }
 
-    return <Helmet title={title} />;
+    return <Title>{title}</Title>;
 };
 
 export default Head;

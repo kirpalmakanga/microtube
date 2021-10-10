@@ -1,4 +1,5 @@
-import { useEffect, useCallback, FunctionComponent } from 'react';
+import { Component, createEffect, onCleanup, onMount } from 'solid-js';
+
 import MenuWrapper from '../menu/MenuWrapper';
 
 import QueueHeader from './QueueHeader';
@@ -28,7 +29,7 @@ interface QueueItemData {
     icon: string;
 }
 
-const Queue: FunctionComponent<Props> = ({
+const Queue: Component<Props> = ({
     isVisible,
     isPlaying,
     isBuffering,
@@ -53,14 +54,11 @@ const Queue: FunctionComponent<Props> = ({
 
     const [, { openNotification }] = useNotifications();
 
-    const handleClickMenu = useCallback(
-        (data: QueueItemData, callback: Function) => () => {
-            const { title } = data;
+    const handleClickMenu = (data: QueueItemData, callback: Function) => () => {
+        const { title } = data;
 
-            callback(data, title);
-        },
-        []
-    );
+        callback(data, title);
+    };
 
     const handleSharing = ({ id, title }: QueueItemData) => {
         const url = getVideoURL(id);
@@ -77,23 +75,26 @@ const Queue: FunctionComponent<Props> = ({
         }
     };
 
-    useEffect(() => {
-        const unsubscribe = subscribeToQueue();
+    let unsubscribeFromQueue: () => void;
+    let unsubscribeFromCurrentQueueId: () => void;
 
-        return unsubscribe;
-    }, []);
+    onMount(() => {
+        subscribeToQueue();
+        subscribeToCurrentQueueId();
+    });
 
-    useEffect(() => {
-        const unsubscribe = subscribeToCurrentQueueId();
+    onCleanup(() => {
+        unsubscribeFromQueue();
+        unsubscribeFromCurrentQueueId();
+    });
 
-        return unsubscribe;
-    }, []);
-
-    useEffect(() => {
+    createEffect(() => {
         if (isVisible) {
             clearNewQueueItems();
         }
-    }, [isVisible]);
+
+        return isVisible;
+    });
 
     return (
         <section

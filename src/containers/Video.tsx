@@ -1,16 +1,15 @@
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { onMount, onCleanup, Component } from 'solid-js';
+
+import { useParams } from 'solid-app-router';
 import { usePlayer } from '../store/hooks/player';
 
-const Video = () => {
+const Video: Component = () => {
     const { videoId } = useParams();
     const [, { getVideo, clearVideo }] = usePlayer();
 
-    useEffect(() => {
-        getVideo(videoId);
+    onMount(() => getVideo(videoId));
 
-        return clearVideo;
-    }, [videoId]);
+    onCleanup(clearVideo);
 
     return null;
 };

@@ -1,7 +1,7 @@
 import { PlaylistData } from '../../../@types/alltypes';
 import { createReducer, State } from '../helpers';
 
-interface PlaylistsState extends State {
+export interface PlaylistsState extends State {
     items: PlaylistData[];
     nextPageToken: String;
     totalResults: number | null;
@@ -28,24 +28,11 @@ const updateItem = (
 };
 
 export default createReducer(initialState, {
-    'playlists/UPDATE_ITEMS': (
-        { items, ...state }: State,
-        { items: newItems, nextPageToken = '', totalResults }: State
-    ) => ({
-        ...state,
-        items: [...items, ...newItems],
-        nextPageToken,
-        hasNextPage: !!nextPageToken,
-        totalResults
-    }),
-
-    'playlists/ADD_ITEM': (
-        { items, ...state }: State,
-        { playlist }: State
-    ) => ({
-        ...state,
-        items: [playlist, ...items]
-    }),
+    /* TODO: 
+        -load channel playlists separately
+        -remove playlists cache clearing
+        -convert these remainings actions
+    */
 
     'playlists/UPDATE_ITEM': (
         { items: currentItems, ...state }: State,
@@ -61,13 +48,6 @@ export default createReducer(initialState, {
         return { ...state, items };
     },
 
-    'playlists/REMOVE_ITEM': (state: State, { id }: State) => ({
-        ...state,
-        items: state.items.filter(
-            ({ id: itemId }: PlaylistData) => itemId !== id
-        )
-    }),
-
     'playlist/REMOVE_ITEM': (state: State, { playlistId }: State) => {
         const items = [...state.items];
 
@@ -77,9 +57,5 @@ export default createReducer(initialState, {
         }));
 
         return { ...state, items };
-    },
-
-    'playlists/CLEAR_ITEMS': () => ({ ...initialState }),
-
-    'user/SIGN_OUT': () => ({ ...initialState })
+    }
 });

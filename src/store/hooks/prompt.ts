@@ -1,27 +1,29 @@
-import { useCallback } from 'react';
 import { useStore } from '..';
 import { GenericObject } from '../../../@types/alltypes';
 import { delay } from '../../lib/helpers';
 
 export const usePrompt = () => {
-    const [{ prompt }, dispatch] = useStore();
+    const [{ prompt }, setState] = useStore();
 
-    const openPrompt = useCallback(
-        (payload: GenericObject) =>
-            dispatch({
-                type: 'prompt/OPEN',
-                payload
-            }),
-        [prompt]
-    );
+    const openPrompt = (payload: GenericObject) =>
+        setState('prompt', { ...payload, isVisible: true });
 
-    const closePrompt = useCallback(async () => {
-        dispatch({
-            type: 'prompt/CLOSE'
+    const closePrompt = async () => {
+        setState('prompt', {
+            isVisible: false
         });
 
-        await delay(300), dispatch({ type: 'prompt/RESET' });
-    }, [prompt]);
+        await delay(300);
+
+        setState('prompt', {
+            isVisible: false,
+            mode: '',
+            headerText: '',
+            confirmText: '',
+            cancelText: '',
+            callback: () => {}
+        });
+    };
 
     return [prompt, { openPrompt, closePrompt }];
 };

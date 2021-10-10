@@ -1,4 +1,6 @@
-import { useReducer, useCallback, FunctionComponent, ReactNode } from 'react';
+import { Component, Show } from 'solid-js';
+import { createStore } from 'solid-js/store';
+import { Transition } from 'solid-transition-group';
 
 import Menu from './Menu';
 import MenuItem from './MenuItem';
@@ -11,7 +13,7 @@ interface MenuItemData {
 
 interface Props {
     menuItems: MenuItemData[];
-    children: (openMenu: Function) => ReactNode;
+    children: (openMenu: Function) => Element[] | Element;
 }
 
 interface State {
@@ -26,41 +28,45 @@ const initialState: State = {
     callbackData: {}
 };
 
-const MenuWrapper: FunctionComponent<Props> = ({ menuItems, children }) => {
-    const [{ isMenuOpen, menuTitle, callbackData }, setState] = useReducer(
-        (state: State, newState: object) => ({ ...state, ...newState }),
-        initialState
-    );
+const MenuWrapper: Component<Props> = ({ menuItems, children = () => {} }) => {
+    const [{ isMenuOpen, menuTitle, callbackData }, setState] =
+        createStore(initialState);
 
-    const openMenu = useCallback(
-        (callbackData: State, menuTitle: string) => {
-            if (isMenuOpen) {
-                return;
-            }
+    const openMenu = (callbackData: State, menuTitle: string) => {
+        if (isMenuOpen) {
+            return;
+        }
 
-            setState({ isMenuOpen: true, menuTitle, callbackData });
-        },
-        [isMenuOpen]
-    );
+        setState({ isMenuOpen: true, menuTitle, callbackData });
+    };
 
-    const closeMenu = useCallback(() => {
-        setState({ isMenuOpen: false });
-    }, [isMenuOpen]);
+    const closeMenu = () => setState({ isMenuOpen: false });
 
     return (
         <>
             {children(openMenu)}
 
-            <Menu isVisible={isMenuOpen} onClick={closeMenu} title={menuTitle}>
-                {menuItems.map(({ title, icon, onClick }: MenuItemData) => (
-                    <MenuItem
-                        key={title}
-                        title={title}
-                        icon={icon}
-                        onClick={() => onClick(callbackData)}
+            <Transition name="slide-up">
+                <Show when={isMenuOpen}>
+                    <Menu
+                        onClick={closeMenu}
+                        title={menuTitle}
+                        items={menuItems}
+                        renderItem={({
+                            title,
+                            icon,
+                            onClick
+                        }: MenuItemData) => (
+                            <MenuItem
+                                key={title}
+                                title={title}
+                                icon={icon}
+                                onClick={() => onClick(callbackData)}
+                            />
+                        )}
                     />
-                ))}
-            </Menu>
+                </Show>
+            </Transition>
         </>
     );
 };

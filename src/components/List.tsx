@@ -1,50 +1,36 @@
-import {
-    memo,
-    useState,
-    useRef,
-    useEffect,
-    useCallback,
-    FunctionComponent,
-    ReactNode,
-    Key
-} from 'react';
-import AutoSizer from 'react-virtualized-auto-sizer';
-import {
-    FixedSizeList,
-    ListChildComponentProps,
-    ListOnScrollProps
-} from 'react-window';
+import { Component, createSignal, onCleanup, onMount, Show } from 'solid-js';
+import { Transition } from 'solid-transition-group';
 import { throttle, isMobile } from '../lib/helpers';
 
-import Fade from './animations/Fade';
+import Autosizer, { Size } from './Autosizer';
+import VirtualizedList from './VirtualizedList';
 import Icon from './Icon';
 
 const rowHeight = isMobile() ? 3 : 6;
 
+/* TODO: implement solid virtual List, memoize */
 interface Props {
     className?: string;
     items: unknown[];
     itemSize?: number | ((containerHeight: number) => number);
-    renderItem: (data: any) => ReactNode;
-    itemKey?: (data?: any) => Key;
+    renderItem: (data: any) => Element;
     loadMoreItems: Function;
 }
 
-const List: FunctionComponent<Props> = ({
+const List: Component<Props> = ({
     className,
     items,
     itemSize,
     renderItem,
-    loadMoreItems,
-    itemKey = () => {}
+    loadMoreItems
 }) => {
-    const [isLoading, setIsLoading] = useState(false);
-    const outerContainer = useRef<HTMLDivElement>(null);
-    const innerContainer = useRef<HTMLDivElement>(null);
-    const isUnmounting = useRef<boolean>(false);
+    const [isLoading, setIsLoading] = createSignal(false);
+    let outerContainer;
+    let innerContainer;
+    let isUnmounting = false;
 
-    const _loadMoreItems = useCallback(async () => {
-        if (isLoading) {
+    const _loadMoreItems = async () => {
+        if (isLoading()) {
             return;
         }
 
@@ -52,34 +38,32 @@ const List: FunctionComponent<Props> = ({
 
         await loadMoreItems();
 
-        if (!isUnmounting.current) {
+        if (!isUnmounting) {
             setIsLoading(false);
         }
-    }, [isLoading]);
+    };
 
     const handleScroll = throttle(({ scrollOffset }: ListOnScrollProps) => {
-        if (!(outerContainer.current && innerContainer.current)) {
+        if (!(outerContainer && innerContainer)) {
             return;
         }
 
-        const scrollPosition =
-            scrollOffset + outerContainer.current.offsetHeight;
+        const scrollPosition = scrollOffset + outerContainer.offsetHeight;
 
-        if (scrollPosition >= innerContainer.current.offsetHeight - 1) {
+        if (scrollPosition >= innerContainer.offsetHeight - 1) {
             _loadMoreItems();
         }
     }, 10);
 
-    const renderLoader = useCallback(
-        () => (
-            <Fade in={true} className="list__loading">
+    const renderLoader = () => (
+        <Transition name="fade" appear={true}>
+            <div className="list__loading">
                 <Icon name="loading" />
-            </Fade>
-        ),
-        []
+            </div>
+        </Transition>
     );
 
-    const _itemSize = useCallback((containerHeight: number): number => {
+    const _itemSize = (containerHeight: number): number => {
         switch (typeof itemSize) {
             case 'function':
                 return itemSize(containerHeight);
@@ -89,54 +73,41 @@ const List: FunctionComponent<Props> = ({
             default:
                 return containerHeight / rowHeight;
         }
-    }, []);
+    };
 
-    const _itemKey = useCallback(
-        (index, list) => (list[index] ? itemKey(list[index]) : index),
-        []
+    const Row = (index: number) => (
+        <div className="list__item">
+            <Show when={index < items.length} fallback={renderLoader()}>
+                {renderItem(index)}
+            </Show>
+        </div>
     );
 
-    const Row = useCallback(
-        ({
-            index,
-            data: { [index]: data, length: itemCount },
-            style
-        }: ListChildComponentProps) => (
-            <div className="list__item" style={style}>
-                {index === itemCount ? renderLoader() : renderItem(data)}
-            </div>
-        ),
-        []
-    );
+    onMount(_loadMoreItems);
 
-    useEffect(() => {
-        _loadMoreItems();
-
-        return () => {
-            isUnmounting.current = true;
-        };
-    }, []);
+    onCleanup(() => (isUnmounting = true));
 
     return (
-        <AutoSizer>
-            {({ height, width }) => (
-                <FixedSizeList
-                    className={['list', className].filter(Boolean).join(' ')}
-                    height={height}
-                    width={width}
-                    outerRef={outerContainer}
-                    innerRef={innerContainer}
-                    itemKey={_itemKey}
-                    itemData={[...items]}
-                    itemCount={isLoading ? items.length + 1 : items.length}
-                    itemSize={_itemSize(height)}
-                    onScroll={items.length ? handleScroll : undefined}
-                >
-                    {Row}
-                </FixedSizeList>
-            )}
-        </AutoSizer>
+        <Autosizer>
+            {({ height, width }: Size) => {
+                console.log({ height, width });
+
+                return (
+                    <VirtualizedList
+                        className={['list', className]
+                            .filter(Boolean)
+                            .join(' ')}
+                        height={height}
+                        totalCount={isLoading ? items.length + 1 : items.length}
+                        itemHeight={_itemSize(height)}
+                        onScroll={handleScroll}
+                    >
+                        {Row}
+                    </VirtualizedList>
+                );
+            }}
+        </Autosizer>
     );
 };
 
-export default memo(List);
+export default List;

@@ -1,14 +1,11 @@
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
-import reactRefresh from '@vitejs/plugin-react-refresh';
+import solidPlugin from 'vite-plugin-solid';
 
 export default defineConfig({
     server: { port: 8080 },
-    esbuild: {
-        jsxInject: `import React from 'react'`
-    },
     plugins: [
-        reactRefresh(),
+        solidPlugin(),
         VitePWA({
             manifest: {
                 name: 'MicroTube',

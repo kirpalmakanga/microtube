@@ -1,24 +1,30 @@
-import { useRef, FunctionComponent, ReactNode } from 'react';
+import { For, Show, Component, ComponentProps } from 'solid-js';
 import {
     DragDropContext,
-    Droppable,
-    Draggable,
-    DropResult
-} from 'react-beautiful-dnd';
+    DragDropSensors,
+    useDragDropContext,
+    createDraggable,
+    createDroppable,
+    transformStyle
+} from '@thisbeyond/solid-dnd';
 import { combinedRef, omit } from '../lib/helpers';
 import { useOnScreen } from '../lib/hooks';
+import { Transition } from 'solid-transition-group';
+
+interface DragComponentProps {
+    id: unknown;
+}
 
 interface ListProps {
     className: string;
     items: any[];
-    renderItem: (...args: any[]) => ReactNode;
+    renderItem: (...args: any[]) => Element;
     getItemId: (props: any) => string;
     onReorderItems: (updatedItems: any[]) => void;
 }
 interface ListItemProps {
-    draggableId: string;
-    index: number;
-    children: (isVisible: boolean) => ReactNode;
+    id: string;
+    children: unknown;
 }
 
 const reorder = (
@@ -33,52 +39,58 @@ const reorder = (
     return result;
 };
 
-const DraggableListItem: FunctionComponent<ListItemProps> = ({
-    index,
-    draggableId,
+const Draggable: Component<DragComponentProps> = ({ id }) => {
+    const draggable = createDraggable({ id });
+
+    return <div use:draggable>draggable</div>;
+};
+
+const Droppable: Component<DragComponentProps> = ({ id }: ComponentProps) => {
+    const droppable = createDroppable({ id });
+
+    return <div use:droppable>droppable</div>;
+};
+
+const DraggableListItem: Component<ListItemProps> = ({
+    id,
     children
 }: ListItemProps) => {
-    const visibilityRef = useRef<HTMLElement | null>(null);
+    let visibilityRef: HTMLElement;
+
+    const isVisible = useOnScreen(visibilityRef);
 
     return (
-        <Draggable key={draggableId} draggableId={draggableId} index={index}>
-            {({ innerRef, draggableProps, dragHandleProps }) => {
-                const isVisible = useOnScreen(visibilityRef);
-
-                return (
-                    <div
-                        ref={combinedRef(visibilityRef, innerRef)}
-                        {...draggableProps}
-                        {...dragHandleProps}
-                        style={{
-                            ...draggableProps.style,
-                            ...(draggableProps.style?.transition
-                                ? {}
-                                : {
-                                      transition: 'opacity 0.3s ease-out',
-                                      opacity: isVisible ? 1 : 0
-                                  })
-                        }}
-                    >
-                        {children(isVisible)}
-                    </div>
-                );
-            }}
+        <Draggable id={id}>
+            <div
+                ref={visibilityRef}
+                style={{
+                    transition: 'opacity 0.3s ease-out',
+                    opacity: isVisible() ? 1 : 0
+                }}
+            >
+                <Transition name="fade" appear={true}>
+                    <Show when={isVisible}>{children}</Show>
+                </Transition>
+            </div>
         </Draggable>
     );
 };
 
-const DraggableList: FunctionComponent<ListProps> = ({
+const DraggableList: Component<ListProps> = ({
     className,
     items = [],
     renderItem,
     getItemId,
     onReorderItems
 }) => {
-    const onDragEnd = (result: DropResult) => {
-        if (!result.destination) {
+    const [, { onDragEnd }] = useDragDropContext();
+
+    onDragEnd(({ draggable, droppable }) => {
+        if (!droppable) {
             return;
         }
+
+        /* TODO: get source and destination indices */
 
         const {
             source: { index: sourceIndex },
@@ -90,38 +102,33 @@ const DraggableList: FunctionComponent<ListProps> = ({
 
             onReorderItems(updatedItems);
         }
-    };
+    });
 
-    return items.length ? (
-        <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="droppable">
-                {({ innerRef, droppableProps, placeholder }) => (
-                    <div
-                        className={className}
-                        ref={innerRef}
-                        {...droppableProps}
-                    >
-                        {items.map((props, index) => {
-                            const id = getItemId(props);
+    return (
+        <Show when={items.length}>
+            <DragDropContext>
+                <DragDropSensors>
+                    <Droppable id="droppable">
+                        <div className={className}>
+                            <For each={items}>
+                                {(props) => {
+                                    const id = getItemId(props);
 
-                            return (
-                                <DraggableListItem
-                                    key={`draggable-${id}`}
-                                    draggableId={`draggable-${id}`}
-                                    index={index}
-                                >
-                                    {(isVisible) =>
-                                        isVisible ? renderItem(props) : null
-                                    }
-                                </DraggableListItem>
-                            );
-                        })}
-                        {placeholder}
-                    </div>
-                )}
-            </Droppable>
-        </DragDropContext>
-    ) : null;
+                                    return (
+                                        <DraggableListItem
+                                            id={`draggable-${id}`}
+                                        >
+                                            {renderItem(props)}
+                                        </DraggableListItem>
+                                    );
+                                }}
+                            </For>
+                        </div>
+                    </Droppable>
+                </DragDropSensors>
+            </DragDropContext>
+        </Show>
+    );
 };
 
 export default DraggableList;

@@ -1,9 +1,8 @@
-import { FunctionComponent, useCallback, useEffect, useRef } from 'react';
-
-import isEqual from 'lodash/isEqual';
+import { onMount, onCleanup, Component, createEffect } from 'solid-js';
 import youTubePlayer from 'youtube-player';
 import type { YouTubePlayer, Options } from 'youtube-player/dist/types';
 import EVENT_NAMES, { EventType } from 'youtube-player/dist/eventNames';
+import { isEqual } from 'lodash';
 
 const PLAYBACK_STATES = {
     UNSTARTED: -1,
@@ -19,7 +18,7 @@ interface Props {
     videoId: string;
     options: Options;
     onReady: (playerInstance: YouTubePlayer) => void;
-    onError: (error: object) => void;
+    onError: (error: unknown) => void;
     onBuffering: () => void;
     onPlay?: () => void;
     onPause?: () => void;
@@ -33,39 +32,6 @@ interface NewOptions {
     endSeconds?: number;
 }
 
-const useDeepCompareMemoize = (value: any) => {
-    const ref = useRef();
-
-    if (!isEqual(value, ref.current)) {
-        ref.current = value;
-    }
-
-    return ref.current;
-};
-
-const useEffectUpdateOnly = (callback: () => void, dependencies: any) => {
-    const isFirstRun = useRef(true);
-
-    useEffect(() => {
-        if (isFirstRun.current) {
-            isFirstRun.current = false;
-
-            return;
-        }
-
-        callback();
-    }, dependencies);
-};
-
-const useDeepCompareEffect = (
-    callback: () => void,
-    dependencies: any,
-    updateOnly: boolean
-) =>
-    (updateOnly ? useEffectUpdateOnly : useEffect)(callback, [
-        useDeepCompareMemoize(dependencies)
-    ]);
-
 const filterResetOptions = (options: Options) => ({
     ...options,
     playerVars: {
@@ -78,7 +44,7 @@ const filterResetOptions = (options: Options) => ({
 
 export { Options };
 
-export const YoutubePlayer: FunctionComponent<Props> = ({
+export const YoutubePlayer: Component<Props> = ({
     id = 'youtube-player',
     className,
     videoId,
@@ -90,22 +56,16 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
     onPause = () => {},
     onEnd,
     onStateChange = () => {}
-    // onPlaybackRateChange = noop,
-    // onPlaybackQualityChange = noop
 }) => {
     const {
         playerVars: { start, end }
     }: any = options;
-    const internalPlayer = useRef<YouTubePlayer | null>(null);
-    const timeWatcher = useRef<number>();
-    const loadingWatcher = useRef<number>();
 
-    const handleIframeReady = useCallback(({ target }) => {
-        onReady(target);
-    }, []);
+    let internalPlayer: YouTubePlayer;
 
-    const createPlayer = useCallback(() => {
-        if (typeof document === 'undefined' || internalPlayer.current) {
+    const handleIframeReady = () => onReady(internalPlayer);
+    const createPlayer = () => {
+        if (typeof document === 'undefined' || internalPlayer) {
             return;
         }
 
@@ -142,41 +102,33 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
         };
 
         try {
-            internalPlayer.current = youTubePlayer(id, {
+            internalPlayer = youTubePlayer(id, {
                 ...options,
                 videoId
             });
 
             for (const [eventKey, event] of Object.entries(events)) {
-                internalPlayer.current?.on(eventKey as EventType, event);
+                internalPlayer.on(eventKey as EventType, event);
             }
-        } catch (error) {
+        } catch (error: unknown) {
             console.error(error);
 
             onError(error);
         }
-    }, []);
+    };
 
-    const resetPlayer = useCallback(async () => {
-        await internalPlayer.current?.destroy();
+    const resetPlayer = async () => {
+        await internalPlayer.destroy();
 
         createPlayer();
-    }, []);
+    };
 
-    const updatePlayer = useCallback(async () => {
-        const iframe = await internalPlayer.current?.getIframe();
-
-        if (id) {
-            iframe?.setAttribute('id', id);
-        }
-    }, []);
-
-    const updateVideo = useCallback(() => {
+    const updateVideo = () => {
         const newOpts: NewOptions = { videoId };
         let autoplay = false;
 
         if (!videoId) {
-            internalPlayer.current?.stopVideo();
+            internalPlayer.stopVideo();
             return;
         }
 
@@ -194,41 +146,28 @@ export const YoutubePlayer: FunctionComponent<Props> = ({
         }
 
         if (autoplay) {
-            internalPlayer.current?.loadVideoById(newOpts);
+            internalPlayer.loadVideoById(newOpts);
             return;
         }
 
-        internalPlayer.current?.cueVideoById(newOpts);
-    }, [videoId]);
+        internalPlayer.cueVideoById(newOpts);
+    };
 
-    const handleUnmounting = useCallback(() => {
-        window.clearInterval(timeWatcher.current);
-        window.clearInterval(loadingWatcher.current);
+    createEffect((previousOptions) => {
+        if (!isEqual(options, previousOptions)) resetPlayer();
 
-        internalPlayer.current = null;
-    }, []);
+        return options;
+    }, options);
 
-    useEffect(() => {
-        createPlayer();
+    createEffect((previousVideoId) => {
+        if (videoId !== previousVideoId) updateVideo();
 
-        return handleUnmounting;
-    }, []);
+        return videoId;
+    }, videoId);
 
-    useEffectUpdateOnly(() => {
-        updatePlayer();
-    }, [id, className]);
+    /* TODO: review all creatEffect calls */
 
-    useDeepCompareEffect(
-        () => {
-            resetPlayer();
-        },
-        filterResetOptions(options),
-        true
-    );
-
-    useEffectUpdateOnly(() => {
-        updateVideo();
-    }, [videoId, start, end]);
+    onMount(createPlayer);
 
     return (
         <div className={className}>

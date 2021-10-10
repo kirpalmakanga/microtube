@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useRef } from 'react';
+// import { useReducer, useRef } from 'react';
 
 export interface Action {
     type: string;
@@ -40,47 +40,38 @@ export const createReducer =
         return { ...initialState, ...state };
     };
 
-export const useRootReducer = (
-    reducer: Reducer,
-    initialState: RootState | State
-) => {
-    const [state, dispatch] = useReducer(reducer, initialState);
+// export const useRootReducer = (
+//     reducer: Reducer,
+//     initialState: RootState | State
+// ) => {
+//     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const stateRef = useRef(state);
-    const getState = useCallback(() => stateRef.current, [state]);
-    const reduce = useCallback(
-        (action) => reducer(getState(), action),
-        [reducer, getState]
-    );
-    const setState = useCallback(
-        (action) => {
-            stateRef.current = reduce(action);
-            dispatch(action);
-        },
-        [state, dispatch]
-    );
+//     const stateRef = useRef(state);
+//     const getState = () => stateRef.current;
+//     const reduce = (action) => reducer(getState(), action);
+//     const setState = (action) => {
+//         stateRef.current = reduce(action);
+//         dispatch(action);
+//     };
 
-    const thunkDispatch = useCallback(
-        (action: Action | Thunk) => {
-            if (typeof action === 'function') {
-                return action(getState);
-            }
-            return setState(action);
-        },
-        [getState, setState]
-    );
+//     const thunkDispatch = (action: Action | Thunk) => {
+//         if (typeof action === 'function') {
+//             return action(getState);
+//         }
+//         return setState(action);
+//     };
 
-    return [state, thunkDispatch];
-};
+//     return [state, thunkDispatch];
+// };
 
-export const combineReducers =
-    (slices: Slices): RootReducer =>
-    (rootState: RootState, action: Action) => {
-        const result = { ...rootState };
+// export const combineReducers =
+//     (slices: Slices): RootReducer =>
+//     (rootState: RootState, action: Action) => {
+//         const result = { ...rootState };
 
-        for (const [namespace, reducer] of Object.entries(slices)) {
-            result[namespace] = reducer(result[namespace], action);
-        }
+//         for (const [namespace, reducer] of Object.entries(slices)) {
+//             result[namespace] = reducer(result[namespace], action);
+//         }
 
-        return result;
-    };
+//         return result;
+//     };

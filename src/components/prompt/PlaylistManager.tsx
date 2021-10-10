@@ -1,22 +1,17 @@
-import {
-    useEffect,
-    useRef,
-    FunctionComponent,
-    SyntheticEvent,
-    FormEvent
-} from 'react';
-
-import { useMergedState } from '../../lib/hooks';
+import { Component } from 'solid-js';
+import { createStore } from 'solid-js/store';
 
 import DropDown from '../DropDown';
 import Button from '../Button';
 import List from '../List';
 import { usePlaylists } from '../../store/hooks/playlists';
+import { preventDefault, stopPropagation } from '../../lib/helpers';
 
 interface PlaylistData {
     playlistId: string;
     title: string;
     itemCount: number;
+    privacyStatus: string;
 }
 
 interface Props {
@@ -33,8 +28,8 @@ const privacyOptions = [
     { label: 'Unlisted', value: 'unlisted' }
 ];
 
-const NewPlayListForm: FunctionComponent<FormProps> = ({ onSubmit }) => {
-    const [state, setState] = useMergedState({
+const NewPlayListForm: Component<FormProps> = ({ onSubmit }) => {
+    const [state, setState] = createStore<PlaylistData>({
         title: '',
         privacyStatus: 'public'
     });
@@ -42,46 +37,31 @@ const NewPlayListForm: FunctionComponent<FormProps> = ({ onSubmit }) => {
     const setValue = (key: string, value: unknown) =>
         setState({ [key]: value });
 
-    const handleInput = ({
-        currentTarget: { name, value }
-    }: SyntheticEvent<HTMLInputElement>) => setValue(name, value);
+    const handlePrivacyStatusChange = (value: string) =>
+        setValue('privacyStatus', value);
 
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-        onSubmit(state as PlaylistData);
-    };
+    const handleInput = ({ currentTarget: { name, value } }) =>
+        setValue(name, value);
 
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        const __keyDownHandler = (e: any) => {
-            e.stopPropagation();
-        };
-
-        inputRef.current?.addEventListener('keydown', __keyDownHandler);
-
-        return () => {
-            inputRef.current?.removeEventListener('keydown', __keyDownHandler);
-        };
-    }, []);
+    const handleSubmit = preventDefault(() => onSubmit(state as PlaylistData));
 
     const { title, privacyStatus } = state;
 
     return (
         <form className="playlist-menu__form" onSubmit={handleSubmit}>
             <input
-                ref={inputRef}
                 className="playlist-menu__item-text"
                 name="title"
                 value={title}
                 placeholder="Playlist title"
                 onChange={handleInput}
+                onKeyDown={stopPropagation()}
             />
 
             <DropDown
                 currentValue={privacyStatus}
                 options={privacyOptions}
-                onSelect={(value) => setValue('privacyStatus', value)}
+                onSelect={handlePrivacyStatusChange}
             />
 
             <Button type="submit" title="Create" />
@@ -89,7 +69,7 @@ const NewPlayListForm: FunctionComponent<FormProps> = ({ onSubmit }) => {
     );
 };
 
-export const PlaylistManager: FunctionComponent<Props> = ({ onClickItem }) => {
+export const PlaylistManager: Component<Props> = ({ onClickItem }) => {
     const [{ items }, { getPlaylists }] = usePlaylists();
     const onCreatePlaylist = (data: PlaylistData) => onClickItem(data);
     const makeOnClickItem = (data: PlaylistData) => () => onClickItem(data);
@@ -100,7 +80,6 @@ export const PlaylistManager: FunctionComponent<Props> = ({ onClickItem }) => {
         return (
             <button
                 className="playlist-menu__item"
-                key={playlistId}
                 onClick={makeOnClickItem(data)}
             >
                 <span className="playlist-menu__item-text">{title}</span>

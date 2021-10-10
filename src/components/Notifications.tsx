@@ -1,9 +1,10 @@
-import { useCallback } from 'react';
+import { Show } from 'solid-js';
+import { Transition } from 'solid-transition-group';
+
 import { useStore } from '../store';
 import { useNotifications } from '../store/hooks/notifications';
 
 import Icon from './Icon';
-import TranslateY from './animations/TranslateY';
 
 const Notifications = () => {
     const [
@@ -14,17 +15,19 @@ const Notifications = () => {
     const [, { closeNotification }] = useNotifications();
 
     return (
-        <TranslateY in={isVisible} className="notification shadow--2dp">
-            <div className="notification__content">
-                <div className="notification__text">{message}</div>
-                <button
-                    className="notification__action icon-button"
-                    onClick={closeNotification}
-                >
-                    <Icon name="close" />
-                </button>
-            </div>
-        </TranslateY>
+        <Transition name="slide-up">
+            <Show when={isVisible}>
+                <div className="notification__content">
+                    <div className="notification__text">{message}</div>
+                    <button
+                        className="notification__action icon-button"
+                        onClick={closeNotification}
+                    >
+                        <Icon name="close" />
+                    </button>
+                </div>
+            </Show>
+        </Transition>
     );
 };
 

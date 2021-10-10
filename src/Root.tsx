@@ -1,11 +1,9 @@
-import './assets/styles/app.scss';
-
-import { useState, useEffect } from 'react';
+import { onMount, createSignal, Show, Component } from 'solid-js';
+import { Transition } from 'solid-transition-group';
 
 // import { enableImportMethods } from './actions.bak/youtube';
 
 import { preventDefault, isMobile } from './lib/helpers';
-import { FunctionComponent } from 'react';
 import { __DEV__ } from './config/app';
 
 import Header from './layout/Header';
@@ -14,33 +12,30 @@ import Head from './components/Head';
 import Sprite from './components/Sprite';
 import Loader from './components/Loader';
 import Player from './components/player/Player';
-
 import Prompt from './components/prompt/Prompt';
 import Notifications from './components/Notifications';
 import { useAuth } from './store/hooks/auth';
 
-const Root: FunctionComponent = ({ children }) => {
+const Root: Component = ({ children }) => {
     const [{ isSignedIn }, { getUserData }] = useAuth();
-    const [isAppReady, setIsAppReady] = useState(false);
+    const [isAppReady, setIsAppReady] = createSignal(false);
 
-    useEffect(() => {
-        (async () => {
-            await getUserData();
+    onMount(async () => {
+        await getUserData();
 
-            setIsAppReady(true);
-        })();
-    }, []);
+        setIsAppReady(true);
+    });
 
     return (
         <div
-            className={`layout ${isMobile() ? 'mobile' : ''}`}
+            className={`layout ${isMobile() ? 'mobile' : ''}`.trim()}
             onContextMenu={__DEV__ ? () => {} : preventDefault()}
         >
             <Head />
 
             <Sprite />
 
-            {isAppReady ? (
+            <Show when={isAppReady()} fallback={<Loader />}>
                 <>
                     <Header />
 
@@ -48,13 +43,13 @@ const Root: FunctionComponent = ({ children }) => {
 
                     <Notifications />
 
-                    {isSignedIn ? <Player /> : null}
+                    <Show when={isSignedIn}>
+                        <Player />
+                    </Show>
 
                     <Prompt />
                 </>
-            ) : null}
-
-            <Loader isActive={!isAppReady} />
+            </Show>
         </div>
     );
 };

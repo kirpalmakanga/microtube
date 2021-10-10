@@ -1,32 +1,30 @@
-import { useCallback, useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { createSignal, Show } from 'solid-js';
+import { Link, useNavigate, useLocation } from 'solid-app-router';
 
-import Fade from '../components/animations/Fade';
 import Icon from '../components/Icon';
 import Button from '../components/Button';
+import Img from '../components/Img';
 
 import useAppTitle from '../store/hooks/app-title';
 import { useAuth } from '../store/hooks/auth';
-import Img from '../components/Img';
+import { Transition } from 'solid-transition-group';
 
 const DefaultHeader = () => {
     const { pathname } = useLocation();
     const navigate = useNavigate();
     const [{ name, picture, isSignedIn }, { signIn, signOut }] = useAuth();
-    const [isMenuOpen, setMenuState] = useState(false);
+    const [isMenuOpen, setMenuState] = createSignal(false);
 
     const title = useAppTitle();
 
-    const handleClickUser = useCallback(
-        () => (isSignedIn ? setMenuState(!isMenuOpen) : signIn()),
-        [isSignedIn, isMenuOpen]
-    );
+    const handleClickUser = () =>
+        isSignedIn ? setMenuState(!isMenuOpen()) : signIn();
 
-    const handleLoggingOut = useCallback(() => {
+    const handleLoggingOut = () => {
         signOut();
 
         setMenuState(false);
-    }, []);
+    };
 
     return (
         <div className="layout__header-row">
@@ -52,7 +50,7 @@ const DefaultHeader = () => {
                         <Link
                             className="navigation__link icon-button"
                             aria-label="Open search"
-                            to="/search"
+                            href="/search"
                         >
                             <Icon name="search" />
                         </Link>
@@ -60,14 +58,14 @@ const DefaultHeader = () => {
                         <Link
                             className="navigation__link icon-button"
                             aria-label="Playlists"
-                            to="/"
+                            href="/"
                         >
                             <Icon name="folder" />
                         </Link>
 
                         <Link
                             className="navigation__link icon-button"
-                            to="/subscriptions"
+                            href="/subscriptions"
                             aria-label="Open subscriptions"
                         >
                             <Icon name="users" />
@@ -82,19 +80,22 @@ const DefaultHeader = () => {
                     >
                         {picture ? <Img src={picture} alt="avatar" /> : null}
                     </Button>
-                    <Fade in={isSignedIn && isMenuOpen}>
-                        <div className="navigation__menu__content shadow--2dp">
-                            <p className="navigation__menu__content__text">
-                                {name}
-                            </p>
-                            <Button
-                                className="button shadow--2dp"
-                                icon="log-out"
-                                title={isSignedIn ? 'Log out' : 'Log in'}
-                                onClick={handleLoggingOut}
-                            ></Button>
-                        </div>
-                    </Fade>
+
+                    <Transition name="fade">
+                        <Show when={isSignedIn && isMenuOpen()}>
+                            <div className="navigation__menu__content shadow--2dp">
+                                <p className="navigation__menu__content__text">
+                                    {name}
+                                </p>
+                                <Button
+                                    className="button shadow--2dp"
+                                    icon="log-out"
+                                    title={isSignedIn ? 'Log out' : 'Log in'}
+                                    onClick={handleLoggingOut}
+                                ></Button>
+                            </div>
+                        </Show>
+                    </Transition>
                 </div>
             </nav>
         </div>

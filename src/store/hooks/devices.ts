@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-
+import { onCleanup, onMount } from 'solid-js';
 import { DeviceData, GenericObject } from '../../../@types/alltypes';
 import { useStore } from '..';
 import { subscribe, emit } from '../../lib/socket';
@@ -49,7 +48,7 @@ export const useDevices = () => {
         ({ deviceId: id }: DeviceData) => id !== deviceId
     );
 
-    useEffect(() => {
+    onMount(() => {
         subscribe('connect', () => {
             emit('room', userId);
 
@@ -58,9 +57,9 @@ export const useDevices = () => {
         });
 
         subscribe('disconnect', () => dispatch({ type: 'app/CLEAR_DEVICES' }));
+    });
 
-        return () => emit('device:delete', deviceId);
-    }, []);
+    onCleanup(() => emit('device:delete', deviceId));
 
     return {
         devices: [currentDevice, ...availableDevices],

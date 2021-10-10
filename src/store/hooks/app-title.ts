@@ -1,4 +1,4 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'solid-app-router';
 import { useStore } from '..';
 
 export default () => {

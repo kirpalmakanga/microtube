@@ -1,39 +1,22 @@
-import {
-    useState,
-    useEffect,
-    useRef,
-    FunctionComponent,
-    FormEvent
-} from 'react';
+import { Component, createSignal } from 'solid-js';
+import { HTMLElementEvent } from '../../../@types/alltypes';
+import { preventDefault, stopPropagation } from '../../lib/helpers';
 
 interface Props {
     onSubmit: (text: string) => void;
 }
 
-export const ImportVideoForm: FunctionComponent<Props> = ({ onSubmit }) => {
-    const [text, setState] = useState('');
-    const input = useRef<HTMLTextAreaElement | null>(null);
+export const ImportVideoForm: Component<Props> = ({ onSubmit }) => {
+    const [text, setState] = createSignal('');
+    let input;
 
     const handleChange = ({
         currentTarget: { value }
-    }: FormEvent<HTMLTextAreaElement>) => setState(value);
+    }: HTMLElementEvent<HTMLTextAreaElement>) => setState(value);
 
-    const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = preventDefault(() => onSubmit(text()));
 
-        onSubmit(text);
-    };
-
-    useEffect(() => {
-        const keyPressHandler = (e: KeyboardEvent) => e.stopPropagation();
-
-        input.current?.focus();
-
-        input.current?.addEventListener('keypress', keyPressHandler);
-        return () => {
-            input.current?.removeEventListener('keypress', keyPressHandler);
-        };
-    }, [input]);
+    const handleKeyPress = stopPropagation();
 
     return (
         <form id="importVideos" onSubmit={handleSubmit}>
@@ -41,9 +24,10 @@ export const ImportVideoForm: FunctionComponent<Props> = ({ onSubmit }) => {
                 <textarea
                     id="videoId"
                     className="textfield__textarea"
-                    value={text}
+                    value={text()}
                     onChange={handleChange}
-                    autoFocus
+                    onKeyPress={handleKeyPress}
+                    autofocus
                     placeholder="URLs/IDs..."
                     rows={10}
                 />

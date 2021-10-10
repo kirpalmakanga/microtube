@@ -1,8 +1,6 @@
-import { FunctionComponent } from 'react';
+import { Component, Show } from 'solid-js';
 import { stopPropagation } from '../../lib/helpers';
 import { usePrompt } from '../../store/hooks/prompt';
-
-import Fade from '../animations/Fade';
 
 import Icon from '../Icon';
 
@@ -10,8 +8,9 @@ import Button from '../Button';
 
 import { ImportVideoForm } from './ImportVideoForm';
 import PlaylistManager from './PlaylistManager';
+import { Transition } from 'solid-transition-group';
 
-const Prompt: FunctionComponent = () => {
+const Prompt: Component = () => {
     const [
         { isVisible, mode, headerText, confirmText, cancelText, callback },
         { closePrompt }
@@ -49,43 +48,52 @@ const Prompt: FunctionComponent = () => {
     }
 
     return (
-        <Fade className="dialog__overlay" onClick={closePrompt} in={isVisible}>
-            <div className="dialog shadow--2dp" onClick={stopPropagation()}>
-                <header className="dialog__header">
-                    <Icon name="prompt" />
+        <Transition name="fade">
+            <Show when={isVisible}>
+                <div className="dialog__overlay" onClick={closePrompt}>
+                    <div
+                        className="dialog shadow--2dp"
+                        onClick={stopPropagation()}
+                    >
+                        <header className="dialog__header">
+                            <Icon name="prompt" />
 
-                    <span>{headerText}</span>
-                </header>
+                            <span>{headerText}</span>
+                        </header>
 
-                {isMode('import', 'playlists') ? (
-                    <div className="dialog__content">
-                        {isMode('import') ? (
-                            <ImportVideoForm onSubmit={handleConfirm} />
-                        ) : null}
+                        <Show when={isMode('import', 'playlists')}>
+                            <div className="dialog__content">
+                                <Show when={isMode('import')}>
+                                    <ImportVideoForm onSubmit={handleConfirm} />
+                                </Show>
 
-                        {isMode('playlists') ? (
-                            <PlaylistManager onClickItem={handleConfirm} />
-                        ) : null}
+                                <Show when={isMode('playlists')}>
+                                    <PlaylistManager
+                                        onClickItem={handleConfirm}
+                                    />
+                                </Show>
+                            </div>
+                        </Show>
+
+                        <footer className="dialog__actions">
+                            <Show when={cancelText}>
+                                <Button
+                                    className="button button--close shadow--2dp"
+                                    onClick={closePrompt}
+                                    title={cancelText}
+                                />
+                            </Show>
+
+                            <Button
+                                className="button shadow--2dp"
+                                title={confirmText}
+                                {...confirmButtonProps}
+                            />
+                        </footer>
                     </div>
-                ) : null}
-
-                <footer className="dialog__actions">
-                    {cancelText ? (
-                        <Button
-                            className="button button--close shadow--2dp"
-                            onClick={closePrompt}
-                            title={cancelText}
-                        />
-                    ) : null}
-
-                    <Button
-                        className="button shadow--2dp"
-                        title={confirmText}
-                        {...confirmButtonProps}
-                    />
-                </footer>
-            </div>
-        </Fade>
+                </div>
+            </Show>
+        </Transition>
     );
 };
 

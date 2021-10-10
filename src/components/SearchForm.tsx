@@ -1,61 +1,48 @@
-import {
-    useState,
-    useEffect,
-    useRef,
-    useCallback,
-    FunctionComponent
-} from 'react';
-
+import { createSignal, onCleanup, onMount, Component } from 'solid-js';
+import { HTMLElementEvent } from '../../@types/alltypes';
 import { preventDefault } from '../lib/helpers';
 interface Props {
     query?: string;
     onSubmit: (query: string) => void;
 }
 
-const SearchForm: FunctionComponent<Props> = ({ query = '', onSubmit }) => {
-    const [input, setInput] = useState(query);
-    const inputRef = useRef<HTMLInputElement>(null);
+const SearchForm: Component<Props> = ({ query = '', onSubmit }) => {
+    const [input, setInput] = createSignal(query);
+    let inputRef: HTMLInputElement;
 
-    const keyDownHandler = useCallback(
-        (e: KeyboardEvent) => e.stopPropagation(),
-        []
-    );
+    const keyDownHandler = (e: KeyboardEvent) => e.stopPropagation();
 
-    const unlistenKeyDown = useCallback(() => {
-        inputRef.current?.removeEventListener('keyup', keyDownHandler);
-    }, []);
+    const unbindKeyDown = () => {
+        inputRef?.removeEventListener('keyup', keyDownHandler);
+    };
 
-    const listenKeyDown = useCallback(() => {
-        unlistenKeyDown();
+    const bindKeyDown = () => {
+        unbindKeyDown();
 
-        inputRef.current?.addEventListener('keyup', keyDownHandler);
-    }, []);
+        inputRef?.addEventListener('keyup', keyDownHandler);
+    };
 
-    useEffect(() => {
+    onMount(() => {
         setInput(query);
 
-        inputRef.current?.focus();
+        inputRef?.focus();
 
-        listenKeyDown();
+        bindKeyDown();
+    });
 
-        return unlistenKeyDown;
-    }, [query]);
+    onCleanup(unbindKeyDown);
 
-    const handleInput = useCallback(
-        ({ currentTarget: { value } }) => setInput(value),
-        []
-    );
+    const handleInput = ({
+        currentTarget: { value }
+    }: HTMLElementEvent<HTMLInputElement>) => setInput(value);
 
-    const handleSubmit = useCallback(
-        preventDefault(() => {
-            const newQuery = input.trim();
+    const handleSubmit = preventDefault(() => {
+        const newQuery = input().trim();
 
-            if (newQuery && newQuery !== query) {
-                onSubmit(newQuery);
-            }
-        }),
-        [input]
-    );
+        if (newQuery && newQuery !== query) {
+            onSubmit(newQuery);
+        }
+    });
 
     return (
         <form className="search-form" onSubmit={handleSubmit}>
@@ -67,7 +54,7 @@ const SearchForm: FunctionComponent<Props> = ({ query = '', onSubmit }) => {
                 <input
                     aria-label="Search"
                     ref={inputRef}
-                    value={input}
+                    value={input()}
                     name="search"
                     className="textfield__input"
                     id="search"

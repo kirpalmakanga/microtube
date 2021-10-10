@@ -1,18 +1,11 @@
-import { FunctionComponent } from 'react';
-import Fade from './animations/Fade';
+import { Component } from 'solid-js';
 import Icon from './Icon';
 
-interface Props {
-    isActive: boolean;
-}
-
-const Loader: FunctionComponent<Props> = ({ isActive }: Props) => {
-    return (
-        <Fade className="loader" in={isActive}>
-            <div className="loader__background" />
-            <Icon name="loading" />
-        </Fade>
-    );
-};
+const Loader: Component = () => (
+    <div className="loader">
+        <div className="loader__background" />
+        <Icon name="loading" />
+    </div>
+);
 
 export default Loader;

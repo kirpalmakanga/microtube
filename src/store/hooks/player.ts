@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import isEqual from 'lodash/isEqual';
 
 import { useStore } from '..';
@@ -13,110 +12,78 @@ import * as api from '../../api/youtube';
 import { saveData, subscribeToData } from '../../api/database';
 
 import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
-import { GetState } from '../helpers';
+
+import { rootInitialState } from '../reducers';
 
 export const usePlayer = () => {
-    const [{ user, player }, dispatch] = useStore();
+    const [{ user, player }, setState] = useStore();
     const [, { openNotification }] = useNotifications();
     const [, { openPrompt }] = usePrompt();
 
-    const getCurrentUserId = useCallback(() => {
+    const getCurrentUserId = () => {
         const { id } = user;
 
         return __DEV__ ? 'dev' : id;
-    }, [user]);
+    };
 
     const queuePath = `users/${getCurrentUserId()}/queue`;
     const currentIdPath = `users/${getCurrentUserId()}/currentId`;
 
     const { queue, currentId } = player;
 
-    const subscribeToQueue = useCallback(
-        () =>
-            subscribeToData(queuePath, (queue = []) =>
-                dispatch((getState: GetState) => {
-                    const {
-                        player: { queue: currentQueue }
-                    } = getState();
+    const subscribeToQueue = () =>
+        subscribeToData(queuePath, (queue = []) => {
+            const { queue: currentQueue } = player;
 
-                    if (!isEqual(queue, currentQueue)) {
-                        dispatch({
-                            type: 'player/UPDATE_DATA',
-                            payload: { queue }
-                        });
-                    }
-                })
-            ),
-        []
-    );
+            if (!isEqual(queue, currentQueue)) {
+                setState('player', { queue });
+            }
+        });
 
-    const subscribeToCurrentQueueId = useCallback(
-        () =>
-            subscribeToData(currentIdPath, (currentId = '') =>
-                dispatch((getState: GetState) => {
-                    const {
-                        player: { currentId: previousCurrentId }
-                    } = getState();
+    const subscribeToCurrentQueueId = () =>
+        subscribeToData(currentIdPath, (currentId = '') => {
+            const { currentId: previousCurrentId } = player;
 
-                    if (currentId !== previousCurrentId) {
-                        dispatch({
-                            type: 'player/UPDATE_DATA',
-                            payload: { currentId }
-                        });
-                    }
-                })
-            ),
-        []
-    );
+            if (currentId !== previousCurrentId) {
+                setState('player', { currentId });
+            }
+        });
 
     const setQueue = (queue: QueueItem[]) => {
-        dispatch({ type: 'player/UPDATE_DATA', payload: { queue } });
+        setState('player', { queue });
 
         saveData(queuePath, queue);
     };
 
-    const queueItems = useCallback(
-        (newItems: QueueItem[]) => {
-            const items = newItems.filter(
-                ({ id }: QueueItem) =>
-                    !queue.find(
-                        ({ id: queueItemId }: QueueItem) => queueItemId === id
-                    )
-            );
+    const queueItems = (newItems: QueueItem[]) => {
+        const items = newItems.filter(
+            ({ id }: QueueItem) =>
+                !queue.find(
+                    ({ id: queueItemId }: QueueItem) => queueItemId === id
+                )
+        );
 
-            dispatch((getState: GetState) => {
-                const {
-                    player: { queue: currentQueue, newQueueItems }
-                } = getState();
+        const { queue: currentQueue, newQueueItems } = player;
 
-                const queue = [...currentQueue, ...items];
+        const queue: QueueItem[] = [...currentQueue, ...items];
 
-                dispatch({
-                    type: 'player/UPDATE_DATA',
-                    payload: {
-                        queue,
-                        newQueueItems: newQueueItems + items.length
-                    }
-                });
+        setState('player', {
+            queue,
+            newQueueItems: newQueueItems + items.length
+        });
 
-                saveData(queuePath, queue);
-            });
+        saveData(queuePath, queue);
 
-            return items;
-        },
-        [queue]
-    );
+        return items;
+    };
 
     const queueItem = (data: QueueItem) => queueItems([data]);
 
-    const setActiveQueueItem = useCallback((currentId) => {
-        dispatch({
-            type: 'player/UPDATE_DATA',
-            payload: { currentId }
-        });
+    const setActiveQueueItem = (currentId: string) => {
+        setState('player', { currentId });
 
         saveData(currentIdPath, currentId);
-    }, []);
+    };
 
     const queueVideos = async (ids: string[]) => {
         try {
@@ -148,93 +115,67 @@ export const usePlayer = () => {
             }
         });
 
-    const removeQueueItem = useCallback(
-        ({ id: targetId }) => {
-            setQueue(queue.filter(({ id }: QueueItem) => id !== targetId));
+    const removeQueueItem = ({ id: targetId }: { id: string }) => {
+        setQueue(queue.filter(({ id }: QueueItem) => id !== targetId));
 
-            if (targetId === currentId) {
-                saveData(currentIdPath, '');
-            }
-        },
-        [queue, currentId]
-    );
+        if (targetId === currentId) {
+            saveData(currentIdPath, '');
+        }
+    };
 
-    const clearNewQueueItems = () =>
-        dispatch({
-            type: 'player/UPDATE_DATA',
-            payload: { newQueueItems: 0 }
+    const clearNewQueueItems = () => setState('player', { newQueueItems: 0 });
+
+    const clearQueue = () =>
+        openPrompt({
+            headerText: 'Clear queue ?',
+            confirmText: 'Clear',
+            cancelText: 'Cancel',
+            callback: () =>
+                setQueue(queue.filter(({ id }: QueueItem) => id === currentId))
         });
 
-    const clearQueue = useCallback(
-        () =>
-            openPrompt({
-                headerText: 'Clear queue ?',
-                confirmText: 'Clear',
-                cancelText: 'Cancel',
-                callback: () =>
-                    setQueue(
-                        queue.filter(({ id }: QueueItem) => id === currentId)
-                    )
-            }),
-        [queue, currentId]
-    );
+    const clearVideo = () =>
+        setState('player', { video: rootInitialState.player.video });
 
-    const clearVideo = () => dispatch({ type: 'player/CLEAR_VIDEO' });
-
-    const getVideo = useCallback(async (videoId) => {
+    const getVideo = async (videoId: string) => {
         try {
             clearVideo();
 
             const video = await api.getVideo(videoId);
 
-            dispatch({ type: 'player/SET_VIDEO', payload: { video } });
+            setState('player', { video });
         } catch (error) {
             openNotification('Error fetching video.');
         }
-    }, []);
+    };
 
-    const toggleQueue = () =>
-        dispatch((getState: GetState) => {
-            const {
-                player: { isQueueVisible: currentIsQueueVisible }
-            } = getState();
+    const toggleQueue = () => {
+        const { isQueueVisible: currentIsQueueVisible } = player;
 
-            const isQueueVisible = !currentIsQueueVisible;
+        const isQueueVisible = !currentIsQueueVisible;
 
-            dispatch({
-                type: 'player/UPDATE_DATA',
-                payload: {
-                    isQueueVisible,
-                    ...(!isQueueVisible
-                        ? { isScreenVisible: false, newQueueItems: 0 }
-                        : {})
-                }
-            });
+        setState('player', {
+            isQueueVisible,
+            ...(!isQueueVisible
+                ? { isScreenVisible: false, newQueueItems: 0 }
+                : {})
         });
+    };
 
-    const closeScreen = () =>
-        dispatch({
-            type: 'player/UPDATE_DATA',
-            payload: { isScreenVisible: false }
-        });
+    const closeScreen = () => setState({ isScreenVisible: false });
 
-    const goToNextQueueItem = (next: boolean | undefined = true) =>
-        dispatch((getState: GetState) => {
-            const {
-                player: { queue, currentId }
-            } = getState();
-            const currentQueueIndex = queue.findIndex(
-                ({ id }: QueueItem) => id === currentId
-            );
-            const newIndex = currentQueueIndex + (next ? 1 : -1);
-            const { [newIndex]: { id = null } = {} } = queue;
+    const goToNextQueueItem = (next: boolean | undefined = true) => {
+        const { queue, currentId } = player;
+        const currentQueueIndex = queue.findIndex(
+            ({ id }: QueueItem) => id === currentId
+        );
+        const newIndex = currentQueueIndex + (next ? 1 : -1);
+        const { [newIndex]: { id = null } = {} } = queue;
 
-            if (id) {
-                setActiveQueueItem(id);
-            }
+        if (id) setActiveQueueItem(id);
 
-            return !!id;
-        });
+        return !!id;
+    };
 
     return [
         player,

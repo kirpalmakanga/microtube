@@ -75,3 +75,13 @@ interface ShareConfig {
     title: string;
     url: string;
 }
+
+type HTMLElementEvent<T extends HTMLElement> = Event & {
+    currentTarget: T;
+};
+
+type HTMLElementWheelEvent = Event & {
+    deltaY: number;
+};
+
+type KeyboardEventName = 'keypress' | 'keydown' | 'keyup';

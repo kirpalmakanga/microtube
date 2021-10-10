@@ -1,5 +1,5 @@
-import { useEffect, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { onCleanup, Show } from 'solid-js';
+import { useNavigate, useParams } from 'solid-app-router';
 
 import { PlaylistData } from '../../@types/alltypes';
 
@@ -29,20 +29,16 @@ const Playlists = () => {
 
     const [, { openNotification }] = useNotifications();
 
-    const handleClickCard = useCallback(
+    const handleClickCard =
         ({ id }: PlaylistData) =>
-            () =>
-                navigate(`/playlist/${id}`),
-        []
-    );
-    const handleClickMenu = useCallback(
-        (data: PlaylistData, callback: Function) => () => {
-            const { title } = data;
+        () =>
+            navigate(`/playlist/${id}`);
 
-            callback(data, title);
-        },
-        []
-    );
+    const handleClickMenu = (data: PlaylistData, callback: Function) => () => {
+        const { title } = data;
+
+        callback(data, title);
+    };
 
     const handleSharing = ({ id, title }: PlaylistData) => {
         const url = getPlaylistURL(id);
@@ -59,61 +55,72 @@ const Playlists = () => {
         }
     };
 
-    useEffect(() => clearPlaylists, [channelId]);
+    onCleanup(clearPlaylists);
 
-    return totalResults === 0 ? (
-        <Placeholder
-            icon="list"
-            text={
-                channelId
-                    ? "This channel doesn't have playlists."
-                    : "You haven't created playlists yet."
-            }
-        />
-    ) : (
-        <MenuWrapper
-            menuItems={[
-                {
-                    title: 'Queue playlist',
-                    icon: 'circle-add',
-                    onClick: queuePlaylist
-                },
-                {
-                    title: 'Launch playlist',
-                    icon: 'play',
-                    onClick: launchPlaylist
-                },
-                {
-                    title: 'Share',
-                    icon: 'share',
-                    onClick: handleSharing
-                },
-                ...(!channelId
-                    ? [
-                          {
-                              title: 'Remove playlist',
-                              icon: 'delete',
-                              onClick: removePlaylist
-                          }
-                      ]
-                    : [])
-            ]}
-        >
-            {(openMenu) => (
-                <List
-                    items={items}
-                    itemKey={({ id }: PlaylistData) => id}
-                    renderItem={(data: PlaylistData) => (
-                        <PlaylistCard
-                            {...data}
-                            onClick={handleClickCard(data)}
-                            onClickMenu={handleClickMenu(data, openMenu)}
-                        />
-                    )}
-                    loadMoreItems={getPlaylists}
+    return (
+        <Show
+            when={totalResults === null || totalResults > 0}
+            fallback={
+                <Placeholder
+                    icon="list"
+                    text={
+                        channelId
+                            ? "This channel doesn't have playlists."
+                            : "You haven't created playlists yet."
+                    }
                 />
-            )}
-        </MenuWrapper>
+            }
+        >
+            <MenuWrapper
+                menuItems={[
+                    {
+                        title: 'Queue playlist',
+                        icon: 'circle-add',
+                        onClick: queuePlaylist
+                    },
+                    {
+                        title: 'Launch playlist',
+                        icon: 'play',
+                        onClick: launchPlaylist
+                    },
+                    {
+                        title: 'Share',
+                        icon: 'share',
+                        onClick: handleSharing
+                    },
+                    ...(!channelId
+                        ? [
+                              {
+                                  title: 'Remove playlist',
+                                  icon: 'delete',
+                                  onClick: removePlaylist
+                              }
+                          ]
+                        : [])
+                ]}
+            >
+                {(openMenu: Function) => (
+                    <List
+                        items={items}
+                        renderItem={(index: number) => {
+                            const { [index]: data } = items;
+
+                            return (
+                                <PlaylistCard
+                                    {...data}
+                                    onClick={handleClickCard(data)}
+                                    onClickMenu={handleClickMenu(
+                                        data,
+                                        openMenu
+                                    )}
+                                />
+                            );
+                        }}
+                        loadMoreItems={getPlaylists}
+                    />
+                )}
+            </MenuWrapper>
+        </Show>
     );
 };
 

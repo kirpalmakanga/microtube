@@ -1,7 +1,4 @@
-import { FunctionComponent } from 'react';
-
-import { memo } from 'react';
-
+import { Component } from 'solid-js';
 import { getThumbnails } from '../../lib/helpers';
 
 import CardContainer from './CardContainer';
@@ -21,7 +18,7 @@ interface Props {
     onClickMenu: () => void;
 }
 
-const PlaylistCard: FunctionComponent<Props> = ({
+const PlaylistCard: Component<Props> = ({
     title,
     thumbnails,
     itemCount,
@@ -47,4 +44,4 @@ const PlaylistCard: FunctionComponent<Props> = ({
     </CardContainer>
 );
 
-export default memo(PlaylistCard);
+export default PlaylistCard;

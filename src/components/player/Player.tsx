@@ -1,21 +1,17 @@
-import { useCallback, useEffect, useRef, WheelEvent } from 'react';
-
+import { createEffect, onCleanup, onMount, Show } from 'solid-js';
 import {
     GenericObject,
     QueueItem,
     PlayerSyncPayload,
-    PlayerSyncHandlers
+    PlayerSyncHandlers,
+    HTMLElementEvent,
+    HTMLElementWheelEvent
 } from '../../../@types/alltypes';
 import { YouTubePlayer } from 'youtube-player/dist/types';
 
 import { usePlayer } from '../../store/hooks/player';
 
-import {
-    useFullscreen,
-    useKeyPress,
-    useMergedState,
-    useUpdateEffect
-} from '../../lib/hooks';
+import { useFullscreen, useKeyboard } from '../../lib/hooks';
 import { isMobile } from '../../lib/helpers';
 
 import Queue from './Queue';
@@ -28,6 +24,9 @@ import DevicesSelector from './controls/DevicesSelector';
 import Info from './Info';
 import { usePlaylistItems } from '../../store/hooks/playlist-items';
 import { useDevices } from '../../store/hooks/devices';
+import { createStore } from 'solid-js/store';
+import { Transition } from 'solid-transition-group';
+import { unsubscribeFromChannel } from '../../api/youtube';
 
 const UNSTARTED = -1;
 
@@ -42,9 +41,10 @@ interface PlayerInnerState {
 }
 
 const Player = () => {
-    const isStartup = useRef<boolean>(true);
-    const youtube = useRef<YouTubePlayer | null>(null);
-    const youtubeVolume = useRef<number>(100);
+    let isStartup: boolean = true;
+    let youtube: YouTubePlayer | null;
+    let youtubeVolume: number = 100;
+    let unsubscribeFromFullscreen: () => void;
 
     const [
         {
@@ -58,7 +58,7 @@ const Player = () => {
             volume
         },
         setPlayerState
-    ] = useMergedState({
+    ] = createStore({
         isFullscreen: false,
         isPlaying: false,
         isBuffering: false,
@@ -88,12 +88,6 @@ const Player = () => {
         requestFullscreen,
         exitFullscreen
     } = useFullscreen();
-
-    useKeyPress('ArrowLeft', () => goToVideo(false));
-    useKeyPress('ArrowRight', () => goToVideo(true));
-    useKeyPress('m', () => toggleMute());
-    useKeyPress('s', () => toggleScreen());
-    useKeyPress(' ', () => togglePlay());
 
     const { isMaster } = currentDevice;
 
@@ -143,7 +137,7 @@ const Player = () => {
     const goToVideo = (next: boolean | undefined = true) =>
         goToNextQueueItem(next);
 
-    const toggleScreen = useCallback(() => {
+    const toggleScreen = () => {
         const isVisible = !isScreenVisible;
 
         updateState({
@@ -152,9 +146,9 @@ const Player = () => {
                 ? { isQueueVisible: false }
                 : {})
         });
-    }, [isScreenVisible, availableDevices.length]);
+    };
 
-    const toggleQueue = useCallback(() => {
+    const toggleQueue = () => {
         const isVisible = !isQueueVisible;
 
         setPlayerState({
@@ -163,19 +157,19 @@ const Player = () => {
                 ? { isScreenVisible: false }
                 : {})
         });
-    }, [isQueueVisible, availableDevices.length]);
+    };
 
     const handleYoutubeIframeReady = (playerInstance: YouTubePlayer) => {
-        youtube.current = playerInstance;
+        youtube = playerInstance;
     };
 
     const handleYoutubeIframeStateChange = (playbackStateId: number) => {
         switch (playbackStateId) {
             case UNSTARTED:
-                if (!isStartup.current) {
+                if (!isStartup) {
                     updateState({ isPlaying: true, isBuffering: false });
                 } else {
-                    isStartup.current = false;
+                    isStartup = false;
                 }
                 break;
         }
@@ -194,7 +188,7 @@ const Player = () => {
         });
 
     const handleSeeking = (currentTime: number) => {
-        youtube.current?.seekTo(currentTime, true);
+        youtube?.seekTo(currentTime, true);
 
         handlePlay();
     };
@@ -206,8 +200,8 @@ const Player = () => {
     };
 
     const getCurrentTime = () => {
-        if (youtube.current) {
-            const currentTime = youtube.current?.getCurrentTime();
+        if (youtube) {
+            const currentTime = youtube?.getCurrentTime();
 
             synchronizePlayer({
                 action: 'update-time',
@@ -221,8 +215,8 @@ const Player = () => {
     };
 
     const getLoadingProgress = () => {
-        if (youtube.current) {
-            const loaded = youtube.current?.getVideoLoadedFraction();
+        if (youtube) {
+            const loaded = youtube?.getVideoLoadedFraction();
 
             synchronizePlayer({
                 action: 'update-loading',
@@ -235,7 +229,7 @@ const Player = () => {
         return null;
     };
 
-    const handleWheelVolume = ({ deltaY }: WheelEvent<HTMLDivElement>) => {
+    const handleWheelVolume = ({ deltaY }: HTMLElementWheelEvent) => {
         const newVolume = deltaY < 0 ? volume + 5 : volume - 5;
         const inRange = newVolume >= 0 && newVolume <= 100;
 
@@ -250,7 +244,69 @@ const Player = () => {
         }
     };
 
-    useEffect(() => {
+    useKeyboard('ArrowLeft', () => goToVideo(false), 'keypress');
+    useKeyboard('ArrowRight', () => goToVideo(true), 'keypress');
+    useKeyboard('m', () => toggleMute(), 'keypress');
+    useKeyboard('s', () => toggleScreen(), 'keypress');
+    useKeyboard(' ', () => togglePlay(), 'keypress');
+
+    createEffect(() => {
+        youtube?.setVolume(volume);
+
+        return volume;
+    }, volume);
+
+    createEffect(() => {
+        if (isMuted) {
+            youtubeVolume = volume;
+
+            setVolume(0);
+        } else {
+            setVolume(youtubeVolume);
+        }
+
+        return isMuted;
+    }, isMuted);
+
+    createEffect(() => {
+        if (!isPlaying) {
+            youtube?.pauseVideo();
+        } else {
+            youtube?.playVideo();
+        }
+
+        return isPlaying;
+    }, isPlaying);
+
+    createEffect(() => {
+        if (isMaster) {
+            setPlayerState({ isScreenVisible });
+        }
+
+        return [isMaster, isScreenVisible];
+    }, [isMaster, isScreenVisible]);
+
+    createEffect(() => {
+        if (!isMaster) {
+            return;
+        }
+
+        if (isFullscreen) {
+            requestFullscreen();
+        } else {
+            exitFullscreen();
+        }
+
+        return [isMaster, isFullscreen];
+    }, [isMaster, isFullscreen]);
+
+    createEffect(() => {
+        if (!videoId) youtube = null;
+
+        return videoId;
+    }, videoId);
+
+    onMount(() => {
         const actions: PlayerSyncHandlers = {
             'update-state': (state: PlayerInnerState) => setPlayerState(state)
         };
@@ -262,66 +318,20 @@ const Player = () => {
                 handler(data);
             }
         });
-    }, []);
 
-    useEffect(() => {
-        youtube.current?.setVolume(volume);
-    }, [volume]);
-
-    useUpdateEffect(() => {
-        if (isMuted) {
-            youtubeVolume.current = volume;
-
-            setVolume(0);
-        } else {
-            setVolume(youtubeVolume.current);
-        }
-    }, [isMuted]);
-
-    useEffect(() => {
-        if (!isPlaying) {
-            youtube.current?.pauseVideo();
-        } else {
-            youtube.current?.playVideo();
-        }
-    }, [isPlaying]);
-
-    useEffect(() => {
-        if (isMaster) {
-            setPlayerState({ isScreenVisible });
-        }
-    }, [isMaster, isScreenVisible]);
-
-    useUpdateEffect(() => {
-        if (!isMaster) {
-            return;
-        }
-
-        if (isFullscreen) {
-            requestFullscreen();
-        } else {
-            exitFullscreen();
-        }
-    }, [isMaster, isFullscreen]);
-
-    useEffect(() => {
-        const unsubscribe = subscribeToFullscreen((isFullscreen: boolean) =>
-            updateState({ isFullscreen })
+        unsubscribeFromFullscreen = subscribeToFullscreen(
+            (isFullscreen: boolean) => updateState({ isFullscreen })
         );
+    });
 
-        return unsubscribe;
-    }, []);
-
-    useUpdateEffect(() => {
-        if (!videoId) {
-            youtube.current = null;
-        }
-    }, [videoId]);
+    onCleanup(() => {
+        unsubscribeFromFullscreen();
+    });
 
     return (
         <div
             className="player__container shadow--2dp"
-            ref={isMaster ? setFullscreenRef : null}
+            ref={isMaster ? setFullscreenRef : undefined}
             data-state-fullscreen={isFullscreen ? 'enabled' : 'disabled'}
             data-state-show-queue={isQueueVisible ? 'enabled' : 'disabled'}
         >
@@ -347,25 +357,26 @@ const Player = () => {
                 togglePlay={togglePlay}
             />
 
-            {availableDevices.length && !isSingleVideo ? (
-                <DevicesSelector
-                    isVisible={isDevicesSelectorVisible}
-                    currentDevice={currentDevice}
-                    devices={availableDevices}
-                    onClickItem={handleSelectDevice}
-                />
-            ) : null}
+            <Transition name="slide-up">
+                <Show when={availableDevices.length && !isSingleVideo}>
+                    <DevicesSelector
+                        currentDevice={currentDevice}
+                        devices={availableDevices}
+                        onClickItem={handleSelectDevice}
+                    />
+                </Show>
+            </Transition>
 
             <div className="player shadow--2dp">
                 <div className="player__inner shadow--2dp">
-                    {!isSingleVideo ? (
+                    <Show when={!isSingleVideo}>
                         <Button
                             className="player__controls-button icon-button"
                             onClick={() => goToVideo(false)}
                             icon="chevron-left"
                             ariaLabel="Go to previous video"
                         />
-                    ) : null}
+                    </Show>
 
                     <Button
                         className="player__controls-button icon-button"
@@ -380,14 +391,14 @@ const Player = () => {
                         ariaLabel={isPlaying ? 'Pause video' : 'Play video'}
                     />
 
-                    {!isSingleVideo ? (
+                    <Show when={!isSingleVideo}>
                         <Button
                             className="player__controls-button icon-button"
                             onClick={() => goToVideo(true)}
                             icon="chevron-right"
                             ariaLabel="Go to next video"
                         />
-                    ) : null}
+                    </Show>
 
                     <Info
                         isWatchingDisabled={
@@ -402,7 +413,7 @@ const Player = () => {
                         onEndSeeking={handleSeeking}
                     />
 
-                    {availableDevices.length && !isSingleVideo ? (
+                    <Show when={availableDevices.length && !isSingleVideo}>
                         <Button
                             className={[
                                 'player__controls-button icon-button',
@@ -412,9 +423,9 @@ const Player = () => {
                             ariaLabel="Devices"
                             onClick={handleToggleDevices}
                         />
-                    ) : null}
+                    </Show>
 
-                    {!isMobile() && videoId ? (
+                    <Show when={!isMobile() && videoId}>
                         <div
                             className="player__controls-volume"
                             onWheel={handleWheelVolume}
@@ -428,10 +439,14 @@ const Player = () => {
 
                             <VolumeRange value={volume} onChange={setVolume} />
                         </div>
-                    ) : null}
+                    </Show>
 
-                    {!isSingleVideo &&
-                    (!availableDevices.length || !isMaster) ? (
+                    <Show
+                        when={
+                            !isSingleVideo &&
+                            (!availableDevices.length || !isMaster)
+                        }
+                    >
                         <Button
                             className={[
                                 'player__controls-button badge icon-button',
@@ -447,9 +462,9 @@ const Player = () => {
                                 isQueueVisible ? 'Close queue' : 'Open queue'
                             }
                         />
-                    ) : null}
+                    </Show>
 
-                    {!isSingleVideo && !isFullscreen ? (
+                    <Show when={!isSingleVideo && !isFullscreen}>
                         <Button
                             className={[
                                 'player__controls-button icon-button',
@@ -461,16 +476,16 @@ const Player = () => {
                                 isScreenVisible ? 'Close screen' : 'open screen'
                             }
                         />
-                    ) : null}
+                    </Show>
 
-                    {isSingleVideo ? (
+                    <Show when={isSingleVideo}>
                         <Button
                             className="player__controls-button icon-button"
                             onClick={handleEditPlaylistItem}
                             icon="folder-add"
                             ariaLabel="Save to playlist"
-                        ></Button>
-                    ) : null}
+                        />
+                    </Show>
 
                     <Button
                         className="player__controls-button icon-button"

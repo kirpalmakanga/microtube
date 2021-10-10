@@ -1,37 +1,30 @@
-import { FunctionComponent, ReactNode, ReactNodeArray } from 'react';
-import Fade from '../animations/Fade';
+import { Component, For } from 'solid-js';
 import { stopPropagation } from '../../lib/helpers';
 
 interface Props {
     title: string;
     isVisible: boolean;
     onClick: () => void;
-    children: ReactNodeArray;
+    items: MenuItemData[];
+    renderItem: (data: MenuItemData) => Element;
 }
 
-const Menu: FunctionComponent<Props> = ({
-    title,
-    isVisible = false,
-    onClick,
-    children = []
-}) => (
-    <Fade in={isVisible}>
-        <div className="menu" onClick={onClick}>
-            <div className="menu__container  shadow--2dp">
-                {title ? (
-                    <div className="menu__header" onClick={stopPropagation()}>
-                        {title}
-                    </div>
-                ) : null}
+const Menu: Component<Props> = ({ title, items, onClick, renderItem }) => (
+    <div className="menu" onClick={onClick}>
+        <div className="menu__container  shadow--2dp">
+            {title ? (
+                <div className="menu__header" onClick={stopPropagation()}>
+                    {title}
+                </div>
+            ) : null}
 
-                <ul className="menu__items">
-                    {children.map((child: ReactNode, index: number) => (
-                        <li key={index}>{child}</li>
-                    ))}
-                </ul>
-            </div>
+            <ul className="menu__items">
+                <For each={items}>
+                    {(data: MenuItemData) => <li>{renderItem(data)}</li>}
+                </For>
+            </ul>
         </div>
-    </Fade>
+    </div>
 );
 
 export default Menu;

@@ -1,5 +1,5 @@
-import { useCallback, useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Show, createEffect, createSignal, on, onCleanup } from 'solid-js';
+import { useParams, useNavigate } from 'solid-app-router';
 
 import { VideoData } from '../../@types/alltypes';
 
@@ -20,73 +20,74 @@ const Search = () => {
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
 
-    const [{ mountGrid }, setState] = useState({
-        mountGrid: true
-    });
+    const [shouldMountGrid, setShouldMountGrid] = createSignal(true);
 
     const handleSearchVideos = () => searchVideos(query);
 
-    const handleClickCard = useCallback(
+    const handleClickCard =
         ({ id }: VideoData) =>
-            () =>
-                navigate(`/video/${id}`),
-        []
+        () =>
+            navigate(`/video/${id}`);
+
+    const handleClickMenu = (data: VideoData, callback: Function) => () => {
+        const { title } = data;
+
+        callback(data, title);
+    };
+
+    createEffect(
+        on([query, forMine], () => {
+            setShouldMountGrid(false);
+
+            clearSearch();
+
+            setTimeout(() => setShouldMountGrid(true));
+        })
     );
 
-    const handleClickMenu = useCallback(
-        (data: VideoData, callback: Function) => () => {
-            const { title } = data;
+    onCleanup(clearSearch);
 
-            callback(data, title);
-        },
-        []
-    );
-
-    useEffect(() => {
-        setState({ mountGrid: false });
-
-        clearSearch();
-
-        setTimeout(() => setState({ mountGrid: true }));
-
-        return clearSearch;
-    }, [query, forMine]);
-
-    return query && mountGrid ? (
-        totalResults === 0 ? (
-            <Placeholder icon="list" text="No results found." />
-        ) : (
-            <MenuWrapper
-                menuItems={[
-                    {
-                        title: `Add to queue`,
-                        icon: 'circle-add',
-                        onClick: queueItem
-                    },
-                    {
-                        title: `Save to playlist`,
-                        icon: 'folder-add',
-                        onClick: editPlaylistItem
-                    }
-                ]}
+    return (
+        <Show when={query && shouldMountGrid()}>
+            <Show
+                when={totalResults === 0}
+                fallback={<Placeholder icon="list" text="No results found." />}
             >
-                {(openMenu) => (
-                    <List
-                        items={items}
-                        itemKey={({ id }: VideoData) => id}
-                        loadMoreItems={handleSearchVideos}
-                        renderItem={(data: VideoData) => (
-                            <VideoCard
-                                {...data}
-                                onClick={handleClickCard(data)}
-                                onClickMenu={handleClickMenu(data, openMenu)}
-                            />
-                        )}
-                    />
-                )}
-            </MenuWrapper>
-        )
-    ) : null;
+                <MenuWrapper
+                    menuItems={[
+                        {
+                            title: `Add to queue`,
+                            icon: 'circle-add',
+                            onClick: queueItem
+                        },
+                        {
+                            title: `Save to playlist`,
+                            icon: 'folder-add',
+                            onClick: editPlaylistItem
+                        }
+                    ]}
+                >
+                    {(openMenu) => (
+                        <List
+                            items={items}
+                            itemKey={({ id }: VideoData) => id}
+                            loadMoreItems={handleSearchVideos}
+                            renderItem={(data: VideoData) => (
+                                <VideoCard
+                                    {...data}
+                                    onClick={handleClickCard(data)}
+                                    onClickMenu={handleClickMenu(
+                                        data,
+                                        openMenu
+                                    )}
+                                />
+                            )}
+                        />
+                    )}
+                </MenuWrapper>
+            </Show>
+        </Show>
+    );
 };
 
 export default Search;

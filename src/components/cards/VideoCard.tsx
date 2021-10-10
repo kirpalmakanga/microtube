@@ -1,7 +1,7 @@
-import { FunctionComponent, memo } from 'react';
-import { Link } from 'react-router-dom';
+import { Component } from 'solid-js';
+import { Link } from 'solid-app-router';
 
-import { ThumbnailsData, VideoData } from '../../../@types/alltypes';
+import { VideoData } from '../../../@types/alltypes';
 
 import {
     formatDate,
@@ -24,7 +24,7 @@ interface Props extends VideoData {
     onClickMenu: () => void;
 }
 
-const VideoCard: FunctionComponent<Props> = ({
+const VideoCard: Component<Props> = ({
     title,
     thumbnails,
     publishedAt,
@@ -49,7 +49,7 @@ const VideoCard: FunctionComponent<Props> = ({
                 {privacyStatus !== 'deleted' ? (
                     <Subtitle className="author">
                         <Link
-                            to={`/channel/${channelId}`}
+                            href={`/channel/${channelId}`}
                             onClick={stopPropagation()}
                         >
                             {channelTitle}
@@ -75,4 +75,4 @@ const VideoCard: FunctionComponent<Props> = ({
     </CardContainer>
 );
 
-export default memo(VideoCard);
+export default VideoCard;

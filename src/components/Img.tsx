@@ -1,57 +1,58 @@
-import { useState, useEffect, FunctionComponent } from 'react';
-import Fade from './animations/Fade';
+import { createSignal, Component, Show, createEffect } from 'solid-js';
+import { Transition } from 'solid-transition-group';
 import Icon from './Icon';
 
 interface Props {
     src: string;
-    alt: string;
+    alt?: string;
     background?: boolean;
 }
 
-const Img: FunctionComponent<Props> = ({
+const Img: Component<Props> = ({
     src = '',
     alt = 'image',
     background = false
 }) => {
-    const [isLoading, setLoadingStatus] = useState(true);
+    const [isLoading, setLoadingStatus] = createSignal(true);
 
-    useEffect(() => {
-        (async () => {
-            try {
-                const img = new Image();
-                img.src = src;
+    createEffect(async () => {
+        try {
+            const img = new Image();
+            img.src = src;
 
-                if (!img.complete) {
-                    await new Promise((resolve, reject) => {
-                        img.onload = resolve;
-                        img.onerror = reject;
-                    });
-                }
-            } catch (e) {
-            } finally {
-                setLoadingStatus(false);
+            if (!img.complete) {
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                });
             }
-        })();
-    }, [src]);
+        } finally {
+            setLoadingStatus(false);
+        }
+    });
 
     return (
         <span className="image">
-            <Fade in={!isLoading} duration={300}>
-                {background ? (
-                    <span
-                        className="image__background"
-                        style={{ backgroundImage: `url(${src})` }}
-                    />
-                ) : (
-                    <img src={src} alt={alt} />
-                )}
-            </Fade>
+            <Transition name="fade">
+                <Show when={!isLoading()}>
+                    {background ? (
+                        <span
+                            className="image__background"
+                            style={{ backgroundImage: `url(${src})` }}
+                        />
+                    ) : (
+                        <img src={src} alt={alt} />
+                    )}
+                </Show>
+            </Transition>
 
-            <Fade in={isLoading} duration={300}>
-                <span className="image__placeholder">
-                    <Icon name="image" />
-                </span>
-            </Fade>
+            <Transition name="fade">
+                <Show when={isLoading()}>
+                    <span className="image__placeholder">
+                        <Icon name="image" />
+                    </span>
+                </Show>
+            </Transition>
         </span>
     );
 };

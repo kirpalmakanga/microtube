@@ -1,17 +1,13 @@
-import { FunctionComponent, ReactNode } from 'react';
+import { Component } from 'solid-js';
 import Icon from './Icon';
 
 interface Props {
     icon: string;
     text: string;
-    children?: ReactNode;
+    children?: unknown;
 }
 
-const Placeholder: FunctionComponent<Props> = ({
-    icon,
-    text,
-    children = null
-}) => (
+const Placeholder: Component<Props> = ({ icon, text, children = null }) => (
     <div className="placeholder">
         <Icon name={icon} />
         <p>{text}</p>

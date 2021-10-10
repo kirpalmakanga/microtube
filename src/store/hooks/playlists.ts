@@ -6,8 +6,10 @@ import { usePrompt } from './prompt';
 import { PlaylistData } from '../../../@types/alltypes';
 import { GetState } from '../helpers';
 
+import { initialState, PlaylistsState } from '../reducers/_playlists';
+
 export const usePlaylists = (channelId?: string) => {
-    const [{ playlists }, dispatch] = useStore();
+    const [{ playlists }, setState] = useStore();
     const [, { openNotification }] = useNotifications();
     const [, { setActiveQueueItem, queueItems }] = usePlayer();
     const [, { openPrompt }] = usePrompt();
@@ -44,33 +46,44 @@ export const usePlaylists = (channelId?: string) => {
 
     const launchPlaylist = (data: PlaylistData) => queuePlaylist(data, true);
 
-    const getPlaylists = () =>
-        dispatch(async (getState: GetState) => {
-            try {
+    const getPlaylists = async () => {
+        try {
+            const { nextPageToken: pageToken, hasNextPage } = playlists;
+
+            if (hasNextPage) {
                 const {
-                    playlists: { nextPageToken: pageToken, hasNextPage }
-                } = getState();
-
-                if (!hasNextPage) {
-                    return;
-                }
-
-                const payload = await api.getPlaylists({
+                    items: newItems,
+                    nextPageToken = '',
+                    totalResults
+                } = await api.getPlaylists({
                     ...(channelId ? { channelId } : { mine: true }),
                     pageToken
                 });
 
-                dispatch({ type: 'playlists/UPDATE_ITEMS', payload });
-            } catch (error) {
-                openNotification('Error fetching playlists.');
+                setState(
+                    'playlists',
+                    ({ items, ...state }: PlaylistsState) => ({
+                        ...state,
+                        items: [...items, ...newItems],
+                        nextPageToken,
+                        hasNextPage: !!nextPageToken,
+                        totalResults
+                    })
+                );
             }
-        });
+        } catch (error) {
+            openNotification('Error fetching playlists.');
+        }
+    };
 
     const createPlaylist = async (title: string, privacyStatus: string) => {
         try {
             const playlist = await api.createPlaylist({ title, privacyStatus });
 
-            dispatch({ type: 'playlists/ADD_ITEM', payload: { playlist } });
+            setState('playlist/items', (items: PlaylistData[]) => [
+                ...items,
+                playlist
+            ]);
 
             return playlist;
         } catch (error) {
@@ -85,10 +98,11 @@ export const usePlaylists = (channelId?: string) => {
             cancelText: 'Cancel',
             callback: async () => {
                 try {
-                    dispatch({
-                        type: 'playlists/REMOVE_ITEM',
-                        payload: { id }
-                    });
+                    setState('playlists/items', (items: PlaylistData[]) =>
+                        items.filter(
+                            ({ id: itemId }: PlaylistData) => itemId !== id
+                        )
+                    );
 
                     openNotification(`Removed playlist "${title}".`);
 
@@ -100,7 +114,7 @@ export const usePlaylists = (channelId?: string) => {
         });
     };
 
-    const clearPlaylists = () => dispatch({ type: 'playlists/CLEAR_ITEMS' });
+    const clearPlaylists = () => setState('playlists', initialState);
 
     return [
         playlists,

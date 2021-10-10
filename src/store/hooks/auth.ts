@@ -1,15 +1,15 @@
-import { useCallback } from 'react';
 import { useStore } from '..';
 
 import * as api from '../../api/youtube';
 import { signIntoDatabase, signOutOfDatabase } from '../../api/database';
 import { useNotifications } from './notifications';
+import { rootInitialState } from '../reducers';
 
 export const useAuth = () => {
-    const [{ user }, dispatch] = useStore();
+    const [{ user }, setState] = useStore();
     const [, { openNotification }] = useNotifications();
 
-    const getUserData = useCallback(async () => {
+    const getUserData = async () => {
         const { isSignedIn, idToken, accessToken, ...data } =
             await api.getSignedInUser();
 
@@ -23,23 +23,19 @@ export const useAuth = () => {
             id = uid;
         }
 
-        dispatch({
-            type: 'user/UPDATE_DATA',
-            payload: {
-                ...data,
-                id,
-                isSignedIn,
-                idToken,
-                accessToken
-            }
+        setState('user', {
+            ...data,
+            id,
+            isSignedIn,
+            idToken,
+            accessToken
         });
-    }, []);
+    };
 
-    const signIn = useCallback(async () => {
+    const signIn = async () => {
         try {
-            dispatch({
-                type: 'user/UPDATE_DATA',
-                payload: { isSigningIn: true }
+            setState('user', {
+                isSigningIn: true
             });
 
             await api.signIn();
@@ -49,19 +45,18 @@ export const useAuth = () => {
                 openNotification('Error signing in user.');
             }
         } finally {
-            dispatch({
-                type: 'user/UPDATE_DATA',
-                payload: { isSigningIn: false }
+            setState('user', {
+                isSigningIn: false
             });
         }
-    }, []);
+    };
 
     const signOut = async () => {
         try {
             await api.signOut();
             await signOutOfDatabase();
 
-            dispatch({ type: 'user/SIGN_OUT' });
+            setState(rootInitialState);
         } catch (error) {
             console.error(error);
         }

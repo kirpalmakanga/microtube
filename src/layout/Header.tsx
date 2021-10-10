@@ -1,5 +1,4 @@
-import { useCallback } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'solid-app-router';
 
 import { usePlayer } from '../store/hooks/player';
 
@@ -9,10 +8,7 @@ import SearchHeader from './SearchHeader';
 const Header = () => {
     const [{ isScreenVisible }, { closeScreen }] = usePlayer();
 
-    const handleCloseScreen = useCallback(
-        () => isScreenVisible && closeScreen(),
-        []
-    );
+    const handleCloseScreen = () => isScreenVisible && closeScreen();
 
     return (
         <header

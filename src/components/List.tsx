@@ -25,8 +25,6 @@ const List: Component<Props> = ({
     loadMoreItems
 }) => {
     const [isLoading, setIsLoading] = createSignal(false);
-    let outerContainer;
-    let innerContainer;
     let isUnmounting = false;
 
     const _loadMoreItems = async () => {
@@ -43,14 +41,10 @@ const List: Component<Props> = ({
         }
     };
 
-    const handleScroll = throttle(({ scrollOffset }: ListOnScrollProps) => {
-        if (!(outerContainer && innerContainer)) {
-            return;
-        }
+    const handleScroll = throttle(({ currentTarget, scrollOffset }) => {
+        const scrollPosition = scrollOffset + currentTarget.offsetHeight;
 
-        const scrollPosition = scrollOffset + outerContainer.offsetHeight;
-
-        if (scrollPosition >= innerContainer.offsetHeight - 1) {
+        if (scrollPosition >= currentTarget.firstChild.offsetHeight - 1) {
             _loadMoreItems();
         }
     }, 10);

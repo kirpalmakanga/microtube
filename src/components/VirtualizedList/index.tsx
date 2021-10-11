@@ -10,6 +10,7 @@ type ScrollEvent = UIEvent & {
 export interface VirtualizedListProps
     extends Omit<JSX.HTMLAttributes<HTMLDivElement>, 'children'> {
     height: number;
+    width: number;
     itemHeight: number;
     totalCount: number;
     buffer?: number;
@@ -19,6 +20,7 @@ export interface VirtualizedListProps
 
 export default function VirtualizedList(props: VirtualizedListProps) {
     const [, rest] = splitProps(props, [
+        'width',
         'height',
         'itemHeight',
         'totalCount',
@@ -49,7 +51,8 @@ export default function VirtualizedList(props: VirtualizedListProps) {
             ref={setScroll.vertical}
             style={{
                 ...(props.style as any),
-                height: `${props.height}px`
+                height: `${props.height}px`,
+                width: `${props.width}px`
             }}
             {...rest}
         >

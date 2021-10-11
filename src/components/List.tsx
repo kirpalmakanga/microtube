@@ -91,6 +91,7 @@ const List: Component<Props> = ({
                         className={['list', className]
                             .filter(Boolean)
                             .join(' ')}
+                        width={width}
                         height={height}
                         totalCount={isLoading ? items.length + 1 : items.length}
                         itemHeight={_itemSize(height)}

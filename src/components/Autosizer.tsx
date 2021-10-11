@@ -15,6 +15,8 @@ const Autosizer: Component<Props> = ({ children }) => {
     let _autoSizer: HTMLElement;
     let _parentNode: HTMLElement;
 
+    const outerStyle = { display: 'none' };
+
     const [dimensions, setDimensions] = createStore({
         width: 0,
         height: 0
@@ -45,15 +47,20 @@ const Autosizer: Component<Props> = ({ children }) => {
 
             resizeObserver = new ResizeObserver(onResize);
 
-            resizeObserver.observe(_autoSizer);
+            resizeObserver.observe(_parentNode);
         }
     });
 
     onCleanup(() => {
-        if (resizeObserver) resizeObserver.unobserve(_autoSizer);
+        if (resizeObserver) resizeObserver.unobserve(_parentNode);
     });
 
-    return <div ref={getAutoSizer}>{children(dimensions)}</div>;
+    return (
+        <>
+            <div ref={getAutoSizer} style={outerStyle}></div>
+            {children(dimensions)}
+        </>
+    );
 };
 
 export default Autosizer;

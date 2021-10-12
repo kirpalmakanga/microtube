@@ -1,12 +1,13 @@
-import { Component, For } from 'solid-js';
+import { Component, For, JSXElement } from 'solid-js';
 import { stopPropagation } from '../../lib/helpers';
+
+import { MenuItemData } from './types';
 
 interface Props {
     title: string;
-    isVisible: boolean;
     onClick: () => void;
     items: MenuItemData[];
-    renderItem: (data: MenuItemData) => Element;
+    renderItem: (data: MenuItemData) => JSXElement;
 }
 
 const Menu: Component<Props> = ({ title, items, onClick, renderItem }) => (

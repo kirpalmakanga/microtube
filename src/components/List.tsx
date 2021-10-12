@@ -1,4 +1,11 @@
-import { Component, createSignal, onCleanup, onMount, Show } from 'solid-js';
+import {
+    Component,
+    createSignal,
+    JSXElement,
+    onCleanup,
+    onMount,
+    Show
+} from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import { throttle, isMobile } from '../lib/helpers';
 
@@ -6,24 +13,18 @@ import Autosizer, { Size } from './Autosizer';
 import VirtualizedList from './VirtualizedList';
 import Icon from './Icon';
 
-const rowHeight = isMobile() ? 3 : 6;
+const visibleRowsCount = isMobile() ? 4 : 6;
 
 /* TODO: implement solid virtual List, memoize */
 interface Props {
     className?: string;
     items: unknown[];
     itemSize?: number | ((containerHeight: number) => number);
-    renderItem: (data: any) => Element;
+    children: (data: any) => JSXElement;
     loadMoreItems: Function;
 }
 
-const List: Component<Props> = ({
-    className,
-    items,
-    itemSize,
-    renderItem,
-    loadMoreItems
-}) => {
+const List: Component<Props> = (props) => {
     const [isLoading, setIsLoading] = createSignal(false);
     let isUnmounting = false;
 
@@ -34,20 +35,22 @@ const List: Component<Props> = ({
 
         setIsLoading(true);
 
-        await loadMoreItems();
+        await props.loadMoreItems();
 
         if (!isUnmounting) {
             setIsLoading(false);
         }
     };
 
-    const handleScroll = throttle(({ currentTarget, scrollOffset }) => {
-        const scrollPosition = scrollOffset + currentTarget.offsetHeight;
-
-        if (scrollPosition >= currentTarget.firstChild.offsetHeight - 1) {
-            _loadMoreItems();
-        }
-    }, 10);
+    const handleScroll = throttle(
+        ({ currentTarget: { scrollTop, scrollHeight, offsetHeight } }) => {
+            if (scrollTop >= scrollHeight - offsetHeight) {
+                console.log('end of scroll');
+                _loadMoreItems();
+            }
+        },
+        10
+    );
 
     const renderLoader = () => (
         <Transition name="fade" appear={true}>
@@ -58,24 +61,16 @@ const List: Component<Props> = ({
     );
 
     const _itemSize = (containerHeight: number): number => {
-        switch (typeof itemSize) {
+        switch (typeof props.itemSize) {
             case 'function':
-                return itemSize(containerHeight);
+                return props.itemSize(containerHeight);
             case 'number':
-                return itemSize;
+                return props.itemSize;
 
             default:
-                return containerHeight / rowHeight;
+                return containerHeight / visibleRowsCount;
         }
     };
-
-    const Row = (index: number) => (
-        <div className="list__item">
-            <Show when={index < items.length} fallback={renderLoader()}>
-                {renderItem(index)}
-            </Show>
-        </div>
-    );
 
     onMount(_loadMoreItems);
 
@@ -83,21 +78,37 @@ const List: Component<Props> = ({
 
     return (
         <Autosizer>
-            {({ height, width }: Size) => {
-                console.log({ height, width });
-
+            {({ height, width }: Size): JSXElement => {
+                const itemHeight = _itemSize(height);
                 return (
                     <VirtualizedList
-                        className={['list', className]
+                        className={['list', props.className]
                             .filter(Boolean)
                             .join(' ')}
                         width={width}
                         height={height}
-                        totalCount={isLoading ? items.length + 1 : items.length}
-                        itemHeight={_itemSize(height)}
+                        totalCount={
+                            isLoading()
+                                ? props.items.length + 1
+                                : props.items.length
+                        }
+                        itemHeight={itemHeight}
+                        buffer={visibleRowsCount}
                         onScroll={handleScroll}
                     >
-                        {Row}
+                        {(index: number) => (
+                            <div
+                                className="list__item"
+                                style={{ height: `${itemHeight}px` }}
+                            >
+                                <Show
+                                    when={index < props.items.length}
+                                    fallback={renderLoader()}
+                                >
+                                    {props.children(index)}
+                                </Show>
+                            </div>
+                        )}
                     </VirtualizedList>
                 );
             }}

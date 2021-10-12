@@ -1,5 +1,6 @@
-import { FunctionComponent } from 'react';
+import { Component } from 'solid-js';
 import Icon from '../Icon';
+import { MenuItemData } from './types';
 
 interface Props {
     title: string;
@@ -7,7 +8,7 @@ interface Props {
     onClick: () => void;
 }
 
-const MenuItem: FunctionComponent<Props> = ({ title, icon, onClick }) => (
+const MenuItem: Component<Props> = ({ title, icon, onClick }: MenuItemData) => (
     <button className="menu__item" type="button" onClick={onClick}>
         {icon ? <Icon name={icon} /> : null}
 

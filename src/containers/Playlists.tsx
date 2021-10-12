@@ -1,4 +1,4 @@
-import { onCleanup, Show } from 'solid-js';
+import { JSXElement, onCleanup, Show } from 'solid-js';
 import { useNavigate, useParams } from 'solid-app-router';
 
 import { PlaylistData } from '../../@types/alltypes';
@@ -17,7 +17,7 @@ const Playlists = () => {
     const navigate = useNavigate();
 
     const [
-        { items, totalResults },
+        playlists,
         {
             getPlaylists,
             removePlaylist,
@@ -59,7 +59,7 @@ const Playlists = () => {
 
     return (
         <Show
-            when={totalResults === null || totalResults > 0}
+            when={playlists.totalResults === null || playlists.totalResults > 0}
             fallback={
                 <Placeholder
                     icon="list"
@@ -99,11 +99,10 @@ const Playlists = () => {
                         : [])
                 ]}
             >
-                {(openMenu: Function) => (
-                    <List
-                        items={items}
-                        renderItem={(index: number) => {
-                            const { [index]: data } = items;
+                {(openMenu: Function): JSXElement => (
+                    <List items={playlists.items} loadMoreItems={getPlaylists}>
+                        {(index: number): JSXElement => {
+                            const { [index]: data } = playlists.items;
 
                             return (
                                 <PlaylistCard
@@ -116,8 +115,7 @@ const Playlists = () => {
                                 />
                             );
                         }}
-                        loadMoreItems={getPlaylists}
-                    />
+                    </List>
                 )}
             </MenuWrapper>
         </Show>

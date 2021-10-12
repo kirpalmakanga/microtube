@@ -1,10 +1,10 @@
 import { Component, onCleanup, onMount, JSXElement } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
-export type Size = {
+export interface Size {
     height: number;
     width: number;
-};
+}
 
 interface Props {
     children: (size: Size) => JSXElement;
@@ -17,7 +17,7 @@ const Autosizer: Component<Props> = ({ children }) => {
 
     const outerStyle = { display: 'none' };
 
-    const [dimensions, setDimensions] = createStore({
+    const [dimensions, setDimensions] = createStore<Size>({
         width: 0,
         height: 0
     });

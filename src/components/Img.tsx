@@ -1,4 +1,4 @@
-import { createSignal, Component, Show, createEffect } from 'solid-js';
+import { createSignal, Component, Show, createEffect, onMount } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import Icon from './Icon';
 
@@ -8,17 +8,13 @@ interface Props {
     background?: boolean;
 }
 
-const Img: Component<Props> = ({
-    src = '',
-    alt = 'image',
-    background = false
-}) => {
+const Img: Component<Props> = (props) => {
     const [isLoading, setLoadingStatus] = createSignal(true);
 
-    createEffect(async () => {
+    onMount(async () => {
         try {
             const img = new Image();
-            img.src = src;
+            img.src = props.src;
 
             if (!img.complete) {
                 await new Promise((resolve, reject) => {
@@ -34,23 +30,22 @@ const Img: Component<Props> = ({
     return (
         <span className="image">
             <Transition name="fade">
-                <Show when={!isLoading()}>
-                    {background ? (
+                <Show
+                    when={!isLoading()}
+                    fallback={
+                        <span className="image__placeholder">
+                            <Icon name="image" />
+                        </span>
+                    }
+                >
+                    {props.background ? (
                         <span
                             className="image__background"
-                            style={{ backgroundImage: `url(${src})` }}
+                            style={{ 'background-image': `url(${props.src})` }}
                         />
                     ) : (
-                        <img src={src} alt={alt} />
+                        <img src={props.src} alt={props.alt} />
                     )}
-                </Show>
-            </Transition>
-
-            <Transition name="fade">
-                <Show when={isLoading()}>
-                    <span className="image__placeholder">
-                        <Icon name="image" />
-                    </span>
                 </Show>
             </Transition>
         </span>

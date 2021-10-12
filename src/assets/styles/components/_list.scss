@@ -1,12 +1,18 @@
 $gutter: 16px;
 
 .list {
+    overflow: auto;
+
+    ul {
+        li {
+            &:not(:last-child) {
+                border-bottom: 1px solid $brand-primary;
+            }
+        }
+    }
+
     &__item {
         display: flex;
-
-        &:not(:last-child) {
-            border-bottom: 1px solid $brand-primary;
-        }
     }
 
     &__loading {

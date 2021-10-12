@@ -1,25 +1,21 @@
-import { Component, Show } from 'solid-js';
+import { Component, JSXElement, Show } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
+
+import { MenuItemData } from './types';
 
 import Menu from './Menu';
 import MenuItem from './MenuItem';
 
-interface MenuItemData {
-    title: string;
-    icon: string;
-    onClick: (callbackData: object) => void;
-}
-
 interface Props {
     menuItems: MenuItemData[];
-    children: (openMenu: Function) => Element[] | Element;
+    children: (openMenu: Function) => JSXElement;
 }
 
 interface State {
     isMenuOpen: boolean;
     menuTitle: string;
-    callbackData: object;
+    callbackData: Object;
 }
 
 const initialState: State = {
@@ -28,12 +24,11 @@ const initialState: State = {
     callbackData: {}
 };
 
-const MenuWrapper: Component<Props> = ({ menuItems, children = () => {} }) => {
-    const [{ isMenuOpen, menuTitle, callbackData }, setState] =
-        createStore(initialState);
+const MenuWrapper: Component<Props> = ({ menuItems, children }) => {
+    const [state, setState] = createStore(initialState);
 
     const openMenu = (callbackData: State, menuTitle: string) => {
-        if (isMenuOpen) {
+        if (state.isMenuOpen) {
             return;
         }
 
@@ -46,11 +41,11 @@ const MenuWrapper: Component<Props> = ({ menuItems, children = () => {} }) => {
         <>
             {children(openMenu)}
 
-            <Transition name="slide-up">
-                <Show when={isMenuOpen}>
+            <Transition name="fade">
+                <Show when={state.isMenuOpen}>
                     <Menu
                         onClick={closeMenu}
-                        title={menuTitle}
+                        title={state.menuTitle}
                         items={menuItems}
                         renderItem={({
                             title,
@@ -58,10 +53,9 @@ const MenuWrapper: Component<Props> = ({ menuItems, children = () => {} }) => {
                             onClick
                         }: MenuItemData) => (
                             <MenuItem
-                                key={title}
                                 title={title}
                                 icon={icon}
-                                onClick={() => onClick(callbackData)}
+                                onClick={() => onClick(state.callbackData)}
                             />
                         )}
                     />

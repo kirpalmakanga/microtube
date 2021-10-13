@@ -1,4 +1,4 @@
-import { JSX, JSXElement, splitProps } from 'solid-js';
+import { Component, JSX, JSXElement, splitProps } from 'solid-js';
 import { createVirtualized } from './virtualize';
 import { createScrollSync } from './scrollSync';
 import Range from './range';
@@ -18,7 +18,7 @@ export interface VirtualizedListProps
     onScroll?: (e: ScrollEvent) => void;
 }
 
-export default function VirtualizedList(props: VirtualizedListProps) {
+const VirtualizedList: Component<VirtualizedListProps> = (props) => {
     const [, rest] = splitProps(props, [
         'width',
         'height',
@@ -70,4 +70,6 @@ export default function VirtualizedList(props: VirtualizedListProps) {
             </ul>
         </div>
     );
-}
+};
+
+export default VirtualizedList;

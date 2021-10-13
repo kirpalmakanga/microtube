@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { Component, Show } from 'solid-js';
 import { YouTubePlayer } from 'youtube-player/dist/types';
 
 import { YoutubePlayer, Options } from './YoutubePlayer';
@@ -14,7 +14,6 @@ const playerOptions: Options = {
 };
 
 interface Props {
-    isVisible: boolean;
     videoId: string;
     onReady: (playerInstance: YouTubePlayer) => void;
     onBuffering: () => void;
@@ -25,32 +24,24 @@ interface Props {
     onClick: () => void;
 }
 
-const Screen: FunctionComponent<Props> = ({
-    isVisible,
-    videoId,
-    onReady,
-    onBuffering,
-    onPlay,
-    onPause,
-    onEnd,
-    onStateChange
-}) => (
-    <div className={`screen ${isVisible ? 'is-visible' : ''}`}>
-        {videoId ? (
+const Screen: Component<Props> = (props) => (
+    <div className="screen">
+        <Show
+            when={props.videoId}
+            fallback={<Placeholder icon="screen" text="No video." />}
+        >
             <YoutubePlayer
-                videoId={videoId}
+                videoId={props.videoId}
                 options={playerOptions}
-                onReady={onReady}
-                onEnd={onEnd}
-                onPlay={onPlay}
-                onPause={onPause}
-                onBuffering={onBuffering}
-                onStateChange={onStateChange}
+                onReady={props.onReady}
+                onEnd={props.onEnd}
+                onPlay={props.onPlay}
+                onPause={props.onPause}
+                onBuffering={props.onBuffering}
+                onStateChange={props.onStateChange}
                 onError={(err) => console.error(err)}
             />
-        ) : (
-            <Placeholder icon="screen" text="No video." />
-        )}
+        </Show>
     </div>
 );
 

@@ -7,7 +7,6 @@
     right: 0;
     bottom: 100px;
     display: flex;
-    transform: translateY(100%);
 
     @media screen and (min-width: 480px) {
         bottom: 50px;
@@ -25,10 +24,6 @@
             right: 0;
             bottom: 0;
         }
-    }
-
-    &.is-visible {
-        transform: translate(0);
     }
 
     [data-state-fullscreen='enabled'] & {

@@ -1,4 +1,4 @@
-import { Component, createEffect, onCleanup, onMount } from 'solid-js';
+import { Component, onCleanup, onMount } from 'solid-js';
 
 import MenuWrapper from '../menu/MenuWrapper';
 
@@ -14,7 +14,6 @@ import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 import { useNotifications } from '../../store/hooks/notifications';
 
 interface Props {
-    isVisible: boolean;
     isPlaying: boolean;
     isBuffering: boolean;
     toggleQueue: () => void;
@@ -30,7 +29,6 @@ interface QueueItemData {
 }
 
 const Queue: Component<Props> = ({
-    isVisible,
     isPlaying,
     isBuffering,
     toggleQueue,
@@ -79,8 +77,9 @@ const Queue: Component<Props> = ({
     let unsubscribeFromCurrentQueueId: () => void;
 
     onMount(() => {
-        subscribeToQueue();
-        subscribeToCurrentQueueId();
+        clearNewQueueItems();
+        unsubscribeFromQueue = subscribeToQueue();
+        unsubscribeFromCurrentQueueId = subscribeToCurrentQueueId();
     });
 
     onCleanup(() => {
@@ -88,18 +87,8 @@ const Queue: Component<Props> = ({
         unsubscribeFromCurrentQueueId();
     });
 
-    createEffect(() => {
-        if (isVisible) {
-            clearNewQueueItems();
-        }
-
-        return isVisible;
-    });
-
     return (
-        <section
-            className={`Queue shadow--2dp ${isVisible ? 'is-visible' : ''}`}
-        >
+        <section className="Queue shadow--2dp">
             <QueueHeader
                 itemCount={items.length}
                 onClickClose={toggleQueue}

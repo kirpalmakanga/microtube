@@ -1,31 +1,31 @@
-import { FunctionComponent, ReactNode } from 'react';
+import { Component, splitProps } from 'solid-js';
 import Icon from '../../Icon';
 
 interface Props {
     className: string;
     icon: string;
     badge?: unknown;
-    children?: ReactNode;
+    children?: string | Element;
     ariaLabel: string;
     onClick: () => void;
 }
 
-const Button: FunctionComponent<Props> = ({
-    children,
-    icon,
-    badge,
-    ariaLabel,
-    onClick,
-    ...props
-}) => (
-    <button
-        {...props}
-        onClick={onClick}
-        aria-label={ariaLabel}
-        data-badge={badge}
-    >
-        <Icon className="icon" name={icon} />
-    </button>
-);
+const Button: Component<Props> = (props) => {
+    const [localProps, buttonProps] = splitProps(props, [
+        'ariaLabel',
+        'badge',
+        'icon'
+    ]);
+
+    return (
+        <button
+            {...buttonProps}
+            aria-label={localProps.ariaLabel}
+            data-badge={localProps.badge}
+        >
+            <Icon className="icon" name={localProps.icon} />
+        </button>
+    );
+};
 
 export default Button;

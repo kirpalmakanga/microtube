@@ -1,17 +1,18 @@
-import { Component } from 'solid-js';
+import { Component, Show } from 'solid-js';
 
 interface Props {
     name: string;
     className?: string;
 }
 
-const Icon: Component<Props> = ({ name, className = '' }: Props) =>
-    name ? (
-        <span className={['icon', className].join(' ')}>
+const Icon: Component<Props> = (props: Props) => (
+    <Show when={props.name}>
+        <span className={['icon', props.className].filter(Boolean).join(' ')}>
             <svg>
-                <use href={`#icon-${name}`} />
+                <use href={`#icon-${props.name}`} />
             </svg>
         </span>
-    ) : null;
+    </Show>
+);
 
 export default Icon;

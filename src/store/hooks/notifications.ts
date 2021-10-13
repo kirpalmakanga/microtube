@@ -1,6 +1,5 @@
 import { useStore } from '..';
 import { delay } from '../../lib/helpers';
-import { GetState } from '../helpers';
 
 export const useNotifications = () => {
     const [{ notifications }, setState] = useStore();

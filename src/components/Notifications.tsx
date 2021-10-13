@@ -1,24 +1,20 @@
-import { Show } from 'solid-js';
+import { Component, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 
-import { useStore } from '../store';
 import { useNotifications } from '../store/hooks/notifications';
 
 import Icon from './Icon';
 
-const Notifications = () => {
-    const [
-        {
-            notifications: { message, isVisible }
-        }
-    ] = useStore();
-    const [, { closeNotification }] = useNotifications();
+const Notifications: Component = () => {
+    const [notifications, { closeNotification }] = useNotifications();
 
     return (
         <Transition name="slide-up">
-            <Show when={isVisible}>
+            <Show when={notifications.isVisible}>
                 <div className="notification__content">
-                    <div className="notification__text">{message}</div>
+                    <div className="notification__text">
+                        {notifications.message}
+                    </div>
                     <button
                         className="notification__action icon-button"
                         onClick={closeNotification}

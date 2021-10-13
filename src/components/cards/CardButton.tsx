@@ -1,6 +1,6 @@
 import Button from '../Button';
 
-const CardButton = ({ ...props }) => (
+const CardButton = (props) => (
     <Button className="card__button icon-button" {...props} />
 );
 

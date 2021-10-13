@@ -1,7 +1,7 @@
-import { FunctionComponent } from 'react';
+import { Component } from 'solid-js';
 
-const CardContentInner: FunctionComponent = ({ children }) => (
-    <div className="card__text">{children}</div>
+const CardContentInner: Component = (props) => (
+    <div className="card__text">{props.children}</div>
 );
 
 export default CardContentInner;

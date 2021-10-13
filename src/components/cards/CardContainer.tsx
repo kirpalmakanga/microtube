@@ -1,14 +1,18 @@
-import { FunctionComponent } from 'react';
+import { Component, splitProps } from 'solid-js';
 
 interface Props {
     onClick?: () => void;
     onContextMenu?: () => void;
 }
 
-const CardContainer: FunctionComponent<Props> = ({ children, ...props }) => (
-    <div className="card" {...props}>
-        {children}
-    </div>
-);
+const CardContainer: Component<Props> = (props) => {
+    const [localProps, containerProps] = splitProps(props, ['children']);
+
+    return (
+        <div className="card" {...containerProps}>
+            {localProps.children}
+        </div>
+    );
+};
 
 export default CardContainer;

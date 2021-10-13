@@ -1,4 +1,4 @@
-import { FunctionComponent } from 'react';
+import { Component, Show } from 'solid-js';
 import Img from '../Img';
 
 interface Props {
@@ -7,17 +7,13 @@ interface Props {
     badgeText: string | null;
 }
 
-const CardThumbnail: FunctionComponent<Props> = ({
-    src,
-    altText,
-    badgeText
-}) => (
+const CardThumbnail: Component<Props> = (props) => (
     <div className="card__thumbnail">
-        {src ? <Img src={src} alt={altText} background /> : null}
+        <Img src={props.src} alt={props.altText} background />
 
-        {badgeText ? (
-            <span className="card__thumbnail-badge">{badgeText}</span>
-        ) : null}
+        <Show when={props.badgeText}>
+            <span className="card__thumbnail-badge">{props.badgeText}</span>
+        </Show>
     </div>
 );
 

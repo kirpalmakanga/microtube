@@ -1,5 +1,11 @@
-import { Component, onCleanup, onMount, JSXElement } from 'solid-js';
-import { createStore } from 'solid-js/store';
+import {
+    Component,
+    onCleanup,
+    onMount,
+    JSXElement,
+    createSignal
+} from 'solid-js';
+import { throttle } from '../lib/helpers';
 
 export interface Size {
     height: number;
@@ -10,28 +16,21 @@ interface Props {
     children: (size: Size) => JSXElement;
 }
 
-const Autosizer: Component<Props> = ({ children }) => {
+/* TODO: fix recursion when setting state ??? */
+
+const Autosizer: Component<Props> = (props) => {
     let resizeObserver: ResizeObserver;
     let _autoSizer: HTMLElement;
     let _parentNode: HTMLElement;
 
     const outerStyle = { display: 'none' };
 
-    const [dimensions, setDimensions] = createStore<Size>({
+    const [dimensions, setDimensions] = createSignal({
         width: 0,
         height: 0
     });
 
-    const getAutoSizer = (el: HTMLElement) => (_autoSizer = el);
-
-    const onResize = () => {
-        const { offsetWidth: width, offsetHeight: height } = _parentNode;
-
-        setDimensions({
-            width,
-            height
-        });
-    };
+    const getRef = (el: HTMLElement) => (_autoSizer = el);
 
     onMount(() => {
         const { parentNode } = _autoSizer;
@@ -43,22 +42,32 @@ const Autosizer: Component<Props> = ({ children }) => {
         ) {
             _parentNode = parentNode;
 
-            onResize();
+            console.log('mount:autoSizer');
 
-            resizeObserver = new ResizeObserver(onResize);
+            resizeObserver = new ResizeObserver(
+                throttle(() => {
+                    console.log('onResize');
+                    const { offsetWidth: width, offsetHeight: height } =
+                        _parentNode;
 
+                    // setDimensions({
+                    //     width,
+                    //     height
+                    // });
+                }, 200)
+            );
             resizeObserver.observe(_parentNode);
         }
     });
 
     onCleanup(() => {
-        if (resizeObserver) resizeObserver.unobserve(_parentNode);
+        if (resizeObserver) resizeObserver.disconnect();
     });
 
     return (
         <>
-            <div ref={getAutoSizer} style={outerStyle}></div>
-            {children(dimensions)}
+            <div ref={getRef} style={outerStyle}></div>
+            {props.children(dimensions())}
         </>
     );
 };

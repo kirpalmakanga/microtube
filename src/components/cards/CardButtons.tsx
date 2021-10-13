@@ -1,7 +1,7 @@
-import { FunctionComponent } from 'react';
+import { Component } from 'solid-js';
 
-const CardButtons: FunctionComponent = ({ children }) => (
-    <div className="card__buttons">{children}</div>
+const CardButtons: Component = (props) => (
+    <div className="card__buttons">{props.children}</div>
 );
 
 export default CardButtons;

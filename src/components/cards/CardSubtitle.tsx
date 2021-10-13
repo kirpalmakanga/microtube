@@ -1,17 +1,23 @@
-import { FunctionComponent } from 'react';
+import { Component, splitProps } from 'solid-js';
 
 interface Props {
     className: string;
 }
 
-const CardTitle: FunctionComponent<Props> = ({
-    children,
-    className,
-    ...props
-}) => (
-    <h3 className={['card__subtitle', className].join(' ')} {...props}>
-        {children}
-    </h3>
-);
+const CardTitle: Component<Props> = (props) => {
+    const [localProps, headerProps] = splitProps(props, [
+        'className',
+        'children'
+    ]);
+
+    return (
+        <h3
+            className={['card__subtitle', localProps.className].join(' ')}
+            {...headerProps}
+        >
+            {localProps.children}
+        </h3>
+    );
+};
 
 export default CardTitle;

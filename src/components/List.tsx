@@ -15,7 +15,6 @@ import Icon from './Icon';
 
 const visibleRowsCount = isMobile() ? 4 : 6;
 
-/* TODO: implement solid virtual List, memoize */
 interface Props {
     className?: string;
     items: unknown[];
@@ -24,11 +23,21 @@ interface Props {
     loadMoreItems: Function;
 }
 
+const Loader = () => (
+    <Transition name="fade" appear={true}>
+        <div className="list__loading">
+            <Icon name="loading" />
+        </div>
+    </Transition>
+);
+
 const List: Component<Props> = (props) => {
     const [isLoading, setIsLoading] = createSignal(false);
     let isUnmounting = false;
 
     const _loadMoreItems = async () => {
+        console.log(isLoading());
+
         if (isLoading()) {
             return;
         }
@@ -52,14 +61,6 @@ const List: Component<Props> = (props) => {
         10
     );
 
-    const renderLoader = () => (
-        <Transition name="fade" appear={true}>
-            <div className="list__loading">
-                <Icon name="loading" />
-            </div>
-        </Transition>
-    );
-
     const _itemSize = (containerHeight: number): number => {
         switch (typeof props.itemSize) {
             case 'function':
@@ -72,14 +73,16 @@ const List: Component<Props> = (props) => {
         }
     };
 
-    onMount(_loadMoreItems);
+    onMount(() => console.log('mount:list'));
 
     onCleanup(() => (isUnmounting = true));
 
     return (
         <Autosizer>
             {({ height, width }: Size): JSXElement => {
+                console.log({ height, width });
                 const itemHeight = _itemSize(height);
+
                 return (
                     <VirtualizedList
                         className={['list', props.className]
@@ -101,12 +104,13 @@ const List: Component<Props> = (props) => {
                                 className="list__item"
                                 style={{ height: `${itemHeight}px` }}
                             >
-                                <Show
+                                {`Test${index}`}
+                                {/* <Show
                                     when={index < props.items.length}
-                                    fallback={renderLoader()}
+                                    fallback={<Loader />}
                                 >
                                     {props.children(index)}
-                                </Show>
+                                </Show> */}
                             </div>
                         )}
                     </VirtualizedList>

@@ -2,7 +2,7 @@ import { JSXElement, Component, splitProps } from 'solid-js';
 
 interface Props {
     children: JSXElement;
-    onClick: JSXElement;
+    onClick: () => void;
 }
 
 const CardContent: Component<Props> = (props) => {

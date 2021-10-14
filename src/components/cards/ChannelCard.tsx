@@ -1,4 +1,4 @@
-import { FunctionComponent, memo } from 'react';
+import { Component } from 'solid-js';
 
 import { ThumbnailsData } from '../../../@types/alltypes';
 
@@ -17,24 +17,19 @@ interface Props {
     goToChannel: () => void;
 }
 
-const SubscriptionCard: FunctionComponent<Props> = ({
-    title,
-    thumbnails,
-    totalItemCount,
-    goToChannel
-}) => (
+const SubscriptionCard: Component<Props> = (props) => (
     <CardContainer>
-        <CardContent onClick={goToChannel}>
+        <CardContent onClick={props.goToChannel}>
             <CardThumbnail
-                src={getThumbnails(thumbnails, 'medium')}
-                altText={title}
-                badgeText={`${totalItemCount} video${
-                    totalItemCount > 1 ? 's' : ''
+                src={getThumbnails(props.thumbnails, 'medium')}
+                altText={props.title}
+                badgeText={`${props.totalItemCount} video${
+                    props.totalItemCount > 1 ? 's' : ''
                 }`}
             />
 
             <CardContentInner>
-                <Title>{title}</Title>
+                <Title>{props.title}</Title>
             </CardContentInner>
         </CardContent>
     </CardContainer>

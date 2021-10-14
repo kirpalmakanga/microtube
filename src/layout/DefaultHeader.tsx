@@ -10,15 +10,15 @@ import { useAuth } from '../store/hooks/auth';
 import { Transition } from 'solid-transition-group';
 
 const DefaultHeader = () => {
-    const { pathname } = useLocation();
+    const location = useLocation();
     const navigate = useNavigate();
-    const [{ name, picture, isSignedIn }, { signIn, signOut }] = useAuth();
+    const [user, { signIn, signOut }] = useAuth();
     const [isMenuOpen, setMenuState] = createSignal(false);
 
     const title = useAppTitle();
 
     const handleClickUser = () =>
-        isSignedIn ? setMenuState(!isMenuOpen()) : signIn();
+        user.isSignedIn ? setMenuState(!isMenuOpen()) : signIn();
 
     const handleLoggingOut = () => {
         signOut();
@@ -28,10 +28,12 @@ const DefaultHeader = () => {
 
     return (
         <div className="layout__header-row">
-            {pathname !== '/' && pathname !== '/login' ? (
+            {location.pathname !== '/' && location.pathname !== '/login' ? (
                 <Button
                     onClick={() =>
-                        navigate(-(pathname.endsWith('/videos') ? 2 : 1))
+                        navigate(
+                            -(location.pathname.endsWith('/videos') ? 2 : 1)
+                        )
                     }
                     className="layout__back-button icon-button"
                     aria-label="Go to homepage"
@@ -45,7 +47,7 @@ const DefaultHeader = () => {
             </span>
 
             <nav className="navigation">
-                {isSignedIn ? (
+                {user.isSignedIn ? (
                     <>
                         <Link
                             className="navigation__link icon-button"
@@ -76,21 +78,25 @@ const DefaultHeader = () => {
                     <Button
                         className="navigation__link icon-buttona avatar"
                         onClick={handleClickUser}
-                        icon={!isSignedIn ? 'user' : ''}
+                        icon={!user.isSignedIn ? 'user' : ''}
                     >
-                        {picture ? <Img src={picture} alt="avatar" /> : null}
+                        {user.picture ? (
+                            <Img src={user.picture} alt="avatar" />
+                        ) : null}
                     </Button>
 
                     <Transition name="fade">
-                        <Show when={isSignedIn && isMenuOpen()}>
+                        <Show when={user.isSignedIn && isMenuOpen()}>
                             <div className="navigation__menu__content shadow--2dp">
                                 <p className="navigation__menu__content__text">
-                                    {name}
+                                    {user.name}
                                 </p>
                                 <Button
                                     className="button shadow--2dp"
                                     icon="log-out"
-                                    title={isSignedIn ? 'Log out' : 'Log in'}
+                                    title={
+                                        user.isSignedIn ? 'Log out' : 'Log in'
+                                    }
                                     onClick={handleLoggingOut}
                                 ></Button>
                             </div>

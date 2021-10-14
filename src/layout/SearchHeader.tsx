@@ -8,8 +8,8 @@ import DropDown from '../components/DropDown';
 
 const SearchHeader = () => {
     const navigate = useNavigate();
-    const { query } = useParams();
-    const [{ forMine }, { setSearchTarget }] = useSearch();
+    const params = useParams();
+    const [search, { setSearchTarget }] = useSearch();
 
     const handleFormSubmit = (query: string) =>
         navigate(`/search/${query}`, { replace: true });
@@ -24,11 +24,11 @@ const SearchHeader = () => {
                 <Icon name="arrow-left" />
             </Link>
 
-            <SearchForm query={query} onSubmit={handleFormSubmit} />
+            <SearchForm query={params.query} onSubmit={handleFormSubmit} />
 
             <nav className="navigation">
                 <DropDown
-                    currentValue={forMine}
+                    currentValue={search.forMine}
                     options={[
                         { label: 'All videos', value: 0 },
                         { label: 'My Videos', value: 1 }

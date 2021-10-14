@@ -6,9 +6,9 @@ import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';
 
 const Header = () => {
-    const [{ isScreenVisible }, { closeScreen }] = usePlayer();
+    const [player, { closeScreen }] = usePlayer();
 
-    const handleCloseScreen = () => isScreenVisible && closeScreen();
+    const handleCloseScreen = () => player.isScreenVisible && closeScreen();
 
     return (
         <header

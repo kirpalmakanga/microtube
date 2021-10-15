@@ -1,4 +1,4 @@
-import { JSXElement, onCleanup, Show } from 'solid-js';
+import { JSXElement, Component, onCleanup, Show } from 'solid-js';
 import { useNavigate, useParams } from 'solid-app-router';
 
 import { PlaylistData } from '../../@types/alltypes';
@@ -12,8 +12,8 @@ import MenuWrapper from '../components/menu/MenuWrapper';
 import { copyText, getPlaylistURL, isMobile, shareURL } from '../lib/helpers';
 import { useNotifications } from '../store/hooks/notifications';
 
-const Playlists = () => {
-    const { channelId } = useParams();
+const Playlists: Component = () => {
+    const params = useParams();
     const navigate = useNavigate();
 
     const [
@@ -25,7 +25,7 @@ const Playlists = () => {
             launchPlaylist,
             clearPlaylists
         }
-    ] = usePlaylists(channelId);
+    ] = usePlaylists(params.channelId);
 
     const [, { openNotification }] = useNotifications();
 
@@ -55,6 +55,33 @@ const Playlists = () => {
         }
     };
 
+    const menuItems = [
+        {
+            title: 'Queue playlist',
+            icon: 'circle-add',
+            onClick: queuePlaylist
+        },
+        {
+            title: 'Launch playlist',
+            icon: 'play',
+            onClick: launchPlaylist
+        },
+        {
+            title: 'Share',
+            icon: 'share',
+            onClick: handleSharing
+        },
+        ...(!params.channelId
+            ? [
+                  {
+                      title: 'Remove playlist',
+                      icon: 'delete',
+                      onClick: removePlaylist
+                  }
+              ]
+            : [])
+    ];
+
     onCleanup(clearPlaylists);
 
     return (
@@ -64,57 +91,23 @@ const Playlists = () => {
                 <Placeholder
                     icon="list"
                     text={
-                        channelId
+                        params.channelId
                             ? "This channel doesn't have playlists."
                             : "You haven't created playlists yet."
                     }
                 />
             }
         >
-            <MenuWrapper
-                menuItems={[
-                    {
-                        title: 'Queue playlist',
-                        icon: 'circle-add',
-                        onClick: queuePlaylist
-                    },
-                    {
-                        title: 'Launch playlist',
-                        icon: 'play',
-                        onClick: launchPlaylist
-                    },
-                    {
-                        title: 'Share',
-                        icon: 'share',
-                        onClick: handleSharing
-                    },
-                    ...(!channelId
-                        ? [
-                              {
-                                  title: 'Remove playlist',
-                                  icon: 'delete',
-                                  onClick: removePlaylist
-                              }
-                          ]
-                        : [])
-                ]}
-            >
-                {(openMenu: Function): JSXElement => (
-                    <List items={playlists.items} loadMoreItems={getPlaylists}>
-                        {(index: number): JSXElement => {
-                            const { [index]: data } = playlists.items;
-
-                            return (
-                                <PlaylistCard
-                                    {...data}
-                                    onClick={handleClickCard(data)}
-                                    onClickMenu={handleClickMenu(
-                                        data,
-                                        openMenu
-                                    )}
-                                />
-                            );
-                        }}
+            <MenuWrapper menuItems={menuItems}>
+                {(openMenu: Function) => (
+                    <List items={playlists.items} loadItems={getPlaylists}>
+                        {(data: PlaylistData): JSXElement => (
+                            <PlaylistCard
+                                {...data}
+                                onClick={handleClickCard(data)}
+                                onClickMenu={handleClickMenu(data, openMenu)}
+                            />
+                        )}
                     </List>
                 )}
             </MenuWrapper>

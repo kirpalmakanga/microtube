@@ -2,27 +2,38 @@ import { useLocation } from 'solid-app-router';
 import { useStore } from '..';
 
 export default () => {
-    const { pathname } = useLocation();
-    const [
-        {
-            playlistItems: { playlistTitle },
-            channel: { channelTitle }
-        }
-    ] = useStore();
+    const location = useLocation();
+    const [state] = useStore();
 
     let title = 'MicroTube';
 
-    if (pathname.startsWith('/subscriptions')) {
+    if (location.pathname.startsWith('/subscriptions')) {
         title = 'Subscriptions';
     }
 
-    if (pathname.startsWith('/channel')) {
-        title = channelTitle;
+    if (location.pathname.startsWith('/channel')) {
+        title = state.channel.channelTitle;
     }
 
-    if (pathname.startsWith('/playlist')) {
-        title = playlistTitle;
+    if (location.pathname.startsWith('/playlist')) {
+        title = state.playlistItems.playlistTitle;
     }
 
-    return title;
+    return () => {
+        let title = 'MicroTube';
+
+        if (location.pathname.startsWith('/subscriptions')) {
+            title = 'Subscriptions';
+        }
+
+        if (location.pathname.startsWith('/channel')) {
+            title = state.channel.channelTitle;
+        }
+
+        if (location.pathname.startsWith('/playlist')) {
+            title = state.playlistItems.playlistTitle;
+        }
+
+        return title;
+    };
 };

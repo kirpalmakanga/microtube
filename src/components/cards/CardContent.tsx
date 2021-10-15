@@ -5,14 +5,10 @@ interface Props {
     onClick: () => void;
 }
 
-const CardContent: Component<Props> = (props) => {
-    const [localProps, containerProps] = splitProps(props, ['children']);
-
-    return (
-        <div className="card__content" {...containerProps}>
-            {localProps.children}
-        </div>
-    );
-};
+const CardContent: Component<Props> = (props) => (
+    <div className="card__content" onClick={props.onClick}>
+        {props.children}
+    </div>
+);
 
 export default CardContent;

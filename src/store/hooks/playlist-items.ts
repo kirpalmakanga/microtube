@@ -6,10 +6,10 @@ import { usePrompt } from './prompt';
 import { PlaylistData, PlaylistItemData } from '../../../@types/alltypes';
 
 import * as api from '../../api/youtube';
-import { GetState } from '../helpers';
+import { initialState, PlaylistItemsState } from '../reducers/_playlist-items';
 
 export const usePlaylistItems = (playlistId?: string) => {
-    const [{ playlistItems }, dispatch] = useStore();
+    const [{ playlistItems }, setState] = useStore();
     const [, { openNotification }] = useNotifications();
     const [, { openPrompt }] = usePrompt();
     const [, { createPlaylist }] = usePlaylists();
@@ -17,38 +17,49 @@ export const usePlaylistItems = (playlistId?: string) => {
     const getPlaylistTitle = async (playlistId: string) => {
         const playlistTitle = await api.getPlaylistTitle(playlistId);
 
-        dispatch({
-            type: 'playlist/SET_TITLE',
-            payload: { playlistTitle }
+        setState('playlistItems', {
+            playlistTitle
         });
     };
 
-    const getPlaylistItems = () =>
-        dispatch(async (getState: GetState) => {
-            try {
-                if (!playlistId) {
-                    throw new Error('playlistId is required');
-                }
-
-                const {
-                    playlistItems: { nextPageToken: pageToken, hasNextPage }
-                } = getState();
-
-                if (hasNextPage) {
-                    const payload = await api.getPlaylistItems({
-                        playlistId,
-                        pageToken
-                    });
-
-                    dispatch({
-                        type: 'playlist/UPDATE_ITEMS',
-                        payload
-                    });
-                }
-            } catch (error) {
-                openNotification('Error fetching playlist items.');
+    const getPlaylistItems = async () => {
+        try {
+            if (!playlistId) {
+                throw new Error('playlistId is required');
             }
-        });
+
+            const { nextPageToken: pageToken, hasNextPage } = playlistItems;
+
+            console.log({
+                playlistId,
+                pageToken
+            });
+
+            if (hasNextPage) {
+                const {
+                    items: newItems,
+                    nextPageToken = '',
+                    totalResults
+                } = await api.getPlaylistItems({
+                    playlistId,
+                    pageToken
+                });
+
+                setState(
+                    'playlistItems',
+                    ({ items, ...state }: PlaylistItemsState) => ({
+                        ...state,
+                        items: [...items, ...newItems],
+                        nextPageToken,
+                        hasNextPage: !!nextPageToken,
+                        totalResults
+                    })
+                );
+            }
+        } catch (error) {
+            openNotification('Error fetching playlist items.');
+        }
+    };
 
     const addPlaylistItem = async (id: string, playlistId: string) => {
         try {
@@ -59,10 +70,11 @@ export const usePlaylistItems = (playlistId?: string) => {
             } = await api.getPlaylists({ ids: [playlistId] });
 
             if (playlist) {
-                dispatch({
-                    type: 'playlists/UPDATE_ITEM',
-                    payload: { playlist }
-                });
+                setState(
+                    'playlists/items',
+                    ({ id }: PlaylistData) => id === playlistId,
+                    playlist
+                );
             }
         } catch (error) {
             openNotification('Error adding playlist item.');
@@ -110,15 +122,19 @@ export const usePlaylistItems = (playlistId?: string) => {
             confirmText: 'Remove',
             callback: async () => {
                 try {
-                    dispatch({
-                        type: 'playlist/REMOVE_ITEM',
-                        payload: { playlistItemId }
-                    });
+                    setState('playlist/items', (items: PlaylistItemData[]) =>
+                        items.filter(
+                            ({ playlistItemId: itemPlaylistId }) =>
+                                itemPlaylistId !== playlistItemId
+                        )
+                    );
 
-                    dispatch({
-                        type: 'playlists/REMOVE_ITEM',
-                        payload: { playlistId }
-                    });
+                    setState(
+                        'playlists/items',
+                        ({ id }: PlaylistData) => id === playlistId,
+                        'itemCount',
+                        (itemCount: number) => itemCount - 1
+                    );
 
                     openNotification(`Removed ${title}.`);
 
@@ -130,7 +146,7 @@ export const usePlaylistItems = (playlistId?: string) => {
         });
     };
 
-    const clearPlaylistItems = () => dispatch({ type: 'playlist/CLEAR_ITEMS' });
+    const clearPlaylistItems = () => setState({ playlistItems: initialState });
 
     return [
         playlistItems,

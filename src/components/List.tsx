@@ -7,20 +7,17 @@ import {
     Show
 } from 'solid-js';
 import { Transition } from 'solid-transition-group';
-import { throttle, isMobile } from '../lib/helpers';
-
-import Autosizer, { Size } from './Autosizer';
-import VirtualizedList from './VirtualizedList';
+import { throttle } from '../lib/helpers';
 import Icon from './Icon';
 
-const visibleRowsCount = isMobile() ? 4 : 6;
+import { VirtualContainer } from '@minht11/solid-virtual-container';
 
 interface Props {
     className?: string;
     items: unknown[];
     itemSize?: number | ((containerHeight: number) => number);
-    children: (data: any) => JSXElement;
-    loadMoreItems: Function;
+    children: (data: any, index: number) => JSXElement;
+    loadItems: Function;
 }
 
 const Loader = () => (
@@ -35,16 +32,14 @@ const List: Component<Props> = (props) => {
     const [isLoading, setIsLoading] = createSignal(false);
     let isUnmounting = false;
 
-    const _loadMoreItems = async () => {
-        console.log(isLoading());
-
+    const _loadItems = async () => {
         if (isLoading()) {
             return;
         }
 
         setIsLoading(true);
 
-        await props.loadMoreItems();
+        await props.loadItems();
 
         if (!isUnmounting) {
             setIsLoading(false);
@@ -54,69 +49,41 @@ const List: Component<Props> = (props) => {
     const handleScroll = throttle(
         ({ currentTarget: { scrollTop, scrollHeight, offsetHeight } }) => {
             if (scrollTop >= scrollHeight - offsetHeight) {
-                console.log('end of scroll');
-                _loadMoreItems();
+                _loadItems();
             }
         },
         10
     );
 
-    const _itemSize = (containerHeight: number): number => {
-        switch (typeof props.itemSize) {
-            case 'function':
-                return props.itemSize(containerHeight);
-            case 'number':
-                return props.itemSize;
+    let scrollTarget;
 
-            default:
-                return containerHeight / visibleRowsCount;
-        }
-    };
-
-    onMount(() => console.log('mount:list'));
+    onMount(_loadItems);
 
     onCleanup(() => (isUnmounting = true));
 
     return (
-        <Autosizer>
-            {({ height, width }: Size): JSXElement => {
-                console.log({ height, width });
-                const itemHeight = _itemSize(height);
-
-                return (
-                    <VirtualizedList
-                        className={['list', props.className]
-                            .filter(Boolean)
-                            .join(' ')}
-                        width={width}
-                        height={height}
-                        totalCount={
-                            isLoading()
-                                ? props.items.length + 1
-                                : props.items.length
-                        }
-                        itemHeight={itemHeight}
-                        buffer={visibleRowsCount}
-                        onScroll={handleScroll}
+        <div className="list" ref={scrollTarget} onScroll={handleScroll}>
+            <VirtualContainer
+                items={isLoading() ? [...props.items, null] : props.items}
+                itemSize={{ height: 150 }}
+                scrollTarget={scrollTarget}
+            >
+                {(itemProps) => (
+                    <div
+                        className="list__item"
+                        style={itemProps.style}
+                        role="listitem"
                     >
-                        {(index: number) => (
-                            <div
-                                className="list__item"
-                                style={{ height: `${itemHeight}px` }}
-                            >
-                                {`Test${index}`}
-                                {/* <Show
-                                    when={index < props.items.length}
-                                    fallback={<Loader />}
-                                >
-                                    {props.children(index)}
-                                </Show> */}
-                            </div>
-                        )}
-                    </VirtualizedList>
-                );
-            }}
-        </Autosizer>
+                        <Show
+                            when={itemProps.index < props.items.length}
+                            fallback={<Loader />}
+                        >
+                            {props.children(itemProps.item, itemProps.index)}
+                        </Show>
+                    </div>
+                )}
+            </VirtualContainer>
+        </div>
     );
 };
 

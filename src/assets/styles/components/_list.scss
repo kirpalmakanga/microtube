@@ -1,18 +1,18 @@
 $gutter: 16px;
 
 .list {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
     overflow: auto;
-
-    ul {
-        li {
-            &:not(:last-child) {
-                border-bottom: 1px solid $brand-primary;
-            }
-        }
-    }
+    resize: both;
 
     &__item {
         display: flex;
+        width: 100%;
+        &:not(:last-child) {
+            border-bottom: 1px solid $brand-primary;
+        }
     }
 
     &__loading {

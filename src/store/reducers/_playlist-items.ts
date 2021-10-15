@@ -4,7 +4,7 @@ interface PlaylistItem {
     playlistItemId: string;
 }
 
-interface PlaylistItemsState extends State {
+export interface PlaylistItemsState extends State {
     playlistTitle: string;
     items: object[];
     nextPageToken: string;

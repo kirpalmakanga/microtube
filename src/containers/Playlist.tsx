@@ -1,23 +1,22 @@
-import { useEffect, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-
-import { usePlaylistItems } from '../store/hooks/playlist-items';
+import { Component, onCleanup, onMount, Show } from 'solid-js';
+import { useNavigate, useParams } from 'solid-app-router';
 
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 import VideoCard from '../components/cards/VideoCard';
 import MenuWrapper from '../components/menu/MenuWrapper';
-import { usePlayer } from '../store/hooks/player';
-import { PlaylistItemData } from '../../@types/alltypes';
+import { PlaylistItemData, VideoData } from '../../@types/alltypes';
 import { copyText, getVideoURL, isMobile, shareURL } from '../lib/helpers';
 import { useNotifications } from '../store/hooks/notifications';
+import { usePlaylistItems } from '../store/hooks/playlist-items';
+import { usePlayer } from '../store/hooks/player';
 
-const Playlists = () => {
-    const { playlistId } = useParams();
+const Playlists: Component = () => {
+    const params = useParams();
     const navigate = useNavigate();
 
     const [
-        { items, totalResults },
+        playlistItems,
         {
             getPlaylistTitle,
             getPlaylistItems,
@@ -25,27 +24,23 @@ const Playlists = () => {
             removePlaylistItem,
             clearPlaylistItems
         }
-    ] = usePlaylistItems(playlistId);
+    ] = usePlaylistItems(params.playlistId);
 
     const [, { queueItem }] = usePlayer();
 
     const [, { openNotification }] = useNotifications();
 
-    const handleClickCard = useCallback(
+    const handleClickCard =
         ({ id }: PlaylistItemData) =>
-            () =>
-                navigate(`/video/${id}`),
-        []
-    );
+        () =>
+            navigate(`/video/${id}`);
 
-    const handleClickMenu = useCallback(
+    const handleClickMenu =
         (data: PlaylistItemData, callback: Function) => () => {
             const { title } = data;
 
             callback(data, title);
-        },
-        []
-    );
+        };
 
     const handleSharing = ({ id, title }: PlaylistItemData) => {
         const url = getVideoURL(id);
@@ -62,54 +57,60 @@ const Playlists = () => {
         }
     };
 
-    useEffect(() => {
-        getPlaylistTitle(playlistId);
+    onMount(() => getPlaylistTitle(params.playlistId));
 
-        return clearPlaylistItems;
-    }, [playlistId]);
+    onCleanup(clearPlaylistItems);
 
-    return totalResults === 0 ? (
-        <Placeholder icon="list" text="This playlist is empty." />
-    ) : (
-        <MenuWrapper
-            menuItems={[
-                {
-                    title: 'Add to queue',
-                    icon: 'circle-add',
-                    onClick: queueItem
-                },
-                {
-                    title: 'Save to playlist',
-                    icon: 'folder-add',
-                    onClick: editPlaylistItem
-                },
-                {
-                    title: 'Share',
-                    icon: 'share',
-                    onClick: handleSharing
-                },
-                {
-                    title: 'Remove from playlist',
-                    icon: 'delete',
-                    onClick: removePlaylistItem
-                }
-            ]}
+    return (
+        <Show
+            when={
+                playlistItems.totalResults === null ||
+                playlistItems.totalResults > 0
+            }
+            fallback={
+                <Placeholder icon="list" text="This playlist is empty." />
+            }
         >
-            {(openMenu) => (
-                <List
-                    items={items}
-                    itemKey={({ id }: PlaylistItemData) => id}
-                    renderItem={(data: PlaylistItemData) => (
-                        <VideoCard
-                            {...data}
-                            onClick={handleClickCard(data)}
-                            onClickMenu={handleClickMenu(data, openMenu)}
-                        />
-                    )}
-                    loadMoreItems={getPlaylistItems}
-                />
-            )}
-        </MenuWrapper>
+            <MenuWrapper
+                menuItems={[
+                    {
+                        title: 'Add to queue',
+                        icon: 'circle-add',
+                        onClick: queueItem
+                    },
+                    {
+                        title: 'Save to playlist',
+                        icon: 'folder-add',
+                        onClick: editPlaylistItem
+                    },
+                    {
+                        title: 'Share',
+                        icon: 'share',
+                        onClick: handleSharing
+                    },
+                    {
+                        title: 'Remove from playlist',
+                        icon: 'delete',
+                        onClick: removePlaylistItem
+                    }
+                ]}
+            >
+                {(openMenu) => (
+                    <List
+                        items={playlistItems.items}
+                        loadItems={getPlaylistItems}
+                    >
+                        {(data: VideoData): JSXElement => (
+                            <VideoCard
+                                {...data}
+                                onClick={handleClickCard(data)}
+                                onClickMenu={handleClickMenu(data, openMenu)}
+                            />
+                        )}
+                    </List>
+                )}
+            </MenuWrapper>
+        </Show>
     );
 };
 

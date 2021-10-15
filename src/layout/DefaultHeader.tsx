@@ -30,11 +30,7 @@ const DefaultHeader = () => {
         <div className="layout__header-row">
             {location.pathname !== '/' && location.pathname !== '/login' ? (
                 <Button
-                    onClick={() =>
-                        navigate(
-                            -(location.pathname.endsWith('/videos') ? 2 : 1)
-                        )
-                    }
+                    onClick={() => navigate('/')}
                     className="layout__back-button icon-button"
                     aria-label="Go to homepage"
                 >
@@ -43,7 +39,7 @@ const DefaultHeader = () => {
             ) : null}
 
             <span className="layout__title">
-                <span className="layout__title-inner">{title}</span>
+                <span className="layout__title-inner">{title()}</span>
             </span>
 
             <nav className="navigation">
@@ -80,9 +76,9 @@ const DefaultHeader = () => {
                         onClick={handleClickUser}
                         icon={!user.isSignedIn ? 'user' : ''}
                     >
-                        {user.picture ? (
+                        <Show when={user.picture}>
                             <Img src={user.picture} alt="avatar" />
-                        ) : null}
+                        </Show>
                     </Button>
 
                     <Transition name="fade">

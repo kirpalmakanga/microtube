@@ -4,10 +4,10 @@ import { useParams } from 'solid-app-router';
 import { usePlayer } from '../store/hooks/player';
 
 const Video: Component = () => {
-    const { videoId } = useParams();
+    const params = useParams();
     const [, { getVideo, clearVideo }] = usePlayer();
 
-    onMount(() => getVideo(videoId));
+    onMount(() => getVideo(params.videoId));
 
     onCleanup(clearVideo);
 

@@ -18,28 +18,24 @@ interface Props {
     onClickMenu: () => void;
 }
 
-const PlaylistCard: Component<Props> = ({
-    title,
-    thumbnails,
-    itemCount,
-    onClick,
-    onClickMenu
-}) => (
-    <CardContainer onContextMenu={onClickMenu}>
-        <CardContent onClick={onClick}>
+const PlaylistCard: Component<Props> = (props) => (
+    <CardContainer onContextMenu={props.onClickMenu}>
+        <CardContent onClick={props.onClick}>
             <CardThumbnail
-                src={getThumbnails(thumbnails, 'medium')}
-                altText={title}
-                badgeText={`${itemCount} video${itemCount !== 1 ? 's' : ''}`}
+                src={getThumbnails(props.thumbnails, 'medium')}
+                altText={props.title}
+                badgeText={`${props.itemCount} video${
+                    props.itemCount !== 1 ? 's' : ''
+                }`}
             />
 
             <CardContentInner>
-                <Title>{title}</Title>
+                <Title>{props.title}</Title>
             </CardContentInner>
         </CardContent>
 
         <CardButtons>
-            <Button icon="more" onClick={onClickMenu} />
+            <Button icon="more" onClick={props.onClickMenu} />
         </CardButtons>
     </CardContainer>
 );

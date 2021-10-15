@@ -4,7 +4,6 @@ import * as api from '../../api/youtube';
 import { usePlayer } from './player';
 import { usePrompt } from './prompt';
 import { PlaylistData } from '../../../@types/alltypes';
-import { GetState } from '../helpers';
 
 import { initialState, PlaylistsState } from '../reducers/_playlists';
 

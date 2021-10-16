@@ -57,7 +57,7 @@ const Player = () => {
         volume: 100
     });
 
-    const [storeState, { currentVideo, goToNextQueueItem }] = usePlayer();
+    const [storeState, { goToNextQueueItem }] = usePlayer();
 
     const [, { editPlaylistItem }] = usePlaylistItems();
 
@@ -89,7 +89,7 @@ const Player = () => {
     };
 
     const handleEditPlaylistItem = () =>
-        editPlaylistItem({ id: currentVideo().id });
+        editPlaylistItem({ id: storeState.currentVideo.id });
 
     const updateState = (data: GenericObject) => {
         setPlayerState(data);
@@ -169,12 +169,13 @@ const Player = () => {
     const handleBuffering = () => updateState({ isBuffering: true });
 
     const togglePlay = () => {
-        updateState({ isPlaying: !state.isPlaying, isBuffering: false });
+        if (storeState.currentVideo.id)
+            updateState({ isPlaying: !state.isPlaying, isBuffering: false });
     };
 
     const getCurrentTime = () => {
         if (youtube) {
-            const currentTime = youtube?.getCurrentTime();
+            const currentTime = youtube.getCurrentTime();
 
             synchronizePlayer({
                 action: 'update-time',
@@ -276,12 +277,12 @@ const Player = () => {
     }, [currentDevice.isMaster, state.isFullscreen]);
 
     createEffect(() => {
-        const { videoId } = currentVideo();
+        const { videoId } = storeState.currentVideo.id;
 
         if (!videoId) youtube = null;
 
         return videoId;
-    }, currentVideo().id);
+    }, storeState.currentVideo.id);
 
     onMount(() => {
         const actions: PlayerSyncHandlers = {
@@ -321,7 +322,7 @@ const Player = () => {
                     }
                 >
                     <Screen
-                        videoId={currentVideo().id}
+                        videoId={storeState.currentVideo.id}
                         onReady={handleYoutubeIframeReady}
                         onEnd={handleVideoEnd}
                         onBuffering={handleBuffering}
@@ -367,7 +368,7 @@ const Player = () => {
 
                     <Button
                         className="player__controls-button icon-button"
-                        onClick={currentVideo().id ? togglePlay : () => {}}
+                        onClick={togglePlay}
                         icon={
                             state.isBuffering
                                 ? 'loading'
@@ -395,9 +396,9 @@ const Player = () => {
                             !state.isPlaying ||
                             !currentDevice.isMaster
                         }
-                        videoId={currentVideo().id}
-                        title={currentVideo().title}
-                        duration={currentVideo().duration}
+                        videoId={storeState.currentVideo.id}
+                        title={storeState.currentVideo.title}
+                        duration={storeState.currentVideo.duration}
                         getCurrentTime={getCurrentTime}
                         getLoadingProgress={getLoadingProgress}
                         onStartSeeking={handlePause}
@@ -418,7 +419,7 @@ const Player = () => {
                         />
                     </Show>
 
-                    <Show when={!isMobile() && currentVideo().id}>
+                    <Show when={!isMobile() && storeState.currentVideo.id}>
                         <div
                             className="player__controls-volume"
                             onWheel={handleWheelVolume}

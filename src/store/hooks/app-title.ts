@@ -5,33 +5,24 @@ export default () => {
     const location = useLocation();
     const [state] = useStore();
 
-    let title = 'MicroTube';
-
-    if (location.pathname.startsWith('/subscriptions')) {
-        title = 'Subscriptions';
-    }
-
-    if (location.pathname.startsWith('/channel')) {
-        title = state.channel.channelTitle;
-    }
-
-    if (location.pathname.startsWith('/playlist')) {
-        title = state.playlistItems.playlistTitle;
-    }
-
     return () => {
+        const { pathname } = location;
         let title = 'MicroTube';
 
-        if (location.pathname.startsWith('/subscriptions')) {
+        if (pathname.startsWith('/subscriptions')) {
             title = 'Subscriptions';
         }
 
-        if (location.pathname.startsWith('/channel')) {
+        if (pathname.startsWith('/channel')) {
             title = state.channel.channelTitle;
         }
 
-        if (location.pathname.startsWith('/playlist')) {
+        if (pathname.startsWith('/playlist')) {
             title = state.playlistItems.playlistTitle;
+        }
+
+        if (pathname.startsWith('/video')) {
+            title = state.player.video.title;
         }
 
         return title;

@@ -14,7 +14,7 @@ import { saveData, subscribeToData } from '../../api/database';
 import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
 
 import { rootInitialState } from '../reducers';
-import { createMemo } from 'solid-js';
+import { createMemo, mergeProps } from 'solid-js';
 
 export const usePlayer = () => {
     const [{ user, player }, setState] = useStore();
@@ -181,22 +181,18 @@ export const usePlayer = () => {
         return !!id;
     };
 
-    const currentVideo = () => {
-        const { video, queue } = player;
-
-        return video.id
-            ? video
-            : queue[currentQueueIndex()] || {
-                  id: '',
-                  title: 'No video.',
-                  duration: 0
-              };
-    };
-
     return [
-        player,
+        mergeProps(player, {
+            get currentVideo() {
+                const { video, queue } = player;
+
+                return video.id
+                    ? video
+                    : queue[currentQueueIndex()] ||
+                          rootInitialState.player.video;
+            }
+        }),
         {
-            currentVideo,
             subscribeToQueue,
             subscribeToCurrentQueueId,
             setQueue,

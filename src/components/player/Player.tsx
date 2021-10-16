@@ -24,7 +24,6 @@ import { usePlaylistItems } from '../../store/hooks/playlist-items';
 import { useDevices } from '../../store/hooks/devices';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
-import { unsubscribeFromChannel } from '../../api/youtube';
 
 const UNSTARTED = -1;
 

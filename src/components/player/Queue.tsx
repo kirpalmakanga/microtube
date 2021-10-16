@@ -35,7 +35,7 @@ const Queue: Component<Props> = ({
     togglePlay
 }) => {
     const [
-        { queue: items, currentId },
+        player,
         {
             subscribeToQueue,
             subscribeToCurrentQueueId,
@@ -90,14 +90,14 @@ const Queue: Component<Props> = ({
     return (
         <section className="Queue shadow--2dp">
             <QueueHeader
-                itemCount={items.length}
+                itemCount={player.queue.length}
                 onClickClose={toggleQueue}
                 onClickImport={importVideos}
                 onClickClear={clearQueue}
             />
 
             <div className="Queue__Content">
-                {items.length ? (
+                {player.queue.length ? (
                     <MenuWrapper
                         menuItems={[
                             {
@@ -120,10 +120,11 @@ const Queue: Component<Props> = ({
                         {(openMenu) => (
                             <DraggableList
                                 className="Queue__Items"
-                                items={items}
+                                items={player.queue}
                                 renderItem={(data: QueueItemData) => {
                                     const { id } = data;
-                                    const isActive = id === currentId;
+                                    const isActive =
+                                        id === player.queue.currentId;
 
                                     let icon = 'play';
 

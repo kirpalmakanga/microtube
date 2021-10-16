@@ -6,10 +6,10 @@ import NotFound from './containers/NotFound';
 import { useAuth } from './store/hooks/auth';
 
 const Protected = () => {
-    const [{ isSignedIn }] = useAuth();
+    const [auth] = useAuth();
 
     return (
-        <Show when={isSignedIn} fallback={<Login />}>
+        <Show when={auth.isSignedIn} fallback={<Login />}>
             <Outlet />
         </Show>
     );
@@ -26,12 +26,12 @@ const ChannelAbout = lazy(() => import('./containers/Channel/ChannelAbout'));
 
 const Router: Component = () => (
     <Routes>
-        <Route path="" element={Protected}>
+        <Route path="" element={<Protected />}>
             <Route path="/" element={<Playlists />} />
             <Route path="/playlist/:playlistId" element={<Playlist />} />
             <Route path="/video/:videoId" element={<Video />} />
-            {/* <Route path="/search/" element={<Search />} />
-            <Route path="/search/:query" element={<Search />} /> */}
+            {/* <Route path="/search/" element={<Search />} /> */}
+            {/* <Route path="/search/:query" element={<Search />} /> */}
             {/* <Route path="/subscriptions" element={<Channels />} /> */}
             {/* <Route path="/channel/:channelId" element={<Channel />}> */}
             {/* <Route path="" element={<Navigate href="videos" />} /> */}

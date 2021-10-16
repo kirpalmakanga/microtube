@@ -1,14 +1,15 @@
-import { FunctionComponent, SyntheticEvent, useCallback } from 'react';
+import { Component } from 'solid-js';
+import { HTMLElementEvent } from '../../../../@types/alltypes';
 
 interface Props {
     value: number;
     onChange: (value: number) => void;
 }
 
-const VolumeRange: FunctionComponent<Props> = ({ value, onChange }) => {
+const VolumeRange: Component<Props> = (props) => {
     const handleUpdate = ({
         currentTarget: { value }
-    }: SyntheticEvent<HTMLInputElement>) => onChange(parseInt(value));
+    }: HTMLElementEvent<HTMLInputElement>) => props.onChange(parseInt(value));
 
     return (
         <div className="player__controls-volume-range">
@@ -16,7 +17,7 @@ const VolumeRange: FunctionComponent<Props> = ({ value, onChange }) => {
                 type="range"
                 min="0"
                 max="100"
-                value={value}
+                value={props.value}
                 onChange={handleUpdate}
             />
         </div>

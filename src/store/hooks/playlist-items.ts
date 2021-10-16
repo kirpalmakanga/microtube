@@ -30,11 +30,6 @@ export const usePlaylistItems = (playlistId?: string) => {
 
             const { nextPageToken: pageToken, hasNextPage } = playlistItems;
 
-            console.log({
-                playlistId,
-                pageToken
-            });
-
             if (hasNextPage) {
                 const {
                     items: newItems,

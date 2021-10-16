@@ -6,24 +6,26 @@ interface Props {
     onClickItem: (deviceId: string) => void;
 }
 
-const DevicesSelector: Component<Props> = ({
-    devices,
-    currentDevice: { deviceId, deviceName, isMaster },
-    onClickItem
-}) => {
-    const handleClickItem = (deviceId: string) => () => onClickItem(deviceId);
+const DevicesSelector: Component<Props> = (props) => {
+    const handleClickItem = (deviceId: string) => () =>
+        props.onClickItem(deviceId);
 
     return (
         <div className="player__controls-devices">
             <ul className="player__controls-devices-list">
-                <li className="device" onClick={handleClickItem(deviceId)}>
+                <li
+                    className="device"
+                    onClick={handleClickItem(props.currentDevice.deviceId)}
+                >
                     <span className="device__desc">Current device</span>
                     <span className="device__name">
-                        {`${deviceName} ${isMaster ? '(active)' : ''}`}
+                        {`${props.currentDevice.deviceName} ${
+                            props.currentDevice.isMaster ? '(active)' : ''
+                        }`}
                     </span>
                 </li>
 
-                <For each={devices}>
+                <For each={props.devices}>
                     {({ deviceId, deviceName, isMaster }) => (
                         <li
                             className="device"

@@ -4,14 +4,6 @@ import type { YouTubePlayer, Options } from 'youtube-player/dist/types';
 import EVENT_NAMES, { EventType } from 'youtube-player/dist/eventNames';
 import { isEqual } from 'lodash';
 
-const PLAYBACK_STATES = {
-    UNSTARTED: -1,
-    ENDED: 0,
-    PLAYING: 1,
-    PAUSED: 2,
-    BUFFERING: 3,
-    CUED: 5
-};
 interface Props {
     id?: string;
     className?: string;
@@ -26,55 +18,54 @@ interface Props {
     onStateChange?: (playbackStateId: number) => void;
 }
 
+const PLAYBACK_STATES = {
+    UNSTARTED: -1,
+    ENDED: 0,
+    PLAYING: 1,
+    PAUSED: 2,
+    BUFFERING: 3,
+    CUED: 5
+};
+
+const noop = () => {};
+
 interface NewOptions {
     videoId: string;
     startSeconds?: number;
     endSeconds?: number;
 }
 
-const filterResetOptions = (options: Options) => ({
-    ...options,
-    playerVars: {
-        ...options.playerVars,
-        autoplay: 0,
-        start: 0,
-        end: 0
-    }
-});
-
 export { Options };
 
-export const YoutubePlayer: Component<Props> = ({
-    id = 'youtube-player',
-    className,
-    videoId,
-    options,
-    onReady,
-    onError = () => {},
-    onBuffering,
-    onPlay = () => {},
-    onPause = () => {},
-    onEnd,
-    onStateChange = () => {}
-}) => {
+export const YoutubePlayer: Component<Props> = (props) => {
     const {
         playerVars: { start, end }
-    }: any = options;
+    }: any = props.options;
 
     let internalPlayer: YouTubePlayer;
 
-    const handleIframeReady = () => onReady(internalPlayer);
+    const getContainerId = () => props.id || 'youtube-player';
+
+    const handleIframeReady = () => props.onReady(internalPlayer);
+
     const createPlayer = () => {
         if (typeof document === 'undefined' || internalPlayer) {
             return;
         }
 
+        const {
+            onStateChange = noop,
+            onEnd = noop,
+            onPlay = noop,
+            onPause = noop,
+            onBuffering = noop
+        } = props;
         const [READY, STATE_CHANGE, , , ERROR] = EVENT_NAMES;
         const { ENDED, PLAYING, PAUSED, BUFFERING } = PLAYBACK_STATES;
 
         const events = {
             [READY]: handleIframeReady,
-            [ERROR]: onError,
+            [ERROR]: props.onError,
             [STATE_CHANGE]: ({ data }: { [key: string]: any }) => {
                 onStateChange(data);
 
@@ -102,9 +93,9 @@ export const YoutubePlayer: Component<Props> = ({
         };
 
         try {
-            internalPlayer = youTubePlayer(id, {
-                ...options,
-                videoId
+            internalPlayer = youTubePlayer(getContainerId(), {
+                ...props.options,
+                videoId: props.videoId
             });
 
             for (const [eventKey, event] of Object.entries(events)) {
@@ -113,7 +104,7 @@ export const YoutubePlayer: Component<Props> = ({
         } catch (error: unknown) {
             console.error(error);
 
-            onError(error);
+            props.onError(error);
         }
     };
 
@@ -124,16 +115,16 @@ export const YoutubePlayer: Component<Props> = ({
     };
 
     const updateVideo = () => {
-        const newOpts: NewOptions = { videoId };
-        let autoplay = false;
-
-        if (!videoId) {
+        if (!props.videoId) {
             internalPlayer.stopVideo();
             return;
         }
 
-        if ('playerVars' in options) {
-            const { playerVars = {} } = options;
+        const newOpts: NewOptions = { videoId: props.videoId };
+        let autoplay = false;
+
+        if ('playerVars' in props.options) {
+            const { playerVars = {} } = props.options;
 
             autoplay = playerVars.autoplay === 1;
 
@@ -154,24 +145,24 @@ export const YoutubePlayer: Component<Props> = ({
     };
 
     createEffect((previousOptions) => {
-        if (!isEqual(options, previousOptions)) resetPlayer();
+        if (!isEqual(props.options, previousOptions)) resetPlayer();
 
-        return options;
-    }, options);
+        return props.options;
+    }, props.options);
 
     createEffect((previousVideoId) => {
-        if (videoId !== previousVideoId) updateVideo();
+        if (props.videoId !== previousVideoId) updateVideo();
 
-        return videoId;
-    }, videoId);
+        return props.videoId;
+    }, props.videoId);
 
     /* TODO: review all creatEffect calls */
 
     onMount(createPlayer);
 
     return (
-        <div className={className}>
-            <div id={id}></div>
+        <div className={props.className}>
+            <div id={getContainerId()}></div>
         </div>
     );
 };

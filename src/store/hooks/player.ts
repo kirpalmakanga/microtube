@@ -14,6 +14,7 @@ import { saveData, subscribeToData } from '../../api/database';
 import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
 
 import { rootInitialState } from '../reducers';
+import { createMemo } from 'solid-js';
 
 export const usePlayer = () => {
     const [{ user, player }, setState] = useStore();
@@ -30,6 +31,11 @@ export const usePlayer = () => {
     const currentIdPath = `users/${getCurrentUserId()}/currentId`;
 
     const { queue, currentId } = player;
+
+    const currentQueueIndex = createMemo(
+        (targetId) => queue.findIndex(({ id }: QueueItem) => id === targetId),
+        player.currentId
+    );
 
     const subscribeToQueue = () =>
         subscribeToData(queuePath, (queue = []) => {
@@ -165,21 +171,32 @@ export const usePlayer = () => {
     const closeScreen = () => setState({ isScreenVisible: false });
 
     const goToNextQueueItem = (next: boolean | undefined = true) => {
-        const { queue, currentId } = player;
-        const currentQueueIndex = queue.findIndex(
-            ({ id }: QueueItem) => id === currentId
-        );
-        const newIndex = currentQueueIndex + (next ? 1 : -1);
-        const { [newIndex]: { id = null } = {} } = queue;
+        const newIndex = currentQueueIndex() + (next ? 1 : -1);
+        const {
+            queue: { [newIndex]: { id = null } = {} }
+        } = player;
 
         if (id) setActiveQueueItem(id);
 
         return !!id;
     };
 
+    const currentVideo = () => {
+        const { video, queue } = player;
+
+        return video.id
+            ? video
+            : queue[currentQueueIndex()] || {
+                  id: '',
+                  title: 'No video.',
+                  duration: 0
+              };
+    };
+
     return [
         player,
         {
+            currentVideo,
             subscribeToQueue,
             subscribeToCurrentQueueId,
             setQueue,

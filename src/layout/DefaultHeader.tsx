@@ -72,12 +72,16 @@ const DefaultHeader = () => {
                 ) : null}
                 <div className="navigation__menu">
                     <Button
-                        className="navigation__link icon-buttona avatar"
+                        className="navigation__link icon-button avatar"
                         onClick={handleClickUser}
-                        icon={!user.isSignedIn ? 'user' : ''}
                     >
-                        <Show when={user.picture}>
-                            <Img src={user.picture} alt="avatar" />
+                        <Show
+                            when={user.isSignedIn}
+                            fallback={<Icon name="user" />}
+                        >
+                            <Show when={user.picture}>
+                                <Img src={user.picture} alt="avatar" />
+                            </Show>
                         </Show>
                     </Button>
 

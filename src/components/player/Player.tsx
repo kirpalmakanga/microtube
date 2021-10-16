@@ -229,7 +229,9 @@ const Player = () => {
         return state.volume;
     }, state.volume);
 
-    createEffect(() => {
+    createEffect((previousIsMuted) => {
+        if (previousIsMuted === state.isMuted) return previousIsMuted;
+
         if (state.isMuted) {
             youtubeVolume = state.volume;
 
@@ -310,7 +312,7 @@ const Player = () => {
                 state.isQueueVisible ? 'enabled' : 'disabled'
             }
         >
-            <Transition name="slide-up" appear={true}>
+            <Transition name="fade" appear={true}>
                 <Show
                     when={
                         (currentDevice.isMaster && isSingleVideo()) ||

@@ -133,7 +133,9 @@ export const usePlayer = () => {
             cancelText: 'Cancel',
             callback: () =>
                 setQueue(
-                    player.queue.filter(({ id }: QueueItem) => id === currentId)
+                    player.queue.filter(
+                        ({ id }: QueueItem) => id === player.currentId
+                    )
                 )
         });
 

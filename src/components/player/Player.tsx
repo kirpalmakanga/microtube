@@ -88,7 +88,7 @@ const Player = () => {
     const handleEditPlaylistItem = () =>
         editPlaylistItem({ id: storeState.currentVideo.id });
 
-    const updateState = (data: GenericObject) => {
+    const setSyncedPlayerState = (data: GenericObject) => {
         setPlayerState(data);
 
         synchronizePlayer({
@@ -98,11 +98,11 @@ const Player = () => {
     };
 
     const toggleFullscreen = () =>
-        updateState({ isFullscreen: !state.isFullscreen });
+        setSyncedPlayerState({ isFullscreen: !state.isFullscreen });
 
-    const setVolume = (volume: number) => updateState({ volume });
+    const setVolume = (volume: number) => setSyncedPlayerState({ volume });
 
-    const toggleMute = () => updateState({ isMuted: !state.isMuted });
+    const toggleMute = () => setSyncedPlayerState({ isMuted: !state.isMuted });
 
     const goToVideo = (next: boolean | undefined = true) =>
         goToNextQueueItem(next);
@@ -110,7 +110,7 @@ const Player = () => {
     const toggleScreen = () => {
         const isVisible = !state.isScreenVisible;
 
-        updateState({
+        setSyncedPlayerState({
             isScreenVisible: isVisible,
             ...(isVisible && !availableDevices.length
                 ? { isQueueVisible: false }
@@ -137,7 +137,10 @@ const Player = () => {
         switch (playbackStateId) {
             case UNSTARTED:
                 if (!isStartup) {
-                    updateState({ isPlaying: true, isBuffering: false });
+                    setSyncedPlayerState({
+                        isPlaying: true,
+                        isBuffering: false
+                    });
                 } else {
                     isStartup = false;
                 }
@@ -146,13 +149,13 @@ const Player = () => {
     };
 
     const handlePlay = () =>
-        updateState({
+        setSyncedPlayerState({
             isPlaying: true,
             isBuffering: false
         });
 
     const handlePause = () =>
-        updateState({
+        setSyncedPlayerState({
             isPlaying: false,
             isBuffering: false
         });
@@ -163,11 +166,14 @@ const Player = () => {
         handlePlay();
     };
 
-    const handleBuffering = () => updateState({ isBuffering: true });
+    const handleBuffering = () => setSyncedPlayerState({ isBuffering: true });
 
     const togglePlay = () => {
         if (storeState.currentVideo.id)
-            updateState({ isPlaying: !state.isPlaying, isBuffering: false });
+            setSyncedPlayerState({
+                isPlaying: !state.isPlaying,
+                isBuffering: false
+            });
     };
 
     const getCurrentTime = () => {
@@ -295,7 +301,7 @@ const Player = () => {
         });
 
         unsubscribeFromFullscreen = subscribeToFullscreen(
-            (isFullscreen: boolean) => updateState({ isFullscreen })
+            (isFullscreen: boolean) => setSyncedPlayerState({ isFullscreen })
         );
     });
 
@@ -342,7 +348,7 @@ const Player = () => {
                 </Show>
             </Transition>
 
-            <Transition name="slide-up">
+            <Transition name="slide-up" appear={true}>
                 <Show when={availableDevices.length && !isSingleVideo()}>
                     <DevicesSelector
                         currentDevice={currentDevice}

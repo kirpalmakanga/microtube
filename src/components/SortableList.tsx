@@ -28,7 +28,7 @@ const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
 
     return result;
 };
-
+/* TODO: fix weird reordering on drag end */
 const SortableItem: Component<ListItemProps> = (props) => {
     const sortable = createSortable({ id: props.id });
     const [ref, isVisible] = useOnScreen();
@@ -37,18 +37,13 @@ const SortableItem: Component<ListItemProps> = (props) => {
         <div
             use:sortable
             ref={ref}
-            style={{
-                transition: 'opacity 0.3s ease-out',
-                opacity: isVisible()
-                    ? sortable.isActiveDraggable
-                        ? 0.25
-                        : 1
-                    : 0
+            className="sortable"
+            classList={{
+                dragged: sortable.isActiveDraggable,
+                hidden: !isVisible()
             }}
         >
-            <Transition name="fade" appear={true}>
-                <Show when={isVisible}>{props.children}</Show>
-            </Transition>
+            <Show when={isVisible()}>{props.children}</Show>
         </div>
     );
 };
@@ -92,7 +87,7 @@ const DraggableList: Component<ListProps> = (props) => {
             <SortableContext ids={ids()}>
                 <For each={props.items}>
                     {(item) => (
-                        <SortableItem id={props.getItemId(props)}>
+                        <SortableItem id={props.getItemId(item)}>
                             {props.children(item)}
                         </SortableItem>
                     )}
@@ -100,7 +95,7 @@ const DraggableList: Component<ListProps> = (props) => {
             </SortableContext>
 
             <DragOverlay>
-                <div class="placeholder"></div>
+                <div class="sortable"></div>
             </DragOverlay>
         </DragDropContext>
     );

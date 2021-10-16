@@ -30,16 +30,22 @@
         overflow-x: hidden;
         overflow-y: scroll;
         flex: 1;
-        & > [draggable] {
+        & > .sortable {
+            @include transition();
+            transition-property: opacity, transform;
             height: 50px;
+
+            &.dragged {
+                opacity: 0.25;
+            }
+
+            &.hidden {
+                opacity: 0;
+            }
 
             &:not(:last-child) .QueueItem {
                 border-bottom: 2px solid rgba($brand-primary, 0.5);
             }
-        }
-
-        .placeholder {
-            height: 50px;
         }
     }
 }

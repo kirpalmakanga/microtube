@@ -56,12 +56,12 @@ export const useKeyboard = (
     );
 };
 
-export const useOnScreen = (
-    ref: Element,
-    rootMargin: string = '0px'
-): (() => boolean) => {
+export const useOnScreen = (rootMargin: string = '0px') => {
     const [isIntersecting, setIntersecting] = createSignal(false);
     let observer: IntersectionObserver;
+    let ref: HTMLElement;
+
+    const setRef = (el: HTMLElement) => (ref = el);
 
     onMount(() => {
         observer = new IntersectionObserver(
@@ -73,12 +73,12 @@ export const useOnScreen = (
             }
         );
 
-        if (ref) observer.observe(ref);
+        if (ref && observer) observer.observe(ref);
     });
 
     onCleanup(() => {
-        if (ref) observer.unobserve(ref);
+        if (ref && observer) observer.unobserve(ref);
     });
 
-    return isIntersecting;
+    return [setRef, isIntersecting];
 };

@@ -1,11 +1,11 @@
-import { Component, onCleanup, onMount } from 'solid-js';
+import { Component, onCleanup, onMount, Show } from 'solid-js';
 
 import MenuWrapper from '../menu/MenuWrapper';
 
 import QueueHeader from './QueueHeader';
 import QueueItem from './QueueItem';
 
-import DraggableList from '../DraggableList';
+import SortableList from '../SortableList';
 import Placeholder from '../Placeholder';
 
 import { usePlayer } from '../../store/hooks/player';
@@ -97,7 +97,12 @@ const Queue: Component<Props> = ({
             />
 
             <div className="Queue__Content">
-                {player.queue.length ? (
+                <Show
+                    when={player.queue.length}
+                    fallback={
+                        <Placeholder icon="list" text="No videos in queue." />
+                    }
+                >
                     <MenuWrapper
                         menuItems={[
                             {
@@ -118,49 +123,49 @@ const Queue: Component<Props> = ({
                         ]}
                     >
                         {(openMenu) => (
-                            <DraggableList
-                                className="Queue__Items"
-                                items={player.queue}
-                                renderItem={(data: QueueItemData) => {
-                                    const { id } = data;
-                                    const isActive =
-                                        id === player.queue.currentId;
+                            <div className="Queue__Items">
+                                <SortableList
+                                    items={player.queue}
+                                    getItemId={({ id }: QueueItemData) => id}
+                                    onReorderItems={setQueue}
+                                >
+                                    {(data: QueueItemData) => {
+                                        const { id } = data;
+                                        const isActive =
+                                            id === player.queue.currentId;
 
-                                    let icon = 'play';
+                                        let icon = 'play';
 
-                                    if (isActive && isBuffering) {
-                                        icon = 'loading';
-                                    }
+                                        if (isActive && isBuffering) {
+                                            icon = 'loading';
+                                        }
 
-                                    if (isActive && isPlaying) {
-                                        icon = 'pause';
-                                    }
+                                        if (isActive && isPlaying) {
+                                            icon = 'pause';
+                                        }
 
-                                    return (
-                                        <QueueItem
-                                            {...data}
-                                            isActive={isActive}
-                                            icon={icon}
-                                            onClick={() =>
-                                                isActive
-                                                    ? togglePlay()
-                                                    : setActiveQueueItem(id)
-                                            }
-                                            onContextMenu={handleClickMenu(
-                                                data,
-                                                openMenu
-                                            )}
-                                        />
-                                    );
-                                }}
-                                getItemId={({ id }: QueueItemData) => id}
-                                onReorderItems={setQueue}
-                            />
+                                        return (
+                                            <QueueItem
+                                                {...data}
+                                                isActive={isActive}
+                                                icon={icon}
+                                                onClick={() =>
+                                                    isActive
+                                                        ? togglePlay()
+                                                        : setActiveQueueItem(id)
+                                                }
+                                                onContextMenu={handleClickMenu(
+                                                    data,
+                                                    openMenu
+                                                )}
+                                            />
+                                        );
+                                    }}
+                                </SortableList>
+                            </div>
                         )}
                     </MenuWrapper>
-                ) : (
-                    <Placeholder icon="list" text="No videos in queue." />
-                )}
+                </Show>
             </div>
         </section>
     );

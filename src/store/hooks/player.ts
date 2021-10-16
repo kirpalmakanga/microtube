@@ -59,7 +59,7 @@ export const usePlayer = () => {
     const queueItems = (newItems: QueueItem[]) => {
         const items = newItems.filter(
             ({ id }: QueueItem) =>
-                !queue.find(
+                !player.queue.find(
                     ({ id: queueItemId }: QueueItem) => queueItemId === id
                 )
         );

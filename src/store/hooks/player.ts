@@ -21,19 +21,14 @@ export const usePlayer = () => {
     const [, { openNotification }] = useNotifications();
     const [, { openPrompt }] = usePrompt();
 
-    const getCurrentUserId = () => {
-        const { id } = user;
-
-        return __DEV__ ? 'dev' : id;
-    };
+    const getCurrentUserId = () => (__DEV__ ? 'dev' : user.id);
 
     const queuePath = `users/${getCurrentUserId()}/queue`;
     const currentIdPath = `users/${getCurrentUserId()}/currentId`;
 
-    const { queue, currentId } = player;
-
     const currentQueueIndex = createMemo(
-        (targetId) => queue.findIndex(({ id }: QueueItem) => id === targetId),
+        (targetId) =>
+            player.queue.findIndex(({ id }: QueueItem) => id === targetId),
         player.currentId
     );
 
@@ -122,9 +117,9 @@ export const usePlayer = () => {
         });
 
     const removeQueueItem = ({ id: targetId }: { id: string }) => {
-        setQueue(queue.filter(({ id }: QueueItem) => id !== targetId));
+        setQueue(player.queue.filter(({ id }: QueueItem) => id !== targetId));
 
-        if (targetId === currentId) {
+        if (targetId === player.currentId) {
             saveData(currentIdPath, '');
         }
     };
@@ -137,12 +132,16 @@ export const usePlayer = () => {
             confirmText: 'Clear',
             cancelText: 'Cancel',
             callback: () =>
-                setQueue(queue.filter(({ id }: QueueItem) => id === currentId))
+                setQueue(
+                    player.queue.filter(({ id }: QueueItem) => id === currentId)
+                )
         });
 
-    const clearVideo = () =>
+    const clearVideo = () => {
         setState('player', { video: rootInitialState.player.video });
 
+        console.log(JSON.stringify(player));
+    };
     const getVideo = async (videoId: string) => {
         try {
             clearVideo();

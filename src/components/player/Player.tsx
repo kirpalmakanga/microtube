@@ -1,10 +1,8 @@
 import { createEffect, onCleanup, onMount, Show } from 'solid-js';
 import {
     GenericObject,
-    QueueItem,
     PlayerSyncPayload,
     PlayerSyncHandlers,
-    HTMLElementEvent,
     HTMLElementWheelEvent
 } from '../../../@types/alltypes';
 import { YouTubePlayer } from 'youtube-player/dist/types';

@@ -43,16 +43,16 @@ const DefaultHeader = () => {
             </span>
 
             <nav className="navigation">
-                {user.isSignedIn ? (
-                    <>
-                        <Link
-                            className="navigation__link icon-button"
-                            aria-label="Open search"
-                            href="/search"
-                        >
-                            <Icon name="search" />
-                        </Link>
+                <Show when={user.isSignedIn}>
+                    <Link
+                        className="navigation__link icon-button"
+                        aria-label="Open search"
+                        href="/search"
+                    >
+                        <Icon name="search" />
+                    </Link>
 
+                    <Show when={location.pathname !== '/'}>
                         <Link
                             className="navigation__link icon-button"
                             aria-label="Playlists"
@@ -60,16 +60,17 @@ const DefaultHeader = () => {
                         >
                             <Icon name="folder" />
                         </Link>
+                    </Show>
 
-                        <Link
-                            className="navigation__link icon-button"
-                            href="/subscriptions"
-                            aria-label="Open subscriptions"
-                        >
-                            <Icon name="users" />
-                        </Link>
-                    </>
-                ) : null}
+                    <Link
+                        className="navigation__link icon-button"
+                        href="/subscriptions"
+                        aria-label="Open subscriptions"
+                    >
+                        <Icon name="users" />
+                    </Link>
+                </Show>
+
                 <div className="navigation__menu">
                     <Button
                         className="navigation__link icon-button avatar"

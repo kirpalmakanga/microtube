@@ -97,7 +97,7 @@ const Queue: Component<Props> = (props) => {
 
             <div className="Queue__Content">
                 <Show
-                    when={player.queue.length}
+                    when={player.queue.length && props.isVisible}
                     fallback={
                         <Placeholder icon="list" text="No videos in queue." />
                     }

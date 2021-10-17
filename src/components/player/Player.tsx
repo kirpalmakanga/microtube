@@ -247,14 +247,15 @@ const Player = () => {
         return state.isMuted;
     }, state.isMuted);
 
-    createEffect(() => {
-        if (!state.isPlaying) {
-            youtube?.pauseVideo();
-        } else {
-            youtube?.playVideo();
-        }
+    createEffect((previousValue) => {
+        const { isPlaying } = state;
 
-        return state.isPlaying;
+        if (isPlaying === previousValue) return previousValue;
+
+        if (isPlaying) youtube?.playVideo();
+        else youtube?.pauseVideo();
+
+        return isPlaying;
     }, state.isPlaying);
 
     createEffect(() => {

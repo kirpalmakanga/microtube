@@ -12,9 +12,14 @@
     box-shadow: 0 -2px 2px 0 rgba($brand-primary, 0.14),
         0 3px 1px -2px rgba($brand-primary, 0.2),
         0 1px 5px 0 rgba($brand-primary, 0.12);
+    transform: translateY(100%);
 
     @media screen and (min-width: 480px) {
         bottom: 50px;
+    }
+
+    &.is--visible {
+        transform: translateY(0);
     }
 
     &__Content {
@@ -30,23 +35,8 @@
         overflow-x: hidden;
         overflow-y: scroll;
         flex: 1;
-        & > .sortable {
-            @include transition();
-            transition-property: opacity, transform;
-            height: 50px;
 
-            &:active {
-            }
-
-            &.dragged {
-                cursor: move;
-                opacity: 0.25;
-            }
-
-            &.hidden {
-                opacity: 0;
-            }
-
+        .sortable {
             &:not(:last-child) .QueueItem {
                 border-bottom: 2px solid rgba($brand-primary, 0.5);
             }
@@ -137,5 +127,16 @@
         &:hover {
             background-color: lighten($brand-primary, 40%);
         }
+    }
+}
+
+.sortable {
+    &.is--dragged {
+        cursor: move;
+        opacity: 0.5;
+    }
+
+    &.is--hidden {
+        opacity: 0;
     }
 }

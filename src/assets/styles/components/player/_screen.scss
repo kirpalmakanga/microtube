@@ -7,9 +7,16 @@
     right: 0;
     bottom: 100px;
     display: flex;
+    opacity: 0;
+    visibility: hidden;
 
     @media screen and (min-width: 480px) {
         bottom: 50px;
+    }
+
+    &.is--visible {
+        opacity: 1;
+        visibility: visible;
     }
 
     & > div {

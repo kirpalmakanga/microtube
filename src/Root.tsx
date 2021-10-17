@@ -7,8 +7,6 @@ import { preventDefault, isMobile } from './lib/helpers';
 import { __DEV__ } from './config/app';
 
 import Header from './layout/Header';
-
-import Head from './components/Head';
 import Sprite from './components/Sprite';
 import Loader from './components/Loader';
 import Player from './components/player/Player';
@@ -31,8 +29,6 @@ const Root: Component = ({ children }) => {
             className={`layout ${isMobile() ? 'mobile' : ''}`.trim()}
             onContextMenu={__DEV__ ? () => {} : preventDefault()}
         >
-            <Head />
-
             <Sprite />
 
             <Show when={isAppReady()} fallback={<Loader />}>

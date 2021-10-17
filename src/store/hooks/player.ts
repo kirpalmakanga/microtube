@@ -4,7 +4,7 @@ import { useStore } from '..';
 import { useNotifications } from './notifications';
 import { usePrompt } from './prompt';
 
-import { QueueItem } from '../../../@types/alltypes';
+import { QueueItem, VideoData } from '../../../@types/alltypes';
 
 import { __DEV__ } from '../../config/app';
 
@@ -15,6 +15,18 @@ import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
 
 import { rootInitialState } from '../reducers';
 import { createMemo, mergeProps } from 'solid-js';
+
+const extractQueueItemData = ({
+    id,
+    title,
+    description,
+    duration
+}: VideoData): QueueItem => ({
+    id,
+    title,
+    description,
+    duration
+});
 
 export const usePlayer = () => {
     const [{ user, player }, setState] = useStore();
@@ -139,11 +151,9 @@ export const usePlayer = () => {
                 )
         });
 
-    const clearVideo = () => {
+    const clearVideo = () =>
         setState('player', { video: rootInitialState.player.video });
 
-        console.log(JSON.stringify(player));
-    };
     const getVideo = async (videoId: string) => {
         try {
             clearVideo();
@@ -183,16 +193,7 @@ export const usePlayer = () => {
     };
 
     return [
-        mergeProps(player, {
-            get currentVideo() {
-                const { video, queue } = player;
-
-                return video.id
-                    ? video
-                    : queue[currentQueueIndex()] ||
-                          rootInitialState.player.video;
-            }
-        }),
+        player,
         {
             subscribeToQueue,
             subscribeToCurrentQueueId,

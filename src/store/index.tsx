@@ -19,7 +19,7 @@ export const StoreProvider = ({
         const [{ player, search }] = store;
 
         saveState({
-            player: omit(player, ['queue', 'newQueueItems', 'video']),
+            player: omit(player, ['newQueueItems', 'video']),
             search: pick(search, ['forMine'])
         });
     });

@@ -316,37 +316,29 @@ const Player = () => {
                 state.isQueueVisible ? 'enabled' : 'disabled'
             }
         >
-            <Transition name="fade" appear={true}>
-                <Show
-                    when={
-                        (currentDevice.isMaster && isSingleVideo()) ||
-                        state.isScreenVisible ||
-                        state.isFullscreen
-                    }
-                >
-                    <Screen
-                        videoId={storeState.currentVideo.id}
-                        onReady={handleYoutubeIframeReady}
-                        onEnd={handleVideoEnd}
-                        onBuffering={handleBuffering}
-                        onPlay={handlePlay}
-                        onPause={handlePause}
-                        onStateChange={handleYoutubeIframeStateChange}
-                        onClick={togglePlay}
-                    />
-                </Show>
-            </Transition>
+            <Screen
+                isVisible={
+                    (currentDevice.isMaster && isSingleVideo()) ||
+                    state.isScreenVisible ||
+                    state.isFullscreen
+                }
+                videoId={storeState.currentVideo.id}
+                onReady={handleYoutubeIframeReady}
+                onEnd={handleVideoEnd}
+                onBuffering={handleBuffering}
+                onPlay={handlePlay}
+                onPause={handlePause}
+                onStateChange={handleYoutubeIframeStateChange}
+                onClick={togglePlay}
+            />
 
-            <Transition name="slide-up" appear={true}>
-                <Show when={state.isQueueVisible}>
-                    <Queue
-                        isPlaying={state.isPlaying}
-                        isBuffering={state.isBuffering}
-                        toggleQueue={toggleQueue}
-                        togglePlay={togglePlay}
-                    />
-                </Show>
-            </Transition>
+            <Queue
+                isVisible={state.isQueueVisible}
+                isPlaying={state.isPlaying}
+                isBuffering={state.isBuffering}
+                toggleQueue={toggleQueue}
+                togglePlay={togglePlay}
+            />
 
             <Transition name="slide-up" appear={true}>
                 <Show when={availableDevices.length && !isSingleVideo()}>

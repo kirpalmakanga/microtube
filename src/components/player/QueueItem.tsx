@@ -13,7 +13,8 @@ interface Props {
 
 const QueueItem: Component<Props> = (props) => (
     <div
-        className={`QueueItem shadow--2dp ${props.isActive ? 'is-active' : ''}`}
+        className="QueueItem shadow--2dp"
+        classList={{ 'is-active': props.isActive }}
     >
         <div
             className="QueueItem__Content"

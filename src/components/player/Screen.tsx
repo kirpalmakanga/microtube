@@ -15,6 +15,7 @@ const playerOptions: Options = {
 
 interface Props {
     videoId: string;
+    isVisible: boolean;
     onReady: (playerInstance: YouTubePlayer) => void;
     onBuffering: () => void;
     onPlay?: () => void;
@@ -25,7 +26,7 @@ interface Props {
 }
 
 const Screen: Component<Props> = (props) => (
-    <div className="screen">
+    <div className="screen" classList={{ 'is--visible': props.isVisible }}>
         <Show
             when={props.videoId}
             fallback={<Placeholder icon="screen" text="No video." />}

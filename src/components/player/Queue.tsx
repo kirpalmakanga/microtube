@@ -14,6 +14,7 @@ import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 import { useNotifications } from '../../store/hooks/notifications';
 
 interface Props {
+    isVisible: boolean;
     isPlaying: boolean;
     isBuffering: boolean;
     toggleQueue: () => void;
@@ -28,12 +29,7 @@ interface QueueItemData {
     icon: string;
 }
 
-const Queue: Component<Props> = ({
-    isPlaying,
-    isBuffering,
-    toggleQueue,
-    togglePlay
-}) => {
+const Queue: Component<Props> = (props) => {
     const [
         player,
         {
@@ -88,10 +84,13 @@ const Queue: Component<Props> = ({
     });
 
     return (
-        <section className="Queue shadow--2dp">
+        <section
+            className="Queue shadow--2dp"
+            classList={{ 'is--visible': props.isVisible }}
+        >
             <QueueHeader
                 itemCount={player.queue.length}
-                onClickClose={toggleQueue}
+                onClickClose={props.toggleQueue}
                 onClickImport={importVideos}
                 onClickClear={clearQueue}
             />
@@ -132,15 +131,15 @@ const Queue: Component<Props> = ({
                                     {(data: QueueItemData) => {
                                         const { id } = data;
                                         const isActive =
-                                            id === player.queue.currentId;
+                                            id === player.currentId;
 
                                         let icon = 'play';
 
-                                        if (isActive && isBuffering) {
+                                        if (isActive && props.isBuffering) {
                                             icon = 'loading';
                                         }
 
-                                        if (isActive && isPlaying) {
+                                        if (isActive && props.isPlaying) {
                                             icon = 'pause';
                                         }
 
@@ -151,7 +150,7 @@ const Queue: Component<Props> = ({
                                                 icon={icon}
                                                 onClick={() =>
                                                     isActive
-                                                        ? togglePlay()
+                                                        ? props.togglePlay()
                                                         : setActiveQueueItem(id)
                                                 }
                                                 onContextMenu={handleClickMenu(

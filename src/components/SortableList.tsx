@@ -9,6 +9,8 @@ import {
 } from '@thisbeyond/solid-dnd';
 import { useOnScreen } from '../lib/hooks';
 import { Transition } from 'solid-transition-group';
+import { HTMLElementEvent } from '../../@types/alltypes';
+import { preventDefault } from '../lib/helpers';
 
 interface ListProps {
     items: any[];
@@ -33,6 +35,75 @@ const SortableItem: Component<ListItemProps> = (props) => {
     const sortable = createSortable({ id: props.id });
     const [ref, isVisible] = useOnScreen();
 
+    let isDragged = false;
+    let movingTarget: HTMLElement;
+    let cursorX = 0;
+    let cursorY = 0;
+
+    const dragMouseUp = preventDefault(() => {
+        cursorX = 0;
+        cursorY = 0;
+
+        if (movingTarget) {
+            movingTarget.onmouseup = null;
+            movingTarget.onmousemove = null;
+            movingTarget.remove();
+        }
+    });
+
+    const setPosition = ({
+        positionX,
+        positionY
+    }: {
+        positionX: number;
+        positionY: number;
+    }) => {
+        const { offsetTop, offsetLeft } = movingTarget;
+
+        Object.assign(movingTarget.style, {
+            left: `${offsetLeft - positionX}px`,
+            top: `${offsetTop - positionY}px`
+        });
+    };
+
+    const dragMouseMove = preventDefault(
+        (e: HTMLElementEvent<HTMLDivElement>) => {
+            const { clientX, clientY } = e;
+
+            setPosition({
+                positionX: cursorX - clientX,
+                positionY: cursorY - clientY
+            });
+
+            cursorX = clientX;
+            cursorY = clientY;
+        }
+    );
+
+    const dragMouseDown = preventDefault(
+        (e: HTMLElementEvent<HTMLDivElement>) => {
+            const { currentTarget, clientX, clientY } = e;
+            const container = currentTarget.parentNode as HTMLElement;
+
+            cursorX = clientX;
+            cursorY = clientY;
+
+            movingTarget = currentTarget.cloneNode(true) as HTMLElement;
+
+            Object.assign(movingTarget.style, {
+                position: 'absolute',
+                width: `${currentTarget.offsetWidth}px`,
+                top: `${currentTarget.offsetTop}px`,
+                left: `${currentTarget.offsetLeft}px`
+            });
+
+            container.append(movingTarget);
+
+            document.onmouseup = dragMouseUp;
+            document.onmousemove = dragMouseMove;
+        }
+    );
+
     return (
         <div
             use:sortable
@@ -42,6 +113,8 @@ const SortableItem: Component<ListItemProps> = (props) => {
                 dragged: sortable.isActiveDraggable,
                 hidden: !isVisible()
             }}
+            onMouseDown={dragMouseDown}
+            draggable={true}
         >
             <Show when={isVisible()}>{props.children}</Show>
         </div>

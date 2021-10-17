@@ -78,6 +78,8 @@ interface ShareConfig {
 
 type HTMLElementEvent<T extends HTMLElement> = Event & {
     currentTarget: T;
+    clientX: number;
+    clientY: number;
 };
 
 type HTMLElementWheelEvent = Event & {

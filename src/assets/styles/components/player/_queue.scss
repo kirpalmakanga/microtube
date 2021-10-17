@@ -35,7 +35,11 @@
             transition-property: opacity, transform;
             height: 50px;
 
+            &:active {
+            }
+
             &.dragged {
+                cursor: move;
                 opacity: 0.25;
             }
 

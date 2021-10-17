@@ -1,11 +1,10 @@
-import { createContext, useContext, createEffect } from 'solid-js';
+import { createContext, useContext, createEffect, mergeProps } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import merge from 'lodash/merge';
 import { rootInitialState } from './reducers';
 import { saveState, loadState } from '../lib/localStorage';
-import { pick, omit } from '../lib/helpers';
+import { mergeDeep, pick, omit } from '../lib/helpers';
 
-const initialState = merge(rootInitialState, loadState() || {});
+const initialState = mergeDeep(rootInitialState, loadState() || {});
 const StoreContext = createContext();
 
 export const StoreProvider = ({

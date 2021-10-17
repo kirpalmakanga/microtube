@@ -1,5 +1,6 @@
 import { createSignal, Show } from 'solid-js';
 import { Link, useNavigate, useLocation } from 'solid-app-router';
+import { Title } from 'solid-meta';
 
 import Icon from '../components/Icon';
 import Button from '../components/Button';
@@ -28,6 +29,8 @@ const DefaultHeader = () => {
 
     return (
         <div className="layout__header-row">
+            <Title>{title()}</Title>
+
             {location.pathname !== '/' && location.pathname !== '/login' ? (
                 <Button
                     onClick={() => navigate('/')}

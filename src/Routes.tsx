@@ -18,11 +18,11 @@ const Protected = () => {
 const Playlists = lazy(() => import('./containers/Playlists'));
 const Playlist = lazy(() => import('./containers/Playlist'));
 const Video = lazy(() => import('./containers/Video'));
-const Search = lazy(() => import('./containers/Search'));
-const Channels = lazy(() => import('./containers/Channels'));
-const Channel = lazy(() => import('./containers/Channel'));
-const ChannelVideos = lazy(() => import('./containers/Channel/ChannelVideos'));
-const ChannelAbout = lazy(() => import('./containers/Channel/ChannelAbout'));
+// const Search = lazy(() => import('./containers/Search'));
+// const Channels = lazy(() => import('./containers/Channels'));
+// const Channel = lazy(() => import('./containers/Channel'));
+// const ChannelVideos = lazy(() => import('./containers/Channel/ChannelVideos'));
+// const ChannelAbout = lazy(() => import('./containers/Channel/ChannelAbout'));
 
 const Router: Component = () => (
     <Routes>

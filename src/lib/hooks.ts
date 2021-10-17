@@ -56,7 +56,9 @@ export const useKeyboard = (
     );
 };
 
-export const useOnScreen = (rootMargin: string = '0px') => {
+export const useOnScreen = (
+    rootMargin: string = '0px'
+): [(el: HTMLElement) => void, () => boolean] => {
     const [isIntersecting, setIntersecting] = createSignal(false);
     let observer: IntersectionObserver;
     let ref: HTMLElement;

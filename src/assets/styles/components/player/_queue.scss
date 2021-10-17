@@ -37,8 +37,18 @@
         flex: 1;
 
         .sortable {
+            @include transition(transform);
+            position: relative;
+
             &:not(:last-child) .QueueItem {
                 border-bottom: 2px solid rgba($brand-primary, 0.5);
+            }
+            &.is--dragged {
+                transition: none;
+                z-index: 1;
+            }
+            &.is--hidden {
+                opacity: 0;
             }
         }
     }
@@ -131,12 +141,8 @@
 }
 
 .sortable {
+    cursor: pointer;
     &.is--dragged {
-        cursor: move;
-        opacity: 0.5;
-    }
-
-    &.is--hidden {
-        opacity: 0;
+        cursor: grabbing;
     }
 }

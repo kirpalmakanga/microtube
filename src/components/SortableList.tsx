@@ -23,6 +23,14 @@ interface ListItemProps {
     children: unknown;
 }
 
+const htmlToElement = (html: string) => {
+    const template = document.createElement('template');
+
+    template.innerHTML = html.trim();
+
+    return template.content.firstChild as HTMLElement;
+};
+
 const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
     const result = [...list];
 
@@ -30,91 +38,29 @@ const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
 
     return result;
 };
-/* TODO: fix weird reordering on drag end */
+
 const SortableItem: Component<ListItemProps> = (props) => {
     const sortable = createSortable({ id: props.id });
-    const [ref, isVisible] = useOnScreen();
+    const [ref, isVisible]: [(el: HTMLElement) => void, () => boolean] =
+        useOnScreen();
 
-    let isDragged = false;
-    let movingTarget: HTMLElement;
-    let cursorX = 0;
-    let cursorY = 0;
-
-    const dragMouseUp = preventDefault(() => {
-        cursorX = 0;
-        cursorY = 0;
-
-        if (movingTarget) {
-            movingTarget.onmouseup = null;
-            movingTarget.onmousemove = null;
-            movingTarget.remove();
-        }
-    });
-
-    const setPosition = ({
-        positionX,
-        positionY
-    }: {
-        positionX: number;
-        positionY: number;
-    }) => {
-        const { offsetTop, offsetLeft } = movingTarget;
-
-        Object.assign(movingTarget.style, {
-            left: `${offsetLeft - positionX}px`,
-            top: `${offsetTop - positionY}px`
-        });
+    const onMouseUp = (e: HTMLElementEvent<HTMLDivElement>) => {
+        // @ts-ignore
+        sortable.isActiveDraggable && e.preventDefault();
     };
-
-    const dragMouseMove = preventDefault(
-        (e: HTMLElementEvent<HTMLDivElement>) => {
-            const { clientX, clientY } = e;
-
-            setPosition({
-                positionX: cursorX - clientX,
-                positionY: cursorY - clientY
-            });
-
-            cursorX = clientX;
-            cursorY = clientY;
-        }
-    );
-
-    const dragMouseDown = preventDefault(
-        (e: HTMLElementEvent<HTMLDivElement>) => {
-            const { currentTarget, clientX, clientY } = e;
-            const container = currentTarget.parentNode as HTMLElement;
-
-            cursorX = clientX;
-            cursorY = clientY;
-
-            movingTarget = currentTarget.cloneNode(true) as HTMLElement;
-
-            Object.assign(movingTarget.style, {
-                position: 'absolute',
-                width: `${currentTarget.offsetWidth}px`,
-                top: `${currentTarget.offsetTop}px`,
-                left: `${currentTarget.offsetLeft}px`
-            });
-
-            container.append(movingTarget);
-
-            document.onmouseup = dragMouseUp;
-            document.onmousemove = dragMouseMove;
-        }
-    );
 
     return (
         <div
+            // @ts-ignore
             use:sortable
             ref={ref}
             className="sortable"
             classList={{
-                dragged: sortable.isActiveDraggable,
-                hidden: !isVisible()
+                // @ts-ignore
+                'is--dragged': sortable.isActiveDraggable,
+                'is--hidden': !isVisible()
             }}
-            onMouseDown={dragMouseDown}
-            draggable={true}
+            onMouseUp={onMouseUp}
         >
             <Show when={isVisible()}>{props.children}</Show>
         </div>
@@ -166,10 +112,6 @@ const DraggableList: Component<ListProps> = (props) => {
                     )}
                 </For>
             </SortableContext>
-
-            <DragOverlay>
-                <div class="sortable"></div>
-            </DragOverlay>
         </DragDropContext>
     );
 };

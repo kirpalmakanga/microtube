@@ -15,6 +15,7 @@ const QueueItem: Component<Props> = (props) => (
     <div
         className="QueueItem shadow--2dp"
         classList={{ 'is-active': props.isActive }}
+        onDragStart={preventDefault(stopPropagation())}
     >
         <div
             className="QueueItem__Content"

@@ -156,8 +156,6 @@ export const YoutubePlayer: Component<Props> = (props) => {
         return props.videoId;
     }, props.videoId);
 
-    /* TODO: review all creatEffect calls */
-
     onMount(createPlayer);
 
     return (

@@ -12,6 +12,7 @@ import { usePlayer } from '../../store/hooks/player';
 import { usePlaylistItems } from '../../store/hooks/playlist-items';
 import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 import { useNotifications } from '../../store/hooks/notifications';
+import { Transition } from 'solid-transition-group';
 
 interface Props {
     isVisible: boolean;
@@ -95,77 +96,94 @@ const Queue: Component<Props> = (props) => {
                 onClickClear={clearQueue}
             />
 
-            <div className="Queue__Content">
-                <Show
-                    when={player.queue.length && props.isVisible}
-                    fallback={
-                        <Placeholder icon="list" text="No videos in queue." />
-                    }
-                >
-                    <MenuWrapper
-                        menuItems={[
-                            {
-                                title: 'Save to playlist',
-                                icon: 'folder-add',
-                                onClick: editPlaylistItem
-                            },
-                            {
-                                title: 'Share',
-                                icon: 'share',
-                                onClick: handleSharing
-                            },
-                            {
-                                title: 'Remove from queue',
-                                icon: 'delete',
-                                onClick: removeQueueItem
+            <Transition name="fade" appear={true}>
+                <Show when={props.isVisible}>
+                    <div className="Queue__Content">
+                        <Show
+                            when={player.queue.length}
+                            fallback={
+                                <Placeholder
+                                    icon="list"
+                                    text="No videos in queue."
+                                />
                             }
-                        ]}
-                    >
-                        {(openMenu) => (
-                            <div className="Queue__Items">
-                                <SortableList
-                                    items={player.queue}
-                                    getItemId={({ id }: QueueItemData) => id}
-                                    onReorderItems={setQueue}
-                                >
-                                    {(data: QueueItemData) => {
-                                        const { id } = data;
-                                        const isActive =
-                                            id === player.currentId;
+                        >
+                            <MenuWrapper
+                                menuItems={[
+                                    {
+                                        title: 'Save to playlist',
+                                        icon: 'folder-add',
+                                        onClick: editPlaylistItem
+                                    },
+                                    {
+                                        title: 'Share',
+                                        icon: 'share',
+                                        onClick: handleSharing
+                                    },
+                                    {
+                                        title: 'Remove from queue',
+                                        icon: 'delete',
+                                        onClick: removeQueueItem
+                                    }
+                                ]}
+                            >
+                                {(openMenu) => (
+                                    <div className="Queue__Items">
+                                        <SortableList
+                                            items={player.queue}
+                                            getItemId={({
+                                                id
+                                            }: QueueItemData) => id}
+                                            onReorderItems={setQueue}
+                                        >
+                                            {(data: QueueItemData) => {
+                                                const { id } = data;
+                                                const isActive =
+                                                    id === player.currentId;
 
-                                        let icon = 'play';
+                                                let icon = 'play';
 
-                                        if (isActive && props.isBuffering) {
-                                            icon = 'loading';
-                                        }
-
-                                        if (isActive && props.isPlaying) {
-                                            icon = 'pause';
-                                        }
-
-                                        return (
-                                            <QueueItem
-                                                {...data}
-                                                isActive={isActive}
-                                                icon={icon}
-                                                onClick={() =>
-                                                    isActive
-                                                        ? props.togglePlay()
-                                                        : setActiveQueueItem(id)
+                                                if (
+                                                    isActive &&
+                                                    props.isBuffering
+                                                ) {
+                                                    icon = 'loading';
                                                 }
-                                                onContextMenu={handleClickMenu(
-                                                    data,
-                                                    openMenu
-                                                )}
-                                            />
-                                        );
-                                    }}
-                                </SortableList>
-                            </div>
-                        )}
-                    </MenuWrapper>
+
+                                                if (
+                                                    isActive &&
+                                                    props.isPlaying
+                                                ) {
+                                                    icon = 'pause';
+                                                }
+
+                                                return (
+                                                    <QueueItem
+                                                        {...data}
+                                                        isActive={isActive}
+                                                        icon={icon}
+                                                        onClick={() =>
+                                                            isActive
+                                                                ? props.togglePlay()
+                                                                : setActiveQueueItem(
+                                                                      id
+                                                                  )
+                                                        }
+                                                        onContextMenu={handleClickMenu(
+                                                            data,
+                                                            openMenu
+                                                        )}
+                                                    />
+                                                );
+                                            }}
+                                        </SortableList>
+                                    </div>
+                                )}
+                            </MenuWrapper>
+                        </Show>
+                    </div>
                 </Show>
-            </div>
+            </Transition>
         </section>
     );
 };

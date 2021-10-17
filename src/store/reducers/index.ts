@@ -1,20 +1,14 @@
 // import { combineReducers } from '../helpers';
-import app, { initialState as appInitialState } from './_app';
-import user, { initialState as userInitialState } from './_user';
-import player, { initialState as playerInitialState } from './_player';
-import playlists, { initialState as playlistsInitialState } from './_playlists';
-import playlistItems, {
-    initialState as playlistItemsInitialState
-} from './_playlist-items';
-import channel, { initialState as channelInitialState } from './_channel';
-import subscriptions, {
-    initialState as subscriptionsInitialState
-} from './_subscriptions';
-import search, { initialState as searchInitialState } from './_search';
-import notifications, {
-    initialState as notificationsInitialState
-} from './_notifications';
-import prompt, { initialState as promptInitialState } from './_prompt';
+import { initialState as appInitialState } from './_app';
+import { initialState as userInitialState } from './_user';
+import { initialState as playerInitialState } from './_player';
+import { initialState as playlistsInitialState } from './_playlists';
+import { initialState as playlistItemsInitialState } from './_playlist-items';
+import { initialState as channelInitialState } from './_channel';
+import { initialState as subscriptionsInitialState } from './_subscriptions';
+import { initialState as searchInitialState } from './_search';
+import { initialState as notificationsInitialState } from './_notifications';
+import { initialState as promptInitialState } from './_prompt';
 
 export const rootInitialState = {
     app: appInitialState,
@@ -28,16 +22,3 @@ export const rootInitialState = {
     notifications: notificationsInitialState,
     prompt: promptInitialState
 };
-
-// export default combineReducers({
-//     app,
-//     user,
-//     player,
-//     playlists,
-//     playlistItems,
-//     channel,
-//     subscriptions,
-//     search,
-//     notifications,
-//     prompt
-// });

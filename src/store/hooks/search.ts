@@ -1,44 +1,51 @@
 import { useStore } from '..';
 import * as api from '../../api/youtube';
+import { omit } from '../../lib/helpers';
 import { GetState } from '../helpers';
+import { rootInitialState } from '../reducers';
 import { useNotifications } from './notifications';
 
 export const useSearch = () => {
-    const [{ search }, dispatch] = useStore();
+    const [{ search }, setState] = useStore();
     const [, { openNotification }] = useNotifications();
 
-    const searchVideos = (query: string) =>
-        dispatch(async (getState: GetState) => {
-            try {
-                const {
-                    search: { hasNextPage, forMine, nextPageToken: pageToken }
-                } = getState();
+    const searchVideos = async (query: string) => {
+        try {
+            const { hasNextPage, forMine, nextPageToken: pageToken } = search;
 
-                if (!hasNextPage) {
-                    return;
-                }
-
-                const payload = await api.searchVideos({
-                    query,
-                    forMine,
-                    pageToken
-                });
-
-                dispatch({ type: 'search/UPDATE_ITEMS', payload });
-            } catch (error) {
-                openNotification('Error searching videos.');
+            if (!hasNextPage) {
+                return;
             }
-        });
+
+            const {
+                items: newItems,
+                nextPageToken = '',
+                totalResults
+            } = await api.searchVideos({
+                query,
+                forMine,
+                pageToken
+            });
+
+            setState('search', {
+                ...search,
+                items: [...search.items, ...newItems],
+                nextPageToken,
+                hasNextPage: !!nextPageToken,
+                totalResults
+            });
+        } catch (error) {
+            openNotification('Error searching videos.');
+        }
+    };
 
     const setSearchTarget = (forMine: number) =>
-        dispatch({
-            type: 'search/SET_TARGET',
-            payload: {
-                forMine
-            }
+        setState('search', {
+            forMine
         });
 
-    const clearSearch = () => dispatch({ type: 'search/RESET' });
+    const clearSearch = () =>
+        setState('search', omit(rootInitialState.search, ['forMine']));
 
     return [search, { searchVideos, setSearchTarget, clearSearch }];
 };

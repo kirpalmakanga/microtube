@@ -1,5 +1,3 @@
-import { createReducer, State } from '../helpers';
-
 export interface UserState {
     uid: string;
     name: string;
@@ -15,11 +13,3 @@ export const initialState: UserState = {
     isSignedIn: false,
     isSigningIn: false
 };
-
-const reducer = createReducer(initialState, {
-    'user/UPDATE_DATA': (state: State, data: State) => ({ ...state, ...data }),
-
-    'user/SIGN_OUT': () => ({ initialState })
-});
-
-export default reducer;

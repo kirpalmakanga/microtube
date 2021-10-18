@@ -1,4 +1,4 @@
-import { createReducer, State } from '../helpers';
+import { State } from '../helpers';
 
 export interface PromptState extends State {
     isVisible: boolean;
@@ -17,18 +17,3 @@ export const initialState: PromptState = {
     cancelText: '',
     callback: () => {}
 };
-
-export default createReducer(initialState, {
-    'prompt/OPEN': (state: State, payload: State) => ({
-        ...state,
-        ...payload,
-        isVisible: true
-    }),
-    'prompt/CLOSE': (state: State) => ({
-        ...state,
-        isVisible: false
-    }),
-    'prompt/RESET': (state: State) => ({
-        ...initialState
-    })
-});

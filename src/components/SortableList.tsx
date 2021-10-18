@@ -10,8 +10,6 @@ import {
 import { useOnScreen } from '../lib/hooks';
 import { Transition } from 'solid-transition-group';
 import { HTMLElementEvent } from '../../@types/alltypes';
-import { preventDefault } from '../lib/helpers';
-
 interface ListProps {
     items: any[];
     children: (...args: any[]) => Element;
@@ -62,7 +60,9 @@ const SortableItem: Component<ListItemProps> = (props) => {
             }}
             onMouseUp={onMouseUp}
         >
-            <Show when={isVisible()}>{props.children}</Show>
+            <Transition name="fade" appear={true}>
+                <Show when={isVisible()}>{props.children}</Show>
+            </Transition>
         </div>
     );
 };
@@ -71,6 +71,16 @@ const DraggableList: Component<ListProps> = (props) => {
     const getItemIds = (items: unknown[]) => items.map(props.getItemId);
     const [items, setItems] = createSignal(getItemIds(props.items));
     const ids = () => items();
+
+    const onDragStart = ({ draggable: { node } }: { draggable: any }) => {
+        const onTransitionEnd = () => {
+            node.style.zIndex = '';
+            node.removeEventListener('transitionend', onTransitionEnd);
+        };
+
+        node.style.zIndex = 1;
+        node.addEventListener('transitionend', onTransitionEnd);
+    };
 
     const onDragEnd = ({
         draggable,
@@ -98,6 +108,7 @@ const DraggableList: Component<ListProps> = (props) => {
 
     return (
         <DragDropContext
+            onDragStart={onDragStart}
             onDragEnd={onDragEnd}
             collisionDetectionAlgorith={closestLayoutCenter}
         >

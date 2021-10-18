@@ -26,19 +26,24 @@ interface Props {
 
 const DropDown: Component<Props> = (props) => {
     const [isOpen, setOpenStatus] = createSignal(false);
-    const label = createMemo(() => {
-        const { label = '', value } =
-            props.options.find(
-                ({ value }: OptionsData) => value === props.currentValue
-            ) || {};
+    const label = createMemo(
+        () => {
+            const { label = '', value } =
+                props.options.find(
+                    ({ value }: OptionsData) => value === props.currentValue
+                ) || {};
 
-        return label || String(value);
-    });
+            return label || String(value);
+        },
+        props.currentValue,
+        { equals: (prev, next) => prev === next }
+    );
 
-    const closeOptions = () => isOpen() && setOpenStatus(false);
+    const closeOptions = () => {
+        if (isOpen()) setOpenStatus(false);
+    };
 
     const toggleOptions = () => {
-        console.log(!isOpen());
         setOpenStatus(!isOpen());
     };
 

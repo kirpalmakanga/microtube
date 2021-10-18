@@ -1,6 +1,6 @@
-import { createSignal, onCleanup, onMount, Component } from 'solid-js';
+import { createSignal, onMount, Component } from 'solid-js';
 import { HTMLElementEvent } from '../../@types/alltypes';
-import { preventDefault } from '../lib/helpers';
+import { preventDefault, stopPropagation } from '../lib/helpers';
 interface Props {
     query?: string;
     onSubmit: (query: string) => void;
@@ -10,27 +10,11 @@ const SearchForm: Component<Props> = ({ query = '', onSubmit }) => {
     const [input, setInput] = createSignal(query);
     let inputRef: HTMLInputElement;
 
-    const keyDownHandler = (e: KeyboardEvent) => e.stopPropagation();
-
-    const unbindKeyDown = () => {
-        inputRef?.removeEventListener('keyup', keyDownHandler);
-    };
-
-    const bindKeyDown = () => {
-        unbindKeyDown();
-
-        inputRef?.addEventListener('keyup', keyDownHandler);
-    };
-
     onMount(() => {
         setInput(query);
 
         inputRef?.focus();
-
-        bindKeyDown();
     });
-
-    onCleanup(unbindKeyDown);
 
     const handleInput = ({
         currentTarget: { value }
@@ -53,13 +37,13 @@ const SearchForm: Component<Props> = ({ query = '', onSubmit }) => {
 
                 <input
                     aria-label="Search"
-                    ref={inputRef}
                     value={input()}
                     name="search"
                     className="textfield__input"
                     id="search"
                     type="text"
                     placeholder="Search..."
+                    onKeyPress={stopPropagation()}
                     onChange={handleInput}
                 />
             </div>

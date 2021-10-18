@@ -15,8 +15,7 @@ import MenuWrapper from '../components/menu/MenuWrapper';
 const Search = () => {
     const navigate = useNavigate();
     const { query } = useParams();
-    const [{ items, totalResults, forMine }, { searchVideos, clearSearch }] =
-        useSearch();
+    const [search, { searchVideos, clearSearch }] = useSearch();
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
 
@@ -36,7 +35,7 @@ const Search = () => {
     };
 
     createEffect(
-        on([query, forMine], () => {
+        on([query, search.forMine], () => {
             setShouldMountGrid(false);
 
             clearSearch();
@@ -50,7 +49,7 @@ const Search = () => {
     return (
         <Show when={query && shouldMountGrid()}>
             <Show
-                when={totalResults === 0}
+                when={search.totalResults === 0}
                 fallback={<Placeholder icon="list" text="No results found." />}
             >
                 <MenuWrapper
@@ -69,10 +68,10 @@ const Search = () => {
                 >
                     {(openMenu) => (
                         <List
-                            items={items}
-                            itemKey={({ id }: VideoData) => id}
-                            loadMoreItems={handleSearchVideos}
-                            renderItem={(data: VideoData) => (
+                            items={search.items}
+                            loadItems={handleSearchVideos}
+                        >
+                            {(data: VideoData) => (
                                 <VideoCard
                                     {...data}
                                     onClick={handleClickCard(data)}
@@ -82,7 +81,7 @@ const Search = () => {
                                     )}
                                 />
                             )}
-                        />
+                        </List>
                     )}
                 </MenuWrapper>
             </Show>

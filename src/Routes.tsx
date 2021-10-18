@@ -18,7 +18,7 @@ const Protected = () => {
 const Playlists = lazy(() => import('./containers/Playlists'));
 const Playlist = lazy(() => import('./containers/Playlist'));
 const Video = lazy(() => import('./containers/Video'));
-// const Search = lazy(() => import('./containers/Search'));
+const Search = lazy(() => import('./containers/Search'));
 // const Channels = lazy(() => import('./containers/Channels'));
 // const Channel = lazy(() => import('./containers/Channel'));
 // const ChannelVideos = lazy(() => import('./containers/Channel/ChannelVideos'));
@@ -30,8 +30,8 @@ const Router: Component = () => (
             <Route path="/" element={<Playlists />} />
             <Route path="/playlist/:playlistId" element={<Playlist />} />
             <Route path="/video/:videoId" element={<Video />} />
-            {/* <Route path="/search/" element={<Search />} /> */}
-            {/* <Route path="/search/:query" element={<Search />} /> */}
+            <Route path="/search/" element={<Search />} />
+            <Route path="/search/:query" element={<Search />} />
             {/* <Route path="/subscriptions" element={<Channels />} /> */}
             {/* <Route path="/channel/:channelId" element={<Channel />}> */}
             {/* <Route path="" element={<Navigate href="videos" />} /> */}

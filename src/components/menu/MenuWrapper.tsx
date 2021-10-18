@@ -9,7 +9,7 @@ import MenuItem from './MenuItem';
 
 interface Props {
     menuItems: MenuItemData[];
-    children: (openMenu: Function) => JSXElement;
+    children: (openMenu: Function) => JSXElement | Element;
 }
 
 interface State {
@@ -24,7 +24,7 @@ const initialState: State = {
     callbackData: {}
 };
 
-const MenuWrapper: Component<Props> = ({ menuItems, children }) => {
+const MenuWrapper: Component<Props> = (props) => {
     const [state, setState] = createStore(initialState);
 
     const openMenu = (callbackData: State, menuTitle: string) => {
@@ -39,14 +39,14 @@ const MenuWrapper: Component<Props> = ({ menuItems, children }) => {
 
     return (
         <>
-            {children(openMenu)}
+            {props.children(openMenu)}
 
             <Transition name="fade">
                 <Show when={state.isMenuOpen}>
                     <Menu
                         onClick={closeMenu}
                         title={state.menuTitle}
-                        items={menuItems}
+                        items={props.menuItems}
                         renderItem={({
                             title,
                             icon,

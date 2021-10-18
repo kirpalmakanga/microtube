@@ -46,16 +46,4 @@
             background-color: lighten($brand-primary, 5%);
         }
     }
-
-    &[data-state='closed'] &__list {
-        // transform: translateY(-25%);
-        opacity: 0;
-        visibility: hidden;
-    }
-
-    &[data-state='open'] &__list {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-    }
 }

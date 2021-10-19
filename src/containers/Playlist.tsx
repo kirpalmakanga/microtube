@@ -57,6 +57,29 @@ const Playlists: Component = () => {
         }
     };
 
+    const menuItems = [
+        {
+            title: 'Add to queue',
+            icon: 'circle-add',
+            onClick: queueItem
+        },
+        {
+            title: 'Save to playlist',
+            icon: 'folder-add',
+            onClick: editPlaylistItem
+        },
+        {
+            title: 'Share',
+            icon: 'share',
+            onClick: handleSharing
+        },
+        {
+            title: 'Remove from playlist',
+            icon: 'delete',
+            onClick: removePlaylistItem
+        }
+    ];
+
     onMount(() => getPlaylistTitle(params.playlistId));
 
     onCleanup(clearPlaylistItems);
@@ -71,30 +94,7 @@ const Playlists: Component = () => {
                 <Placeholder icon="list" text="This playlist is empty." />
             }
         >
-            <MenuWrapper
-                menuItems={[
-                    {
-                        title: 'Add to queue',
-                        icon: 'circle-add',
-                        onClick: queueItem
-                    },
-                    {
-                        title: 'Save to playlist',
-                        icon: 'folder-add',
-                        onClick: editPlaylistItem
-                    },
-                    {
-                        title: 'Share',
-                        icon: 'share',
-                        onClick: handleSharing
-                    },
-                    {
-                        title: 'Remove from playlist',
-                        icon: 'delete',
-                        onClick: removePlaylistItem
-                    }
-                ]}
-            >
+            <MenuWrapper menuItems={menuItems}>
                 {(openMenu) => (
                     <List
                         items={playlistItems.items}

@@ -77,7 +77,7 @@ const Search = () => {
                         }
                     ]}
                 >
-                    {(openMenu) => (
+                    {({ openMenu }) => (
                         <List
                             items={search.items}
                             loadItems={handleSearchVideos}

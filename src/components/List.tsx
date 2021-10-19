@@ -1,6 +1,7 @@
 import {
     Component,
     createSignal,
+    JSX,
     JSXElement,
     onCleanup,
     onMount,
@@ -11,12 +12,13 @@ import { throttle } from '../lib/helpers';
 import Icon from './Icon';
 
 import { VirtualContainer } from '@minht11/solid-virtual-container';
+import { Dynamic } from 'solid-js/web';
 
 interface Props {
     className?: string;
     items: unknown[];
     itemSize?: number | undefined;
-    children: (data: any, index: number) => JSXElement;
+    children: JSX.FunctionElement;
     loadItems: Function;
 }
 
@@ -83,10 +85,11 @@ const List: Component<Props> = (props) => {
                                 when={itemProps.index < props.items.length}
                                 fallback={<Loader />}
                             >
-                                {props.children(
-                                    itemProps.item,
-                                    itemProps.index
-                                )}
+                                <Dynamic
+                                    component={props.children}
+                                    data={itemProps.item}
+                                    index={itemProps.index}
+                                />
                             </Show>
                         </div>
                     )}

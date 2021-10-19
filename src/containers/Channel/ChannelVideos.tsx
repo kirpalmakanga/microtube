@@ -84,7 +84,7 @@ const ChannelVideos = () => {
             }
         >
             <MenuWrapper menuItems={menuItems}>
-                {(openMenu) => (
+                {({ openMenu }) => (
                     <List
                         items={channel.videos.items}
                         loadItems={handleGetChannelVideos}

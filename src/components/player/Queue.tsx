@@ -128,7 +128,7 @@ const Queue: Component<Props> = (props) => {
                             }
                         >
                             <MenuWrapper menuItems={menuItems}>
-                                {(openMenu) => (
+                                {({ openMenu }) => (
                                     <div className="Queue__Items">
                                         <SortableList
                                             items={player.queue}

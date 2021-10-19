@@ -95,7 +95,7 @@ const Playlists: Component = () => {
             }
         >
             <MenuWrapper menuItems={menuItems}>
-                {(openMenu) => (
+                {({ openMenu }) => (
                     <List
                         items={playlistItems.items}
                         loadItems={getPlaylistItems}

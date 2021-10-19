@@ -1,4 +1,4 @@
-import { JSXElement, Component, onCleanup, Show } from 'solid-js';
+import { JSXElement, Component, onCleanup, Show, JSX } from 'solid-js';
 import { useNavigate } from 'solid-app-router';
 
 import { PlaylistData } from '../../@types/alltypes';
@@ -8,7 +8,7 @@ import { usePlaylists } from '../store/hooks/playlists';
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 import PlaylistCard from '../components/cards/PlaylistCard';
-import MenuWrapper from '../components/menu/MenuWrapper';
+import MenuWrapper, { MenuOpener } from '../components/menu/MenuWrapper';
 import { copyText, getPlaylistURL, isMobile, shareURL } from '../lib/helpers';
 import { useNotifications } from '../store/hooks/notifications';
 
@@ -90,9 +90,9 @@ const Playlists: Component = () => {
             }
         >
             <MenuWrapper menuItems={menuItems}>
-                {(openMenu: Function) => (
+                {({ openMenu }) => (
                     <List items={playlists.items} loadItems={getPlaylists}>
-                        {(data: PlaylistData): JSXElement => (
+                        {({ data }: { data: PlaylistData }) => (
                             <PlaylistCard
                                 {...data}
                                 onClick={handleClickCard(data)}

@@ -1,30 +1,32 @@
 import { JSXElement, Component, onCleanup, Show } from 'solid-js';
-import { useNavigate } from 'solid-app-router';
+import { useNavigate, useParams } from 'solid-app-router';
 
-import { PlaylistData } from '../../@types/alltypes';
+import { PlaylistData } from '../../../@types/alltypes';
 
-import { usePlaylists } from '../store/hooks/playlists';
+import { usePlaylists } from '../../store/hooks/playlists';
 
-import List from '../components/List';
-import Placeholder from '../components/Placeholder';
-import PlaylistCard from '../components/cards/PlaylistCard';
-import MenuWrapper from '../components/menu/MenuWrapper';
-import { copyText, getPlaylistURL, isMobile, shareURL } from '../lib/helpers';
-import { useNotifications } from '../store/hooks/notifications';
+import List from '../../components/List';
+import Placeholder from '../../components/Placeholder';
+import PlaylistCard from '../../components/cards/PlaylistCard';
+import MenuWrapper from '../../components/menu/MenuWrapper';
+import {
+    copyText,
+    getPlaylistURL,
+    isMobile,
+    shareURL
+} from '../../lib/helpers';
+import { useNotifications } from '../../store/hooks/notifications';
+import { useChannel } from '../../store/hooks/channel';
 
 const Playlists: Component = () => {
+    const params = useParams();
     const navigate = useNavigate();
 
-    const [
-        playlists,
-        {
-            getPlaylists,
-            removePlaylist,
-            queuePlaylist,
-            launchPlaylist,
-            clearPlaylists
-        }
-    ] = usePlaylists();
+    const [channel, { getPlaylists, clearPlaylists }] = useChannel(
+        params.channelId
+    );
+
+    const [{ queuePlaylist, launchPlaylist }] = usePlaylists();
 
     const [, { openNotification }] = useNotifications();
 
@@ -69,11 +71,6 @@ const Playlists: Component = () => {
             title: 'Share',
             icon: 'share',
             onClick: handleSharing
-        },
-        {
-            title: 'Remove playlist',
-            icon: 'delete',
-            onClick: removePlaylist
         }
     ];
 
@@ -81,17 +78,23 @@ const Playlists: Component = () => {
 
     return (
         <Show
-            when={playlists.totalResults === null || playlists.totalResults > 0}
+            when={
+                channel.playlists.totalResults === null ||
+                channel.playlists.totalResults > 0
+            }
             fallback={
                 <Placeholder
                     icon="list"
-                    text="You haven't created playlists yet."
+                    text="This channel does not have playlists yet."
                 />
             }
         >
             <MenuWrapper menuItems={menuItems}>
                 {(openMenu: Function) => (
-                    <List items={playlists.items} loadItems={getPlaylists}>
+                    <List
+                        items={channel.playlists.items}
+                        loadItems={getPlaylists}
+                    >
                         {(data: PlaylistData): JSXElement => (
                             <PlaylistCard
                                 {...data}

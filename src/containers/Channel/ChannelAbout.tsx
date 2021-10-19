@@ -1,27 +1,27 @@
-import { useParams } from 'react-router-dom';
+import { Component, createMemo, For, Show } from 'solid-js';
+import { useParams } from 'solid-app-router';
 import { useChannel } from '../../store/hooks/channel';
 
 import { wrapURLs } from '../../lib/helpers';
 
-const ChannelAbout = () => {
+const ChannelAbout: Component = () => {
     const { channelId } = useParams();
-    const [{ description }] = useChannel(channelId);
+    const [channel] = useChannel(channelId);
+    const paragraphs = createMemo((text) => {
+        if (text)
+            return wrapURLs(text)
+                .split('\n')
+                .filter((text) => text && text.trim());
+        else return [];
+    }, channel.description);
 
     return (
         <div className="channel__description">
-            {description
-                ? wrapURLs(description)
-                      .split('\n')
-                      .filter(
-                          (text) => typeof text === 'string' && !!text.trim()
-                      )
-                      .map((line: string, index: number) => (
-                          <p
-                              key={index}
-                              dangerouslySetInnerHTML={{ __html: line }}
-                          ></p>
-                      ))
-                : null}
+            <Show when={paragraphs().length}>
+                <For each={paragraphs()}>
+                    {(line: string) => <p innerHTML={line}></p>}
+                </For>
+            </Show>
         </div>
     );
 };

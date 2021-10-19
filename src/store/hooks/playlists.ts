@@ -5,7 +5,7 @@ import { usePlayer } from './player';
 import { usePrompt } from './prompt';
 import { PlaylistData } from '../../../@types/alltypes';
 
-import { initialState, PlaylistsState } from '../reducers/_playlists';
+import { initialState } from '../reducers/_playlists';
 
 export const usePlaylists = (channelId?: string) => {
     const [{ playlists }, setState] = useStore();
@@ -47,7 +47,7 @@ export const usePlaylists = (channelId?: string) => {
 
     const getPlaylists = async () => {
         try {
-            const { nextPageToken: pageToken, hasNextPage } = playlists;
+            const { items, nextPageToken: pageToken, hasNextPage } = playlists;
 
             if (hasNextPage) {
                 const {
@@ -59,16 +59,12 @@ export const usePlaylists = (channelId?: string) => {
                     pageToken
                 });
 
-                setState(
-                    'playlists',
-                    ({ items, ...state }: PlaylistsState) => ({
-                        ...state,
-                        items: [...items, ...newItems],
-                        nextPageToken,
-                        hasNextPage: !!nextPageToken,
-                        totalResults
-                    })
-                );
+                setState('playlists', {
+                    items: [...items, ...newItems],
+                    nextPageToken,
+                    hasNextPage: !!nextPageToken,
+                    totalResults
+                });
             }
         } catch (error) {
             openNotification('Error fetching playlists.');

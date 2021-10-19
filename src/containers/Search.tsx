@@ -11,16 +11,15 @@ import List from '../components/List';
 import VideoCard from '../components/cards/VideoCard';
 import Placeholder from '../components/Placeholder';
 import MenuWrapper from '../components/menu/MenuWrapper';
-import isEqual from 'lodash/isEqual';
 
 const Search = () => {
     const navigate = useNavigate();
-    const { query = '' } = useParams();
+    const params = useParams();
     const [search, { searchVideos, clearSearch }] = useSearch();
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
     const [shouldMountGrid, setShouldMountGrid] = createSignal(true);
-    const handleSearchVideos = () => searchVideos(query);
+    const handleSearchVideos = () => searchVideos(params.query);
     const handleClickCard =
         ({ id }: VideoData) =>
         () =>
@@ -33,11 +32,18 @@ const Search = () => {
 
     createEffect(
         on(
-            [(): string => query, (): number => search.forMine],
-            (input, [previousQuery]) => {
+            [
+                (): string => decodeURIComponent(params.query || ''),
+                (): number => search.forMine
+            ],
+            (input, previousInput) => {
+                const [previousQuery] = previousInput || [];
                 const [query] = input;
 
+                console.log('query', query);
+
                 if (query && query !== previousQuery) {
+                    console.log('query:execute', query);
                     setShouldMountGrid(false);
                     clearSearch();
                     setTimeout(() => setShouldMountGrid(true));
@@ -48,11 +54,11 @@ const Search = () => {
         )
     );
 
-    /* TODO: fixed route cleanups :angry: */
+    /* TODO: fix route cleanups :angry: */
     onCleanup(clearSearch);
 
     return (
-        <Show when={query && shouldMountGrid()}>
+        <Show when={params.query && shouldMountGrid()}>
             <Show
                 when={search.totalResults === null || search.totalResults > 0}
                 fallback={<Placeholder icon="list" text="No results found." />}

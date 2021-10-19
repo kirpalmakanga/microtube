@@ -1,38 +1,32 @@
-import { useEffect, FunctionComponent, ReactNode } from 'react';
-import { Outlet, NavLink, useParams } from 'react-router-dom';
+import { Component, For, onCleanup, onMount } from 'solid-js';
+import { Outlet, NavLink, useParams } from 'solid-app-router';
 
 import { getThumbnails } from '../../lib/helpers';
 
 import Img from '../../components/Img';
-import { useChannel } from '../../store/hooks/channel';
 import Button from '../../components/Button';
+import { useChannel } from '../../store/hooks/channel';
 
 interface TabsProps {
-    children: ReactNode[];
+    children: Element[];
 }
 
-const Tabs: FunctionComponent<TabsProps> = ({ children }) => (
+const Tabs: Component<TabsProps> = (props) => (
     <ul className="tabs">
-        {children.map((content: ReactNode, index: number) => (
-            <li key={index} className="tab">
-                {content}
-            </li>
-        ))}
+        <For each={props.children}>
+            {(content: Element) => <li className="tab">{content}</li>}
+        </For>
     </ul>
 );
 
 const Channel = () => {
     const { channelId } = useParams();
-    const [
-        { channelTitle, thumbnails, subscriptionId },
-        { getChannel, clearChannelData, toggleSubscription }
-    ] = useChannel(channelId);
+    const [channel, { getData, clearData, toggleSubscription }] =
+        useChannel(channelId);
 
-    useEffect(() => {
-        getChannel(channelId);
+    onMount(() => getData(channelId));
 
-        return clearChannelData;
-    }, [channelId]);
+    onCleanup(clearData);
 
     return (
         <div className="channel">
@@ -40,19 +34,21 @@ const Channel = () => {
                 <div className="channel__header-inner">
                     <div className="channel__thumbnail">
                         <Img
-                            src={getThumbnails(thumbnails, 'medium')}
+                            src={getThumbnails(channel.thumbnails, 'medium')}
                             alt="Channel thumbnail"
                         />
                     </div>
 
                     <div className="channel__details">
                         <div className="channel__details-title">
-                            {channelTitle}
+                            {channel.channelTitle}
                         </div>
 
                         <Button
                             title={
-                                subscriptionId ? 'Unsubscribe' : 'Subscribed'
+                                channel.subscriptionId
+                                    ? 'Unsubscribe'
+                                    : 'Subscribed'
                             }
                             onClick={toggleSubscription}
                         />
@@ -60,15 +56,15 @@ const Channel = () => {
                 </div>
 
                 <Tabs>
-                    <NavLink to="videos" replace>
+                    <NavLink href="videos" replace>
                         Videos
                     </NavLink>
 
-                    <NavLink to="playlists" replace>
+                    <NavLink href="playlists" replace>
                         Playlists
                     </NavLink>
 
-                    <NavLink to="about" replace>
+                    <NavLink href="about" replace>
                         About
                     </NavLink>
                 </Tabs>

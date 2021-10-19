@@ -1,7 +1,7 @@
-import { createReducer, State } from '../helpers';
+import { State } from '../helpers';
 import { ChannelData } from '../../../@types/alltypes';
 
-interface SubscriptionsState extends State {
+export interface SubscriptionsState extends State {
     items: ChannelData[];
     nextPageToken: String;
     totalResults: number | null;
@@ -14,20 +14,3 @@ export const initialState: SubscriptionsState = {
     totalResults: null,
     hasNextPage: true
 };
-
-export default createReducer(initialState, {
-    'subscriptions/UPDATE_ITEMS': (
-        { items, ...state }: State,
-        { items: newItems, nextPageToken = '', totalResults }: State
-    ) => ({
-        ...state,
-        items: [...items, ...newItems],
-        nextPageToken,
-        hasNextPage: !!nextPageToken,
-        totalResults
-    }),
-
-    'subscriptions/CLEAR_ITEMS': () => ({ ...initialState }),
-
-    'auth/SIGN_OUT': () => ({ ...initialState })
-});

@@ -29,7 +29,10 @@ const SearchHeader = () => {
                 <Icon name="arrow-left" />
             </Link>
 
-            <SearchForm query={params.query} onSubmit={handleFormSubmit} />
+            <SearchForm
+                query={decodeURIComponent(params.query || '')}
+                onSubmit={handleFormSubmit}
+            />
 
             <nav className="navigation">
                 <DropDown

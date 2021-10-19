@@ -1,11 +1,22 @@
 $gutter: 16px;
 
 .list {
-    display: flex;
-    flex-direction: column;
+    position: relative;
     flex: 1;
-    overflow: auto;
-    resize: both;
+
+    &__inner {
+        display: flex;
+        flex-direction: column;
+
+        overflow: auto;
+        resize: both;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        overflow-y: auto;
+    }
 
     &__item {
         display: flex;

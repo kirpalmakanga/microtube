@@ -1,5 +1,5 @@
-import { useEffect, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Show, onCleanup } from 'solid-js';
+import { useNavigate, useParams } from 'solid-app-router';
 
 import List from '../../components/List';
 import Placeholder from '../../components/Placeholder';
@@ -14,35 +14,26 @@ import { useNotifications } from '../../store/hooks/notifications';
 import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 
 const ChannelVideos = () => {
-    const { channelId } = useParams();
+    const params = useParams();
     const navigate = useNavigate();
 
-    const [{ items, totalResults }, { getChannelVideos, clearChannelVideos }] =
-        useChannel(channelId);
+    const [channel, { getVideos, clearVideos }] = useChannel(params.channelId);
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
     const [, { openNotification }] = useNotifications();
 
-    const handleGetChannelVideos = useCallback(
-        () => getChannelVideos(channelId),
-        []
-    );
+    const handleGetChannelVideos = () => getVideos(params.channelId);
 
-    const handleClickCard = useCallback(
+    const handleClickCard =
         ({ id }: VideoData) =>
-            () =>
-                navigate(`/video/${id}`),
-        []
-    );
+        () =>
+            navigate(`/video/${id}`);
 
-    const handleClickMenu = useCallback(
-        (data: VideoData, callback: Function) => () => {
-            const { title } = data;
+    const handleClickMenu = (data: VideoData, callback: Function) => () => {
+        const { title } = data;
 
-            callback(data, title);
-        },
-        []
-    );
+        callback(data, title);
+    };
 
     const handleSharing = ({ id, title }: VideoData) => {
         const url = getVideoURL(id);
@@ -59,48 +50,56 @@ const ChannelVideos = () => {
         }
     };
 
-    useEffect(() => clearChannelVideos, []);
+    const menuItems = [
+        {
+            title: `Add to queue`,
+            icon: 'circle-add',
+            onClick: queueItem
+        },
+        {
+            title: `Save to playlist`,
+            icon: 'folder-add',
+            onClick: editPlaylistItem
+        },
+        {
+            title: 'Share',
+            icon: 'share',
+            onClick: handleSharing
+        }
+    ];
 
-    return totalResults === 0 ? (
-        <Placeholder icon="list" text="This channel hasn't uploaded videos." />
-    ) : (
-        <MenuWrapper
-            menuItems={[
-                {
-                    title: `Add to queue`,
-                    icon: 'circle-add',
-                    onClick: queueItem
-                },
-                {
-                    title: `Save to playlist`,
-                    icon: 'folder-add',
-                    onClick: editPlaylistItem
-                },
-                {
-                    title: 'Share',
-                    icon: 'share',
-                    onClick: handleSharing
-                }
-            ]}
-        >
-            {(openMenu) => (
-                <List
-                    items={items}
-                    loadMoreItems={handleGetChannelVideos}
-                    itemSize={(containerHeight) =>
-                        containerHeight / (isMobile() ? 2 : 5)
-                    }
-                    itemKey={({ id }: VideoData) => id}
-                    renderItem={(data: VideoData) => (
-                        <VideoCard
-                            {...data}
-                            onClick={handleClickCard(data)}
-                            onClickMenu={handleClickMenu(data, openMenu)}
-                        />
-                    )}
+    onCleanup(clearVideos);
+
+    return (
+        <Show
+            when={
+                channel.videos.totalResults === null ||
+                channel.videos.totalResults > 0
+            }
+            fallback={
+                <Placeholder
+                    icon="list"
+                    text="This channel hasn't uploaded videos."
                 />
-            )}
-        </MenuWrapper>
+            }
+        >
+            <MenuWrapper menuItems={menuItems}>
+                {(openMenu) => (
+                    <List
+                        items={channel.videos.items}
+                        loadItems={handleGetChannelVideos}
+                    >
+                        {(data: VideoData) => (
+                            <VideoCard
+                                {...data}
+                                onClick={handleClickCard(data)}
+                                onClickMenu={handleClickMenu(data, openMenu)}
+                            />
+                        )}
+                    </List>
+                )}
+            </MenuWrapper>
+        </Show>
     );
 };
 

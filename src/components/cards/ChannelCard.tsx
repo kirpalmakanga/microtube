@@ -14,12 +14,12 @@ interface Props {
     title: string;
     thumbnails: ThumbnailsData;
     totalItemCount: number;
-    goToChannel: () => void;
+    onClick: () => void;
 }
 
 const SubscriptionCard: Component<Props> = (props) => (
     <CardContainer>
-        <CardContent onClick={props.goToChannel}>
+        <CardContent onClick={props.onClick}>
             <CardThumbnail
                 src={getThumbnails(props.thumbnails, 'medium')}
                 altText={props.title}
@@ -35,4 +35,4 @@ const SubscriptionCard: Component<Props> = (props) => (
     </CardContainer>
 );
 
-export default memo(SubscriptionCard);
+export default SubscriptionCard;

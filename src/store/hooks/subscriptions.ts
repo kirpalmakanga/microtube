@@ -2,36 +2,46 @@ import * as api from '../../api/youtube';
 
 import { useStore } from '..';
 import { useNotifications } from './notifications';
-import { GetState } from '../helpers';
+import { rootInitialState } from '../reducers';
 
 export const useSubscriptions = () => {
-    const [{ subscriptions }, dispatch] = useStore();
+    const [{ subscriptions }, setState] = useStore();
     const [, { openNotification }] = useNotifications();
 
-    const getSubscriptions = (channelId: string) =>
-        dispatch(async (getState: GetState) => {
-            try {
-                const {
-                    subscriptions: { nextPageToken: pageToken, hasNextPage }
-                } = getState();
+    const getData = async (channelId: string) => {
+        try {
+            const {
+                items,
+                nextPageToken: pageToken,
+                hasNextPage
+            } = subscriptions;
 
-                if (!hasNextPage) {
-                    return;
-                }
-
-                const payload = await api.getSubscriptions({
-                    pageToken,
-                    ...(channelId ? { channelId } : { mine: true })
-                });
-
-                dispatch({
-                    type: 'subscriptions/UPDATE_ITEMS',
-                    payload
-                });
-            } catch (error) {
-                openNotification('Error fetching subscriptions.');
+            if (!hasNextPage) {
+                return;
             }
-        });
 
-    return [subscriptions, { getSubscriptions }];
+            const {
+                items: newItems,
+                nextPageToken = '',
+                totalResults
+            } = await api.getSubscriptions({
+                pageToken,
+                ...(channelId ? { channelId } : { mine: true })
+            });
+
+            setState('subscriptions', {
+                items: [...items, ...newItems],
+                nextPageToken,
+                hasNextPage: !!nextPageToken,
+                totalResults
+            });
+        } catch (error) {
+            openNotification('Error fetching subscriptions.');
+        }
+    };
+
+    const clearData = () =>
+        setState('subscriptions', rootInitialState.subscriptions);
+
+    return [subscriptions, { getData, clearData }];
 };

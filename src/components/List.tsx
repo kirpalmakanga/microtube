@@ -15,7 +15,7 @@ import { VirtualContainer } from '@minht11/solid-virtual-container';
 interface Props {
     className?: string;
     items: unknown[];
-    itemSize?: number | ((containerHeight: number) => number);
+    itemSize?: number | undefined;
     children: (data: any, index: number) => JSXElement;
     loadItems: Function;
 }
@@ -62,27 +62,36 @@ const List: Component<Props> = (props) => {
     onCleanup(() => (isUnmounting = true));
 
     return (
-        <div className="list" ref={scrollTarget} onScroll={handleScroll}>
-            <VirtualContainer
-                items={isLoading() ? [...props.items, null] : props.items}
-                itemSize={{ height: 150 }}
-                scrollTarget={scrollTarget}
+        <div className="list">
+            <div
+                className="list__inner"
+                ref={scrollTarget}
+                onScroll={handleScroll}
             >
-                {(itemProps) => (
-                    <div
-                        className="list__item"
-                        style={itemProps.style}
-                        role="listitem"
-                    >
-                        <Show
-                            when={itemProps.index < props.items.length}
-                            fallback={<Loader />}
+                <VirtualContainer
+                    items={isLoading() ? [...props.items, null] : props.items}
+                    itemSize={{ height: props.itemSize || 150 }}
+                    scrollTarget={scrollTarget}
+                >
+                    {(itemProps) => (
+                        <div
+                            className="list__item"
+                            style={itemProps.style}
+                            role="listitem"
                         >
-                            {props.children(itemProps.item, itemProps.index)}
-                        </Show>
-                    </div>
-                )}
-            </VirtualContainer>
+                            <Show
+                                when={itemProps.index < props.items.length}
+                                fallback={<Loader />}
+                            >
+                                {props.children(
+                                    itemProps.item,
+                                    itemProps.index
+                                )}
+                            </Show>
+                        </div>
+                    )}
+                </VirtualContainer>
+            </div>
         </div>
     );
 };

@@ -28,7 +28,11 @@ export const usePlaylistItems = (playlistId?: string) => {
                 throw new Error('playlistId is required');
             }
 
-            const { nextPageToken: pageToken, hasNextPage } = playlistItems;
+            const {
+                items,
+                nextPageToken: pageToken,
+                hasNextPage
+            } = playlistItems;
 
             if (hasNextPage) {
                 const {
@@ -40,16 +44,12 @@ export const usePlaylistItems = (playlistId?: string) => {
                     pageToken
                 });
 
-                setState(
-                    'playlistItems',
-                    ({ items, ...state }: PlaylistItemsState) => ({
-                        ...state,
-                        items: [...items, ...newItems],
-                        nextPageToken,
-                        hasNextPage: !!nextPageToken,
-                        totalResults
-                    })
-                );
+                setState('playlistItems', {
+                    items: [...items, ...newItems],
+                    nextPageToken,
+                    hasNextPage: !!nextPageToken,
+                    totalResults
+                });
             }
         } catch (error) {
             openNotification('Error fetching playlist items.');

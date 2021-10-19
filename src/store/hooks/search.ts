@@ -1,7 +1,6 @@
 import { useStore } from '..';
 import * as api from '../../api/youtube';
 import { omit } from '../../lib/helpers';
-import { GetState } from '../helpers';
 import { rootInitialState } from '../reducers';
 import { useNotifications } from './notifications';
 
@@ -9,9 +8,24 @@ export const useSearch = () => {
     const [{ search }, setState] = useStore();
     const [, { openNotification }] = useNotifications();
 
+    const setSearchTarget = (forMine: number) =>
+        setState('search', {
+            forMine
+        });
+
+    const clearSearch = () => {
+        console.log('clearSearch');
+        setState('search', omit(rootInitialState.search, ['forMine']));
+    };
+
     const searchVideos = async (query: string) => {
         try {
-            const { hasNextPage, forMine, nextPageToken: pageToken } = search;
+            const {
+                items,
+                hasNextPage,
+                forMine,
+                nextPageToken: pageToken
+            } = search;
 
             if (!hasNextPage) {
                 return;
@@ -28,8 +42,7 @@ export const useSearch = () => {
             });
 
             setState('search', {
-                ...search,
-                items: [...search.items, ...newItems],
+                items: [...items, ...newItems],
                 nextPageToken,
                 hasNextPage: !!nextPageToken,
                 totalResults
@@ -38,14 +51,6 @@ export const useSearch = () => {
             openNotification('Error searching videos.');
         }
     };
-
-    const setSearchTarget = (forMine: number) =>
-        setState('search', {
-            forMine
-        });
-
-    const clearSearch = () =>
-        setState('search', omit(rootInitialState.search, ['forMine']));
 
     return [search, { searchVideos, setSearchTarget, clearSearch }];
 };

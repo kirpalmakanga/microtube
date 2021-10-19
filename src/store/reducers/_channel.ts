@@ -1,7 +1,19 @@
 import { createReducer, State } from '../helpers';
 import { omit } from '../../lib/helpers';
 
-interface ChannelState {
+export interface ChannelVideosState {
+    items: object[];
+    nextPageToken: string;
+    hasNextPage: boolean;
+    totalResults: number | null;
+}
+export interface ChannelPlaylistsState {
+    items: object[];
+    nextPageToken: string;
+    hasNextPage: boolean;
+    totalResults: number | null;
+}
+export interface ChannelState {
     [key: string]: unknown;
     channelTitle: string;
     description: string;
@@ -10,10 +22,8 @@ interface ChannelState {
         medium: { url: string };
         high: { url: string };
     };
-    items: object[];
-    nextPageToken: string;
-    hasNextPage: boolean;
-    totalResults: number | null;
+    videos: ChannelVideosState;
+    playlists: ChannelPlaylistsState;
 }
 
 export const initialState: ChannelState = {
@@ -24,10 +34,18 @@ export const initialState: ChannelState = {
         medium: { url: '' },
         high: { url: '' }
     },
-    items: [],
-    nextPageToken: '',
-    hasNextPage: true,
-    totalResults: null
+    videos: {
+        items: [],
+        nextPageToken: '',
+        hasNextPage: true,
+        totalResults: null
+    },
+    playlists: {
+        items: [],
+        nextPageToken: '',
+        hasNextPage: true,
+        totalResults: null
+    }
 };
 
 export default createReducer(initialState, {

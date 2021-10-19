@@ -4,45 +4,99 @@ import { useStore } from '..';
 import { useNotifications } from './notifications';
 import { GetState } from '../helpers';
 import { usePrompt } from './prompt';
+import { rootInitialState } from '../reducers';
+import { PlaylistsState } from '../reducers/_playlists';
+import {
+    ChannelPlaylistsState,
+    ChannelState,
+    ChannelVideosState
+} from '../reducers/_channel';
 
 export const useChannel = (channelId: string) => {
-    const [{ channel }, dispatch] = useStore();
+    const [{ channel }, setState] = useStore();
     const [, { openNotification }] = useNotifications();
     const [, { openPrompt }] = usePrompt();
 
-    const getChannel = async () => {
+    const getData = async () => {
         try {
-            const payload = await api.getChannel(channelId);
+            const data = await api.getChannel(channelId);
 
-            dispatch({ type: 'channel/UPDATE_DATA', payload });
+            setState('channel', data);
         } catch (error) {
             openNotification('Error fetching channel data.');
         }
     };
 
-    const clearChannelData = () => dispatch({ type: 'channel/CLEAR_DATA' });
+    const clearData = () => setState('channel', rootInitialState.channel);
 
-    const getChannelVideos = () =>
-        dispatch(async (getState: GetState) => {
-            try {
+    const getPlaylists = async () => {
+        try {
+            const {
+                items,
+                nextPageToken: pageToken,
+                hasNextPage
+            } = channel.playlists;
+
+            if (hasNextPage) {
                 const {
-                    channel: { nextPageToken: pageToken, hasNextPage }
-                } = getState();
+                    items: newItems,
+                    nextPageToken = '',
+                    totalResults
+                } = await api.getPlaylists({
+                    ...(channelId ? { channelId } : { mine: true }),
+                    pageToken
+                });
 
-                if (hasNextPage) {
-                    const payload = await api.getChannelVideos({
-                        channelId,
-                        pageToken
-                    });
-
-                    dispatch({ type: 'channel/UPDATE_ITEMS', payload });
-                }
-            } catch (error) {
-                openNotification('Error fetching channel videos.');
+                setState('channel', {
+                    playlists: {
+                        items: [...items, ...newItems],
+                        nextPageToken,
+                        hasNextPage: !!nextPageToken,
+                        totalResults
+                    }
+                });
             }
-        });
+        } catch (error) {
+            console.error(error);
+            openNotification('Error fetching playlists.');
+        }
+    };
 
-    const clearChannelVideos = () => dispatch({ type: 'channel/CLEAR_ITEMS' });
+    const getVideos = async (getState: GetState) => {
+        try {
+            const {
+                videos: { items, nextPageToken: pageToken, hasNextPage }
+            } = channel;
+
+            if (hasNextPage) {
+                const {
+                    items: newItems,
+                    nextPageToken = '',
+                    totalResults
+                } = await api.getChannelVideos({
+                    channelId,
+                    pageToken
+                });
+
+                setState('channel', {
+                    videos: {
+                        items: [...items, ...newItems],
+                        nextPageToken,
+                        hasNextPage: !!nextPageToken,
+                        totalResults
+                    }
+                });
+            }
+        } catch (error) {
+            openNotification('Error fetching channel videos.');
+        }
+    };
+
+    const clearVideos = () =>
+        setState('channel/videos', rootInitialState.channel.videos);
+
+    const clearPlaylists = () =>
+        setState('channel/playlists', rootInitialState.channel.playlists);
 
     const toggleSubscription = async () => {
         const { channelTitle, subscriptionId } = channel;
@@ -54,10 +108,7 @@ export const useChannel = (channelId: string) => {
                 cancelText: 'Cancel',
                 async callback() {
                     try {
-                        dispatch({
-                            type: 'channel/UPDATE_DATA',
-                            payload: { subscriptionId: '' }
-                        });
+                        setState('channel', { subscriptionId: '' });
 
                         await api.unsubscribeFromChannel(subscriptionId);
                     } catch (error) {
@@ -69,10 +120,7 @@ export const useChannel = (channelId: string) => {
             try {
                 const subscriptionId = await api.subscribeToChannel(channelId);
 
-                dispatch({
-                    type: 'channel/UPDATE_DATA',
-                    payload: { subscriptionId }
-                });
+                setState('channel', { subscriptionId });
             } catch (error) {
                 openNotification('Error subscribing to channel.');
             }
@@ -82,10 +130,12 @@ export const useChannel = (channelId: string) => {
     return [
         channel,
         {
-            getChannel,
-            clearChannelData,
-            getChannelVideos,
-            clearChannelVideos,
+            getData,
+            clearData,
+            getVideos,
+            clearVideos,
+            getPlaylists,
+            clearPlaylists,
             toggleSubscription
         }
     ];

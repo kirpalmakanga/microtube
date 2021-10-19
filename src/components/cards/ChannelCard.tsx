@@ -8,7 +8,7 @@ import CardContainer from './CardContainer';
 import CardContent from './CardContent';
 import CardContentInner from './CardContentInner';
 import CardThumbnail from './CardThumbnail';
-import Title from './CardTitle';
+import CardTitle from './CardTitle';
 
 interface Props {
     title: string;
@@ -29,7 +29,7 @@ const SubscriptionCard: Component<Props> = (props) => (
             />
 
             <CardContentInner>
-                <Title>{props.title}</Title>
+                <CardTitle>{props.title}</CardTitle>
             </CardContentInner>
         </CardContent>
     </CardContainer>

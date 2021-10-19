@@ -7,7 +7,7 @@ import CardContentInner from './CardContentInner';
 import CardThumbnail from './CardThumbnail';
 import CardButtons from './CardButtons';
 import Button from './CardButton';
-import Title from './CardTitle';
+import CardTitle from './CardTitle';
 import { ThumbnailsData } from '../../../@types/alltypes';
 
 interface Props {
@@ -30,7 +30,7 @@ const PlaylistCard: Component<Props> = (props) => (
             />
 
             <CardContentInner>
-                <Title>{props.title}</Title>
+                <CardTitle>{props.title}</CardTitle>
             </CardContentInner>
         </CardContent>
 

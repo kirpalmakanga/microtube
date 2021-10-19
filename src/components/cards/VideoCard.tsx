@@ -16,7 +16,7 @@ import CardContentInner from './CardContentInner';
 import CardThumbnail from './CardThumbnail';
 import CardButtons from './CardButtons';
 import Button from './CardButton';
-import Title from './CardTitle';
+import CardTitle from './CardTitle';
 import Subtitle from './CardSubtitle';
 
 interface Props extends VideoData {
@@ -44,7 +44,7 @@ const VideoCard: Component<Props> = ({
             />
 
             <CardContentInner>
-                <Title>{title}</Title>
+                <CardTitle>{title}</CardTitle>
 
                 {privacyStatus !== 'deleted' ? (
                     <Subtitle className="author">

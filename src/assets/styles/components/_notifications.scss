@@ -24,9 +24,9 @@
         align-items: center;
         border: none;
         fill: $brand-secondary;
-        svg {
-            width: 30px;
-            height: 30px;
+        .icon {
+            height: 22px;
+            width: 22px;
         }
         &:focus {
             outline: none;

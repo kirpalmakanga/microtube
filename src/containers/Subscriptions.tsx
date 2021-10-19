@@ -32,7 +32,7 @@ const Subscriptions = () => {
                 items={subscriptions.items}
                 loadItems={getData}
             >
-                {(data: ChannelData) => {
+                {({ data }) => {
                     const { id } = data;
 
                     return (

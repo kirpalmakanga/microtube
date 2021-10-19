@@ -143,12 +143,13 @@ export const usePlayer = () => {
             headerText: 'Clear queue ?',
             confirmText: 'Clear',
             cancelText: 'Cancel',
-            callback: () =>
+            callback: () => {
                 setQueue(
                     player.queue.filter(
                         ({ id }: QueueItem) => id === player.currentId
                     )
-                )
+                );
+            }
         });
 
     const clearVideo = () =>

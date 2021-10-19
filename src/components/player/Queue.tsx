@@ -71,6 +71,24 @@ const Queue: Component<Props> = (props) => {
         }
     };
 
+    const menuItems = [
+        {
+            title: 'Save to playlist',
+            icon: 'folder-add',
+            onClick: editPlaylistItem
+        },
+        {
+            title: 'Share',
+            icon: 'share',
+            onClick: handleSharing
+        },
+        {
+            title: 'Remove from queue',
+            icon: 'delete',
+            onClick: removeQueueItem
+        }
+    ];
+
     let unsubscribeFromQueue: () => void;
     let unsubscribeFromCurrentQueueId: () => void;
 
@@ -109,25 +127,7 @@ const Queue: Component<Props> = (props) => {
                                 />
                             }
                         >
-                            <MenuWrapper
-                                menuItems={[
-                                    {
-                                        title: 'Save to playlist',
-                                        icon: 'folder-add',
-                                        onClick: editPlaylistItem
-                                    },
-                                    {
-                                        title: 'Share',
-                                        icon: 'share',
-                                        onClick: handleSharing
-                                    },
-                                    {
-                                        title: 'Remove from queue',
-                                        icon: 'delete',
-                                        onClick: removeQueueItem
-                                    }
-                                ]}
-                            >
+                            <MenuWrapper menuItems={menuItems}>
                                 {(openMenu) => (
                                     <div className="Queue__Items">
                                         <SortableList

@@ -11,22 +11,19 @@ import PlaylistManager from './PlaylistManager';
 import { Transition } from 'solid-transition-group';
 
 const Prompt: Component = () => {
-    const [
-        { isVisible, mode, headerText, confirmText, cancelText, callback },
-        { closePrompt }
-    ] = usePrompt();
+    const [prompt, { closePrompt }] = usePrompt();
 
-    const isMode = (...args: String[]) => args.includes(mode);
+    const isMode = (...args: String[]) => args.includes(prompt.mode);
 
     const handleConfirm = (data?: unknown) => {
         closePrompt();
 
-        callback(data);
+        prompt.callback(data);
     };
 
     let confirmButtonProps;
 
-    switch (mode) {
+    switch (prompt.mode) {
         case 'import':
             confirmButtonProps = {
                 type: 'submit',
@@ -49,7 +46,7 @@ const Prompt: Component = () => {
 
     return (
         <Transition name="fade">
-            <Show when={isVisible}>
+            <Show when={prompt.isVisible}>
                 <div className="dialog__overlay" onClick={closePrompt}>
                     <div
                         className="dialog shadow--2dp"
@@ -58,7 +55,7 @@ const Prompt: Component = () => {
                         <header className="dialog__header">
                             <Icon name="prompt" />
 
-                            <span>{headerText}</span>
+                            <span>{prompt.headerText}</span>
                         </header>
 
                         <Show when={isMode('import', 'playlists')}>
@@ -76,17 +73,17 @@ const Prompt: Component = () => {
                         </Show>
 
                         <footer className="dialog__actions">
-                            <Show when={cancelText}>
+                            <Show when={prompt.cancelText}>
                                 <Button
                                     className="button button--close shadow--2dp"
                                     onClick={closePrompt}
-                                    title={cancelText}
+                                    title={prompt.cancelText}
                                 />
                             </Show>
 
                             <Button
                                 className="button shadow--2dp"
-                                title={confirmText}
+                                title={prompt.confirmText}
                                 {...confirmButtonProps}
                             />
                         </footer>

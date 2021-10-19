@@ -17,7 +17,7 @@ export const usePrompt = () => {
 
         setState('prompt', {
             isVisible: false,
-            mode: '',
+            mode: 'default',
             headerText: '',
             confirmText: '',
             cancelText: '',

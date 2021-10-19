@@ -1,4 +1,4 @@
-import { Component, Show } from 'solid-js';
+import { Component, Match, Show, Switch } from 'solid-js';
 import { stopPropagation } from '../../lib/helpers';
 import { usePrompt } from '../../store/hooks/prompt';
 
@@ -9,6 +9,7 @@ import Button from '../Button';
 import { ImportVideoForm } from './ImportVideoForm';
 import PlaylistManager from './PlaylistManager';
 import { Transition } from 'solid-transition-group';
+import { Dynamic } from 'solid-js/web';
 
 const Prompt: Component = () => {
     const [prompt, { closePrompt }] = usePrompt();
@@ -20,29 +21,6 @@ const Prompt: Component = () => {
 
         prompt.callback(data);
     };
-
-    let confirmButtonProps;
-
-    switch (prompt.mode) {
-        case 'import':
-            confirmButtonProps = {
-                type: 'submit',
-                form: 'importVideos'
-            };
-            break;
-
-        case 'playlists':
-            confirmButtonProps = {
-                onClick: closePrompt
-            };
-            break;
-
-        default:
-            confirmButtonProps = {
-                onClick: handleConfirm
-            };
-            break;
-    }
 
     return (
         <Transition name="fade">
@@ -81,11 +59,30 @@ const Prompt: Component = () => {
                                 />
                             </Show>
 
-                            <Button
-                                className="button shadow--2dp"
-                                title={prompt.confirmText}
-                                {...confirmButtonProps}
-                            />
+                            <Switch>
+                                <Match when={prompt.mode === 'import'}>
+                                    <Button
+                                        className="button shadow--2dp"
+                                        title={prompt.confirmText}
+                                        type="submit"
+                                        form="importVideos"
+                                    />
+                                </Match>
+                                <Match when={prompt.mode === 'import'}>
+                                    <Button
+                                        className="button shadow--2dp"
+                                        title={prompt.confirmText}
+                                        onClick={closePrompt}
+                                    />
+                                </Match>
+                                <Match when={prompt.mode === 'default'}>
+                                    <Button
+                                        className="button shadow--2dp"
+                                        title={prompt.confirmText}
+                                        onClick={handleConfirm}
+                                    />
+                                </Match>
+                            </Switch>
                         </footer>
                     </div>
                 </div>

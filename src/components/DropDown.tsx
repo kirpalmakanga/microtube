@@ -1,14 +1,5 @@
-import {
-    createMemo,
-    createSignal,
-    For,
-    Show,
-    Component,
-    Accessor
-} from 'solid-js';
+import { createMemo, createSignal, For, Show, Component } from 'solid-js';
 import { Transition } from 'solid-transition-group';
-import isEqual from 'lodash/isEqual';
-
 import Icon from './Icon';
 
 import { stopPropagation, preventDefault } from '../lib/helpers';

@@ -29,7 +29,7 @@ const privacyOptions = [
 ];
 
 const NewPlayListForm: Component<FormProps> = ({ onSubmit }) => {
-    const [state, setState] = createStore<PlaylistData>({
+    const [state, setState] = createStore({
         title: '',
         privacyStatus: 'public'
     });
@@ -37,11 +37,14 @@ const NewPlayListForm: Component<FormProps> = ({ onSubmit }) => {
     const setValue = (key: string, value: unknown) =>
         setState({ [key]: value });
 
-    const handlePrivacyStatusChange = (value: string) =>
-        setValue('privacyStatus', value);
+    const handlePrivacyStatusChange = (value: unknown) =>
+        setValue('privacyStatus', value as string);
 
-    const handleInput = ({ currentTarget: { name, value } }) =>
-        setValue(name, value);
+    const handleInput = ({
+        currentTarget: { name, value }
+    }: {
+        currentTarget: HTMLInputElement;
+    }) => setValue(name, value);
 
     const handleSubmit = preventDefault(() => onSubmit(state as PlaylistData));
 
@@ -70,12 +73,12 @@ const NewPlayListForm: Component<FormProps> = ({ onSubmit }) => {
 };
 
 export const PlaylistManager: Component<Props> = ({ onClickItem }) => {
-    const [{ items }, { getPlaylists }] = usePlaylists();
+    const [playlists, { getPlaylists }] = usePlaylists();
     const onCreatePlaylist = (data: PlaylistData) => onClickItem(data);
     const makeOnClickItem = (data: PlaylistData) => () => onClickItem(data);
 
-    const renderOption = (data: PlaylistData) => {
-        const { playlistId, title, itemCount } = data;
+    const ListItem = ({ data }: { data: PlaylistData }) => {
+        const { title, itemCount } = data;
 
         return (
             <button
@@ -95,11 +98,12 @@ export const PlaylistManager: Component<Props> = ({ onClickItem }) => {
 
             <div className="playlist-menu__items">
                 <List
-                    items={items}
-                    itemKey={({ id }) => id}
-                    loadMoreItems={getPlaylists}
-                    renderItem={renderOption}
-                />
+                    items={playlists.items}
+                    loadItems={getPlaylists}
+                    itemSize={50}
+                >
+                    {ListItem}
+                </List>
             </div>
         </div>
     );

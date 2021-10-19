@@ -9,7 +9,7 @@ import { YouTubePlayer } from 'youtube-player/dist/types';
 
 import { usePlayer } from '../../store/hooks/player';
 
-import { useFullscreen, useKeyboard } from '../../lib/hooks';
+import { useFullscreen, useKey, useKeyboard } from '../../lib/hooks';
 import { isMobile } from '../../lib/helpers';
 
 import Queue from './Queue';
@@ -221,11 +221,11 @@ const Player = () => {
         }
     };
 
-    useKeyboard('ArrowLeft', () => goToVideo(false), 'keypress');
-    useKeyboard('ArrowRight', () => goToVideo(true), 'keypress');
-    useKeyboard('m', () => toggleMute(), 'keypress');
-    useKeyboard('s', () => toggleScreen(), 'keypress');
-    useKeyboard(' ', () => togglePlay(), 'keypress');
+    useKey('keypress', 'ArrowLeft', () => goToVideo(false));
+    useKey('keypress', 'ArrowRight', () => goToVideo(true));
+    useKey('keypress', 'm', toggleMute);
+    useKey('keypress', 's', toggleScreen);
+    useKey('keypress', ' ', togglePlay);
 
     createEffect(() => {
         youtube?.setVolume(state.volume);

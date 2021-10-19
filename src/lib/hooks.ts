@@ -39,20 +39,29 @@ export const useFullscreen = () => {
 };
 
 export const useKeyboard = (
-    key: string,
-    action: () => void,
+    action: (() => void) | ((e: KeyboardEvent) => void),
     event: KeyboardEventName,
     element?: HTMLElement
 ) => {
     const target = element || window;
-    const listener = ({ key: eventKey }: KeyboardEvent) => {
-        eventKey === key && action();
-    };
 
-    onMount(() => target.addEventListener(event, listener as EventListener));
+    onMount(() => target.addEventListener(event, action as EventListener));
 
-    onCleanup(() =>
-        target.removeEventListener(event, listener as EventListener)
+    onCleanup(() => target.removeEventListener(event, action as EventListener));
+};
+
+export const useKey = (
+    event: KeyboardEventName,
+    key: string,
+    action: () => void,
+    element?: HTMLElement
+) => {
+    useKeyboard(
+        ({ key: eventKey }: KeyboardEvent) => {
+            eventKey === key && action();
+        },
+        event,
+        element
     );
 };
 

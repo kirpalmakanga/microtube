@@ -1,6 +1,5 @@
 import { createSignal, Show } from 'solid-js';
 import { Link, useNavigate, useLocation } from 'solid-app-router';
-import { Title } from 'solid-meta';
 
 import Icon from '../components/Icon';
 import Button from '../components/Button';
@@ -9,6 +8,7 @@ import Img from '../components/Img';
 import useAppTitle from '../store/hooks/app-title';
 import { useAuth } from '../store/hooks/auth';
 import { Transition } from 'solid-transition-group';
+import Title from '../components/meta/Title';
 
 const DefaultHeader = () => {
     const location = useLocation();

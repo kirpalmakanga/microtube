@@ -1,11 +1,12 @@
 import { useLocation } from 'solid-app-router';
+import { createMemo } from 'solid-js';
 import { useStore } from '..';
 
 export default () => {
     const location = useLocation();
     const [state] = useStore();
 
-    return () => {
+    const title = createMemo(() => {
         const { pathname } = location;
         let title = 'MicroTube';
 
@@ -26,5 +27,7 @@ export default () => {
         }
 
         return title;
-    };
+    }, location.pathname);
+
+    return title;
 };

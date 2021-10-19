@@ -1,6 +1,5 @@
 import { render } from 'solid-js/web';
 import { Router } from 'solid-app-router';
-import { MetaProvider } from 'solid-meta';
 
 import Root from './Root';
 import Routes from './Routes';
@@ -16,13 +15,11 @@ if (appContainer) {
         () => (
             <StoreProvider>
                 {() => (
-                    <MetaProvider>
-                        <Router>
-                            <Root>
-                                <Routes />
-                            </Root>
-                        </Router>
-                    </MetaProvider>
+                    <Router>
+                        <Root>
+                            <Routes />
+                        </Root>
+                    </Router>
                 )}
             </StoreProvider>
         ),

@@ -1,5 +1,4 @@
 import { Link, useNavigate, useParams } from 'solid-app-router';
-import { Title } from 'solid-meta';
 
 import useAppTitle from '../store/hooks/app-title';
 import { useSearch } from '../store/hooks/search';
@@ -7,6 +6,7 @@ import { useSearch } from '../store/hooks/search';
 import SearchForm from '../components/SearchForm';
 import Icon from '../components/Icon';
 import DropDown from '../components/DropDown';
+import Title from '../components/meta/Title';
 
 const SearchHeader = () => {
     const navigate = useNavigate();
@@ -19,7 +19,7 @@ const SearchHeader = () => {
 
     return (
         <div className="layout__header-row">
-            <Title>{title}</Title>
+            <Title>{title()}</Title>
 
             <Link
                 className="layout__back-button icon-button"

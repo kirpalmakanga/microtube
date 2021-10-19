@@ -89,7 +89,7 @@ const ChannelVideos = () => {
                         items={channel.videos.items}
                         loadItems={handleGetChannelVideos}
                     >
-                        {(data: VideoData) => (
+                        {({ data }) => (
                             <VideoCard
                                 {...data}
                                 onClick={handleClickCard(data)}

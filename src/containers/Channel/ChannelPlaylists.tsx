@@ -95,7 +95,7 @@ const Playlists: Component = () => {
                         items={channel.playlists.items}
                         loadItems={getPlaylists}
                     >
-                        {(data: PlaylistData): JSXElement => (
+                        {({ data }) => (
                             <PlaylistCard
                                 {...data}
                                 onClick={handleClickCard(data)}

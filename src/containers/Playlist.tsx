@@ -100,7 +100,7 @@ const Playlists: Component = () => {
                         items={playlistItems.items}
                         loadItems={getPlaylistItems}
                     >
-                        {(data: VideoData): JSXElement => (
+                        {({ data }): JSXElement => (
                             <VideoCard
                                 {...data}
                                 onClick={handleClickCard(data)}

@@ -82,7 +82,7 @@ const Search = () => {
                             items={search.items}
                             loadItems={handleSearchVideos}
                         >
-                            {(data: VideoData) => (
+                            {({ data }) => (
                                 <VideoCard
                                     {...data}
                                     onClick={handleClickCard(data)}

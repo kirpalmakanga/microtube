@@ -92,7 +92,7 @@ const Playlists: Component = () => {
             <MenuWrapper menuItems={menuItems}>
                 {({ openMenu }) => (
                     <List items={playlists.items} loadItems={getPlaylists}>
-                        {({ data }: { data: PlaylistData }) => (
+                        {({ data }) => (
                             <PlaylistCard
                                 {...data}
                                 onClick={handleClickCard(data)}

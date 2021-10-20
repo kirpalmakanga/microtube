@@ -8,8 +8,6 @@ import Menu from './Menu';
 import MenuItem from './MenuItem';
 import { Dynamic } from 'solid-js/web';
 
-export type MenuOpener = (callbackData: State, menuTitle: string) => void;
-
 interface Props {
     menuItems: MenuItemData[];
     children: JSX.FunctionElement;
@@ -20,6 +18,8 @@ interface State {
     menuTitle: string;
     callbackData: Object;
 }
+
+export type MenuOpener = (callbackData: State, menuTitle: string) => void;
 
 const initialState: State = {
     isMenuOpen: false,

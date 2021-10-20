@@ -8,7 +8,6 @@ interface Props {
 
 export const ImportVideoForm: Component<Props> = ({ onSubmit }) => {
     const [text, setState] = createSignal('');
-    let input;
 
     const handleChange = ({
         currentTarget: { value }

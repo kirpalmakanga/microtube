@@ -1,6 +1,3 @@
-import { createReducer, State } from '../helpers';
-import { omit } from '../../lib/helpers';
-
 export interface ChannelVideosState {
     items: object[];
     nextPageToken: string;
@@ -47,30 +44,3 @@ export const initialState: ChannelState = {
         totalResults: null
     }
 };
-
-export default createReducer(initialState, {
-    'channel/UPDATE_DATA': (state: State, data: State) => ({
-        ...state,
-        ...data
-    }),
-
-    'channel/UPDATE_ITEMS': (
-        { items, ...state }: State,
-        { items: newItems, nextPageToken = '', totalResults }: State
-    ) => ({
-        ...state,
-        items: [...items, ...newItems],
-        nextPageToken,
-        hasNextPage: !!nextPageToken,
-        totalResults
-    }),
-
-    'channel/CLEAR_ITEMS': (state: State) => ({
-        ...state,
-        ...omit(initialState, ['channelTitle', 'description', 'thumbnails'])
-    }),
-
-    'channel/CLEAR_DATA': () => ({ ...initialState }),
-
-    'auth/SIGN_OUT': () => ({ ...initialState })
-});

@@ -2,7 +2,7 @@ import * as api from '../../api/youtube';
 
 import { useStore } from '..';
 import { useNotifications } from './notifications';
-import { rootInitialState } from '../reducers';
+import { rootInitialState } from '../state';
 
 export const useSubscriptions = () => {
     const [{ subscriptions }, setState] = useStore();

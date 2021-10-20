@@ -1,7 +1,6 @@
 import { QueueItem } from '../../../@types/alltypes';
-import { State } from '../helpers';
 
-export interface PlayerState extends State {
+export interface PlayerState {
     queue: QueueItem[];
     currentId: string;
     isQueueVisible: boolean;
@@ -9,6 +8,7 @@ export interface PlayerState extends State {
     newQueueItems: number;
     currentTime: number;
     video: QueueItem;
+    currentVideo: QueueItem;
 }
 
 const initialVideoState = {

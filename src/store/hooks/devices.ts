@@ -2,7 +2,7 @@ import { onCleanup, onMount, createMemo } from 'solid-js';
 import { DeviceData, GenericObject } from '../../../@types/alltypes';
 import { useStore } from '..';
 import { subscribe, emit } from '../../lib/socket';
-import { rootInitialState } from '../reducers';
+import { rootInitialState } from '../state';
 
 export const useDevices = () => {
     const [{ user: user, app: app }, setState] = useStore();

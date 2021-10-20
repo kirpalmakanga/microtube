@@ -2,15 +2,8 @@ import * as api from '../../api/youtube';
 
 import { useStore } from '..';
 import { useNotifications } from './notifications';
-import { GetState } from '../helpers';
 import { usePrompt } from './prompt';
-import { rootInitialState } from '../reducers';
-import { PlaylistsState } from '../reducers/_playlists';
-import {
-    ChannelPlaylistsState,
-    ChannelState,
-    ChannelVideosState
-} from '../reducers/_channel';
+import { rootInitialState } from '../state';
 
 export const useChannel = (channelId: string) => {
     const [{ channel }, setState] = useStore();
@@ -26,8 +19,6 @@ export const useChannel = (channelId: string) => {
             openNotification('Error fetching channel data.');
         }
     };
-
-    const clearData = () => setState('channel', rootInitialState.channel);
 
     const getPlaylists = async () => {
         try {
@@ -62,7 +53,7 @@ export const useChannel = (channelId: string) => {
         }
     };
 
-    const getVideos = async (getState: GetState) => {
+    const getVideos = async () => {
         try {
             const {
                 videos: { items, nextPageToken: pageToken, hasNextPage }
@@ -92,11 +83,7 @@ export const useChannel = (channelId: string) => {
         }
     };
 
-    const clearVideos = () =>
-        setState('channel/videos', rootInitialState.channel.videos);
-
-    const clearPlaylists = () =>
-        setState('channel/playlists', rootInitialState.channel.playlists);
+    const clearData = () => setState('channel', rootInitialState.channel);
 
     const toggleSubscription = async () => {
         const { channelTitle, subscriptionId } = channel;
@@ -133,9 +120,7 @@ export const useChannel = (channelId: string) => {
             getData,
             clearData,
             getVideos,
-            clearVideos,
             getPlaylists,
-            clearPlaylists,
             toggleSubscription
         }
     ];

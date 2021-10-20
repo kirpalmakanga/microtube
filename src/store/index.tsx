@@ -1,6 +1,6 @@
-import { createContext, useContext, createEffect, mergeProps } from 'solid-js';
+import { createContext, useContext, createEffect } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { rootInitialState } from './reducers';
+import { rootInitialState, RootState } from './state';
 import { saveState, loadState } from '../lib/localStorage';
 import { mergeDeep, pick, omit } from '../lib/helpers';
 
@@ -12,14 +12,14 @@ export const StoreProvider = ({
 }: {
     children: unknown;
 }) => {
-    const store = createStore(initialState);
+    const store = createStore<RootState>(initialState as RootState);
 
     createEffect(() => {
         const [{ player, search }] = store;
 
         saveState({
-            player: omit(player, ['newQueueItems', 'video']),
-            search: pick(search, ['forMine'])
+            player: omit(player, 'newQueueItems', 'video'),
+            search: pick(search, 'forMine')
         });
     });
 

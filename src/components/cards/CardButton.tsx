@@ -1,6 +1,7 @@
-import Button from '../Button';
+import { Component } from 'solid-js';
+import Button, { ButtonProps } from '../Button';
 
-const CardButton = (props) => (
+const CardButton: Component<ButtonProps> = (props) => (
     <Button className="card__button icon-button" {...props} />
 );
 

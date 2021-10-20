@@ -1,6 +1,4 @@
-import { State } from '../helpers';
-
-export interface NotificationState extends State {
+export interface NotificationState {
     message: string;
     isVisible: boolean;
 }

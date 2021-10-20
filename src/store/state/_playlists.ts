@@ -1,7 +1,6 @@
 import { PlaylistData } from '../../../@types/alltypes';
-import { State } from '../helpers';
 
-export interface PlaylistsState extends State {
+export interface PlaylistsState {
     items: PlaylistData[];
     nextPageToken: String;
     totalResults: number | null;

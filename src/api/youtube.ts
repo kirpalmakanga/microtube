@@ -402,10 +402,11 @@ export async function getSubscriptions({ pageToken = '', mine = false }) {
                 ...(matchingSubscription.id
                     ? {
                           subscriptionId: matchingSubscription.id,
-                          ...pick(matchingSubscription.contentDetails, [
+                          ...pick(
+                              matchingSubscription.contentDetails,
                               'totalItemCount',
                               'newItemCount'
-                          ])
+                          )
                       }
                     : {}),
                 isUnsubscribed: false

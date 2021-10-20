@@ -1,27 +1,27 @@
-import { FunctionComponent, ReactNode } from 'react';
+import { Component } from 'solid-js';
 
 import Icon from './Icon';
 
 type ButtonType = 'button' | 'submit' | 'reset' | undefined;
 
-interface Props {
+export interface ButtonProps {
     className?: string;
     icon?: string;
     title?: string;
-    type?: string;
+    type?: ButtonType;
     form?: string;
     onClick?: () => void;
-    children?: ReactNode;
+    children?: Element;
 }
 
-const Button: FunctionComponent<Props> = ({
+const Button: Component<ButtonProps> = ({
     icon,
     type = 'button',
     title = '',
     children,
     ...props
 }) => (
-    <button type={type as ButtonType} {...props}>
+    <button type={type} {...props}>
         {icon ? <Icon name={icon} /> : null}
 
         {title ? <span>{title}</span> : null}

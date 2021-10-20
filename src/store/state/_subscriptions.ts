@@ -1,7 +1,6 @@
-import { State } from '../helpers';
 import { ChannelData } from '../../../@types/alltypes';
 
-export interface SubscriptionsState extends State {
+export interface SubscriptionsState {
     items: ChannelData[];
     nextPageToken: String;
     totalResults: number | null;

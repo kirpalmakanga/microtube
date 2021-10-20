@@ -1,6 +1,4 @@
-import { State } from '../helpers';
-
-export interface PromptState extends State {
+export interface PromptState {
     isVisible: boolean;
     mode: string;
     headerText: string;
@@ -11,7 +9,7 @@ export interface PromptState extends State {
 
 export const initialState: PromptState = {
     isVisible: false,
-    mode: '',
+    mode: 'default',
     headerText: '',
     confirmText: '',
     cancelText: '',

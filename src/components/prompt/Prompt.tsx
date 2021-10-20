@@ -9,7 +9,6 @@ import Button from '../Button';
 import { ImportVideoForm } from './ImportVideoForm';
 import PlaylistManager from './PlaylistManager';
 import { Transition } from 'solid-transition-group';
-import { Dynamic } from 'solid-js/web';
 
 const Prompt: Component = () => {
     const [prompt, { closePrompt }] = usePrompt();

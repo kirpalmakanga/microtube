@@ -5,7 +5,7 @@ import { usePlayer } from './player';
 import { usePrompt } from './prompt';
 import { PlaylistData } from '../../../@types/alltypes';
 
-import { initialState } from '../reducers/_playlists';
+import { initialState, PlaylistsState } from '../state/_playlists';
 
 export const usePlaylists = (channelId?: string) => {
     const [{ playlists }, setState] = useStore();
@@ -75,10 +75,9 @@ export const usePlaylists = (channelId?: string) => {
         try {
             const playlist = await api.createPlaylist({ title, privacyStatus });
 
-            setState('playlist/items', (items: PlaylistData[]) => [
-                ...items,
-                playlist
-            ]);
+            setState('playlist', ({ items }: PlaylistsState) => ({
+                items: [...items, playlist]
+            }));
 
             return playlist;
         } catch (error) {
@@ -93,11 +92,11 @@ export const usePlaylists = (channelId?: string) => {
             cancelText: 'Cancel',
             callback: async () => {
                 try {
-                    setState('playlists/items', (items: PlaylistData[]) =>
-                        items.filter(
+                    setState('playlists', ({ items }: PlaylistsState) => ({
+                        items: items.filter(
                             ({ id: itemId }: PlaylistData) => itemId !== id
                         )
-                    );
+                    }));
 
                     openNotification(`Removed playlist "${title}".`);
 

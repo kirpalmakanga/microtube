@@ -36,9 +36,8 @@ const DefaultHeader = () => {
                     onClick={() => navigate('/')}
                     className="layout__back-button icon-button"
                     aria-label="Go to homepage"
-                >
-                    <Icon name="arrow-left" />
-                </Button>
+                    icon="arrow-left"
+                />
             ) : null}
 
             <span className="layout__title">

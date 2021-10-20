@@ -13,8 +13,8 @@ import { saveData, subscribeToData } from '../../api/database';
 
 import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
 
-import { rootInitialState } from '../reducers';
-import { createMemo, mergeProps } from 'solid-js';
+import { rootInitialState } from '../state';
+import { createMemo } from 'solid-js';
 
 const extractQueueItemData = ({
     id,

@@ -1,18 +1,17 @@
-import { SyntheticEvent, MutableRefObject } from 'react';
 import { ThumbnailsData, ShareConfig } from '../../@types/alltypes';
 import { format } from 'date-fns';
 
 export const preventDefault =
-    (func = (e: SyntheticEvent) => {}) =>
-    (e: SyntheticEvent) => {
+    (func = (e: any) => {}) =>
+    (e: any) => {
         e.preventDefault();
 
         func(e);
     };
 
 export const stopPropagation =
-    (func = (e: SyntheticEvent) => {}) =>
-    (e: SyntheticEvent) => {
+    (func = (e: any) => {}) =>
+    (e: any) => {
         e.stopPropagation();
         func && func(e);
     };
@@ -163,31 +162,25 @@ export const debounce = (callback: (...args: any[]) => void, delay: number) => {
     };
 };
 
-export const pick = (obj: { [key: string]: unknown }, whitelist: string[]) => {
-    if (whitelist.length) {
-        const result: { [key: string]: unknown } = {};
+export function pick<T extends object, K extends keyof T>(
+    base: T,
+    ...keys: K[]
+): Pick<T, K> {
+    const entries = keys.map((key) => [key, base[key]]);
 
-        for (const key of whitelist) {
-            const { [key]: value } = obj;
+    return Object.fromEntries(entries);
+}
 
-            if (value) result[key] = value;
-        }
+export function omit<T extends object, K extends keyof T>(
+    base: T,
+    ...keys: K[]
+): Omit<T, K> {
+    const result = { ...base };
 
-        return result;
-    }
-
-    return obj;
-};
-
-export const omit = (obj: { [key: string]: unknown }, blacklist: string[]) => {
-    const result: { [key: string]: unknown } = {};
-
-    for (const key in obj) {
-        if (!blacklist.includes(key)) result[key] = obj[key];
-    }
+    for (const key of keys) delete result[key];
 
     return result;
-};
+}
 
 export const wrapURLs = (text: string) => {
     // http://, https://, ftp://
@@ -242,21 +235,6 @@ export const getPlaylistURL = (id: string) =>
 export const shareURL = (config: ShareConfig) => navigator.share(config);
 
 export const copyText = (text: string) => navigator.clipboard.writeText(text);
-
-type CombinedRefs =
-    | MutableRefObject<HTMLElement | null>
-    | ((element?: HTMLElement | null | undefined) => any);
-
-export const combinedRef =
-    (...refs: CombinedRefs[]) =>
-    (el: HTMLElement | null) => {
-        if (el) {
-            for (const ref of refs) {
-                if (typeof ref === 'function') ref(el);
-                else ref.current = el;
-            }
-        }
-    };
 
 const isObject = (item: unknown) =>
     item && typeof item === 'object' && !Array.isArray(item);

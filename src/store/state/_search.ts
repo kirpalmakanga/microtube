@@ -1,6 +1,4 @@
-import { State } from '../helpers';
-
-interface SearchState extends State {
+export interface SearchState {
     items: object[];
     nextPageToken: string;
     hasNextPage: boolean;

@@ -6,7 +6,8 @@ import { usePrompt } from './prompt';
 import { PlaylistData, PlaylistItemData } from '../../../@types/alltypes';
 
 import * as api from '../../api/youtube';
-import { initialState, PlaylistItemsState } from '../reducers/_playlist-items';
+import { initialState, PlaylistItemsState } from '../state/_playlist-items';
+import { PlaylistsState } from '../state/_playlists';
 
 export const usePlaylistItems = (playlistId?: string) => {
     const [{ playlistItems }, setState] = useStore();
@@ -65,11 +66,16 @@ export const usePlaylistItems = (playlistId?: string) => {
             } = await api.getPlaylists({ ids: [playlistId] });
 
             if (playlist) {
-                setState(
-                    'playlists/items',
-                    ({ id }: PlaylistData) => id === playlistId,
-                    playlist
-                );
+                setState('playlists', ({ items }: PlaylistsState) => {
+                    const index = items.findIndex(
+                        ({ id }: PlaylistData) => id === playlistId
+                    );
+
+                    if (index > -1) items[index] = playlist;
+                    else items.unshift(playlist);
+
+                    return { items };
+                });
             }
         } catch (error) {
             openNotification('Error adding playlist item.');
@@ -117,19 +123,25 @@ export const usePlaylistItems = (playlistId?: string) => {
             confirmText: 'Remove',
             callback: async () => {
                 try {
-                    setState('playlist/items', (items: PlaylistItemData[]) =>
-                        items.filter(
-                            ({ playlistItemId: itemPlaylistId }) =>
-                                itemPlaylistId !== playlistItemId
-                        )
+                    setState(
+                        'playlistItems',
+                        ({ items }: PlaylistItemsState) => ({
+                            items: items.filter(
+                                ({ playlistItemId: itemPlaylistId }) =>
+                                    itemPlaylistId !== playlistItemId
+                            )
+                        })
                     );
 
-                    setState(
-                        'playlists/items',
-                        ({ id }: PlaylistData) => id === playlistId,
-                        'itemCount',
-                        (itemCount: number) => itemCount - 1
-                    );
+                    setState('playlists', ({ items }: PlaylistsState) => {
+                        const index = items.findIndex(
+                            ({ id }) => id === playlistId
+                        );
+
+                        if (index > -1) items[index].itemCount--;
+
+                        return { items };
+                    });
 
                     openNotification(`Removed ${title}.`);
 

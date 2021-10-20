@@ -108,13 +108,10 @@ export const usePlaylists = (channelId?: string) => {
         });
     };
 
-    const clearPlaylists = () => setState('playlists', initialState);
-
     return [
         playlists,
         {
             getPlaylists,
-            clearPlaylists,
             createPlaylist,
             removePlaylist,
             queuePlaylist,

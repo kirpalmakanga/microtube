@@ -17,13 +17,7 @@ const Playlists: Component = () => {
 
     const [
         playlists,
-        {
-            getPlaylists,
-            removePlaylist,
-            queuePlaylist,
-            launchPlaylist,
-            clearPlaylists
-        }
+        { getPlaylists, removePlaylist, queuePlaylist, launchPlaylist }
     ] = usePlaylists();
 
     const [, { openNotification }] = useNotifications();
@@ -76,8 +70,6 @@ const Playlists: Component = () => {
             onClick: removePlaylist
         }
     ];
-
-    onCleanup(clearPlaylists);
 
     return (
         <Show

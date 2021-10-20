@@ -48,21 +48,19 @@ const NewPlayListForm: Component<FormProps> = ({ onSubmit }) => {
 
     const handleSubmit = preventDefault(() => onSubmit(state as PlaylistData));
 
-    const { title, privacyStatus } = state;
-
     return (
         <form className="playlist-menu__form" onSubmit={handleSubmit}>
             <input
                 className="playlist-menu__item-text"
                 name="title"
-                value={title}
+                value={state.title}
                 placeholder="Playlist title"
                 onChange={handleInput}
-                onKeyDown={stopPropagation()}
+                onKeyPress={stopPropagation()}
             />
 
             <DropDown
-                currentValue={privacyStatus}
+                currentValue={state.privacyStatus}
                 options={privacyOptions}
                 onSelect={handlePrivacyStatusChange}
             />

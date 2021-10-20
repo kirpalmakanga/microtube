@@ -9,7 +9,7 @@
     &__content {
         position: relative;
         display: flex;
-        height: calc(1em + 40px);
+        min-height: calc(1em + 40px);
     }
     &__text {
         flex: 1;
@@ -19,6 +19,7 @@
         cursor: pointer;
         @include transition();
         height: 100%;
+        width: calc(1em + 40px);
         background-color: $red;
         display: flex;
         align-items: center;

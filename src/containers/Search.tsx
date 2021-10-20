@@ -54,7 +54,6 @@ const Search = () => {
         )
     );
 
-    /* TODO: fix route cleanups :angry: */
     onCleanup(clearSearch);
 
     return (

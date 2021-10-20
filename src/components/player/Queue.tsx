@@ -30,7 +30,6 @@ interface QueueItemData {
     icon: string;
 }
 
-/* TODO: fix clearQueue + notification */
 const Queue: Component<Props> = (props) => {
     const [
         player,

@@ -1,4 +1,4 @@
-import { JSXElement, Component, onCleanup, Show } from 'solid-js';
+import { Component, Show } from 'solid-js';
 import { useNavigate, useParams } from 'solid-app-router';
 
 import { PlaylistData } from '../../../@types/alltypes';
@@ -22,9 +22,7 @@ const Playlists: Component = () => {
     const params = useParams();
     const navigate = useNavigate();
 
-    const [channel, { getPlaylists, clearPlaylists }] = useChannel(
-        params.channelId
-    );
+    const [channel, { getPlaylists }] = useChannel(params.channelId);
 
     const [{ queuePlaylist, launchPlaylist }] = usePlaylists();
 
@@ -73,8 +71,6 @@ const Playlists: Component = () => {
             onClick: handleSharing
         }
     ];
-
-    onCleanup(clearPlaylists);
 
     return (
         <Show

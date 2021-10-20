@@ -1,4 +1,4 @@
-import { Show, onCleanup } from 'solid-js';
+import { Show } from 'solid-js';
 import { useNavigate, useParams } from 'solid-app-router';
 
 import List from '../../components/List';
@@ -17,7 +17,7 @@ const ChannelVideos = () => {
     const params = useParams();
     const navigate = useNavigate();
 
-    const [channel, { getVideos, clearVideos }] = useChannel(params.channelId);
+    const [channel, { getVideos }] = useChannel(params.channelId);
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
     const [, { openNotification }] = useNotifications();
@@ -67,8 +67,6 @@ const ChannelVideos = () => {
             onClick: handleSharing
         }
     ];
-
-    onCleanup(clearVideos);
 
     return (
         <Show

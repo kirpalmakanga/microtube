@@ -259,15 +259,15 @@ const Player = () => {
     }, state.isPlaying);
 
     createEffect(() => {
-        if (currentDevice.isMaster) {
+        if (currentDevice().isMaster) {
             setPlayerState({ isScreenVisible: state.isScreenVisible });
         }
 
-        return [currentDevice.isMaster, state.isScreenVisible];
-    }, [currentDevice.isMaster, state.isScreenVisible]);
+        return [currentDevice().isMaster, state.isScreenVisible];
+    }, [currentDevice().isMaster, state.isScreenVisible]);
 
     createEffect(() => {
-        if (!currentDevice.isMaster) {
+        if (!currentDevice().isMaster) {
             return;
         }
 
@@ -277,8 +277,8 @@ const Player = () => {
             exitFullscreen();
         }
 
-        return [currentDevice.isMaster, state.isFullscreen];
-    }, [currentDevice.isMaster, state.isFullscreen]);
+        return [currentDevice().isMaster, state.isFullscreen];
+    }, [currentDevice().isMaster, state.isFullscreen]);
 
     createEffect(() => {
         const { videoId } = storeState.currentVideo.id;
@@ -317,21 +317,23 @@ const Player = () => {
                 state.isQueueVisible ? 'enabled' : 'disabled'
             }
         >
-            <Screen
-                isVisible={
-                    (currentDevice.isMaster && isSingleVideo()) ||
-                    state.isScreenVisible ||
-                    state.isFullscreen
-                }
-                videoId={storeState.currentVideo.id}
-                onReady={handleYoutubeIframeReady}
-                onEnd={handleVideoEnd}
-                onBuffering={handleBuffering}
-                onPlay={handlePlay}
-                onPause={handlePause}
-                onStateChange={handleYoutubeIframeStateChange}
-                onClick={togglePlay}
-            />
+            <Show when={currentDevice().isMaster}>
+                <Screen
+                    isVisible={
+                        isSingleVideo() ||
+                        state.isScreenVisible ||
+                        state.isFullscreen
+                    }
+                    videoId={storeState.currentVideo.id}
+                    onReady={handleYoutubeIframeReady}
+                    onEnd={handleVideoEnd}
+                    onBuffering={handleBuffering}
+                    onPlay={handlePlay}
+                    onPause={handlePause}
+                    onStateChange={handleYoutubeIframeStateChange}
+                    onClick={togglePlay}
+                />
+            </Show>
 
             <Queue
                 isVisible={state.isQueueVisible}
@@ -342,10 +344,16 @@ const Player = () => {
             />
 
             <Transition name="slide-up" appear={true}>
-                <Show when={availableDevices.length && !isSingleVideo()}>
+                <Show
+                    when={
+                        state.isDevicesSelectorVisible &&
+                        availableDevices().length &&
+                        !isSingleVideo()
+                    }
+                >
                     <DevicesSelector
-                        currentDevice={currentDevice}
-                        devices={availableDevices}
+                        currentDevice={currentDevice()}
+                        devices={availableDevices()}
                         onClickItem={handleSelectDevice}
                     />
                 </Show>
@@ -390,7 +398,7 @@ const Player = () => {
                         isWatchingDisabled={
                             state.isBuffering ||
                             !state.isPlaying ||
-                            !currentDevice.isMaster
+                            !currentDevice().isMaster
                         }
                         videoId={storeState.currentVideo.id}
                         title={storeState.currentVideo.title}
@@ -401,14 +409,12 @@ const Player = () => {
                         onEndSeeking={handleSeeking}
                     />
 
-                    <Show when={availableDevices.length && !isSingleVideo()}>
+                    <Show when={availableDevices().length && !isSingleVideo()}>
                         <Button
-                            className={[
-                                'player__controls-button icon-button',
-                                state.isDevicesSelectorVisible
-                                    ? 'is-active'
-                                    : ''
-                            ].join(' ')}
+                            className="player__controls-button icon-button"
+                            classList={{
+                                'is-active': state.isDevicesSelectorVisible
+                            }}
                             icon="devices"
                             ariaLabel="Devices"
                             onClick={handleToggleDevices}
@@ -443,8 +449,8 @@ const Player = () => {
                     <Show
                         when={
                             !isSingleVideo() &&
-                            (!availableDevices.length ||
-                                !currentDevice.isMaster)
+                            (!availableDevices().length ||
+                                !currentDevice().isMaster)
                         }
                     >
                         <Button

@@ -3,6 +3,7 @@ import Icon from '../../Icon';
 
 interface Props {
     className: string;
+    classList?: { [key: string]: boolean };
     icon: string;
     badge?: unknown;
     children?: string | Element;

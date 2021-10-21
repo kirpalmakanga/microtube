@@ -454,14 +454,13 @@ const Player = () => {
                         }
                     >
                         <Button
-                            className={[
-                                'player__controls-button badge icon-button',
-                                state.isQueueVisible ? 'is-active' : '',
-                                storeState.newQueueItems &&
-                                !state.isQueueVisible
-                                    ? 'badge--active'
-                                    : ''
-                            ].join(' ')}
+                            className="player__controls-button badge icon-button"
+                            classList={{
+                                'is-active': state.isQueueVisible,
+                                'badge--active':
+                                    storeState.newQueueItems &&
+                                    !state.isQueueVisible
+                            }}
                             onClick={toggleQueue}
                             badge={storeState.newQueueItems}
                             icon="list"
@@ -475,10 +474,8 @@ const Player = () => {
 
                     <Show when={!isSingleVideo() && !state.isFullscreen}>
                         <Button
-                            className={[
-                                'player__controls-button icon-button',
-                                state.isScreenVisible ? 'is-active' : ''
-                            ].join(' ')}
+                            className="player__controls-button icon-button"
+                            classList={{ 'is-active': state.isScreenVisible }}
                             onClick={toggleScreen}
                             icon="screen"
                             ariaLabel={

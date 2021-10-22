@@ -1,4 +1,4 @@
-import { Component, JSX, JSXElement, Show } from 'solid-js';
+import { Component, Show } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
 

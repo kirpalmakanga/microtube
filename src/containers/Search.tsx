@@ -40,8 +40,6 @@ const Search = () => {
                 const [previousQuery] = previousInput || [];
                 const [query] = input;
 
-                console.log('query', query);
-
                 if (query && query !== previousQuery) {
                     console.log('query:execute', query);
                     setShouldMountGrid(false);

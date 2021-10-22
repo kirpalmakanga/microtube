@@ -5,7 +5,7 @@ import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 import VideoCard from '../components/cards/VideoCard';
 import MenuWrapper from '../components/menu/MenuWrapper';
-import { PlaylistItemData, VideoData } from '../../@types/alltypes';
+import { PlaylistItemData } from '../../@types/alltypes';
 import { copyText, getVideoURL, isMobile, shareURL } from '../lib/helpers';
 import { useNotifications } from '../store/hooks/notifications';
 import { usePlaylistItems } from '../store/hooks/playlist-items';

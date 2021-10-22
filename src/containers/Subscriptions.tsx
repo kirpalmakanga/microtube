@@ -6,7 +6,6 @@ import Placeholder from '../components/Placeholder';
 
 import ChannelCard from '../components/cards/ChannelCard';
 import { useSubscriptions } from '../store/hooks/subscriptions';
-import { ChannelData } from '../../@types/alltypes';
 
 const Subscriptions = () => {
     const navigate = useNavigate();

@@ -15,7 +15,7 @@
         "history": "^5.0.1",
         "socket.io-client": "^4.2.0",
         "solid-app-router": "^0.1.8",
-        "solid-js": "^1.1.6",
+        "solid-js": "^1.1.7",
         "solid-transition-group": "^0.0.8",
         "uuid": "^8.3.2",
         "youtube-player": "^5.5.2"

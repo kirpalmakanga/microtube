@@ -36,14 +36,14 @@ export interface RootState {
 }
 
 export const rootInitialState: RootState = {
-    app: appInitialState,
-    user: userInitialState,
-    player: playerInitialState,
-    playlists: playlistsInitialState,
-    playlistItems: playlistItemsInitialState,
-    channel: channelInitialState,
-    subscriptions: subscriptionsInitialState,
-    search: searchInitialState,
-    notifications: notificationsInitialState,
+    app: appInitialState(),
+    user: userInitialState(),
+    player: playerInitialState(),
+    playlists: playlistsInitialState(),
+    playlistItems: playlistItemsInitialState(),
+    channel: channelInitialState(),
+    subscriptions: subscriptionsInitialState(),
+    search: searchInitialState(),
+    notifications: notificationsInitialState(),
     prompt: promptInitialState
 };

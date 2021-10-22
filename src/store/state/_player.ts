@@ -18,7 +18,7 @@ const initialVideoState = {
     duration: 0
 };
 
-export const initialState: PlayerState = {
+export const initialState = (): PlayerState => ({
     queue: [],
     currentId: '',
     isQueueVisible: false,
@@ -33,4 +33,4 @@ export const initialState: PlayerState = {
             ? video
             : queue.find(({ id }) => id === currentId) || initialVideoState;
     }
-};
+});

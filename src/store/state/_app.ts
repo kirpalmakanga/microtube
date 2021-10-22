@@ -6,8 +6,8 @@ export interface AppState {
     deviceId: string;
 }
 
-export const initialState: AppState = {
+export const initialState = (): AppState => ({
     isLoading: false,
     devices: [],
     deviceId: uuidv4()
-};
+});

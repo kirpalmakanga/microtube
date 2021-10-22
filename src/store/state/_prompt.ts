@@ -7,11 +7,11 @@ export interface PromptState {
     callback: (...args: unknown[]) => void;
 }
 
-export const initialState: PromptState = {
+export const initialState = (): PromptState => ({
     isVisible: false,
     mode: 'default',
     headerText: '',
     confirmText: '',
     cancelText: '',
     callback: () => {}
-};
+});

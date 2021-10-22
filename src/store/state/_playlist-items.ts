@@ -10,10 +10,10 @@ export interface PlaylistItemsState {
     hasNextPage: boolean;
 }
 
-export const initialState: PlaylistItemsState = {
+export const initialState = (): PlaylistItemsState => ({
     playlistTitle: '',
     items: [],
     nextPageToken: '',
     totalResults: null,
     hasNextPage: true
-};
+});

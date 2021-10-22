@@ -7,9 +7,9 @@ export interface SubscriptionsState {
     hasNextPage: boolean;
 }
 
-export const initialState: SubscriptionsState = {
+export const initialState = (): SubscriptionsState => ({
     items: [],
     nextPageToken: '',
     totalResults: null,
     hasNextPage: true
-};
+});

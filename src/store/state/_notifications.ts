@@ -3,7 +3,7 @@ export interface NotificationState {
     isVisible: boolean;
 }
 
-export const initialState: NotificationState = {
+export const initialState = (): NotificationState => ({
     message: '',
     isVisible: false
-};
+});

@@ -6,10 +6,10 @@ export interface UserState {
     isSigningIn: boolean;
 }
 
-export const initialState: UserState = {
+export const initialState = (): UserState => ({
     uid: '',
     name: '',
     picture: '',
     isSignedIn: false,
     isSigningIn: false
-};
+});

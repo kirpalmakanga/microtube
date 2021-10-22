@@ -23,7 +23,7 @@ export interface ChannelState {
     playlists: ChannelPlaylistsState;
 }
 
-export const initialState: ChannelState = {
+export const initialState = (): ChannelState => ({
     channelTitle: '',
     description: '',
     thumbnails: {
@@ -43,4 +43,4 @@ export const initialState: ChannelState = {
         hasNextPage: true,
         totalResults: null
     }
-};
+});

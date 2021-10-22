@@ -5,8 +5,6 @@ interface Props {
 }
 
 const Title: Component<Props> = (props) => {
-    const previousTitle = '';
-
     createEffect((previousTitle) => {
         const { children: title } = props;
 
@@ -15,7 +13,6 @@ const Title: Component<Props> = (props) => {
         let titleTag = document.head.querySelector('title');
 
         if (!titleTag) {
-            console.log('creating title tag');
             titleTag = document.createElement('title');
 
             document.head.appendChild(titleTag);

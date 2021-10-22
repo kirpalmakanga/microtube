@@ -238,7 +238,7 @@ export async function createPlaylist({
         'POST',
         'playlists',
         {
-            part: 'snippet,status'
+            part: 'snippet,status,contentDetails'
         },
         {
             snippet: {
@@ -323,7 +323,7 @@ export async function addPlaylistItem(playlistId: string, videoId: string) {
     const data = await request(
         'POST',
         'playlistItems',
-        { part: 'snippet' },
+        { part: 'snippet,status,contentDetails' },
         {
             snippet: {
                 playlistId,

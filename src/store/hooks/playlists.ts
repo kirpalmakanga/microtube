@@ -5,8 +5,6 @@ import { usePlayer } from './player';
 import { usePrompt } from './prompt';
 import { PlaylistData } from '../../../@types/alltypes';
 
-import { initialState, PlaylistsState } from '../state/_playlists';
-
 export const usePlaylists = (channelId?: string) => {
     const [{ playlists }, setState] = useStore();
     const [, { openNotification }] = useNotifications();
@@ -73,15 +71,33 @@ export const usePlaylists = (channelId?: string) => {
 
     const createPlaylist = async (title: string, privacyStatus: string) => {
         try {
+            const { items } = playlists;
+
             const playlist = await api.createPlaylist({ title, privacyStatus });
 
-            setState('playlist', ({ items }: PlaylistsState) => ({
-                items: [...items, playlist]
-            }));
+            setState('playlist', {
+                items: [playlist, ...items]
+            });
 
             return playlist;
         } catch (error) {
             openNotification(`Error creating playlist "${title}".`);
+        }
+    };
+
+    const updatePlaylist = async (data: PlaylistData) => {
+        try {
+            const { items } = playlists;
+            const index = items.findIndex(
+                ({ id }: PlaylistData) => id === data.id
+            );
+
+            if (index > -1) items[index] = data;
+            else items.unshift(data);
+
+            setState('playlists', { items });
+        } catch (error) {
+            openNotification(`Error updated playlist "${data.title}".`);
         }
     };
 
@@ -92,11 +108,13 @@ export const usePlaylists = (channelId?: string) => {
             cancelText: 'Cancel',
             callback: async () => {
                 try {
-                    setState('playlists', ({ items }: PlaylistsState) => ({
+                    const { items } = playlists;
+
+                    setState('playlists', {
                         items: items.filter(
                             ({ id: itemId }: PlaylistData) => itemId !== id
                         )
-                    }));
+                    });
 
                     openNotification(`Removed playlist "${title}".`);
 
@@ -113,6 +131,7 @@ export const usePlaylists = (channelId?: string) => {
         {
             getPlaylists,
             createPlaylist,
+            updatePlaylist,
             removePlaylist,
             queuePlaylist,
             launchPlaylist

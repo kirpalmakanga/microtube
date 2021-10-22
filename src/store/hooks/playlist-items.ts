@@ -10,7 +10,7 @@ import { initialState, PlaylistItemsState } from '../state/_playlist-items';
 import { PlaylistsState } from '../state/_playlists';
 
 export const usePlaylistItems = (playlistId?: string) => {
-    const [{ playlistItems }, setState] = useStore();
+    const [{ playlists, playlistItems }, setState] = useStore();
     const [, { openNotification }] = useNotifications();
     const [, { openPrompt }] = usePrompt();
     const [, { createPlaylist }] = usePlaylists();
@@ -66,16 +66,15 @@ export const usePlaylistItems = (playlistId?: string) => {
             } = await api.getPlaylists({ ids: [playlistId] });
 
             if (playlist) {
-                setState('playlists', ({ items }: PlaylistsState) => {
-                    const index = items.findIndex(
-                        ({ id }: PlaylistData) => id === playlistId
-                    );
+                const items = [...playlists.items];
+                const index = items.findIndex(
+                    ({ id }: PlaylistData) => id === playlistId
+                );
 
-                    if (index > -1) items[index] = playlist;
-                    else items.unshift(playlist);
+                if (index > -1) items[index] = playlist;
+                else items.unshift(playlist);
 
-                    return { items };
-                });
+                setState('playlists', { items });
             }
         } catch (error) {
             openNotification('Error adding playlist item.');

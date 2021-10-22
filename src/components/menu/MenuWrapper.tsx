@@ -7,6 +7,7 @@ import { MenuItemData } from './types';
 import Menu from './Menu';
 import MenuItem from './MenuItem';
 import { Dynamic } from 'solid-js/web';
+import { delay } from '../../lib/helpers';
 
 interface Props {
     menuItems: MenuItemData[];
@@ -38,7 +39,13 @@ const MenuWrapper: Component<Props> = (props) => {
         setState({ isMenuOpen: true, menuTitle, callbackData });
     };
 
-    const close = () => setState({ isMenuOpen: false });
+    const close = async () => {
+        setState({ isMenuOpen: false });
+
+        await delay(300);
+
+        setState(initialState);
+    };
 
     return (
         <>

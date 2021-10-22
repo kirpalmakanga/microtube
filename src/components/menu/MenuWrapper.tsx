@@ -11,7 +11,7 @@ import { delay } from '../../lib/helpers';
 
 interface Props {
     menuItems: MenuItemData[];
-    children: JSX.FunctionElement;
+    children: ((props: { openMenu: MenuOpener }) => Element) & Element;
 }
 
 interface State {

@@ -2,7 +2,7 @@ import { onCleanup, onMount, createMemo } from 'solid-js';
 import { DeviceData, GenericObject } from '../../../@types/alltypes';
 import { useStore } from '..';
 import { subscribe, emit } from '../../lib/socket';
-import { rootInitialState } from '../state';
+import { initialState } from '../state/_app';
 
 export const useDevices = () => {
     const [{ user: user, app: app }, setState] = useStore();
@@ -58,7 +58,7 @@ export const useDevices = () => {
         });
 
         subscribe('disconnect', () =>
-            setState('app', { devices: rootInitialState.app.devices })
+            setState('app', { devices: initialState().devices })
         );
     });
 

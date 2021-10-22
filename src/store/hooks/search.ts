@@ -1,8 +1,8 @@
 import { useStore } from '..';
 import * as api from '../../api/youtube';
 import { omit } from '../../lib/helpers';
-import { rootInitialState } from '../state';
 import { useNotifications } from './notifications';
+import { initialState } from '../state/_search';
 
 export const useSearch = () => {
     const [{ search }, setState] = useStore();
@@ -14,7 +14,7 @@ export const useSearch = () => {
         });
 
     const clearSearch = () =>
-        setState('search', omit(rootInitialState.search, 'forMine'));
+        setState('search', omit(initialState(), 'forMine'));
 
     const searchVideos = async (query: string) => {
         try {

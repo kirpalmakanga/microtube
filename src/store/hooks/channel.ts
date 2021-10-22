@@ -3,7 +3,7 @@ import * as api from '../../api/youtube';
 import { useStore } from '..';
 import { useNotifications } from './notifications';
 import { usePrompt } from './prompt';
-import { rootInitialState } from '../state';
+import { initialState } from '../state/_channel';
 
 export const useChannel = (channelId: string) => {
     const [{ channel }, setState] = useStore();
@@ -83,7 +83,7 @@ export const useChannel = (channelId: string) => {
         }
     };
 
-    const clearData = () => setState('channel', rootInitialState.channel);
+    const clearData = () => setState('channel', initialState());
 
     const toggleSubscription = async () => {
         const { channelTitle, subscriptionId } = channel;

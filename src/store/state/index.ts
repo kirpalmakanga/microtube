@@ -35,7 +35,7 @@ export interface RootState {
     prompt: PromptState;
 }
 
-export const rootInitialState: RootState = {
+export const rootInitialState = (): RootState => ({
     app: appInitialState(),
     user: userInitialState(),
     player: playerInitialState(),
@@ -45,5 +45,5 @@ export const rootInitialState: RootState = {
     subscriptions: subscriptionsInitialState(),
     search: searchInitialState(),
     notifications: notificationsInitialState(),
-    prompt: promptInitialState
-};
+    prompt: promptInitialState()
+});

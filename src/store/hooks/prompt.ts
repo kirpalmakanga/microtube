@@ -15,7 +15,7 @@ export const usePrompt = () => {
 
         await delay(300);
 
-        setState('prompt', initialState);
+        setState('prompt', initialState());
     };
 
     return [prompt, { openPrompt, closePrompt }];

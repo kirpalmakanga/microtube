@@ -4,7 +4,7 @@ import { rootInitialState, RootState } from './state';
 import { saveState, loadState } from '../lib/localStorage';
 import { mergeDeep, pick, omit } from '../lib/helpers';
 
-const initialState = mergeDeep(rootInitialState, loadState() || {});
+const initialState = mergeDeep(rootInitialState(), loadState() || {});
 const StoreContext = createContext();
 
 export const StoreProvider = ({

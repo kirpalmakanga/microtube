@@ -1,3 +1,4 @@
+import { createMemo } from 'solid-js';
 import isEqual from 'lodash/isEqual';
 
 import { useStore } from '..';
@@ -12,9 +13,7 @@ import * as api from '../../api/youtube';
 import { saveData, subscribeToData } from '../../api/database';
 
 import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
-
-import { rootInitialState } from '../state';
-import { createMemo } from 'solid-js';
+import { initialState } from '../state/_player';
 
 const extractQueueItemData = ({
     id,
@@ -153,7 +152,7 @@ export const usePlayer = () => {
         });
 
     const clearVideo = () =>
-        setState('player', { video: rootInitialState.player.video });
+        setState('player', { video: initialState().video });
 
     const getVideo = async (videoId: string) => {
         try {

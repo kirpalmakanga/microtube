@@ -2,7 +2,7 @@ import * as api from '../../api/youtube';
 
 import { useStore } from '..';
 import { useNotifications } from './notifications';
-import { rootInitialState } from '../state';
+import { initialState } from '../state/_subscriptions';
 
 export const useSubscriptions = () => {
     const [{ subscriptions }, setState] = useStore();
@@ -40,8 +40,7 @@ export const useSubscriptions = () => {
         }
     };
 
-    const clearData = () =>
-        setState('subscriptions', rootInitialState.subscriptions);
+    const clearData = () => setState('subscriptions', initialState());
 
     return [subscriptions, { getData, clearData }];
 };

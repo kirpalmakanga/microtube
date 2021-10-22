@@ -56,7 +56,7 @@ export const useAuth = () => {
             await api.signOut();
             await signOutOfDatabase();
 
-            setState(rootInitialState);
+            setState(rootInitialState());
         } catch (error) {
             console.error(error);
         }

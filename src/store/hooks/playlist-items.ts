@@ -152,10 +152,7 @@ export const usePlaylistItems = (playlistId?: string) => {
         });
     };
 
-    const clearPlaylistItems = () => {
-        console.log('playlistItems', initialState);
-        setState('playlistItems', initialState);
-    };
+    const clearPlaylistItems = () => setState('playlistItems', initialState());
 
     return [
         playlistItems,

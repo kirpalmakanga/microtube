@@ -14,7 +14,7 @@ import Prompt from './components/prompt/Prompt';
 import Notifications from './components/Notifications';
 import { useAuth } from './store/hooks/auth';
 
-const Root: Component = ({ children }) => {
+const Root: Component = (props) => {
     const [auth, { getUserData }] = useAuth();
     const [isAppReady, setIsAppReady] = createSignal(false);
 
@@ -26,25 +26,24 @@ const Root: Component = ({ children }) => {
 
     return (
         <div
-            className={`layout ${isMobile() ? 'mobile' : ''}`.trim()}
+            className="layout"
+            classList={{ 'is--mobile': isMobile() }}
             onContextMenu={__DEV__ ? () => {} : preventDefault()}
         >
             <Sprite />
 
             <Show when={isAppReady()} fallback={<Loader />}>
-                <>
-                    <Header />
+                <Header />
 
-                    <main className="layout__content">{children}</main>
+                <main className="layout__content">{props.children}</main>
 
-                    <Notifications />
+                <Notifications />
 
-                    <Show when={auth.isSignedIn}>
-                        <Player />
-                    </Show>
+                <Show when={auth.isSignedIn}>
+                    <Player />
+                </Show>
 
-                    <Prompt />
-                </>
+                <Prompt />
             </Show>
         </div>
     );

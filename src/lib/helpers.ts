@@ -106,7 +106,7 @@ export const formatTime = (t: number) => {
 export const isMobile = () => {
     const { userAgent = '' } = navigator;
 
-    return userAgent.match(
+    return !!userAgent.match(
         /(Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone)/i
     );
 };

@@ -6,8 +6,8 @@
     position: relative;
     @include no-highlights;
 
-    .layout:not(.mobile) &:active,
-    .layout:not(.mobile) &:hover {
+    .layout:not(.is--mobile) &:active,
+    .layout:not(.is--mobile) &:hover {
         background-color: lighten($brand-primary, 60%);
     }
 

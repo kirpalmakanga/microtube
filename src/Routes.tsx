@@ -1,16 +1,19 @@
-import { lazy, Component, Show, onMount } from 'solid-js';
+import { lazy, Component, Show } from 'solid-js';
 import { Navigate, Routes, Route, Outlet } from 'solid-app-router';
 
 import Login from './containers/Login';
 import NotFound from './containers/NotFound';
-import { useAuth } from './store/hooks/auth';
+import Loader from './components/Loader';
+import { useStore } from './store';
 
 const Protected = () => {
-    const [auth] = useAuth();
+    const [state] = useStore();
 
     return (
-        <Show when={auth.isSignedIn} fallback={<Login />}>
-            <Outlet />
+        <Show when={!state.user.isSigningIn} fallback={<Loader />}>
+            <Show when={state.user.isSignedIn} fallback={<Login />}>
+                <Outlet />
+            </Show>
         </Show>
     );
 };

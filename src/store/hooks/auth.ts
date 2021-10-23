@@ -42,7 +42,9 @@ export const useAuth = () => {
             await getUserData();
         } catch (error) {
             if (error !== 'popup_closed_by_user') {
-                openNotification('Error signing in user.');
+                openNotification('Connection cancelled.');
+            } else {
+                openNotification('Error signing user in.');
             }
         } finally {
             setState('user', {

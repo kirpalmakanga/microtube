@@ -41,9 +41,9 @@ const Root: Component = (props) => {
 
                 <Show when={auth.isSignedIn}>
                     <Player />
-                </Show>
 
-                <Prompt />
+                    <Prompt />
+                </Show>
             </Show>
         </div>
     );

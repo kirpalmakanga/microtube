@@ -5,7 +5,7 @@ import { useStore } from '..';
 import { useNotifications } from './notifications';
 import { usePrompt } from './prompt';
 
-import { QueueItem, VideoData } from '../../../@types/alltypes';
+import { QueueItem } from '../../../@types/alltypes';
 
 import { __DEV__ } from '../../config/app';
 
@@ -14,18 +14,6 @@ import { saveData, subscribeToData } from '../../api/database';
 
 import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
 import { initialState } from '../state/_player';
-
-const extractQueueItemData = ({
-    id,
-    title,
-    description,
-    duration
-}: VideoData): QueueItem => ({
-    id,
-    title,
-    description,
-    duration
-});
 
 export const usePlayer = () => {
     const [{ user, player }, setState] = useStore();

@@ -24,7 +24,7 @@ const Button: Component<Props> = (props) => {
             aria-label={localProps.ariaLabel}
             data-badge={localProps.badge}
         >
-            <Icon className="icon" name={localProps.icon} />
+            <Icon name={localProps.icon} />
         </button>
     );
 };

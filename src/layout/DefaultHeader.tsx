@@ -7,7 +7,6 @@ import Img from '../components/Img';
 
 import useAppTitle from '../store/hooks/app-title';
 import { useAuth } from '../store/hooks/auth';
-import { Transition } from 'solid-transition-group';
 import Title from '../components/meta/Title';
 
 const DefaultHeader = () => {
@@ -18,11 +17,11 @@ const DefaultHeader = () => {
 
     const title = useAppTitle();
 
-    const handleClickUser = () =>
-        user.isSignedIn ? setMenuState(!isMenuOpen()) : signIn();
+    const handleClickUser = () => setMenuState(!isMenuOpen());
 
-    const handleLoggingOut = () => {
-        signOut();
+    const handleLogging = () => {
+        if (user.isSignedIn) signOut();
+        else signIn();
 
         setMenuState(false);
     };
@@ -31,14 +30,20 @@ const DefaultHeader = () => {
         <div className="layout__header-row">
             <Title>{title()}</Title>
 
-            {location.pathname !== '/' && location.pathname !== '/login' ? (
+            <Show
+                when={
+                    user.isSignedIn &&
+                    location.pathname !== '/' &&
+                    location.pathname !== '/login'
+                }
+            >
                 <Button
                     onClick={() => navigate('/')}
                     className="layout__back-button icon-button"
                     aria-label="Go to homepage"
                     icon="arrow-left"
                 />
-            ) : null}
+            </Show>
 
             <span className="layout__title">
                 <span className="layout__title-inner">{title()}</span>
@@ -88,23 +93,21 @@ const DefaultHeader = () => {
                         </Show>
                     </Button>
 
-                    <Transition name="fade">
-                        <Show when={user.isSignedIn && isMenuOpen()}>
-                            <div className="navigation__menu__content shadow--2dp">
+                    <Show when={isMenuOpen()}>
+                        <div className="navigation__menu__content shadow--2dp">
+                            <Show when={user.name}>
                                 <p className="navigation__menu__content__text">
                                     {user.name}
                                 </p>
-                                <Button
-                                    className="button shadow--2dp"
-                                    icon="log-out"
-                                    title={
-                                        user.isSignedIn ? 'Log out' : 'Log in'
-                                    }
-                                    onClick={handleLoggingOut}
-                                ></Button>
-                            </div>
-                        </Show>
-                    </Transition>
+                            </Show>
+                            <Button
+                                className="button shadow--2dp"
+                                icon="log-out"
+                                title={user.isSignedIn ? 'Log out' : 'Log in'}
+                                onClick={handleLogging}
+                            ></Button>
+                        </div>
+                    </Show>
                 </div>
             </nav>
         </div>

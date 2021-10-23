@@ -3,7 +3,6 @@ import {
     DragDropContext,
     SortableContext,
     DragDropSensors,
-    DragOverlay,
     createSortable,
     closestLayoutCenter
 } from '@thisbeyond/solid-dnd';
@@ -20,14 +19,6 @@ interface ListItemProps {
     id: number | string;
     children: unknown;
 }
-
-const htmlToElement = (html: string) => {
-    const template = document.createElement('template');
-
-    template.innerHTML = html.trim();
-
-    return template.content.firstChild as HTMLElement;
-};
 
 const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
     const result = [...list];

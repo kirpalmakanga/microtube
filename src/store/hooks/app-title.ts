@@ -8,22 +8,29 @@ export default () => {
 
     const title = createMemo(() => {
         const { pathname } = location;
+        const {
+            channel: { channelTitle },
+            playlistItems: { playlistTitle },
+            player: {
+                video: { title: videoTitle }
+            }
+        } = state;
         let title = 'MicroTube';
 
         if (pathname.startsWith('/subscriptions')) {
             title = 'Subscriptions';
         }
 
-        if (pathname.startsWith('/channel')) {
-            title = state.channel.channelTitle;
+        if (pathname.startsWith('/channel') && channelTitle) {
+            title = channelTitle;
         }
 
-        if (pathname.startsWith('/playlist')) {
-            title = state.playlistItems.playlistTitle;
+        if (pathname.startsWith('/playlist') && playlistTitle) {
+            title = playlistTitle;
         }
 
-        if (pathname.startsWith('/video')) {
-            title = state.player.video.title;
+        if (pathname.startsWith('/video') && videoTitle) {
+            title = videoTitle;
         }
 
         return title;

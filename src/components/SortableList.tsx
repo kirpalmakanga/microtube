@@ -60,8 +60,7 @@ const SortableItem: Component<ListItemProps> = (props) => {
             className="sortable"
             classList={{
                 // @ts-ignore
-                'is--dragged': sortable.isActiveDraggable,
-                'is--hidden': !isVisible()
+                'is--dragged': sortable.isActiveDraggable
             }}
             onMouseUp={onMouseUp}
         >

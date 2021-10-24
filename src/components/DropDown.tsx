@@ -53,7 +53,7 @@ const DropDown: Component<Props> = (props) => {
                 <span className="dropdown__trigger-title">{label()}</span>
             </button>
 
-            <Transition name="fade" appear={true}>
+            <Transition name="fade">
                 <Show when={isOpen()}>
                     <ul className="dropdown__list shadow--2dp">
                         <For each={props.options}>

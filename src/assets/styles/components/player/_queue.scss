@@ -42,7 +42,6 @@
 
         .sortable {
             height: 50px;
-            @include transition(transform);
             position: relative;
 
             &:not(:last-child) .QueueItem {

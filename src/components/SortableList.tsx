@@ -7,7 +7,6 @@ import {
     closestLayoutCenter
 } from '@thisbeyond/solid-dnd';
 import { useOnScreen } from '../lib/hooks';
-import { Transition } from 'solid-transition-group';
 import { HTMLElementEvent } from '../../@types/alltypes';
 interface ListProps {
     items: any[];
@@ -19,6 +18,21 @@ interface ListItemProps {
     id: number | string;
     children: unknown;
 }
+
+const getSiblings = (e: HTMLElement) => {
+    let siblings = [];
+
+    if (e.parentNode) {
+        let sibling = e.parentNode.firstChild;
+
+        while (sibling) {
+            if (sibling.nodeType === 1 && sibling !== e) siblings.push(sibling);
+
+            sibling = sibling.nextSibling;
+        }
+    }
+    return siblings as HTMLElement[];
+};
 
 const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
     const result = [...list];
@@ -51,9 +65,7 @@ const SortableItem: Component<ListItemProps> = (props) => {
             }}
             onMouseUp={onMouseUp}
         >
-            <Transition name="fade">
-                <Show when={isVisible()}>{props.children}</Show>
-            </Transition>
+            <Show when={isVisible()}>{props.children}</Show>
         </div>
     );
 };
@@ -64,10 +76,9 @@ const DraggableList: Component<ListProps> = (props) => {
     const ids = () => items();
 
     const onDragStart = ({ draggable: { node } }: { draggable: any }) => {
-        const onTransitionEnd = () => (node.style.zIndex = '');
-
-        node.style.zIndex = 1;
-        node.addEventListener('transitionend', onTransitionEnd, { once: true });
+        getSiblings(node).forEach(
+            (n) => (n.style.transition = 'transform 0.3s ease-out')
+        );
     };
 
     const onDragEnd = ({
@@ -77,9 +88,11 @@ const DraggableList: Component<ListProps> = (props) => {
         draggable: any;
         droppable: any;
     }) => {
-        if (!droppable || !droppable) {
+        if (!draggable || !droppable) {
             return;
         }
+
+        getSiblings(draggable.node).forEach((n) => (n.style.transition = ''));
 
         const currentItems = ids();
         const fromIndex = currentItems.indexOf(draggable.id);

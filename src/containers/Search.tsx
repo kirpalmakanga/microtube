@@ -41,7 +41,6 @@ const Search = () => {
                 const [query] = input;
 
                 if (query && query !== previousQuery) {
-                    console.log('query:execute', query);
                     setShouldMountGrid(false);
                     clearSearch();
                     setTimeout(() => setShouldMountGrid(true));

@@ -1,29 +1,21 @@
-import {
-    Component,
-    createSignal,
-    JSX,
-    JSXElement,
-    onCleanup,
-    onMount,
-    Show
-} from 'solid-js';
+import { Component, createSignal, onCleanup, onMount, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
+import { VirtualContainer } from '@minht11/solid-virtual-container';
 import { throttle } from '../lib/helpers';
 import Icon from './Icon';
 
-import { VirtualContainer } from '@minht11/solid-virtual-container';
-import { Dynamic } from 'solid-js/web';
+type ListItemProps = { data: any };
 
 interface Props {
     className?: string;
     items: unknown[];
     itemSize?: number | undefined;
-    children: JSX.FunctionElement;
+    children: ((props: ListItemProps) => Element) & Element;
     loadItems: Function;
 }
 
 const Loader = () => (
-    <Transition name="fade" appear={true}>
+    <Transition name="fade">
         <div className="list__loading">
             <Icon name="loading" />
         </div>
@@ -85,11 +77,9 @@ const List: Component<Props> = (props) => {
                                 when={itemProps.index < props.items.length}
                                 fallback={<Loader />}
                             >
-                                <Dynamic
-                                    component={props.children}
-                                    data={itemProps.item}
-                                    index={itemProps.index}
-                                />
+                                {props.children({
+                                    data: itemProps.item
+                                })}
                             </Show>
                         </div>
                     )}

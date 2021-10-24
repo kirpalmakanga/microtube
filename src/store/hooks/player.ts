@@ -26,8 +26,10 @@ export const usePlayer = () => {
     const currentIdPath = `users/${getCurrentUserId()}/currentId`;
 
     const currentQueueIndex = createMemo(
-        (targetId) =>
-            player.queue.findIndex(({ id }: QueueItem) => id === targetId),
+        () =>
+            player.queue.findIndex(
+                ({ id }: QueueItem) => id === player.currentId
+            ),
         player.currentId
     );
 
@@ -176,8 +178,6 @@ export const usePlayer = () => {
         } = player;
 
         if (id) setActiveQueueItem(id);
-
-        return !!id;
     };
 
     return [

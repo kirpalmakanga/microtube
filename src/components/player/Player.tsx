@@ -9,7 +9,7 @@ import { YouTubePlayer } from 'youtube-player/dist/types';
 
 import { usePlayer } from '../../store/hooks/player';
 
-import { useFullscreen, useKey, useKeyboard } from '../../lib/hooks';
+import { useFullscreen, useKey } from '../../lib/hooks';
 import { isMobile } from '../../lib/helpers';
 
 import Queue from './Queue';

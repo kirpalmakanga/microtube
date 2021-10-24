@@ -64,13 +64,10 @@ const DraggableList: Component<ListProps> = (props) => {
     const ids = () => items();
 
     const onDragStart = ({ draggable: { node } }: { draggable: any }) => {
-        const onTransitionEnd = () => {
-            node.style.zIndex = '';
-            node.removeEventListener('transitionend', onTransitionEnd);
-        };
+        const onTransitionEnd = () => (node.style.zIndex = '');
 
         node.style.zIndex = 1;
-        node.addEventListener('transitionend', onTransitionEnd);
+        node.addEventListener('transitionend', onTransitionEnd, { once: true });
     };
 
     const onDragEnd = ({

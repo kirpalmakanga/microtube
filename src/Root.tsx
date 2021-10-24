@@ -15,7 +15,7 @@ import Notifications from './components/Notifications';
 import { useAuth } from './store/hooks/auth';
 
 const Root: Component = (props) => {
-    const [auth, { getUserData }] = useAuth();
+    const [user, { getUserData }] = useAuth();
     const [isAppReady, setIsAppReady] = createSignal(false);
 
     onMount(async () => {
@@ -39,7 +39,7 @@ const Root: Component = (props) => {
 
                 <Notifications />
 
-                <Show when={auth.isSignedIn}>
+                <Show when={user.isSignedIn}>
                     <Player />
 
                     <Prompt />

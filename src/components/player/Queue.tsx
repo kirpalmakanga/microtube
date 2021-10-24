@@ -114,7 +114,7 @@ const Queue: Component<Props> = (props) => {
                 onClickClear={clearQueue}
             />
 
-            <Transition name="fade" appear={true}>
+            <Transition name="fade">
                 <Show when={props.isVisible}>
                     <div className="Queue__Content">
                         <Show

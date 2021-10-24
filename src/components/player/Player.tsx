@@ -343,7 +343,7 @@ const Player = () => {
                 togglePlay={togglePlay}
             />
 
-            <Transition name="slide-up" appear={true}>
+            <Transition name="slide-up">
                 <Show
                     when={
                         state.isDevicesSelectorVisible &&

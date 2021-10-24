@@ -51,7 +51,7 @@ const SortableItem: Component<ListItemProps> = (props) => {
             }}
             onMouseUp={onMouseUp}
         >
-            <Transition name="fade" appear={true}>
+            <Transition name="fade">
                 <Show when={isVisible()}>{props.children}</Show>
             </Transition>
         </div>

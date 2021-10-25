@@ -21,6 +21,7 @@ const Tabs: Component<TabsProps> = (props) => (
 
 const Channel = () => {
     const { channelId } = useParams();
+
     const [channel, { getData, clearData, toggleSubscription }] =
         useChannel(channelId);
 
@@ -48,7 +49,7 @@ const Channel = () => {
                             title={
                                 channel.subscriptionId
                                     ? 'Unsubscribe'
-                                    : 'Subscribed'
+                                    : 'Subscribe'
                             }
                             onClick={toggleSubscription}
                         />

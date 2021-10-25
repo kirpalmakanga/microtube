@@ -99,7 +99,10 @@ const Info: Component<Props> = (props) => {
         return props.videoId;
     }, props.videoId);
 
-    createEffect(() => {
+    createEffect((previousIsWatchingDisabled) => {
+        if (props.isWatchingDisabled === previousIsWatchingDisabled)
+            return previousIsWatchingDisabled;
+
         if (props.isWatchingDisabled) {
             clearWatchers();
         } else {

@@ -114,7 +114,7 @@ export const YoutubePlayer: Component<Props> = (props) => {
         createPlayer();
     };
 
-    const updateVideo = () => {
+    const updateVideo = async () => {
         if (!props.videoId) {
             internalPlayer.stopVideo();
             return;
@@ -137,11 +137,12 @@ export const YoutubePlayer: Component<Props> = (props) => {
         }
 
         if (autoplay) {
-            internalPlayer.loadVideoById(newOpts);
-            return;
+            await internalPlayer.loadVideoById(newOpts);
+        } else {
+            await internalPlayer.cueVideoById(newOpts);
         }
 
-        internalPlayer.cueVideoById(newOpts);
+        handleIframeReady();
     };
 
     createEffect((previousOptions) => {

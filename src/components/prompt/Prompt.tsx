@@ -59,7 +59,14 @@ const Prompt: Component = () => {
                             </Show>
 
                             <Switch>
-                                <Match when={prompt.mode === 'import'}>
+                                <Match when={isMode('import', 'playlists')}>
+                                    <Button
+                                        className="button shadow--2dp"
+                                        title={prompt.confirmText}
+                                        onClick={closePrompt}
+                                    />
+                                </Match>
+                                <Match when={isMode('import')}>
                                     <Button
                                         className="button shadow--2dp"
                                         title={prompt.confirmText}
@@ -67,14 +74,7 @@ const Prompt: Component = () => {
                                         form="importVideos"
                                     />
                                 </Match>
-                                <Match when={prompt.mode === 'import'}>
-                                    <Button
-                                        className="button shadow--2dp"
-                                        title={prompt.confirmText}
-                                        onClick={closePrompt}
-                                    />
-                                </Match>
-                                <Match when={prompt.mode === 'default'}>
+                                <Match when={isMode('default')}>
                                     <Button
                                         className="button shadow--2dp"
                                         title={prompt.confirmText}

@@ -85,7 +85,7 @@ export const usePlaylistItems = (playlistId?: string) => {
         openPrompt({
             mode: 'playlists',
             headerText: 'Save to playlist',
-            confirmText: 'Done',
+            confirmText: 'Close',
             callback: async ({
                 id: playlistId,
                 title,

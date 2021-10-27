@@ -14,13 +14,11 @@ if (appContainer) {
     render(
         () => (
             <StoreProvider>
-                {() => (
-                    <Router>
-                        <Root>
-                            <Routes />
-                        </Root>
-                    </Router>
-                )}
+                <Router>
+                    <Root>
+                        <Routes />
+                    </Root>
+                </Router>
             </StoreProvider>
         ),
         appContainer

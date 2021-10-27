@@ -1,4 +1,4 @@
-import { For, Show, Component, createSignal } from 'solid-js';
+import { For, Show, Component, createSignal, JSXElement } from 'solid-js';
 import {
     DragDropContext,
     SortableContext,
@@ -10,7 +10,7 @@ import { useOnScreen } from '../lib/hooks';
 import { HTMLElementEvent } from '../../@types/alltypes';
 interface ListProps {
     items: any[];
-    children: (...args: any[]) => Element;
+    children: (data: any) => JSXElement;
     getItemId: (props: any) => number | string;
     onReorderItems: (updatedItems: any[]) => void;
 }
@@ -69,7 +69,7 @@ const SortableItem: Component<ListItemProps> = (props) => {
     );
 };
 
-const DraggableList: Component<ListProps> = (props) => {
+const DraggableList = (props: ListProps) => {
     const getItemIds = (items: unknown[]) => items.map(props.getItemId);
     const [items, setItems] = createSignal(getItemIds(props.items));
     const ids = () => items();

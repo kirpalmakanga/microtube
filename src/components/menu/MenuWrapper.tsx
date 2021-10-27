@@ -1,4 +1,4 @@
-import { Component, Show } from 'solid-js';
+import { JSXElement, Show } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
 
@@ -11,7 +11,7 @@ import { delay } from '../../lib/helpers';
 
 interface Props {
     menuItems: MenuItemData[];
-    children: ((props: { openMenu: MenuOpener }) => Element) & Element;
+    children: (props: { openMenu: MenuOpener }) => JSXElement;
 }
 
 interface State {
@@ -28,7 +28,7 @@ const initialState: State = {
     callbackData: {}
 };
 
-const MenuWrapper: Component<Props> = (props) => {
+const MenuWrapper = (props: Props) => {
     const [state, setState] = createStore(initialState);
 
     const open: MenuOpener = (callbackData: State, menuTitle: string) => {

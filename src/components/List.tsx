@@ -1,4 +1,4 @@
-import { Component, createSignal, onCleanup, onMount, Show } from 'solid-js';
+import { createSignal, JSXElement, onCleanup, onMount, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import { VirtualContainer } from '@minht11/solid-virtual-container';
 import { throttle } from '../lib/helpers';
@@ -10,7 +10,7 @@ interface Props {
     className?: string;
     items: unknown[];
     itemSize?: number | undefined;
-    children: ((props: ListItemProps) => Element) & Element;
+    children: (props: ListItemProps) => JSXElement;
     loadItems: Function;
 }
 
@@ -22,7 +22,7 @@ const Loader = () => (
     </Transition>
 );
 
-const List: Component<Props> = (props) => {
+const List = (props: Props) => {
     const [isLoading, setIsLoading] = createSignal(false);
     let isUnmounting = false;
 

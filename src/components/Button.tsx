@@ -1,4 +1,4 @@
-import { Component } from 'solid-js';
+import { Component, JSXElement, Show } from 'solid-js';
 
 import Icon from './Icon';
 
@@ -11,20 +11,24 @@ export interface ButtonProps {
     type?: ButtonType;
     form?: string;
     onClick?: () => void;
-    children?: Element;
+    children?: JSXElement;
 }
 
 const Button: Component<ButtonProps> = ({
     icon,
     type = 'button',
-    title = '',
+    title,
     children,
     ...props
 }) => (
     <button type={type} {...props}>
-        {icon ? <Icon name={icon} /> : null}
+        <Show when={icon}>
+            <Icon name={icon} />
+        </Show>
 
-        {title ? <span>{title}</span> : null}
+        <Show when={title}>
+            <span>{title}</span>
+        </Show>
 
         {children}
     </button>

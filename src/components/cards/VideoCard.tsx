@@ -1,4 +1,4 @@
-import { Component } from 'solid-js';
+import { Component, Show } from 'solid-js';
 import { Link } from 'solid-app-router';
 
 import { VideoData } from '../../../@types/alltypes';
@@ -46,7 +46,7 @@ const VideoCard: Component<Props> = ({
             <CardContentInner>
                 <CardTitle>{title}</CardTitle>
 
-                {privacyStatus !== 'deleted' ? (
+                <Show when={privacyStatus !== 'deleted'}>
                     <Subtitle className="author">
                         <Link
                             href={`/channel/${channelId}`}
@@ -55,13 +55,13 @@ const VideoCard: Component<Props> = ({
                             {channelTitle}
                         </Link>
                     </Subtitle>
-                ) : null}
+                </Show>
 
-                {publishedAt ? (
+                <Show when={publishedAt}>
                     <Subtitle className="date">
                         {formatDate(publishedAt, 'MMMM do yyyy')}
                     </Subtitle>
-                ) : null}
+                </Show>
             </CardContentInner>
         </CardContent>
 

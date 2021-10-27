@@ -1,4 +1,4 @@
-import { createContext, useContext, createEffect } from 'solid-js';
+import { createContext, useContext, createEffect, Component } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { rootInitialState, RootState } from './state';
 import { saveState, loadState } from '../lib/localStorage';
@@ -7,11 +7,7 @@ import { mergeDeep, pick, omit } from '../lib/helpers';
 const initialState = mergeDeep(rootInitialState(), loadState() || {});
 const StoreContext = createContext();
 
-export const StoreProvider = ({
-    children = () => {}
-}: {
-    children: unknown;
-}) => {
+export const StoreProvider: Component = (props) => {
     const store = createStore<RootState>(initialState as RootState);
 
     createEffect(() => {
@@ -24,7 +20,9 @@ export const StoreProvider = ({
     });
 
     return (
-        <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
+        <StoreContext.Provider value={store}>
+            {props.children}
+        </StoreContext.Provider>
     );
 };
 

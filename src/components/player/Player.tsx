@@ -54,7 +54,7 @@ const Player = () => {
         volume: 100
     });
 
-    const [storeState, { goToNextQueueItem }] = usePlayer();
+    const [storeState, { goToNextQueueItem, clearNewQueueItems }] = usePlayer();
 
     const [, { editPlaylistItem }] = usePlaylistItems();
 
@@ -127,6 +127,8 @@ const Player = () => {
                 ? { isScreenVisible: false }
                 : {})
         });
+
+        if (isVisible) clearNewQueueItems();
     };
 
     const handleYoutubeIframeReady = (playerInstance: YouTubePlayer) => {

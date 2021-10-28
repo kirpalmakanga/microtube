@@ -24,7 +24,7 @@ const Playlists: Component = () => {
 
     const [channel, { getPlaylists }] = useChannel(params.channelId);
 
-    const [{ queuePlaylist, launchPlaylist }] = usePlaylists();
+    const [, { queuePlaylist, launchPlaylist }] = usePlaylists();
 
     const [, { openNotification }] = useNotifications();
     const [, { openMenu }] = useMenu();

@@ -1,17 +1,14 @@
-export type MenuOpener = (
-    callbackData: {
-        title: string;
-        callbackData: object;
-        items: MenuItemData[];
-    },
-    menuTitle: string
-) => void;
-
 export interface MenuItemData {
     title: string;
     icon: string;
     onClick: (data: object) => void;
 }
+
+export type MenuOpener = (data: {
+    title: string;
+    callbackData: object;
+    items: MenuItemData[];
+}) => void;
 
 export interface MenuState {
     items: MenuItemData[];

@@ -10,8 +10,6 @@ export const useMenu = () => {
             return;
         }
 
-        console.log(data);
-
         setState('menu', { isOpen: true, ...data });
     };
 

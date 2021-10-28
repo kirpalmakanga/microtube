@@ -29,9 +29,10 @@ button {
     &:hover {
         background-color: lighten($brand-primary, 5%);
     }
-}
-.button--close {
-    background-color: lighten($brand-primary, 40%);
+
+    &.is--close {
+        background-color: $red;
+    }
 }
 
 .icon-button {

@@ -52,36 +52,28 @@ const Prompt: Component = () => {
                         <footer className="dialog__actions">
                             <Show when={prompt.cancelText}>
                                 <Button
-                                    className="button button--close shadow--2dp"
+                                    className="button is--close shadow--2dp"
                                     onClick={closePrompt}
                                     title={prompt.cancelText}
                                 />
                             </Show>
 
-                            <Switch>
-                                <Match when={isMode('import', 'playlists')}>
-                                    <Button
-                                        className="button shadow--2dp"
-                                        title={prompt.confirmText}
-                                        onClick={closePrompt}
-                                    />
-                                </Match>
-                                <Match when={isMode('import')}>
-                                    <Button
-                                        className="button shadow--2dp"
-                                        title={prompt.confirmText}
-                                        type="submit"
-                                        form="importVideos"
-                                    />
-                                </Match>
-                                <Match when={isMode('default')}>
-                                    <Button
-                                        className="button shadow--2dp"
-                                        title={prompt.confirmText}
-                                        onClick={handleConfirm}
-                                    />
-                                </Match>
-                            </Switch>
+                            <Show when={isMode('import')}>
+                                <Button
+                                    className="button shadow--2dp"
+                                    title={prompt.confirmText}
+                                    type="submit"
+                                    form="importVideos"
+                                />
+                            </Show>
+
+                            <Show when={isMode('default')}>
+                                <Button
+                                    className="button shadow--2dp"
+                                    title={prompt.confirmText}
+                                    onClick={handleConfirm}
+                                />
+                            </Show>
                         </footer>
                     </div>
                 </div>

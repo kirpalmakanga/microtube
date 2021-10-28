@@ -20,8 +20,8 @@ interface Props {
     duration: number;
     onStartSeeking: () => void;
     onEndSeeking: (seekingTime: number) => void;
-    getCurrentTime: () => number | null;
-    getLoadingProgress: () => number | null;
+    getCurrentTime: () => Promise<number | null>;
+    getLoadingProgress: () => Promise<number | null>;
 }
 
 const Info: Component<Props> = (props) => {
@@ -114,8 +114,11 @@ const Info: Component<Props> = (props) => {
 
     onMount(() => {
         const actions: PlayerSyncHandlers = {
-            'seek-time': ({ seekingTime }: GenericObject) =>
-                setState({ seekingTime }),
+            'seek-time': ({ seekingTime }: GenericObject) => {
+                setState({ seekingTime });
+
+                props.onEndSeeking(seekingTime);
+            },
             'update-time': ({ currentTime }: GenericObject) =>
                 setState({ currentTime }),
             'update-loading': ({ loaded }: GenericObject) =>

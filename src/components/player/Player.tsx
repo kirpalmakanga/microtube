@@ -178,9 +178,9 @@ const Player = () => {
             });
     };
 
-    const getCurrentTime = () => {
+    const getCurrentTime = async () => {
         if (youtube) {
-            const currentTime = youtube.getCurrentTime();
+            const currentTime = await youtube.getCurrentTime();
 
             synchronizePlayer({
                 action: 'update-time',
@@ -193,9 +193,9 @@ const Player = () => {
         return null;
     };
 
-    const getLoadingProgress = () => {
+    const getLoadingProgress = async () => {
         if (youtube) {
-            const loaded = youtube?.getVideoLoadedFraction();
+            const loaded = await youtube.getVideoLoadedFraction();
 
             synchronizePlayer({
                 action: 'update-loading',

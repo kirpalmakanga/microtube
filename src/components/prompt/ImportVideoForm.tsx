@@ -1,5 +1,4 @@
-import { Component, createSignal } from 'solid-js';
-import { HTMLElementEvent } from '../../../@types/alltypes';
+import { Component, createSignal, JSX } from 'solid-js';
 import { preventDefault, stopPropagation } from '../../lib/helpers';
 
 interface Props {
@@ -9,9 +8,9 @@ interface Props {
 export const ImportVideoForm: Component<Props> = ({ onSubmit }) => {
     const [text, setState] = createSignal('');
 
-    const handleChange = ({
+    const handleChange: JSX.EventHandler<HTMLInputElement, Event> = ({
         currentTarget: { value }
-    }: HTMLElementEvent<HTMLTextAreaElement>) => setState(value);
+    }) => setState(value);
 
     const handleSubmit = preventDefault(() => onSubmit(text()));
 

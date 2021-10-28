@@ -1,11 +1,10 @@
-import { Component, createEffect, onMount, onCleanup } from 'solid-js';
+import { Component, createEffect, onMount, onCleanup, JSX } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 import {
     PlayerSyncPayload,
     PlayerSyncHandlers,
-    GenericObject,
-    HTMLElementEvent
+    GenericObject
 } from '../../../@types/alltypes';
 
 import InfoTime from './controls/InfoTime';
@@ -85,10 +84,9 @@ const Info: Component<Props> = (props) => {
         props.onEndSeeking(seekingTime);
     };
 
-    const handleSeeking = ({
+    const handleSeeking: JSX.EventHandler<HTMLInputElement, Event> = ({
         currentTarget: { value: seekingTime }
-    }: HTMLElementEvent<HTMLInputElement>) =>
-        setState({ seekingTime: parseInt(seekingTime) });
+    }) => setState({ seekingTime: parseInt(seekingTime) });
 
     const time = () =>
         state.isSeeking ? state.seekingTime : state.currentTime;

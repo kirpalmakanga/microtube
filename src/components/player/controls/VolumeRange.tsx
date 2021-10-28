@@ -1,5 +1,4 @@
-import { Component } from 'solid-js';
-import { HTMLElementEvent } from '../../../../@types/alltypes';
+import { Component, JSX } from 'solid-js';
 
 interface Props {
     value: number;
@@ -7,9 +6,9 @@ interface Props {
 }
 
 const VolumeRange: Component<Props> = (props) => {
-    const handleUpdate = ({
+    const handleUpdate: JSX.EventHandler<HTMLInputElement, Event> = ({
         currentTarget: { value }
-    }: HTMLElementEvent<HTMLInputElement>) => props.onChange(parseInt(value));
+    }) => props.onChange(parseInt(value));
 
     return (
         <div className="player__controls-volume-range">

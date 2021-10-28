@@ -1,4 +1,4 @@
-import { For, Show, Component, createSignal, JSXElement } from 'solid-js';
+import { For, Show, Component, createSignal, JSXElement, JSX } from 'solid-js';
 import {
     DragDropContext,
     SortableContext,
@@ -7,7 +7,6 @@ import {
     closestLayoutCenter
 } from '@thisbeyond/solid-dnd';
 import { useOnScreen } from '../lib/hooks';
-import { HTMLElementEvent } from '../../@types/alltypes';
 interface ListProps {
     items: any[];
     children: (data: any) => JSXElement;
@@ -47,7 +46,7 @@ const SortableItem: Component<ListItemProps> = (props) => {
     const [ref, isVisible]: [(el: HTMLElement) => void, () => boolean] =
         useOnScreen();
 
-    const onMouseUp = (e: HTMLElementEvent<HTMLDivElement>) => {
+    const onMouseUp: JSX.EventHandler<HTMLDivElement, Event> = (e) => {
         // @ts-ignore
         sortable.isActiveDraggable && e.preventDefault();
     };

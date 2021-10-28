@@ -1,5 +1,4 @@
-import { createSignal, onMount, Component } from 'solid-js';
-import { HTMLElementEvent } from '../../@types/alltypes';
+import { createSignal, onMount, Component, JSX } from 'solid-js';
 import { preventDefault, stopPropagation } from '../lib/helpers';
 interface Props {
     query?: string;
@@ -16,9 +15,9 @@ const SearchForm: Component<Props> = ({ query = '', onSubmit }) => {
         inputRef?.focus();
     });
 
-    const handleInput = ({
+    const handleInput: JSX.EventHandler<HTMLInputElement, Event> = ({
         currentTarget: { value }
-    }: HTMLElementEvent<HTMLInputElement>) => setInput(value);
+    }) => setInput(value);
 
     const handleSubmit = preventDefault(() => {
         const newQuery = input().trim();

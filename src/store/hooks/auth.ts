@@ -4,6 +4,7 @@ import * as api from '../../api/youtube';
 import { signIntoDatabase, signOutOfDatabase } from '../../api/database';
 import { useNotifications } from './notifications';
 import { rootInitialState } from '../state';
+import { initialState } from '../state/_user';
 
 export const useAuth = () => {
     const [{ user }, setState] = useStore();
@@ -57,6 +58,8 @@ export const useAuth = () => {
         try {
             await api.signOut();
             await signOutOfDatabase();
+
+            setState('user', initialState());
 
             setState(rootInitialState());
         } catch (error) {

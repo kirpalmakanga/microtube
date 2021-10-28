@@ -69,13 +69,15 @@ const DefaultHeader = () => {
                         </Link>
                     </Show>
 
-                    <Link
-                        className="navigation__link icon-button"
-                        href="/subscriptions"
-                        aria-label="Open subscriptions"
-                    >
-                        <Icon name="users" />
-                    </Link>
+                    <Show when={location.pathname !== '/subscriptions'}>
+                        <Link
+                            className="navigation__link icon-button"
+                            href="/subscriptions"
+                            aria-label="Open subscriptions"
+                        >
+                            <Icon name="users" />
+                        </Link>
+                    </Show>
                 </Show>
 
                 <div className="navigation__menu">

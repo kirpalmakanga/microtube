@@ -5,13 +5,13 @@ import List from '../../components/List';
 import Placeholder from '../../components/Placeholder';
 import VideoCard from '../../components/cards/VideoCard';
 
-import MenuWrapper from '../../components/menu/MenuWrapper';
 import { VideoData } from '../../../@types/alltypes';
 import { useChannel } from '../../store/hooks/channel';
 import { usePlaylistItems } from '../../store/hooks/playlist-items';
 import { usePlayer } from '../../store/hooks/player';
 import { useNotifications } from '../../store/hooks/notifications';
 import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
+import { useMenu } from '../../store/hooks/menu';
 
 const ChannelVideos = () => {
     const params = useParams();
@@ -21,6 +21,7 @@ const ChannelVideos = () => {
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
     const [, { openNotification }] = useNotifications();
+    const [, { openMenu }] = useMenu();
 
     const handleGetChannelVideos = () => getVideos(params.channelId);
 
@@ -29,44 +30,44 @@ const ChannelVideos = () => {
         () =>
             navigate(`/video/${id}`);
 
-    const handleClickMenu = (data: VideoData, callback: Function) => () => {
-        const { title } = data;
+    const handleClickMenu = (callbackData: VideoData) => () => {
+        const { title } = callbackData;
 
-        callback(data, title);
+        openMenu({
+            title,
+            callbackData,
+            items: [
+                {
+                    title: `Add to queue`,
+                    icon: 'circle-add',
+                    onClick: queueItem
+                },
+                {
+                    title: `Save to playlist`,
+                    icon: 'folder-add',
+                    onClick: editPlaylistItem
+                },
+                {
+                    title: 'Share',
+                    icon: 'share',
+                    onClick: ({ id, title }: VideoData) => {
+                        const url = getVideoURL(id);
+
+                        if (isMobile()) {
+                            shareURL({
+                                title,
+                                url
+                            });
+                        } else {
+                            copyText(url);
+
+                            openNotification('Copied link to clipboard.');
+                        }
+                    }
+                }
+            ]
+        });
     };
-
-    const handleSharing = ({ id, title }: VideoData) => {
-        const url = getVideoURL(id);
-
-        if (isMobile()) {
-            shareURL({
-                title,
-                url
-            });
-        } else {
-            copyText(url);
-
-            openNotification('Copied link to clipboard.');
-        }
-    };
-
-    const menuItems = [
-        {
-            title: `Add to queue`,
-            icon: 'circle-add',
-            onClick: queueItem
-        },
-        {
-            title: `Save to playlist`,
-            icon: 'folder-add',
-            onClick: editPlaylistItem
-        },
-        {
-            title: 'Share',
-            icon: 'share',
-            onClick: handleSharing
-        }
-    ];
 
     return (
         <Show
@@ -81,22 +82,18 @@ const ChannelVideos = () => {
                 />
             }
         >
-            <MenuWrapper menuItems={menuItems}>
-                {({ openMenu }) => (
-                    <List
-                        items={channel.videos.items}
-                        loadItems={handleGetChannelVideos}
-                    >
-                        {({ data }) => (
-                            <VideoCard
-                                {...data}
-                                onClick={handleClickCard(data)}
-                                onClickMenu={handleClickMenu(data, openMenu)}
-                            />
-                        )}
-                    </List>
+            <List
+                items={channel.videos.items}
+                loadItems={handleGetChannelVideos}
+            >
+                {({ data }) => (
+                    <VideoCard
+                        {...data}
+                        onClick={handleClickCard(data)}
+                        onClickMenu={handleClickMenu(data)}
+                    />
                 )}
-            </MenuWrapper>
+            </List>
         </Show>
     );
 };

@@ -8,7 +8,6 @@ import { usePlaylists } from '../../store/hooks/playlists';
 import List from '../../components/List';
 import Placeholder from '../../components/Placeholder';
 import PlaylistCard from '../../components/cards/PlaylistCard';
-import MenuWrapper from '../../components/menu/MenuWrapper';
 import {
     copyText,
     getPlaylistURL,
@@ -17,6 +16,7 @@ import {
 } from '../../lib/helpers';
 import { useNotifications } from '../../store/hooks/notifications';
 import { useChannel } from '../../store/hooks/channel';
+import { useMenu } from '../../store/hooks/menu';
 
 const Playlists: Component = () => {
     const params = useParams();
@@ -27,16 +27,37 @@ const Playlists: Component = () => {
     const [{ queuePlaylist, launchPlaylist }] = usePlaylists();
 
     const [, { openNotification }] = useNotifications();
+    const [, { openMenu }] = useMenu();
 
     const handleClickCard =
         ({ id }: PlaylistData) =>
         () =>
             navigate(`/playlist/${id}`);
 
-    const handleClickMenu = (data: PlaylistData, callback: Function) => () => {
-        const { title } = data;
+    const handleClickMenu = (callbackData: PlaylistData) => () => {
+        const { title } = callbackData;
 
-        callback(data, title);
+        openMenu({
+            title,
+            callbackData,
+            items: [
+                {
+                    title: 'Queue playlist',
+                    icon: 'circle-add',
+                    onClick: queuePlaylist
+                },
+                {
+                    title: 'Launch playlist',
+                    icon: 'play',
+                    onClick: launchPlaylist
+                },
+                {
+                    title: 'Share',
+                    icon: 'share',
+                    onClick: handleSharing
+                }
+            ]
+        });
     };
 
     const handleSharing = ({ id, title }: PlaylistData) => {
@@ -54,24 +75,6 @@ const Playlists: Component = () => {
         }
     };
 
-    const menuItems = [
-        {
-            title: 'Queue playlist',
-            icon: 'circle-add',
-            onClick: queuePlaylist
-        },
-        {
-            title: 'Launch playlist',
-            icon: 'play',
-            onClick: launchPlaylist
-        },
-        {
-            title: 'Share',
-            icon: 'share',
-            onClick: handleSharing
-        }
-    ];
-
     return (
         <Show
             when={
@@ -85,22 +88,15 @@ const Playlists: Component = () => {
                 />
             }
         >
-            <MenuWrapper menuItems={menuItems}>
-                {({ openMenu }) => (
-                    <List
-                        items={channel.playlists.items}
-                        loadItems={getPlaylists}
-                    >
-                        {({ data }) => (
-                            <PlaylistCard
-                                {...data}
-                                onClick={handleClickCard(data)}
-                                onClickMenu={handleClickMenu(data, openMenu)}
-                            />
-                        )}
-                    </List>
+            <List items={channel.playlists.items} loadItems={getPlaylists}>
+                {({ data }) => (
+                    <PlaylistCard
+                        {...data}
+                        onClick={handleClickCard(data)}
+                        onClickMenu={handleClickMenu(data)}
+                    />
                 )}
-            </MenuWrapper>
+            </List>
         </Show>
     );
 };

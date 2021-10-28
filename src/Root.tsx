@@ -13,6 +13,7 @@ import Player from './components/player/Player';
 import Prompt from './components/prompt/Prompt';
 import Notifications from './components/Notifications';
 import { useAuth } from './store/hooks/auth';
+import Menu from './components/Menu';
 
 const Root: Component = (props) => {
     const [user, { getUserData }] = useAuth();
@@ -43,6 +44,8 @@ const Root: Component = (props) => {
                     <Player />
 
                     <Prompt />
+
+                    <Menu />
                 </Show>
             </Show>
         </div>

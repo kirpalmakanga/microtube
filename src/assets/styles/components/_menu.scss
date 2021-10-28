@@ -1,5 +1,5 @@
 .menu {
-    position: absolute;
+    position: fixed;
     top: 0;
     bottom: 0;
     left: 0;
@@ -9,6 +9,7 @@
     flex-direction: column;
     justify-content: flex-end;
     cursor: pointer;
+    z-index: 10;
     @include no-highlights;
 
     ul {

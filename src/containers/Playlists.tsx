@@ -8,9 +8,9 @@ import { usePlaylists } from '../store/hooks/playlists';
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 import PlaylistCard from '../components/cards/PlaylistCard';
-import MenuWrapper from '../components/menu/MenuWrapper';
 import { copyText, getPlaylistURL, isMobile, shareURL } from '../lib/helpers';
 import { useNotifications } from '../store/hooks/notifications';
+import { useMenu } from '../store/hooks/menu';
 
 const Playlists: Component = () => {
     const navigate = useNavigate();
@@ -22,54 +22,56 @@ const Playlists: Component = () => {
 
     const [, { openNotification }] = useNotifications();
 
+    const [, { openMenu }] = useMenu();
+
     const handleClickCard =
         ({ id }: PlaylistData) =>
         () =>
             navigate(`/playlist/${id}`);
 
-    const handleClickMenu = (data: PlaylistData, callback: Function) => () => {
-        const { title } = data;
+    const handleClickMenu = (callbackData: PlaylistData) => () => {
+        const { title } = callbackData;
 
-        callback(data, title);
+        openMenu({
+            title,
+            callbackData,
+            items: [
+                {
+                    title: 'Queue playlist',
+                    icon: 'circle-add',
+                    onClick: queuePlaylist
+                },
+                {
+                    title: 'Launch playlist',
+                    icon: 'play',
+                    onClick: launchPlaylist
+                },
+                {
+                    title: 'Remove playlist',
+                    icon: 'delete',
+                    onClick: removePlaylist
+                },
+                {
+                    title: 'Share',
+                    icon: 'share',
+                    onClick: ({ id, title }: PlaylistData) => {
+                        const url = getPlaylistURL(id);
+
+                        if (isMobile()) {
+                            shareURL({
+                                title,
+                                url
+                            });
+                        } else {
+                            copyText(url);
+
+                            openNotification('Copied link to clipboard.');
+                        }
+                    }
+                }
+            ]
+        });
     };
-
-    const handleSharing = ({ id, title }: PlaylistData) => {
-        const url = getPlaylistURL(id);
-
-        if (isMobile()) {
-            shareURL({
-                title,
-                url
-            });
-        } else {
-            copyText(url);
-
-            openNotification('Copied link to clipboard.');
-        }
-    };
-
-    const menuItems = [
-        {
-            title: 'Queue playlist',
-            icon: 'circle-add',
-            onClick: queuePlaylist
-        },
-        {
-            title: 'Launch playlist',
-            icon: 'play',
-            onClick: launchPlaylist
-        },
-        {
-            title: 'Share',
-            icon: 'share',
-            onClick: handleSharing
-        },
-        {
-            title: 'Remove playlist',
-            icon: 'delete',
-            onClick: removePlaylist
-        }
-    ];
 
     return (
         <Show
@@ -81,19 +83,15 @@ const Playlists: Component = () => {
                 />
             }
         >
-            <MenuWrapper menuItems={menuItems}>
-                {({ openMenu }) => (
-                    <List items={playlists.items} loadItems={getPlaylists}>
-                        {({ data }) => (
-                            <PlaylistCard
-                                {...data}
-                                onClick={handleClickCard(data)}
-                                onClickMenu={handleClickMenu(data, openMenu)}
-                            />
-                        )}
-                    </List>
+            <List items={playlists.items} loadItems={getPlaylists}>
+                {({ data }) => (
+                    <PlaylistCard
+                        {...data}
+                        onClick={handleClickCard(data)}
+                        onClickMenu={handleClickMenu(data)}
+                    />
                 )}
-            </MenuWrapper>
+            </List>
         </Show>
     );
 };

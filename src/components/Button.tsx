@@ -16,12 +16,11 @@ export interface ButtonProps {
 
 const Button: Component<ButtonProps> = ({
     icon,
-    type = 'button',
     title,
     children,
     ...props
 }) => (
-    <button type={type} {...props}>
+    <button {...props}>
         <Show when={icon}>
             <Icon name={icon} />
         </Show>

@@ -1,4 +1,4 @@
-import { Component, For, onCleanup, onMount } from 'solid-js';
+import { Component, createSignal, For, onCleanup, onMount } from 'solid-js';
 import { Outlet, NavLink, useParams } from 'solid-app-router';
 
 import { getThumbnails } from '../../lib/helpers';
@@ -25,6 +25,16 @@ const Channel = () => {
     const [channel, { getData, clearData, toggleSubscription }] =
         useChannel(channelId);
 
+    const [isSubscribing, setSubscriptionStatus] = createSignal(false);
+
+    const handleSubscription = async () => {
+        setSubscriptionStatus(true);
+
+        await toggleSubscription();
+
+        setSubscriptionStatus(false);
+    };
+
     onMount(() => getData(channelId));
 
     onCleanup(clearData);
@@ -46,12 +56,17 @@ const Channel = () => {
                         </div>
 
                         <Button
+                            className="button"
+                            disabled={isSubscribing()}
                             title={
-                                channel.subscriptionId
+                                isSubscribing()
+                                    ? ''
+                                    : channel.subscriptionId
                                     ? 'Unsubscribe'
                                     : 'Subscribe'
                             }
-                            onClick={toggleSubscription}
+                            icon={isSubscribing() ? 'loading' : ''}
+                            onClick={handleSubscription}
                         />
                     </div>
                 </div>

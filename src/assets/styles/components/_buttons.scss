@@ -14,14 +14,16 @@ button {
     cursor: pointer;
     font-size: 14px;
     line-height: 0.9em;
-    font-weight: 700;
+    font-weight: bold;
+    font-family: $font-primary;
     border-radius: 2px;
     display: flex;
     align-items: center;
+    justify-content: center;
+    gap: 10px;
     .icon {
-        width: 1.5em;
-        height: 1.5em;
-        margin-right: 10px;
+        width: 14px;
+        height: 14px;
     }
 
     &:hover {

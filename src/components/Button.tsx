@@ -1,4 +1,4 @@
-import { Component, JSXElement, Show } from 'solid-js';
+import { Component, JSXElement, Show, splitProps } from 'solid-js';
 
 import Icon from './Icon';
 
@@ -10,27 +10,31 @@ export interface ButtonProps {
     title?: string;
     type?: ButtonType;
     form?: string;
+    disabled?: boolean;
     onClick?: () => void;
     children?: JSXElement;
 }
 
-const Button: Component<ButtonProps> = ({
-    icon,
-    title,
-    children,
-    ...props
-}) => (
-    <button {...props}>
-        <Show when={icon}>
-            <Icon name={icon} />
-        </Show>
+const Button: Component<ButtonProps> = (props) => {
+    const [localProps, buttonProps] = splitProps(props, [
+        'icon',
+        'title',
+        'children'
+    ]);
 
-        <Show when={title}>
-            <span>{title}</span>
-        </Show>
+    return (
+        <button {...buttonProps}>
+            <Show when={localProps.icon}>
+                <Icon name={localProps.icon || ''} />
+            </Show>
 
-        {children}
-    </button>
-);
+            <Show when={localProps.title}>
+                <span>{localProps.title}</span>
+            </Show>
+
+            {localProps.children}
+        </button>
+    );
+};
 
 export default Button;

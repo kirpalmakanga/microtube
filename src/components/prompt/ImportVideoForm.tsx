@@ -8,7 +8,7 @@ interface Props {
 export const ImportVideoForm: Component<Props> = ({ onSubmit }) => {
     const [text, setState] = createSignal('');
 
-    const handleChange: JSX.EventHandler<HTMLInputElement, Event> = ({
+    const handleChange: JSX.EventHandler<HTMLTextAreaElement, Event> = ({
         currentTarget: { value }
     }) => setState(value);
 

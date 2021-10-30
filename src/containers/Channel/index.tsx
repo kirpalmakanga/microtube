@@ -1,4 +1,4 @@
-import { Component, createSignal, For, onCleanup, onMount } from 'solid-js';
+import { createSignal, For, JSXElement, onCleanup, onMount } from 'solid-js';
 import { Outlet, NavLink, useParams } from 'solid-app-router';
 
 import { getThumbnails } from '../../lib/helpers';
@@ -8,13 +8,13 @@ import Button from '../../components/Button';
 import { useChannel } from '../../store/hooks/channel';
 
 interface TabsProps {
-    children: Element[];
+    children: JSXElement[];
 }
 
-const Tabs: Component<TabsProps> = (props) => (
+const Tabs = (props: TabsProps) => (
     <ul className="tabs">
         <For each={props.children}>
-            {(content: Element) => <li className="tab">{content}</li>}
+            {(child) => <li className="tab">{child}</li>}
         </For>
     </ul>
 );
@@ -75,11 +75,9 @@ const Channel = () => {
                     <NavLink href="videos" replace>
                         Videos
                     </NavLink>
-
                     <NavLink href="playlists" replace>
                         Playlists
                     </NavLink>
-
                     <NavLink href="about" replace>
                         About
                     </NavLink>

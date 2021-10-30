@@ -1,4 +1,9 @@
-import { ThumbnailsData } from '../../@types/alltypes';
+import {
+    ChannelData,
+    PlaylistData,
+    ThumbnailsData,
+    VideoData
+} from '../../@types/alltypes';
 import { parseDuration } from '../lib/helpers';
 
 interface YoutubeVideoData {
@@ -39,7 +44,7 @@ export const parseVideoData = ({
         publishedAt
     },
     status: { privacyStatus = 'deleted' }
-}: YoutubeVideoData) => ({
+}: YoutubeVideoData): VideoData => ({
     id,
     title,
     description,
@@ -56,7 +61,7 @@ export const parsePlaylistData = ({
     contentDetails: { itemCount = 0 },
     snippet: { title, thumbnails },
     status: { privacyStatus }
-}: YoutubePlaylistData) => ({
+}: YoutubePlaylistData): PlaylistData => ({
     id,
     title,
     thumbnails,
@@ -67,7 +72,7 @@ export const parsePlaylistData = ({
 export const parseChannelData = ({
     id,
     snippet: { title, thumbnails }
-}: YoutubeChannelData) => ({
+}: YoutubeChannelData): ChannelData => ({
     id,
     title,
     thumbnails

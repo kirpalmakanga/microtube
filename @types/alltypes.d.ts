@@ -60,6 +60,8 @@ export interface QueueItem {
 
 export interface ChannelData {
     id: string;
+    title: string;
+    thumbnails: ThumbnailsData;
 }
 
 interface PlayerSyncPayload {

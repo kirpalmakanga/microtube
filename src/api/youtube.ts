@@ -114,7 +114,6 @@ const request = async (
 };
 
 /* Videos */
-
 export async function searchVideos({
     query,
     forMine,

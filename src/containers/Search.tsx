@@ -7,10 +7,13 @@ import { useSearch } from '../store/hooks/search';
 import { usePlaylistItems } from '../store/hooks/playlist-items';
 import { usePlayer } from '../store/hooks/player';
 import { useMenu } from '../store/hooks/menu';
+import { useNotifications } from '../store/hooks/notifications';
 
 import List from '../components/List';
 import VideoCard from '../components/cards/VideoCard';
 import Placeholder from '../components/Placeholder';
+import { copyText, getVideoURL, isMobile, shareURL } from '../lib/helpers';
+
 const Search = () => {
     const navigate = useNavigate();
     const params = useParams();
@@ -18,6 +21,7 @@ const Search = () => {
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
     const [, { openMenu }] = useMenu();
+    const [, { openNotification }] = useNotifications();
     const [shouldMountGrid, setShouldMountGrid] = createSignal(true);
     const handleSearchVideos = () => searchVideos(params.query);
     const handleClickCard =
@@ -41,6 +45,24 @@ const Search = () => {
                     title: `Save to playlist`,
                     icon: 'folder-add',
                     onClick: editPlaylistItem
+                },
+                {
+                    title: 'Share',
+                    icon: 'share',
+                    onClick: ({ id, title }: VideoData) => {
+                        const url = getVideoURL(id);
+
+                        if (isMobile()) {
+                            shareURL({
+                                title,
+                                url
+                            });
+                        } else {
+                            copyText(url);
+
+                            openNotification('Copied link to clipboard.');
+                        }
+                    }
                 }
             ]
         });

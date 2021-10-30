@@ -56,11 +56,6 @@ const Playlists: Component = () => {
                     onClick: editPlaylistItem
                 },
                 {
-                    title: 'Remove from playlist',
-                    icon: 'delete',
-                    onClick: removePlaylistItem
-                },
-                {
                     title: 'Share',
                     icon: 'share',
                     onClick: ({ id, title }: PlaylistItemData) => {
@@ -77,6 +72,11 @@ const Playlists: Component = () => {
                             openNotification('Copied link to clipboard.');
                         }
                     }
+                },
+                {
+                    title: 'Remove from playlist',
+                    icon: 'delete',
+                    onClick: removePlaylistItem
                 }
             ]
         });

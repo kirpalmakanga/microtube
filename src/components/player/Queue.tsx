@@ -65,11 +65,6 @@ const Queue: Component<Props> = (props) => {
                     onClick: editPlaylistItem
                 },
                 {
-                    title: 'Remove from queue',
-                    icon: 'delete',
-                    onClick: removeQueueItem
-                },
-                {
                     title: 'Share',
                     icon: 'share',
                     onClick: ({ id, title }: QueueItemData) => {
@@ -86,6 +81,11 @@ const Queue: Component<Props> = (props) => {
                             openNotification('Copied link to clipboard.');
                         }
                     }
+                },
+                {
+                    title: 'Remove from queue',
+                    icon: 'delete',
+                    onClick: removeQueueItem
                 }
             ]
         });

@@ -54,25 +54,23 @@ const Playlists: Component = () => {
                 {
                     title: 'Share',
                     icon: 'share',
-                    onClick: handleSharing
+                    onClick: ({ id, title }: PlaylistData) => {
+                        const url = getPlaylistURL(id);
+
+                        if (isMobile()) {
+                            shareURL({
+                                title,
+                                url
+                            });
+                        } else {
+                            copyText(url);
+
+                            openNotification('Copied link to clipboard.');
+                        }
+                    }
                 }
             ]
         });
-    };
-
-    const handleSharing = ({ id, title }: PlaylistData) => {
-        const url = getPlaylistURL(id);
-
-        if (isMobile()) {
-            shareURL({
-                title,
-                url
-            });
-        } else {
-            copyText(url);
-
-            openNotification('Copied link to clipboard.');
-        }
     };
 
     return (

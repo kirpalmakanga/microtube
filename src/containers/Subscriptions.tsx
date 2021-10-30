@@ -9,9 +9,7 @@ import { useSubscriptions } from '../store/hooks/subscriptions';
 
 const Subscriptions = () => {
     const navigate = useNavigate();
-    const [subscriptions, { getData, clearData }] = useSubscriptions();
-
-    onCleanup(clearData);
+    const [subscriptions, { getData }] = useSubscriptions();
 
     return (
         <Show

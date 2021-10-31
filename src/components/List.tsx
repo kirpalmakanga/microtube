@@ -1,4 +1,11 @@
-import { createSignal, JSXElement, onCleanup, onMount, Show } from 'solid-js';
+import {
+    createMemo,
+    createSignal,
+    JSXElement,
+    onCleanup,
+    onMount,
+    Show
+} from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import { VirtualContainer } from '@minht11/solid-virtual-container';
 import { throttle } from '../lib/helpers';
@@ -49,9 +56,18 @@ const List = (props: Props) => {
         10
     );
 
-    let scrollTarget;
+    const getItemSize = () => props.itemSize || 150;
 
-    onMount(_loadItems);
+    let scrollTarget: HTMLDivElement | undefined = undefined;
+
+    onMount(() => {
+        if (
+            !scrollTarget ||
+            getItemSize() * props.items.length <= scrollTarget.offsetHeight
+        ) {
+            _loadItems();
+        }
+    });
 
     onCleanup(() => (isUnmounting = true));
 
@@ -64,7 +80,7 @@ const List = (props: Props) => {
             >
                 <VirtualContainer
                     items={isLoading() ? [...props.items, null] : props.items}
-                    itemSize={{ height: props.itemSize || 150 }}
+                    itemSize={{ height: getItemSize() }}
                     scrollTarget={scrollTarget}
                 >
                     {(itemProps) => (

@@ -1,4 +1,4 @@
-import { onCleanup, Show } from 'solid-js';
+import { Show } from 'solid-js';
 import { useNavigate } from 'solid-app-router';
 
 import List from '../components/List';

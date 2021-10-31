@@ -13,7 +13,7 @@
         "date-fns": "^2.24.0",
         "firebase": "^9.2.0",
         "socket.io-client": "^4.2.0",
-        "solid-app-router": "^0.1.8",
+        "solid-app-router": "^0.1.11",
         "solid-js": "^1.2.0",
         "solid-transition-group": "^0.0.8",
         "uuid": "^8.3.2",

@@ -1,6 +1,4 @@
 import { onMount, createSignal, Show, Component } from 'solid-js';
-import { Transition } from 'solid-transition-group';
-
 // import { enableImportMethods } from './actions.bak/youtube';
 
 import { preventDefault, isMobile } from './lib/helpers';

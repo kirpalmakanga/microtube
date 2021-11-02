@@ -26,29 +26,31 @@ const Root: Component = (props) => {
     });
 
     return (
-        <div
-            className="layout"
-            classList={{ 'is--mobile': isMobile() }}
-            onContextMenu={__DEV__ ? () => {} : preventDefault()}
-        >
+        <>
             <Sprite />
 
-            <Show when={isAppReady()} fallback={<Loader />}>
-                <Header />
+            <div
+                className="layout"
+                classList={{ 'is--mobile': isMobile() }}
+                onContextMenu={__DEV__ ? () => {} : preventDefault()}
+            >
+                <Show when={isAppReady()} fallback={<Loader />}>
+                    <Header />
 
-                <main className="layout__content">{props.children}</main>
+                    <main className="layout__content">{props.children}</main>
 
-                <Notifications />
+                    <Notifications />
 
-                <Show when={user.isSignedIn}>
-                    <Player />
+                    <Show when={user.isSignedIn}>
+                        <Player />
 
-                    <Prompt />
+                        <Prompt />
 
-                    <Menu />
+                        <Menu />
+                    </Show>
                 </Show>
-            </Show>
-        </div>
+            </div>
+        </>
     );
 };
 

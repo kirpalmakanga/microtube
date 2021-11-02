@@ -11,7 +11,7 @@ const DevicesSelector: Component<Props> = (props) => {
         props.onClickItem(deviceId);
 
     return (
-        <div className="player__controls-devices">
+        <div className="player__controls-devices shadow--2dp">
             <ul className="player__controls-devices-list">
                 <li
                     className="device"

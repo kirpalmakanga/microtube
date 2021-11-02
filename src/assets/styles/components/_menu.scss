@@ -1,27 +1,28 @@
 .menu {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba($brand-primary, 0.5);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     cursor: pointer;
-    z-index: 10;
+    height: 0;
+    z-index: 2;
     @include no-highlights;
 
-    ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        width: 100%;
+    &__overlay {
+        background-color: rgba($brand-primary, 0.5);
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
+    }
 
-        li {
-            display: flex;
-            border-top: 2px solid lighten($brand-primary, 20%);
-        }
+    &__container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 10;
     }
 
     &__header {
@@ -35,6 +36,18 @@
 
         @media screen and (min-width: 480px) {
             font-size: 1rem;
+        }
+    }
+
+    &__items {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+
+        li {
+            display: flex;
+            border-top: 2px solid lighten($brand-primary, 20%);
         }
     }
 

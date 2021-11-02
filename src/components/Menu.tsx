@@ -9,9 +9,15 @@ const Menu = () => {
     const [menu, { closeMenu }] = useMenu();
 
     return (
-        <Transition name="fade">
-            <Show when={menu.isOpen}>
-                <div className="menu" onClick={closeMenu}>
+        <>
+            <Transition name="fade">
+                <Show when={menu.isOpen}>
+                    <div className="menu__overlay" onClick={closeMenu}></div>
+                </Show>
+            </Transition>
+
+            <Transition name="slide-up">
+                <Show when={menu.isOpen}>
                     <div className="menu__container  shadow--2dp">
                         <Show when={menu.title}>
                             <div
@@ -44,9 +50,9 @@ const Menu = () => {
                             </For>
                         </ul>
                     </div>
-                </div>
-            </Show>
-        </Transition>
+                </Show>
+            </Transition>
+        </>
     );
 };
 

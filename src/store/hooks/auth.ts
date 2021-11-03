@@ -1,10 +1,10 @@
+import { batch } from 'solid-js';
 import { useStore } from '..';
 
 import * as api from '../../api/youtube';
 import { signIntoDatabase, signOutOfDatabase } from '../../api/database';
 import { useNotifications } from './notifications';
 import { rootInitialState } from '../state';
-import { initialState } from '../state/_user';
 
 export const useAuth = () => {
     const [{ user }, setState] = useStore();
@@ -35,11 +35,10 @@ export const useAuth = () => {
 
     const signIn = async () => {
         try {
+            await api.signIn();
             setState('user', {
                 isSigningIn: true
             });
-
-            await api.signIn();
             await getUserData();
         } catch (error) {
             if (error !== 'popup_closed_by_user') {
@@ -59,9 +58,9 @@ export const useAuth = () => {
             await api.signOut();
             await signOutOfDatabase();
 
-            setState('user', initialState());
-
-            setState(rootInitialState());
+            for (const [key, state] of Object.entries(rootInitialState())) {
+                setState(key, state);
+            }
         } catch (error) {
             console.error(error);
         }

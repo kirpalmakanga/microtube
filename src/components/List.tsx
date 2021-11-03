@@ -73,6 +73,7 @@ const List = (props: Props) => {
                     items={isLoading() ? [...props.items, null] : props.items}
                     itemSize={{ height: getItemSize() }}
                     scrollTarget={scrollTarget}
+                    overscan={5}
                 >
                     {(itemProps) => (
                         <div
@@ -80,16 +81,14 @@ const List = (props: Props) => {
                             style={itemProps.style}
                             role="listitem"
                         >
-                            <Transition name="fade">
-                                <Show
-                                    when={itemProps.index < props.items.length}
-                                    fallback={<Loader />}
-                                >
-                                    {props.children({
-                                        data: itemProps.item
-                                    })}
-                                </Show>
-                            </Transition>
+                            <Show
+                                when={itemProps.index < props.items.length}
+                                fallback={<Loader />}
+                            >
+                                {props.children({
+                                    data: itemProps.item
+                                })}
+                            </Show>
                         </div>
                     )}
                 </VirtualContainer>

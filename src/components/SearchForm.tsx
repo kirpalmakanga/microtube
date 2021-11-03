@@ -5,15 +5,11 @@ interface Props {
     onSubmit: (query: string) => void;
 }
 
-const SearchForm: Component<Props> = ({ query = '', onSubmit }) => {
-    const [input, setInput] = createSignal(query);
-    let inputRef: HTMLInputElement;
+const SearchForm: Component<Props> = (props) => {
+    const [input, setInput] = createSignal(props.query || '');
+    let inputRef: HTMLDivElement | undefined = undefined;
 
-    onMount(() => {
-        setInput(query);
-
-        inputRef?.focus();
-    });
+    onMount(() => inputRef?.focus());
 
     const handleInput: JSX.EventHandler<HTMLInputElement, Event> = ({
         currentTarget: { value }
@@ -22,9 +18,7 @@ const SearchForm: Component<Props> = ({ query = '', onSubmit }) => {
     const handleSubmit = preventDefault(() => {
         const newQuery = input().trim();
 
-        if (newQuery && newQuery !== query) {
-            onSubmit(newQuery);
-        }
+        if (newQuery && newQuery !== props.query) props.onSubmit(newQuery);
     });
 
     return (
@@ -35,6 +29,7 @@ const SearchForm: Component<Props> = ({ query = '', onSubmit }) => {
                 </label>
 
                 <input
+                    ref={inputRef}
                     aria-label="Search"
                     value={input()}
                     name="search"

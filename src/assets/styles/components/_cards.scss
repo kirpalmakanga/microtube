@@ -1,5 +1,4 @@
 .card {
-    @include transition();
     display: flex;
     background-color: lighten($brand-primary, 20%);
     width: 100%;
@@ -53,7 +52,7 @@
         text-decoration: none;
         overflow: hidden;
         padding: 16px;
-        width: 100%;
+        flex: 1;
         cursor: pointer;
     }
 
@@ -74,7 +73,6 @@
         overflow: hidden;
         letter-spacing: 0.1em;
         font-size: 0.9rem;
-        line-height: 1em;
         margin-top: 0;
         margin-bottom: 10px;
         @media screen and (min-width: 480px) {
@@ -92,11 +90,9 @@
 
         &.author {
             font-size: 0.9rem;
-            line-height: 10px;
             opacity: 0.9;
             @media screen and (min-width: 480px) {
                 font-size: 1rem;
-                line-height: 15px;
             }
 
             a {

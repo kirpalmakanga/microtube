@@ -1,14 +1,9 @@
 import { Component } from 'solid-js';
-import { getThumbnails } from '../../lib/helpers';
 
-import CardContainer from './CardContainer';
-import CardContent from './CardContent';
-import CardContentInner from './CardContentInner';
-import CardThumbnail from './CardThumbnail';
-import CardButtons from './CardButtons';
-import Button from './CardButton';
-import CardTitle from './CardTitle';
+import Button from '../Button';
+import { getThumbnails } from '../../lib/helpers';
 import { ThumbnailsData } from '../../../@types/alltypes';
+import Img from '../Img';
 
 interface Props {
     title: string;
@@ -19,25 +14,34 @@ interface Props {
 }
 
 const PlaylistCard: Component<Props> = (props) => (
-    <CardContainer onContextMenu={props.onClickMenu}>
-        <CardContent onClick={props.onClick}>
-            <CardThumbnail
-                src={getThumbnails(props.thumbnails, 'medium')}
-                altText={props.title}
-                badgeText={`${props.itemCount} video${
-                    props.itemCount !== 1 ? 's' : ''
-                }`}
+    <div className="card" onContextMenu={props.onClickMenu}>
+        <div className="card__content" onClick={props.onClick}>
+            <div className="card__thumbnail">
+                <Img
+                    src={getThumbnails(props.thumbnails, 'medium')}
+                    alt={props.title}
+                    background
+                />
+
+                <span className="card__thumbnail-badge">
+                    {`${props.itemCount} video${
+                        props.itemCount !== 1 ? 's' : ''
+                    }`}
+                </span>
+            </div>
+
+            <div className="card__text">
+                <h2 className="card__title">{props.title}</h2>
+            </div>
+        </div>
+        <div className="card__buttons">
+            <Button
+                className="card__button icon-button"
+                icon="more"
+                onClick={props.onClickMenu}
             />
-
-            <CardContentInner>
-                <CardTitle>{props.title}</CardTitle>
-            </CardContentInner>
-        </CardContent>
-
-        <CardButtons>
-            <Button icon="more" onClick={props.onClickMenu} />
-        </CardButtons>
-    </CardContainer>
+        </div>
+    </div>
 );
 
 export default PlaylistCard;

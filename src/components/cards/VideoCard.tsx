@@ -10,69 +10,61 @@ import {
     stopPropagation
 } from '../../lib/helpers';
 
-import CardContainer from './CardContainer';
-import CardContent from './CardContent';
-import CardContentInner from './CardContentInner';
-import CardThumbnail from './CardThumbnail';
-import CardButtons from './CardButtons';
-import Button from './CardButton';
-import CardTitle from './CardTitle';
-import Subtitle from './CardSubtitle';
+import Img from '../Img';
+import Button from '../Button';
 
 interface Props extends VideoData {
     onClick: () => void;
     onClickMenu: () => void;
 }
 
-const VideoCard: Component<Props> = ({
-    title,
-    thumbnails,
-    publishedAt,
-    privacyStatus,
-    duration,
-    channelId,
-    channelTitle,
-    onClick,
-    onClickMenu
-}) => (
-    <CardContainer onContextMenu={onClickMenu}>
-        <CardContent onClick={onClick}>
-            <CardThumbnail
-                src={getThumbnails(thumbnails, 'medium')}
-                altText={title}
-                badgeText={duration ? formatTime(duration) : null}
-            />
+const VideoCard: Component<Props> = (props) => (
+    <div className="card" onContextMenu={props.onClickMenu}>
+        <div className="card__content" onClick={props.onClick}>
+            <div className="card__thumbnail">
+                <Img
+                    src={getThumbnails(props.thumbnails, 'medium')}
+                    alt={props.title}
+                    background
+                />
 
-            <CardContentInner>
-                <CardTitle>{title}</CardTitle>
+                <Show when={props.duration}>
+                    <span className="card__thumbnail-badge">
+                        {formatTime(props.duration)}
+                    </span>
+                </Show>
+            </div>
 
-                <Show when={privacyStatus !== 'deleted'}>
-                    <Subtitle className="author">
+            <div className="card__text">
+                <h2 className="card__title">{props.title}</h2>
+
+                <Show when={props.privacyStatus !== 'deleted'}>
+                    <h3 className="card__subtitle author">
                         <Link
-                            href={`/channel/${channelId}`}
+                            href={`/channel/${props.channelId}`}
                             onClick={stopPropagation()}
                         >
-                            {channelTitle}
+                            {props.channelTitle}
                         </Link>
-                    </Subtitle>
+                    </h3>
                 </Show>
 
-                <Show when={publishedAt}>
-                    <Subtitle className="date">
-                        {formatDate(publishedAt, 'MMMM do yyyy')}
-                    </Subtitle>
+                <Show when={props.publishedAt}>
+                    <h3 className="card__subtitle date">
+                        {formatDate(props.publishedAt, 'MMMM do yyyy')}
+                    </h3>
                 </Show>
-            </CardContentInner>
-        </CardContent>
+            </div>
+        </div>
 
-        <CardButtons>
+        <div className="card__buttons">
             <Button
-                aria-label="Open video menu"
+                className="card__button icon-button"
                 icon="more"
-                onClick={onClickMenu}
+                onClick={props.onClickMenu}
             />
-        </CardButtons>
-    </CardContainer>
+        </div>
+    </div>
 );
 
 export default VideoCard;

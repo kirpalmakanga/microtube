@@ -3,12 +3,7 @@ import { Component } from 'solid-js';
 import { ThumbnailsData } from '../../../@types/alltypes';
 
 import { getThumbnails } from '../../lib/helpers';
-
-import CardContainer from './CardContainer';
-import CardContent from './CardContent';
-import CardContentInner from './CardContentInner';
-import CardThumbnail from './CardThumbnail';
-import CardTitle from './CardTitle';
+import Img from '../Img';
 
 interface Props {
     title: string;
@@ -18,21 +13,27 @@ interface Props {
 }
 
 const SubscriptionCard: Component<Props> = (props) => (
-    <CardContainer>
-        <CardContent onClick={props.onClick}>
-            <CardThumbnail
-                src={getThumbnails(props.thumbnails, 'medium')}
-                altText={props.title}
-                badgeText={`${props.totalItemCount} video${
-                    props.totalItemCount > 1 ? 's' : ''
-                }`}
-            />
+    <div className="card">
+        <div className="card__content" onClick={props.onClick}>
+            <div className="card__thumbnail">
+                <Img
+                    src={getThumbnails(props.thumbnails, 'medium')}
+                    alt={props.title}
+                    background
+                />
 
-            <CardContentInner>
-                <CardTitle>{props.title}</CardTitle>
-            </CardContentInner>
-        </CardContent>
-    </CardContainer>
+                <span className="card__thumbnail-badge">
+                    {`${props.totalItemCount} video${
+                        props.totalItemCount > 1 ? 's' : ''
+                    }`}
+                </span>
+            </div>
+
+            <div className="card__text">
+                <h2 className="card__title">{props.title}</h2>
+            </div>
+        </div>
+    </div>
 );
 
 export default SubscriptionCard;

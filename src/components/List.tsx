@@ -1,11 +1,4 @@
-import {
-    createMemo,
-    createSignal,
-    JSXElement,
-    onCleanup,
-    onMount,
-    Show
-} from 'solid-js';
+import { createSignal, JSXElement, onCleanup, onMount, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import { VirtualContainer } from '@minht11/solid-virtual-container';
 import { throttle } from '../lib/helpers';
@@ -22,11 +15,9 @@ interface Props {
 }
 
 const Loader = () => (
-    <Transition name="fade">
-        <div className="list__loading">
-            <Icon name="loading" />
-        </div>
-    </Transition>
+    <div className="list__loading">
+        <Icon name="loading" />
+    </div>
 );
 
 const List = (props: Props) => {
@@ -89,14 +80,16 @@ const List = (props: Props) => {
                             style={itemProps.style}
                             role="listitem"
                         >
-                            <Show
-                                when={itemProps.index < props.items.length}
-                                fallback={<Loader />}
-                            >
-                                {props.children({
-                                    data: itemProps.item
-                                })}
-                            </Show>
+                            <Transition name="fade">
+                                <Show
+                                    when={itemProps.index < props.items.length}
+                                    fallback={<Loader />}
+                                >
+                                    {props.children({
+                                        data: itemProps.item
+                                    })}
+                                </Show>
+                            </Transition>
                         </div>
                     )}
                 </VirtualContainer>

@@ -75,13 +75,16 @@ const Search = () => {
                 (): number => search.forMine
             ],
             (input, previousInput) => {
-                const [previousQuery] = previousInput || [];
-                const [query] = input;
+                const [previousQuery, previousForMine] = previousInput || [];
+                const [query, forMine] = input;
 
-                if (query && query !== previousQuery) {
+                if (
+                    query &&
+                    (query !== previousQuery || forMine !== previousForMine)
+                ) {
                     setShouldMountGrid(false);
                     clearSearch();
-                    setTimeout(() => setShouldMountGrid(true));
+                    requestAnimationFrame(() => setShouldMountGrid(true));
                 }
                 return input;
             },

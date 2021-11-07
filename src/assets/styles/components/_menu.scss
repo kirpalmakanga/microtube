@@ -7,22 +7,20 @@
     z-index: 2;
     @include no-highlights;
 
+    &__container,
     &__overlay {
-        background-color: rgba($brand-primary, 0.5);
         position: fixed;
-        top: 0;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 10;
     }
 
-    &__container {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 10;
+    &__overlay {
+        top: 0;
+        background-color: rgba($brand-primary, 0.5);
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
     }
 
     &__header {

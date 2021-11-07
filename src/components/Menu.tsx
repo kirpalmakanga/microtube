@@ -35,9 +35,10 @@ const Menu = () => {
                                         <button
                                             className="menu__item"
                                             type="button"
-                                            onClick={() =>
-                                                onClick(menu.callbackData)
-                                            }
+                                            onClick={() => {
+                                                closeMenu();
+                                                onClick(menu.callbackData);
+                                            }}
                                         >
                                             <Show when={icon}>
                                                 <Icon name={icon} />

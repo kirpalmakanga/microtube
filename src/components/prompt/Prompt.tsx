@@ -22,9 +22,18 @@ const Prompt: Component = () => {
     };
 
     return (
-        <Transition name="fade">
-            <Show when={prompt.isVisible}>
-                <div className="dialog__overlay" onClick={closePrompt}>
+        <>
+            <Transition name="fade">
+                <Show when={prompt.isVisible}>
+                    <div
+                        className="dialog__overlay"
+                        onClick={closePrompt}
+                    ></div>
+                </Show>
+            </Transition>
+
+            <Transition name="slide-up">
+                <Show when={prompt.isVisible}>
                     <div
                         className="dialog shadow--2dp"
                         onClick={stopPropagation()}
@@ -76,9 +85,9 @@ const Prompt: Component = () => {
                             </Show>
                         </footer>
                     </div>
-                </div>
-            </Show>
-        </Transition>
+                </Show>
+            </Transition>
+        </>
     );
 };
 

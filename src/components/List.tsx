@@ -1,5 +1,4 @@
 import { createSignal, JSXElement, onCleanup, onMount, Show } from 'solid-js';
-import { Transition } from 'solid-transition-group';
 import { VirtualContainer } from '@minht11/solid-virtual-container';
 import { throttle } from '../lib/helpers';
 import Icon from './Icon';

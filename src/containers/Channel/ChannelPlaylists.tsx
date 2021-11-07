@@ -1,22 +1,19 @@
-import { Component, Show } from 'solid-js';
 import { useNavigate, useParams } from 'solid-app-router';
-
+import { Component, Show } from 'solid-js';
 import { PlaylistData } from '../../../@types/alltypes';
-
-import { usePlaylists } from '../../store/hooks/playlists';
-
+import PlaylistCard from '../../components/cards/PlaylistCard';
 import List from '../../components/List';
 import Placeholder from '../../components/Placeholder';
-import PlaylistCard from '../../components/cards/PlaylistCard';
 import {
     copyText,
     getPlaylistURL,
     isMobile,
     shareURL
 } from '../../lib/helpers';
-import { useNotifications } from '../../store/hooks/notifications';
 import { useChannel } from '../../store/hooks/channel';
 import { useMenu } from '../../store/hooks/menu';
+import { useNotifications } from '../../store/hooks/notifications';
+import { usePlaylists } from '../../store/hooks/playlists';
 
 const Playlists: Component = () => {
     const params = useParams();

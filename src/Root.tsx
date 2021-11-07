@@ -1,17 +1,15 @@
-import { onMount, createSignal, Show, Component } from 'solid-js';
-// import { enableImportMethods } from './actions.bak/youtube';
-
-import { preventDefault, isMobile } from './lib/helpers';
-import { __DEV__ } from './config/app';
-
-import Header from './layout/Header';
-import Sprite from './components/Sprite';
+import { Component, createSignal, onMount, Show } from 'solid-js';
 import Loader from './components/Loader';
+import Menu from './components/Menu';
+import Notifications from './components/Notifications';
 import Player from './components/player/Player';
 import Prompt from './components/prompt/Prompt';
-import Notifications from './components/Notifications';
+import Sprite from './components/Sprite';
+import { __DEV__ } from './config/app';
+import Header from './layout/Header';
+// import { enableImportMethods } from './actions.bak/youtube';
+import { isMobile, preventDefault } from './lib/helpers';
 import { useAuth } from './store/hooks/auth';
-import Menu from './components/Menu';
 
 const Root: Component = (props) => {
     const [user, { getUserData }] = useAuth();

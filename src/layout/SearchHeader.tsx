@@ -1,12 +1,10 @@
 import { Link, useNavigate, useParams } from 'solid-app-router';
-
+import DropDown from '../components/DropDown';
+import Icon from '../components/Icon';
+import Title from '../components/meta/Title';
+import SearchForm from '../components/SearchForm';
 import useAppTitle from '../store/hooks/app-title';
 import { useSearch } from '../store/hooks/search';
-
-import SearchForm from '../components/SearchForm';
-import Icon from '../components/Icon';
-import DropDown from '../components/DropDown';
-import Title from '../components/meta/Title';
 
 const SearchHeader = () => {
     const navigate = useNavigate();

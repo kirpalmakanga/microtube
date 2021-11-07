@@ -1,6 +1,5 @@
-import { onMount, onCleanup, Component } from 'solid-js';
-
 import { useParams } from 'solid-app-router';
+import { Component, onCleanup, onMount } from 'solid-js';
 import { usePlayer } from '../store/hooks/player';
 
 const Video: Component = () => {

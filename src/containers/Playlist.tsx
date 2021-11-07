@@ -1,16 +1,14 @@
-import { Component, onCleanup, onMount, Show } from 'solid-js';
 import { useNavigate, useParams } from 'solid-app-router';
-
+import { Component, onCleanup, onMount, Show } from 'solid-js';
+import { PlaylistItemData } from '../../@types/alltypes';
+import VideoCard from '../components/cards/VideoCard';
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
-import VideoCard from '../components/cards/VideoCard';
-import MenuWrapper from '../components/Menu';
-import { PlaylistItemData } from '../../@types/alltypes';
 import { copyText, getVideoURL, isMobile, shareURL } from '../lib/helpers';
-import { useNotifications } from '../store/hooks/notifications';
-import { usePlaylistItems } from '../store/hooks/playlist-items';
-import { usePlayer } from '../store/hooks/player';
 import { useMenu } from '../store/hooks/menu';
+import { useNotifications } from '../store/hooks/notifications';
+import { usePlayer } from '../store/hooks/player';
+import { usePlaylistItems } from '../store/hooks/playlist-items';
 
 const Playlists: Component = () => {
     const params = useParams();

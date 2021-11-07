@@ -1,8 +1,7 @@
-import { createMemo, createSignal, For, Show, Component } from 'solid-js';
+import { Component, createMemo, createSignal, For, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
+import { preventDefault, stopPropagation } from '../lib/helpers';
 import Icon from './Icon';
-
-import { stopPropagation, preventDefault } from '../lib/helpers';
 
 interface OptionsData {
     label: string;

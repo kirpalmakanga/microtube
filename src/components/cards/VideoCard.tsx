@@ -1,17 +1,14 @@
-import { Component, Show } from 'solid-js';
 import { Link } from 'solid-app-router';
-
+import { Component, Show } from 'solid-js';
 import { VideoData } from '../../../@types/alltypes';
-
 import {
     formatDate,
     formatTime,
     getThumbnails,
     stopPropagation
 } from '../../lib/helpers';
-
-import Img from '../Img';
 import Button from '../Button';
+import Img from '../Img';
 
 interface Props extends VideoData {
     onClick: () => void;

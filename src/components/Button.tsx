@@ -1,5 +1,4 @@
 import { Component, JSXElement, Show, splitProps } from 'solid-js';
-
 import Icon from './Icon';
 
 type ButtonType = 'button' | 'submit' | 'reset' | undefined;

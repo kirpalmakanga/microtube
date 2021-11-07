@@ -1,9 +1,8 @@
-import { lazy, Component, Show } from 'solid-js';
-import { Navigate, Routes, Route, Outlet } from 'solid-app-router';
-
+import { Navigate, Outlet, Route, Routes } from 'solid-app-router';
+import { Component, lazy, Show } from 'solid-js';
+import Loader from './components/Loader';
 import Login from './containers/Login';
 import NotFound from './containers/NotFound';
-import Loader from './components/Loader';
 import { useStore } from './store';
 
 const Protected = () => {

@@ -1,8 +1,8 @@
-import { onMount, onCleanup, Component, createEffect } from 'solid-js';
-import youTubePlayer from 'youtube-player';
-import type { YouTubePlayer, Options } from 'youtube-player/dist/types';
-import EVENT_NAMES, { EventType } from 'youtube-player/dist/eventNames';
 import { isEqual } from 'lodash';
+import { Component, createEffect, onCleanup, onMount } from 'solid-js';
+import youTubePlayer from 'youtube-player';
+import EVENT_NAMES, { EventType } from 'youtube-player/dist/eventNames';
+import type { Options, YouTubePlayer } from 'youtube-player/dist/types';
 
 interface Props {
     id?: string;

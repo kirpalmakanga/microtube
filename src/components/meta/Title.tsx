@@ -1,4 +1,4 @@
-import { Component, createEffect, onCleanup, onMount } from 'solid-js';
+import { Component, createEffect } from 'solid-js';
 
 interface Props {
     children: string;

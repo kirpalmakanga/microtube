@@ -1,7 +1,7 @@
 import { Component } from 'solid-js';
+import { formatTime, preventDefault, stopPropagation } from '../../lib/helpers';
 import Icon from '../Icon';
 
-import { formatTime, preventDefault, stopPropagation } from '../../lib/helpers';
 interface Props {
     title: string;
     duration: number;

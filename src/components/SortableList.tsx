@@ -1,11 +1,11 @@
-import { For, Show, Component, createSignal, JSXElement, JSX } from 'solid-js';
 import {
-    DragDropContext,
-    SortableContext,
-    DragDropSensors,
+    closestLayoutCenter,
     createSortable,
-    closestLayoutCenter
+    DragDropContext,
+    DragDropSensors,
+    SortableContext
 } from '@thisbeyond/solid-dnd';
+import { Component, createSignal, For, JSX, JSXElement, Show } from 'solid-js';
 import { useOnScreen } from '../lib/hooks';
 interface ListProps {
     items: any[];

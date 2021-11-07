@@ -1,10 +1,8 @@
+import { NavLink, Outlet, useParams } from 'solid-app-router';
 import { createSignal, For, JSXElement, onCleanup, onMount } from 'solid-js';
-import { Outlet, NavLink, useParams } from 'solid-app-router';
-
-import { getThumbnails } from '../../lib/helpers';
-
-import Img from '../../components/Img';
 import Button from '../../components/Button';
+import Img from '../../components/Img';
+import { getThumbnails } from '../../lib/helpers';
 import { useChannel } from '../../store/hooks/channel';
 
 interface TabsProps {

@@ -1,16 +1,14 @@
-import { Component, createEffect, onMount, onCleanup, JSX } from 'solid-js';
+import { Component, createEffect, JSX, onCleanup, onMount } from 'solid-js';
 import { createStore } from 'solid-js/store';
-
 import {
-    PlayerSyncPayload,
+    GenericObject,
     PlayerSyncHandlers,
-    GenericObject
+    PlayerSyncPayload
 } from '../../../@types/alltypes';
-
-import InfoTime from './controls/InfoTime';
-import InfoProgress from './controls/InfoProgress';
 import { preventDefault, setImmediateInterval } from '../../lib/helpers';
-import { subscribe, emit } from '../../lib/socket';
+import { emit, subscribe } from '../../lib/socket';
+import InfoProgress from './controls/InfoProgress';
+import InfoTime from './controls/InfoTime';
 
 interface Props {
     isWatchingDisabled: boolean;

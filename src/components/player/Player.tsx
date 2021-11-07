@@ -1,29 +1,24 @@
 import { createEffect, onCleanup, onMount, Show } from 'solid-js';
-import {
-    GenericObject,
-    PlayerSyncPayload,
-    PlayerSyncHandlers,
-    HTMLElementWheelEvent
-} from '../../../@types/alltypes';
-import { YouTubePlayer } from 'youtube-player/dist/types';
-
-import { usePlayer } from '../../store/hooks/player';
-
-import { useFullscreen, useKey } from '../../lib/hooks';
-import { isMobile } from '../../lib/helpers';
-
-import Queue from './Queue';
-import Screen from './Screen';
-
-import Button from './controls/Button';
-import VolumeRange from './controls/VolumeRange';
-import DevicesSelector from './controls/DevicesSelector';
-
-import Info from './Info';
-import { usePlaylistItems } from '../../store/hooks/playlist-items';
-import { useDevices } from '../../store/hooks/devices';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
+import { YouTubePlayer } from 'youtube-player/dist/types';
+import {
+    GenericObject,
+    HTMLElementWheelEvent,
+    PlayerSyncHandlers,
+    PlayerSyncPayload
+} from '../../../@types/alltypes';
+import { isMobile } from '../../lib/helpers';
+import { useFullscreen, useKey } from '../../lib/hooks';
+import { useDevices } from '../../store/hooks/devices';
+import { usePlayer } from '../../store/hooks/player';
+import { usePlaylistItems } from '../../store/hooks/playlist-items';
+import Button from './controls/Button';
+import DevicesSelector from './controls/DevicesSelector';
+import VolumeRange from './controls/VolumeRange';
+import Info from './Info';
+import Queue from './Queue';
+import Screen from './Screen';
 
 const UNSTARTED = -1;
 

@@ -1,19 +1,14 @@
 import { Component, onCleanup, onMount, Show } from 'solid-js';
-
-import MenuWrapper from '../Menu';
-
-import QueueHeader from './QueueHeader';
-import QueueItem from './QueueItem';
-
-import SortableList from '../SortableList';
-import Placeholder from '../Placeholder';
-
+import { Transition } from 'solid-transition-group';
+import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
+import { useMenu } from '../../store/hooks/menu';
+import { useNotifications } from '../../store/hooks/notifications';
 import { usePlayer } from '../../store/hooks/player';
 import { usePlaylistItems } from '../../store/hooks/playlist-items';
-import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
-import { useNotifications } from '../../store/hooks/notifications';
-import { Transition } from 'solid-transition-group';
-import { useMenu } from '../../store/hooks/menu';
+import Placeholder from '../Placeholder';
+import SortableList from '../SortableList';
+import QueueHeader from './QueueHeader';
+import QueueItem from './QueueItem';
 
 interface Props {
     isVisible: boolean;

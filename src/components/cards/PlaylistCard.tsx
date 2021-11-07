@@ -1,8 +1,7 @@
 import { Component } from 'solid-js';
-
-import Button from '../Button';
-import { getThumbnails } from '../../lib/helpers';
 import { ThumbnailsData } from '../../../@types/alltypes';
+import { getThumbnails } from '../../lib/helpers';
+import Button from '../Button';
 import Img from '../Img';
 
 interface Props {

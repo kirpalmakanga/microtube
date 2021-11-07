@@ -1,5 +1,4 @@
 import { useStore } from '../../store';
-
 import Button from '../Button';
 
 const Login = () => {

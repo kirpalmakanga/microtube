@@ -1,7 +1,5 @@
 import { Component } from 'solid-js';
-
 import { ThumbnailsData } from '../../../@types/alltypes';
-
 import { getThumbnails } from '../../lib/helpers';
 import Img from '../Img';
 

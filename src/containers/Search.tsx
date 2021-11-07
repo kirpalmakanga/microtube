@@ -1,18 +1,15 @@
-import { Show, createEffect, createSignal, on, onCleanup } from 'solid-js';
-import { useParams, useNavigate } from 'solid-app-router';
-
+import { useNavigate, useParams } from 'solid-app-router';
+import { createEffect, createSignal, on, onCleanup, Show } from 'solid-js';
 import { VideoData } from '../../@types/alltypes';
-
-import { useSearch } from '../store/hooks/search';
-import { usePlaylistItems } from '../store/hooks/playlist-items';
-import { usePlayer } from '../store/hooks/player';
-import { useMenu } from '../store/hooks/menu';
-import { useNotifications } from '../store/hooks/notifications';
-
-import List from '../components/List';
 import VideoCard from '../components/cards/VideoCard';
+import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 import { copyText, getVideoURL, isMobile, shareURL } from '../lib/helpers';
+import { useMenu } from '../store/hooks/menu';
+import { useNotifications } from '../store/hooks/notifications';
+import { usePlayer } from '../store/hooks/player';
+import { usePlaylistItems } from '../store/hooks/playlist-items';
+import { useSearch } from '../store/hooks/search';
 
 const Search = () => {
     const navigate = useNavigate();

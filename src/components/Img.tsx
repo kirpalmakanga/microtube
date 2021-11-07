@@ -1,4 +1,4 @@
-import { createSignal, Component, Show, createEffect, onMount } from 'solid-js';
+import { Component, createSignal, onMount, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import Icon from './Icon';
 

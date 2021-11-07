@@ -1,4 +1,4 @@
-import { createSignal, onMount, Component, JSX } from 'solid-js';
+import { Component, createSignal, JSX, onMount } from 'solid-js';
 import { preventDefault, stopPropagation } from '../lib/helpers';
 interface Props {
     query?: string;

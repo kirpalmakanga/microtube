@@ -1,17 +1,15 @@
-import { Show } from 'solid-js';
 import { useNavigate, useParams } from 'solid-app-router';
-
+import { Show } from 'solid-js';
+import { VideoData } from '../../../@types/alltypes';
+import VideoCard from '../../components/cards/VideoCard';
 import List from '../../components/List';
 import Placeholder from '../../components/Placeholder';
-import VideoCard from '../../components/cards/VideoCard';
-
-import { VideoData } from '../../../@types/alltypes';
-import { useChannel } from '../../store/hooks/channel';
-import { usePlaylistItems } from '../../store/hooks/playlist-items';
-import { usePlayer } from '../../store/hooks/player';
-import { useNotifications } from '../../store/hooks/notifications';
 import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
+import { useChannel } from '../../store/hooks/channel';
 import { useMenu } from '../../store/hooks/menu';
+import { useNotifications } from '../../store/hooks/notifications';
+import { usePlayer } from '../../store/hooks/player';
+import { usePlaylistItems } from '../../store/hooks/playlist-items';
 
 const ChannelVideos = () => {
     const params = useParams();

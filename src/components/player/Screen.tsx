@@ -1,7 +1,7 @@
 import { Component, Show } from 'solid-js';
-import type { YouTubePlayer, Options } from 'youtube-player/dist/types';
-import { Player } from './YoutubePlayer';
+import type { Options, YouTubePlayer } from 'youtube-player/dist/types';
 import Placeholder from '../Placeholder';
+import { Player } from './YoutubePlayer';
 
 const playerOptions: Options = {
     playerVars: {

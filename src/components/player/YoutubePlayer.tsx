@@ -35,9 +35,7 @@ interface NewOptions {
     endSeconds?: number;
 }
 
-export { Options };
-
-export const YoutubePlayer: Component<Props> = (props) => {
+export const Player: Component<Props> = (props) => {
     const {
         playerVars: { start, end }
     }: any = props.options;
@@ -108,8 +106,10 @@ export const YoutubePlayer: Component<Props> = (props) => {
         }
     };
 
+    const destroyPlayer = () => internalPlayer?.destroy();
+
     const resetPlayer = async () => {
-        await internalPlayer.destroy();
+        await destroyPlayer();
 
         createPlayer();
     };
@@ -158,6 +158,8 @@ export const YoutubePlayer: Component<Props> = (props) => {
     }, props.videoId);
 
     onMount(createPlayer);
+
+    onCleanup(destroyPlayer);
 
     return (
         <div className={props.className}>

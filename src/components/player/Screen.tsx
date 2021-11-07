@@ -1,7 +1,6 @@
 import { Component, Show } from 'solid-js';
-import { YouTubePlayer } from 'youtube-player/dist/types';
-
-import { YoutubePlayer, Options } from './YoutubePlayer';
+import type { YouTubePlayer, Options } from 'youtube-player/dist/types';
+import { Player } from './YoutubePlayer';
 import Placeholder from '../Placeholder';
 
 const playerOptions: Options = {
@@ -31,7 +30,7 @@ const Screen: Component<Props> = (props) => (
             when={props.videoId}
             fallback={<Placeholder icon="screen" text="No video." />}
         >
-            <YoutubePlayer
+            <Player
                 videoId={props.videoId}
                 options={playerOptions}
                 onReady={props.onReady}

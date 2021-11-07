@@ -1,4 +1,4 @@
-import { Component, Match, Show, Switch } from 'solid-js';
+import { Component, Show } from 'solid-js';
 import { stopPropagation } from '../../lib/helpers';
 import { usePrompt } from '../../store/hooks/prompt';
 

@@ -33,7 +33,6 @@ export interface Options {
     width?: number | string;
     height?: number | string;
     videoId?: string;
-    host?: string;
     playerVars?: {
         autoplay?: 0 | 1;
         cc_lang_pref?: string;

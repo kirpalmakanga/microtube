@@ -1,8 +1,12 @@
 import { isEqual } from 'lodash';
 import { Component, createEffect, onCleanup, onMount } from 'solid-js';
-import youTubePlayer from 'youtube-player';
-import EVENT_NAMES, { EventType } from 'youtube-player/dist/eventNames';
-import type { Options, YouTubePlayer } from 'youtube-player/dist/types';
+import {
+    createYoutubePlayer,
+    EVENT_NAMES,
+    Options,
+    PLAYBACK_STATES,
+    YouTubePlayer
+} from '../../api/youtube-player';
 
 interface Props {
     id?: string;
@@ -18,22 +22,13 @@ interface Props {
     onStateChange?: (playbackStateId: number) => void;
 }
 
-const PLAYBACK_STATES = {
-    UNSTARTED: -1,
-    ENDED: 0,
-    PLAYING: 1,
-    PAUSED: 2,
-    BUFFERING: 3,
-    CUED: 5
-};
-
-const noop = () => {};
-
 interface NewOptions {
     videoId: string;
     startSeconds?: number;
     endSeconds?: number;
 }
+
+const noop = () => {};
 
 export const Player: Component<Props> = (props) => {
     const {
@@ -46,7 +41,7 @@ export const Player: Component<Props> = (props) => {
 
     const handleIframeReady = () => props.onReady(internalPlayer);
 
-    const createPlayer = () => {
+    const createPlayer = async () => {
         if (typeof document === 'undefined' || internalPlayer) {
             return;
         }
@@ -58,47 +53,41 @@ export const Player: Component<Props> = (props) => {
             onPause = noop,
             onBuffering = noop
         } = props;
-        const [READY, STATE_CHANGE, , , ERROR] = EVENT_NAMES;
         const { ENDED, PLAYING, PAUSED, BUFFERING } = PLAYBACK_STATES;
 
-        const events = {
-            [READY]: handleIframeReady,
-            [ERROR]: props.onError,
-            [STATE_CHANGE]: ({ data }: { [key: string]: any }) => {
-                onStateChange(data);
-
-                switch (data) {
-                    case ENDED:
-                        onEnd();
-                        break;
-
-                    case PLAYING:
-                        onPlay();
-                        break;
-
-                    case PAUSED:
-                        onPause();
-                        break;
-
-                    case BUFFERING:
-                        onBuffering();
-                        break;
-
-                    default:
-                        return;
-                }
-            }
-        };
-
         try {
-            internalPlayer = youTubePlayer(getContainerId(), {
+            internalPlayer = await createYoutubePlayer(getContainerId(), {
                 ...props.options,
-                videoId: props.videoId
-            });
+                videoId: props.videoId,
+                events: {
+                    onReady: handleIframeReady,
+                    onError: props.onError,
+                    onStateChange({ data }: { [key: string]: any }) {
+                        onStateChange(data);
 
-            for (const [eventKey, event] of Object.entries(events)) {
-                internalPlayer.on(eventKey as EventType, event);
-            }
+                        switch (data) {
+                            case ENDED:
+                                onEnd();
+                                break;
+
+                            case PLAYING:
+                                onPlay();
+                                break;
+
+                            case PAUSED:
+                                onPause();
+                                break;
+
+                            case BUFFERING:
+                                onBuffering();
+                                break;
+
+                            default:
+                                return;
+                        }
+                    }
+                }
+            });
         } catch (error: unknown) {
             console.error(error);
 

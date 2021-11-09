@@ -16,8 +16,7 @@
         "solid-app-router": "^0.1.11",
         "solid-js": "^1.2.2",
         "solid-transition-group": "https://github.com/solidjs/solid-transition-group/tarball/main",
-        "uuid": "^8.3.2",
-        "youtube-player": "^5.5.2"
+        "uuid": "^8.3.2"
     },
     "devDependencies": {
         "@types/lodash": "^4.14.175",

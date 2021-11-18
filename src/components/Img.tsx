@@ -1,4 +1,5 @@
 import { Component, createSignal, onMount, Show } from 'solid-js';
+import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
 import Icon from './Icon';
 
@@ -9,25 +10,31 @@ interface Props {
 }
 
 const Img: Component<Props> = (props) => {
-    const [isLoading, setLoadingStatus] = createSignal(true);
-    const onImageLoaded = () => setLoadingStatus(false);
+    const [state, setState] = createStore({
+        isLoaded: false,
+        hasError: false
+    });
 
-    const img = new Image();
-    img.src = props.src;
+    let img;
 
-    if (!img.complete) {
-        img.onload = onImageLoaded;
-        img.onerror = onImageLoaded;
+    if (props.src) {
+        img = new Image();
+        img.src = props.src;
+    }
+
+    if (img && !img.complete) {
+        img.onload = () => setState({ isLoaded: true });
+        img.onerror = () => setState({ hasError: true });
     }
 
     return (
         <span className="image">
             <Show
-                when={img.complete}
+                when={img && img.complete}
                 fallback={
                     <Transition name="fade">
                         <Show
-                            when={!isLoading()}
+                            when={state.isLoaded && !state.hasError}
                             fallback={
                                 <span className="image__placeholder">
                                     <Icon name="image" />

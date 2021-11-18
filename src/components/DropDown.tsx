@@ -48,8 +48,9 @@ const DropDown: Component<Props> = (props) => {
                 onBlur={closeOptions}
                 type="button"
             >
-                <Icon name={isOpen() ? 'chevron-up' : 'chevron-down'} />
                 <span className="dropdown__trigger-title">{label()}</span>
+
+                <Icon name={isOpen() ? 'chevron-up' : 'chevron-down'} />
             </button>
 
             <Transition name="fade">

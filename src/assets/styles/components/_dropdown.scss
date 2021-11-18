@@ -7,13 +7,14 @@
         position: relative;
         z-index: 1;
         .icon {
-            height: 24px;
-            width: 24px;
+            height: 20px;
+            width: 20px;
         }
     }
 
     .icon {
         fill: currentColor;
+        margin-left: 15px;
     }
 
     &__list {

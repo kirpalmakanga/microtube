@@ -10,44 +10,37 @@ interface Props {
 
 const Img: Component<Props> = (props) => {
     const [isLoading, setLoadingStatus] = createSignal(true);
+    const onImageLoaded = () => setLoadingStatus(false);
 
-    onMount(async () => {
-        try {
-            const img = new Image();
-            img.src = props.src;
+    const img = new Image();
+    img.src = props.src;
 
-            if (!img.complete) {
-                await new Promise((resolve, reject) => {
-                    img.onload = resolve;
-                    img.onerror = reject;
-                });
-            }
-        } finally {
-            setLoadingStatus(false);
-        }
-    });
+    if (!img.complete) {
+        img.onload = onImageLoaded;
+        img.onerror = onImageLoaded;
+    }
 
     return (
         <span className="image">
-            <Transition name="fade">
-                <Show
-                    when={!isLoading()}
-                    fallback={
-                        <span className="image__placeholder">
-                            <Icon name="image" />
-                        </span>
-                    }
-                >
-                    {props.background ? (
-                        <span
-                            className="image__background"
-                            style={{ 'background-image': `url(${props.src})` }}
-                        />
-                    ) : (
-                        <img src={props.src} alt={props.alt} />
-                    )}
-                </Show>
-            </Transition>
+            <Show
+                when={img.complete}
+                fallback={
+                    <Transition name="fade">
+                        <Show
+                            when={!isLoading()}
+                            fallback={
+                                <span className="image__placeholder">
+                                    <Icon name="image" />
+                                </span>
+                            }
+                        >
+                            <img src={props.src} alt={props.alt} />
+                        </Show>
+                    </Transition>
+                }
+            >
+                <img src={props.src} alt={props.alt} />
+            </Show>
         </span>
     );
 };

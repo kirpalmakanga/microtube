@@ -115,17 +115,6 @@ input {
         background-color: lighten($brand-primary, 30%);
     }
 
-    &__background {
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        position: absolute;
-        background-position: center center;
-        background-repeat: no-repeat;
-        background-size: cover;
-    }
-
     &__placeholder {
         position: absolute;
         top: 0;

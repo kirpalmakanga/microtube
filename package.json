@@ -14,7 +14,7 @@
         "firebase": "^9.3.0",
         "socket.io-client": "^4.2.0",
         "solid-app-router": "^0.1.11",
-        "solid-js": "^1.2.3",
+        "solid-js": "^1.2.4",
         "solid-transition-group": "https://github.com/solidjs/solid-transition-group/tarball/main",
         "uuid": "^8.3.2"
     },

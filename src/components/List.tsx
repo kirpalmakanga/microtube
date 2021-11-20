@@ -39,7 +39,7 @@ const List = (props: Props) => {
 
     const handleScroll = throttle(
         ({ currentTarget: { scrollTop, scrollHeight, offsetHeight } }) => {
-            if (scrollTop >= scrollHeight - offsetHeight) {
+            if (scrollTop >= scrollHeight - offsetHeight - 1) {
                 _loadItems();
             }
         },

@@ -35,8 +35,7 @@ const Router: Component = () => (
             <Route path="/" element={<Playlists />} />
             <Route path="/playlist/:playlistId" element={<Playlist />} />
             <Route path="/video/:videoId" element={<Video />} />
-            <Route path="/search/" element={<Search />} />
-            <Route path="/search/:query" element={<Search />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/subscriptions" element={<Subscriptions />} />
             <Route path="/channel/:channelId" element={<Channel />}>
                 <Route path="/" element={<Navigate href="videos" />} />

@@ -1,5 +1,12 @@
-import { useNavigate, useParams } from 'solid-app-router';
-import { createEffect, createSignal, on, onCleanup, Show } from 'solid-js';
+import { useNavigate, useSearchParams } from 'solid-app-router';
+import {
+    createEffect,
+    createSignal,
+    on,
+    onCleanup,
+    onMount,
+    Show
+} from 'solid-js';
 import { VideoData } from '../../@types/alltypes';
 import VideoCard from '../components/cards/VideoCard';
 import List from '../components/List';
@@ -13,14 +20,14 @@ import { useSearch } from '../store/hooks/search';
 
 const Search = () => {
     const navigate = useNavigate();
-    const params = useParams();
+    const [searchParams] = useSearchParams();
     const [search, { searchVideos, clearSearch }] = useSearch();
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
     const [, { openMenu }] = useMenu();
     const [, { openNotification }] = useNotifications();
-    const [shouldMountGrid, setShouldMountGrid] = createSignal(true);
-    const handleSearchVideos = () => searchVideos(params.query);
+    const [shouldMountList, setShouldMountList] = createSignal(false);
+    const handleSearchVideos = () => searchVideos(searchParams.query);
     const handleClickCard =
         ({ id }: VideoData) =>
         () =>
@@ -68,7 +75,7 @@ const Search = () => {
     createEffect(
         on(
             [
-                (): string => decodeURIComponent(params.query || ''),
+                (): string => searchParams.query || '',
                 (): number => search.forMine
             ],
             (input, previousInput) => {
@@ -79,20 +86,23 @@ const Search = () => {
                     query &&
                     (query !== previousQuery || forMine !== previousForMine)
                 ) {
-                    setShouldMountGrid(false);
+                    setShouldMountList(false);
                     clearSearch();
-                    requestAnimationFrame(() => setShouldMountGrid(true));
+                    requestAnimationFrame(() => setShouldMountList(true));
                 }
                 return input;
-            },
-            { defer: true }
+            }
         )
     );
+
+    onMount(() => {
+        if (searchParams.query) setShouldMountList(true);
+    });
 
     onCleanup(clearSearch);
 
     return (
-        <Show when={params.query && shouldMountGrid()}>
+        <Show when={searchParams.query && shouldMountList()}>
             <Show
                 when={search.totalResults === null || search.totalResults > 0}
                 fallback={<Placeholder icon="list" text="No results found." />}

@@ -1,4 +1,4 @@
-import { Link, useNavigate, useParams } from 'solid-app-router';
+import { Link, useNavigate, useSearchParams } from 'solid-app-router';
 import DropDown from '../components/DropDown';
 import Icon from '../components/Icon';
 import Title from '../components/meta/Title';
@@ -8,12 +8,12 @@ import { useSearch } from '../store/hooks/search';
 
 const SearchHeader = () => {
     const navigate = useNavigate();
-    const params = useParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     const [search, { setSearchTarget }] = useSearch();
     const title = useAppTitle();
 
     const handleFormSubmit = (query: string) =>
-        navigate(`/search/${query}`, { replace: true });
+        setSearchParams({ query }, { replace: true });
 
     return (
         <div className="layout__header-row">
@@ -28,7 +28,7 @@ const SearchHeader = () => {
             </Link>
 
             <SearchForm
-                query={decodeURIComponent(params.query || '')}
+                query={searchParams.query || ''}
                 onSubmit={handleFormSubmit}
             />
 

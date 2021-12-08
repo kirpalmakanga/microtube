@@ -1,9 +1,13 @@
 export interface NotificationState {
-    message: string;
     isVisible: boolean;
+    message: string;
+    callback: Function | null;
+    callbackButtonText: string;
 }
 
 export const initialState = (): NotificationState => ({
+    isVisible: false,
     message: '',
-    isVisible: false
+    callback: null,
+    callbackButtonText: 'OK'
 });

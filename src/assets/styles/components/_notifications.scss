@@ -1,16 +1,9 @@
 .notification {
-    @include transition();
-    transform: translateY(100%);
-    position: fixed;
-    bottom: 100px;
-    left: 0;
-    right: 0;
-    background-color: $brand-primary;
-    &__content {
-        position: relative;
-        display: flex;
-        min-height: calc(1em + 40px);
-    }
+    background-color: lighten($brand-primary, 5%);
+    position: relative;
+    display: flex;
+    min-height: calc(1em + 40px);
+
     &__text {
         flex: 1;
         padding: 20px;
@@ -19,31 +12,42 @@
         cursor: pointer;
         @include transition();
         height: 100%;
-        width: calc(1em + 40px);
-        background-color: $red;
+        background-color: lighten($brand-primary, 10%);
         display: flex;
         align-items: center;
         border: none;
         fill: $brand-secondary;
+        justify-content: center;
+        padding: 0 15px;
+        font-weight: bold;
+        text-transform: uppercase;
+
         .icon {
             height: 22px;
             width: 22px;
         }
+
+        &:hover {
+            background-color: lighten($brand-primary, 15%);
+        }
+
         &:focus {
             outline: none;
         }
-        justify-content: center;
-        &:hover {
-            background-color: lighten($red, 20%);
-        }
+
         &:active {
             svg {
                 transform: scale(0.7);
             }
         }
-    }
-    @media screen and (min-width: 480px) {
-        bottom: 50px;
+
+        &.is--close {
+            min-width: calc(1em + 40px);
+            background-color: $red;
+            &:hover {
+                background-color: lighten($red, 10%);
+            }
+        }
     }
 }
 

@@ -1,5 +1,11 @@
 import { useStore } from '..';
 import { delay } from '../../lib/helpers';
+import { initialState } from '../state/_notifications';
+
+interface Options {
+    callback?: Function;
+    callbackButtonText?: string;
+}
 
 export const useNotifications = () => {
     const [{ notifications }, setState] = useStore();
@@ -11,22 +17,23 @@ export const useNotifications = () => {
 
         await delay(300);
 
-        setState('notifications', {
-            message: ''
-        });
+        setState('notifications', initialState());
     };
 
-    const openNotification = async (message: string) => {
+    const openNotification = async (message: string, options: Options) => {
         setState('notifications', {
             isVisible: true,
-            message
+            message,
+            ...options
         });
 
-        // await delay(4000);
+        if (!options.callback) {
+            await delay(4000);
 
-        // const { isVisible } = notifications;
+            const { isVisible } = notifications;
 
-        // if (isVisible) closeNotification();
+            if (isVisible) closeNotification();
+        }
     };
 
     return [

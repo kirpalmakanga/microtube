@@ -5,19 +5,33 @@ import Icon from './Icon';
 
 const Notifications: Component = () => {
     const [notifications, { closeNotification }] = useNotifications();
+    const onValidate = () => {
+        notifications.callback();
+        closeNotification();
+    };
 
     return (
         <Transition name="slide-up">
             <Show when={notifications.isVisible}>
-                <div className="notification__content">
+                <div className="notification">
                     <div className="notification__text">
                         {notifications.message}
                     </div>
+
+                    <Show when={notifications.callback}>
+                        <button
+                            className="notification__action icon-button"
+                            onClick={onValidate}
+                        >
+                            {notifications.callbackButtonText}
+                        </button>
+                    </Show>
+
                     <button
-                        className="notification__action icon-button"
+                        className="notification__action icon-button is--close"
                         onClick={closeNotification}
                     >
-                        <Icon name="close" />
+                        Close
                     </button>
                 </div>
             </Show>

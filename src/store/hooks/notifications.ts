@@ -20,7 +20,7 @@ export const useNotifications = () => {
         setState('notifications', initialState());
     };
 
-    const openNotification = async (message: string, options: Options) => {
+    const openNotification = async (message: string, options: Options = {}) => {
         setState('notifications', {
             isVisible: true,
             message,

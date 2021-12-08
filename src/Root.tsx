@@ -31,6 +31,8 @@ const Root: Component = (props) => {
                 openNotification('Offline mode is active.');
             }
         });
+
+        updateSW();
     });
 
     return (

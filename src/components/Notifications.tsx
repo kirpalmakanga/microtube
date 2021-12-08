@@ -1,13 +1,12 @@
 import { Component, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import { useNotifications } from '../store/hooks/notifications';
-import Icon from './Icon';
 
 const Notifications: Component = () => {
     const [notifications, { closeNotification }] = useNotifications();
     const onValidate = () => {
-        notifications.callback();
         closeNotification();
+        notifications.callback();
     };
 
     return (

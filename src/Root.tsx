@@ -26,7 +26,7 @@ const Root: Component = (props) => {
         const updateSW = registerSW({
             onNeedRefresh() {
                 openNotification(
-                    'An update for this app is available, click reload to apply.',
+                    'An update for this app is available, click the reload button to apply.',
                     {
                         callback: () => location.reload(),
                         callbackButtonText: 'Reload'

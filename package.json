@@ -1,6 +1,6 @@
 {
     "name": "microtube",
-    "version": "1.14.0",
+    "version": "1.2.0",
     "scripts": {
         "dev": "vite",
         "dev:api": "npm --prefix ../microtube-socket run start:dev",

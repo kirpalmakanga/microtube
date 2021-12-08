@@ -22,11 +22,11 @@ export const useNotifications = () => {
             message
         });
 
-        await delay(4000);
+        // await delay(4000);
 
-        const { isVisible } = notifications;
+        // const { isVisible } = notifications;
 
-        if (isVisible) closeNotification();
+        // if (isVisible) closeNotification();
     };
 
     return [

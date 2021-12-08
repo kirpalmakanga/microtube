@@ -1,4 +1,5 @@
 import { Component, createSignal, onMount, Show } from 'solid-js';
+import { registerSW } from 'virtual:pwa-register';
 import Loader from './components/Loader';
 import Menu from './components/Menu';
 import Notifications from './components/Notifications';
@@ -10,15 +11,26 @@ import Header from './layout/Header';
 // import { enableImportMethods } from './actions.bak/youtube';
 import { isMobile, preventDefault } from './lib/helpers';
 import { useAuth } from './store/hooks/auth';
+import { useNotifications } from './store/hooks/notifications';
 
 const Root: Component = (props) => {
     const [user, { getUserData }] = useAuth();
+    const [, { openNotification }] = useNotifications();
     const [isAppReady, setIsAppReady] = createSignal(false);
 
     onMount(async () => {
         await getUserData();
 
         setIsAppReady(true);
+
+        const updateSW = registerSW({
+            onNeedRefresh() {
+                openNotification('An update for this app is available.');
+            },
+            onOfflineReady() {
+                openNotification('Offline mode is active.');
+            }
+        });
     });
 
     return (

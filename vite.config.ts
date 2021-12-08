@@ -7,13 +7,16 @@ export default defineConfig({
     plugins: [
         solidPlugin(),
         VitePWA({
+            workbox: {
+                sourcemap: true
+            },
             manifest: {
                 name: 'MicroTube',
                 short_name: 'MicroTube',
                 theme_color: '#191919',
                 background_color: '#191919',
                 display: 'standalone',
-                Scope: '/',
+                scope: '/',
                 start_url: '/',
                 icons: [
                     {
@@ -21,8 +24,7 @@ export default defineConfig({
                         sizes: '512x512',
                         type: 'image/png'
                     }
-                ],
-                splash_pages: null
+                ]
             }
         })
     ]

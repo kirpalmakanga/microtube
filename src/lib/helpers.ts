@@ -220,7 +220,7 @@ export const loadScript = (src: string) => {
 
 export const setImmediateInterval = (
     handler: Function,
-    timeout: number
+    timeout?: number
 ): number => {
     handler();
 

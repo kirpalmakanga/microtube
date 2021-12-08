@@ -1,4 +1,4 @@
-import { Component, createSignal, JSX } from 'solid-js';
+import { Component, createSignal, JSX, onCleanup, onMount } from 'solid-js';
 import { preventDefault, stopPropagation } from '../../lib/helpers';
 
 interface Props {
@@ -6,15 +6,26 @@ interface Props {
 }
 
 export const ImportVideoForm: Component<Props> = ({ onSubmit }) => {
-    const [text, setState] = createSignal('');
+    const [text, setText] = createSignal('');
 
     const handleChange: JSX.EventHandler<HTMLTextAreaElement, Event> = ({
         currentTarget: { value }
-    }) => setState(value);
+    }) => setText(value);
 
     const handleSubmit = preventDefault(() => onSubmit(text()));
 
     const handleKeyPress = stopPropagation();
+
+    // let clipboardWatcher: number;
+
+    // onMount(() => {
+    // clipboardWatcher = setImmediateInterval(async () => {
+    //     const text = navigator.clipboard.readText();
+    //     console.log({ text });
+    // }, 200);
+    // });
+
+    // onCleanup(() => clearInterval(clipboardWatcher));
 
     return (
         <form id="importVideos" onSubmit={handleSubmit}>

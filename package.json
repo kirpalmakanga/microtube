@@ -15,7 +15,7 @@
         "socket.io-client": "^4.2.0",
         "solid-app-router": "^0.1.14",
         "solid-js": "^1.2.4",
-        "solid-transition-group": "https://github.com/solidjs/solid-transition-group/tarball/main",
+        "solid-transition-group": "^0.0.8",
         "uuid": "^8.3.2"
     },
     "devDependencies": {

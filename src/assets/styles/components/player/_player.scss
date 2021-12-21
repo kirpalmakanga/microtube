@@ -39,11 +39,11 @@
         display: flex;
 
         &-button {
-            @include transition();
+            @include transition(color);
             padding: 0;
             background-color: $brand-primary;
             border: none;
-            fill: $brand-secondary;
+            color: $brand-secondary;
             flex: 1;
             height: 50px;
             border-radius: 0;
@@ -56,14 +56,14 @@
             }
 
             &.is-active {
-                background-color: lighten($brand-primary, 10%);
+                color: rgba($brand-secondary, 0.7);
             }
 
             @media screen and (min-width: 480px) {
                 flex: initial;
 
                 &:hover {
-                    background-color: lighten($brand-primary, 10%);
+                    color: rgba($brand-secondary, 0.5);
                 }
             }
 

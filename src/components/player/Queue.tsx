@@ -120,7 +120,7 @@ const Queue: Component<Props> = (props) => {
                             fallback={
                                 <Placeholder
                                     icon="list"
-                                    text="No videos in queue."
+                                    text="The queue is empty."
                                 />
                             }
                         >

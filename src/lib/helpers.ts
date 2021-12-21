@@ -237,7 +237,7 @@ export const shareURL = (config: ShareConfig) => navigator.share(config);
 export const copyText = (text: string) => navigator.clipboard.writeText(text);
 
 const isObject = (item: unknown) =>
-    item && typeof item === 'object' && !Array.isArray(item);
+    item !== null && typeof item === 'object' && !Array.isArray(item);
 
 export const mergeDeep = (
     target: { [key: string]: any },

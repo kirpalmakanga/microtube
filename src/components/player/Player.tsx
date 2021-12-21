@@ -1,7 +1,6 @@
 import { createEffect, onCleanup, onMount, Show } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
-import { YouTubePlayer } from 'youtube-player/dist/types';
 import {
     GenericObject,
     HTMLElementWheelEvent,
@@ -13,6 +12,8 @@ import { useFullscreen, useKey } from '../../lib/hooks';
 import { useDevices } from '../../store/hooks/devices';
 import { usePlayer } from '../../store/hooks/player';
 import { usePlaylistItems } from '../../store/hooks/playlist-items';
+import { YouTubePlayer } from '../../api/youtube-player';
+
 import Button from './controls/Button';
 import DevicesSelector from './controls/DevicesSelector';
 import VolumeRange from './controls/VolumeRange';

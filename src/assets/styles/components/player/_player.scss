@@ -47,16 +47,27 @@
             flex: 1;
             height: 50px;
             border-radius: 0;
-
             order: 1;
+            position: relative;
+            cursor: pointer;
+
+            &:before {
+                @include transition(background-color);
+                content: '';
+                height: 2px;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+            }
 
             @media screen and (min-width: 480px) {
                 width: 50px;
                 order: initial;
             }
 
-            &.is-active {
-                color: rgba($brand-secondary, 0.3);
+            &.is-active:before {
+                background-color: $brand-secondary;
             }
 
             @media screen and (min-width: 480px) {
@@ -66,9 +77,6 @@
                     color: rgba($brand-secondary, 0.5);
                 }
             }
-
-            cursor: pointer;
-            position: relative;
 
             &:focus {
                 outline: none;

@@ -29,8 +29,8 @@ export const initialState = (): PlayerState => ({
     get currentVideo() {
         const { currentId, video, queue } = this;
 
-        return video.id
-            ? video
-            : queue.find(({ id }) => id === currentId) || initialVideoState;
+        if (video.id) return video;
+
+        return queue.find(({ id }) => id === currentId) || initialVideoState;
     }
 });

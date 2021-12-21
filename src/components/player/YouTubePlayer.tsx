@@ -2,7 +2,6 @@ import { isEqual } from 'lodash';
 import { Component, createEffect, onCleanup, onMount } from 'solid-js';
 import {
     createYoutubePlayer,
-    EVENT_NAMES,
     Options,
     PLAYBACK_STATES,
     YouTubePlayer

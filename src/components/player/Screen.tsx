@@ -1,7 +1,7 @@
 import { Component, Show } from 'solid-js';
-import type { Options, YouTubePlayer } from 'youtube-player/dist/types';
 import Placeholder from '../Placeholder';
 import { Player } from './YouTubePlayer';
+import { Options, YouTubePlayer } from '../../api/youtube-player';
 
 const playerOptions: Options = {
     playerVars: {
@@ -21,11 +21,15 @@ interface Props {
     onPause?: () => void;
     onEnd: () => void;
     onStateChange?: (playbackStateId: number) => void;
-    onClick: () => void;
+    onClick?: () => void;
 }
 
 const Screen: Component<Props> = (props) => (
-    <div className="screen" classList={{ 'is--visible': props.isVisible }}>
+    <div
+        className="screen"
+        classList={{ 'is--visible': props.isVisible }}
+        onClick={props.onClick}
+    >
         <Show
             when={props.videoId}
             fallback={<Placeholder icon="screen" text="No video." />}

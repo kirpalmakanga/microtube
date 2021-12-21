@@ -492,16 +492,18 @@ const Player = () => {
                         />
                     </Show>
 
-                    <Button
-                        className="player__controls-button icon-button"
-                        onClick={toggleFullscreen}
-                        icon={state.isFullscreen ? 'close' : 'expand'}
-                        ariaLabel={
-                            state.isFullscreen
-                                ? 'Exit Fullscreen'
-                                : 'Enable Fullscreen'
-                        }
-                    />
+                    <Show when={storeState.currentVideo.id}>
+                        <Button
+                            className="player__controls-button icon-button"
+                            onClick={toggleFullscreen}
+                            icon={state.isFullscreen ? 'close' : 'expand'}
+                            ariaLabel={
+                                state.isFullscreen
+                                    ? 'Exit Fullscreen'
+                                    : 'Enable Fullscreen'
+                            }
+                        />
+                    </Show>
                 </div>
             </div>
         </div>

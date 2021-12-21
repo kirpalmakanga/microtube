@@ -38,6 +38,8 @@
 
     &__description {
         padding: 1rem;
+        white-space: pre-wrap;
+        line-height: 1.5em;
 
         p {
             &:not(:last-child) {

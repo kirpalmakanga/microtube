@@ -19,16 +19,19 @@ import VolumeRange from './controls/VolumeRange';
 import Info from './Info';
 import Queue from './Queue';
 import Screen from './Screen';
+import Description from './Description';
 
 const UNSTARTED = -1;
 
 interface PlayerInnerState {
-    isPlayerReady: boolean;
+    isFullscreen: boolean;
     isPlaying: boolean;
     isBuffering: boolean;
-    isScreenVisible: boolean;
+    isMuted: boolean;
     isQueueVisible: boolean;
+    isScreenVisible: boolean;
     isDevicesSelectorVisible: boolean;
+    isDescriptionVisible: boolean;
     volume: number;
 }
 
@@ -38,7 +41,7 @@ const Player = () => {
     let youtubeVolume: number = 100;
     let unsubscribeFromFullscreen: () => void;
 
-    const [state, setPlayerState] = createStore({
+    const [state, setPlayerState] = createStore<PlayerInnerState>({
         isFullscreen: false,
         isPlaying: false,
         isBuffering: false,
@@ -46,6 +49,7 @@ const Player = () => {
         isQueueVisible: false,
         isScreenVisible: false,
         isDevicesSelectorVisible: false,
+        isDescriptionVisible: false,
         volume: 100
     });
 
@@ -108,7 +112,7 @@ const Player = () => {
         setSyncedPlayerState({
             isScreenVisible: isVisible,
             ...(isVisible && !availableDevices.length
-                ? { isQueueVisible: false }
+                ? { isQueueVisible: false, isDescriptionVisible: false }
                 : {})
         });
     };
@@ -119,13 +123,23 @@ const Player = () => {
         setPlayerState({
             isQueueVisible: isVisible,
             ...(isVisible && !availableDevices.length
-                ? { isScreenVisible: false }
+                ? { isScreenVisible: false, isDescriptionVisible: false }
                 : {})
         });
 
         if (isVisible) clearNewQueueItems();
     };
 
+    const toggleInfo = () => {
+        const isVisible = !state.isDescriptionVisible;
+
+        setPlayerState({
+            isDescriptionVisible: isVisible,
+            ...(isVisible
+                ? { isScreenVisible: false, isQueueVisible: false }
+                : {})
+        });
+    };
     const handleYoutubeIframeReady = (playerInstance: YouTubePlayer) => {
         youtube = playerInstance;
     };
@@ -341,6 +355,12 @@ const Player = () => {
             />
 
             <Transition name="slide-up">
+                <Show when={state.isDescriptionVisible}>
+                    <Description text={storeState.currentVideo.description} />
+                </Show>
+            </Transition>
+
+            <Transition name="slide-up">
                 <Show
                     when={
                         state.isDevicesSelectorVisible &&
@@ -443,6 +463,20 @@ const Player = () => {
                         </div>
                     </Show>
 
+                    <Button
+                        className="player__controls-button icon-button"
+                        classList={{
+                            'is-active': state.isDescriptionVisible
+                        }}
+                        icon="info"
+                        ariaLabel={
+                            state.isDescriptionVisible
+                                ? 'Hide description'
+                                : 'Show description'
+                        }
+                        onClick={toggleInfo}
+                    />
+
                     <Show
                         when={
                             !isSingleVideo() &&
@@ -463,8 +497,8 @@ const Player = () => {
                             icon="list"
                             ariaLabel={
                                 state.isQueueVisible
-                                    ? 'Close queue'
-                                    : 'Open queue'
+                                    ? 'Hide queue'
+                                    : 'Show queue'
                             }
                         />
                     </Show>
@@ -477,8 +511,8 @@ const Player = () => {
                             icon="screen"
                             ariaLabel={
                                 state.isScreenVisible
-                                    ? 'Close screen'
-                                    : 'open screen'
+                                    ? 'Hide screen'
+                                    : 'Open screen'
                             }
                         />
                     </Show>

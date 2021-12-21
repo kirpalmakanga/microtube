@@ -6,23 +6,13 @@ import { useChannel } from '../../store/hooks/channel';
 const ChannelAbout: Component = () => {
     const { channelId } = useParams();
     const [channel] = useChannel(channelId);
-    const paragraphs = createMemo((text) => {
-        if (text)
-            return wrapURLs(text)
-                .split('\n')
-                .filter((text) => text && text.trim());
-        else return [];
-    }, channel.description);
 
-    return (
-        <div className="channel__description">
-            <Show when={paragraphs().length}>
-                <For each={paragraphs()}>
-                    {(line: string) => <p innerHTML={line}></p>}
-                </For>
-            </Show>
-        </div>
+    const text = createMemo(
+        (text) => (text ? wrapURLs(text) : ''),
+        channel.description
     );
+
+    return <div className="channel__description" innerHTML={text()}></div>;
 };
 
 export default ChannelAbout;

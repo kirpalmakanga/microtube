@@ -36,6 +36,7 @@ $header-height: 50px;
     }
 
     &__back-button {
+        @include transition(color);
         background-color: transparent;
         border: none;
         fill: $white;
@@ -56,6 +57,10 @@ $header-height: 50px;
                 height: 24px;
                 width: 24px;
             }
+        }
+
+        &:hover {
+            color: rgba($brand-secondary, 0.5);
         }
     }
 }

@@ -2,16 +2,16 @@ import { ThumbnailsData, ShareConfig } from '../../@types/alltypes';
 import { format } from 'date-fns';
 
 export const preventDefault =
-    (func = (e: any) => {}) =>
-    (e: any) => {
+    (func = (e: Event) => {}) =>
+    (e: Event) => {
         e.preventDefault();
 
         func(e);
     };
 
 export const stopPropagation =
-    (func = (e: any) => {}) =>
-    (e: any) => {
+    (func = (e: Event) => {}) =>
+    (e: Event) => {
         e.stopPropagation();
         func && func(e);
     };

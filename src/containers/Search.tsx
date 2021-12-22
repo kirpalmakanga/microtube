@@ -78,19 +78,21 @@ const Search = () => {
                 (): string => searchParams.query || '',
                 (): number => search.forMine
             ],
-            (input, previousInput) => {
-                const [previousQuery, previousForMine] = previousInput || [];
-                const [query, forMine] = input;
-
+            (
+                [query, forMine]: [string, number],
+                [previousQuery, previousForMine]: [string, number] = ['', 0]
+            ) => {
                 if (
                     query &&
                     (query !== previousQuery || forMine !== previousForMine)
                 ) {
                     setShouldMountList(false);
+
                     clearSearch();
+
                     requestAnimationFrame(() => setShouldMountList(true));
                 }
-                return input;
+                return [query, forMine];
             }
         )
     );

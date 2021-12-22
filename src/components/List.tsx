@@ -48,7 +48,7 @@ const List = (props: Props) => {
 
     const getItemSize = () => props.itemSize || 150;
 
-    let scrollTarget: HTMLDivElement | undefined = undefined;
+    let scrollTarget: HTMLDivElement | undefined;
 
     onMount(() => {
         if (

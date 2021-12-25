@@ -18,7 +18,7 @@ const Menu = () => {
 
             <Transition name="slide-up">
                 <Show when={menu.isOpen}>
-                    <div className="menu__container  shadow--2dp">
+                    <div className="menu__container shadow--2dp">
                         <Show when={menu.title}>
                             <div
                                 className="menu__header"

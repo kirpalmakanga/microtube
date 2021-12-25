@@ -10,7 +10,7 @@
         position: relative;
         a {
             font-family: $font-primary;
-            @include transition();
+            @include transition(color);
             background-color: $brand-primary;
             display: flex;
             align-items: center;
@@ -19,12 +19,27 @@
             color: $brand-secondary;
             height: 2.5rem;
             text-decoration: none;
+
+            &:after {
+                @include transition(background-color);
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                content: '';
+            }
+
             &:focus {
                 outline: none;
             }
-            &.active,
+
             &:hover {
-                background-color: lighten($brand-primary, 10%);
+                color: rgba($brand-secondary, 0.5);
+            }
+
+            &.active:after {
+                background-color: $brand-secondary;
             }
         }
     }

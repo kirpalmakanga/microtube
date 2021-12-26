@@ -1,4 +1,3 @@
-import { isEqual } from 'lodash';
 import { Component, createEffect, onCleanup, onMount } from 'solid-js';
 import {
     createYoutubePlayer,
@@ -6,6 +5,7 @@ import {
     PLAYBACK_STATES,
     YouTubePlayer
 } from '../../api/youtube-player';
+import { isEqual } from '../../lib/helpers';
 
 interface Props {
     id?: string;

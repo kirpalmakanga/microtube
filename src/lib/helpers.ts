@@ -259,3 +259,51 @@ export const mergeDeep = (
 
     return mergeDeep(target, ...sources);
 };
+
+export const isEqual = (obj1: unknown, obj2: unknown) => {
+    type GenericObject = {
+        [key: string]: unknown;
+    };
+
+    function getType(obj: unknown) {
+        return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+    }
+
+    function areArraysEqual(arr1: unknown[], arr2: unknown[]) {
+        if (arr1.length !== arr2.length) return false;
+
+        for (let i = 0; i < arr1.length; i++) {
+            if (!isEqual(arr1[i], arr2[i])) return false;
+        }
+
+        return true;
+    }
+
+    function areObjectsEqual(obj1: GenericObject, obj2: GenericObject) {
+        if (Object.keys(obj1).length !== Object.keys(obj2).length) return false;
+
+        for (let key in obj1) {
+            if (Object.prototype.hasOwnProperty.call(obj1, key)) {
+                if (!isEqual(obj1[key], obj2[key])) return false;
+            }
+        }
+
+        return true;
+    }
+
+    function areFunctionsEqual(func1: Function, func2: Function) {
+        return func1.toString() === func2.toString();
+    }
+
+    let type = getType(obj1);
+
+    if (type !== getType(obj2)) return false;
+
+    if (type === 'array')
+        return areArraysEqual(obj1 as unknown[], obj2 as unknown[]);
+    if (type === 'object')
+        return areObjectsEqual(obj1 as GenericObject, obj2 as GenericObject);
+    if (type === 'function')
+        return areFunctionsEqual(obj1 as Function, obj2 as Function);
+    return obj1 === obj2;
+};

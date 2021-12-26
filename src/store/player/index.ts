@@ -1,5 +1,4 @@
 import { createMemo } from 'solid-js';
-import isEqual from 'lodash/isEqual';
 
 import { useStore } from '..';
 import { useNotifications } from '../notifications';
@@ -12,7 +11,7 @@ import { __DEV__ } from '../../config/app';
 import * as api from '../../api/youtube';
 import { saveData, subscribeToData } from '../../api/database';
 
-import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
+import { splitLines, parseVideoId, chunk, isEqual } from '../../lib/helpers';
 import { initialState } from './_state';
 
 export const usePlayer = () => {

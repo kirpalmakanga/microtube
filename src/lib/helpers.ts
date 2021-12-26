@@ -1,5 +1,5 @@
 import { ThumbnailsData, ShareConfig } from '../../@types/alltypes';
-import { format } from 'date-fns';
+import format from 'date-fns/fp/format';
 
 export const preventDefault =
     (func = (e: Event) => {}) =>
@@ -28,7 +28,7 @@ export const getThumbnails = (
 };
 
 export const formatDate = (date: string, formatString: string) =>
-    format(new Date(date), formatString);
+    format(formatString, new Date(date));
 
 export const parseDuration = (PT: string) => {
     if (!PT) {
@@ -295,6 +295,10 @@ export const isEqual = (obj1: unknown, obj2: unknown) => {
         return func1.toString() === func2.toString();
     }
 
+    function arePrimitivesEqual(primitive1: unknown, primitive2: unknown) {
+        return primitive1 === primitive2;
+    }
+
     let type = getType(obj1);
 
     if (type !== getType(obj2)) return false;
@@ -305,5 +309,5 @@ export const isEqual = (obj1: unknown, obj2: unknown) => {
         return areObjectsEqual(obj1 as GenericObject, obj2 as GenericObject);
     if (type === 'function')
         return areFunctionsEqual(obj1 as Function, obj2 as Function);
-    return obj1 === obj2;
+    return arePrimitivesEqual(obj1, obj2);
 };

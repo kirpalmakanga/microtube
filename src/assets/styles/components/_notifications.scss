@@ -1,6 +1,9 @@
 .notification {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 50px;
     background-color: lighten($brand-primary, 5%);
-    position: relative;
     display: flex;
     min-height: calc(1em + 40px);
 
@@ -21,6 +24,7 @@
         padding: 0 15px;
         font-weight: bold;
         text-transform: uppercase;
+        min-height: 54px;
 
         .icon {
             height: 22px;

@@ -1,7 +1,7 @@
 import { useParams } from 'solid-app-router';
-import { Component, createMemo, For, Show } from 'solid-js';
+import { Component, createMemo } from 'solid-js';
 import { wrapURLs } from '../../lib/helpers';
-import { useChannel } from '../../store/hooks/channel';
+import { useChannel } from '../../store/channel';
 
 const ChannelAbout: Component = () => {
     const { channelId } = useParams();

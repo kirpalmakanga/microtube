@@ -1,10 +1,10 @@
-import { batch } from 'solid-js';
 import { useStore } from '..';
 
 import * as api from '../../api/youtube';
 import { signIntoDatabase, signOutOfDatabase } from '../../api/database';
-import { useNotifications } from './notifications';
-import { rootInitialState } from '../state';
+import { useNotifications } from '../notifications';
+
+import { rootInitialState } from '../_state';
 
 export const useAuth = () => {
     const [{ user }, setState] = useStore();

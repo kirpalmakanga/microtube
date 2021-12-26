@@ -1,6 +1,6 @@
 import { useStore } from '..';
 import { delay } from '../../lib/helpers';
-import { initialState, MenuItemData, MenuOpener } from '../state/_menu';
+import { initialState, MenuOpener } from './_state';
 
 export const useMenu = () => {
     const [{ menu }, setState] = useStore();

@@ -1,5 +1,5 @@
 import { Route, Routes } from 'solid-app-router';
-import { usePlayer } from '../store/hooks/player';
+import { usePlayer } from '../store/player';
 import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';
 

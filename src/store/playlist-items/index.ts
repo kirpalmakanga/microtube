@@ -1,13 +1,13 @@
 import { useStore } from '..';
-import { usePlaylists } from './playlists';
-import { useNotifications } from './notifications';
-import { usePrompt } from './prompt';
+import { usePlaylists } from '../playlists';
+import { useNotifications } from '../notifications';
+import { usePrompt } from '../prompt';
 
 import { PlaylistData, PlaylistItemData } from '../../../@types/alltypes';
 
 import * as api from '../../api/youtube';
-import { initialState, PlaylistItemsState } from '../state/_playlist-items';
-import { PlaylistsState } from '../state/_playlists';
+import { initialState, PlaylistItemsState } from './_state';
+import { PlaylistsState } from '../playlists/_state';
 
 export const usePlaylistItems = (playlistId?: string) => {
     const [{ playlists, playlistItems }, setState] = useStore();
@@ -85,7 +85,7 @@ export const usePlaylistItems = (playlistId?: string) => {
         openPrompt({
             mode: 'playlists',
             headerText: 'Save to playlist',
-            confirmText: 'Close',
+            cancelText: 'Close',
             callback: async ({
                 id: playlistId,
                 title,

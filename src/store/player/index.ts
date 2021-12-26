@@ -2,8 +2,8 @@ import { createMemo } from 'solid-js';
 import isEqual from 'lodash/isEqual';
 
 import { useStore } from '..';
-import { useNotifications } from './notifications';
-import { usePrompt } from './prompt';
+import { useNotifications } from '../notifications';
+import { usePrompt } from '../prompt';
 
 import { QueueItem } from '../../../@types/alltypes';
 
@@ -13,7 +13,7 @@ import * as api from '../../api/youtube';
 import { saveData, subscribeToData } from '../../api/database';
 
 import { splitLines, parseVideoId, chunk } from '../../lib/helpers';
-import { initialState } from '../state/_player';
+import { initialState } from './_state';
 
 export const usePlayer = () => {
     const [{ user, player }, setState] = useStore();

@@ -10,10 +10,10 @@ import {
     isMobile,
     shareURL
 } from '../../lib/helpers';
-import { useChannel } from '../../store/hooks/channel';
-import { useMenu } from '../../store/hooks/menu';
-import { useNotifications } from '../../store/hooks/notifications';
-import { usePlaylists } from '../../store/hooks/playlists';
+import { useChannel } from '../../store/channel';
+import { useMenu } from '../../store/menu';
+import { useNotifications } from '../../store/notifications';
+import { usePlaylists } from '../../store/playlists';
 
 const Playlists: Component = () => {
     const params = useParams();

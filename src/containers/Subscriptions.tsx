@@ -3,7 +3,7 @@ import { Show } from 'solid-js';
 import ChannelCard from '../components/cards/ChannelCard';
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
-import { useSubscriptions } from '../store/hooks/subscriptions';
+import { useSubscriptions } from '../store/subscriptions';
 
 const Subscriptions = () => {
     const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import { useStore } from '..';
 import { delay } from '../../lib/helpers';
-import { initialState } from '../state/_notifications';
+import { initialState } from './_state';
 
 interface Options {
     callback?: Function;

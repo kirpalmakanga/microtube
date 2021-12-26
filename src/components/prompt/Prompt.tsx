@@ -1,6 +1,6 @@
 import { Component, Show } from 'solid-js';
 import { stopPropagation } from '../../lib/helpers';
-import { usePrompt } from '../../store/hooks/prompt';
+import { usePrompt } from '../../store/prompt';
 
 import Icon from '../Icon';
 

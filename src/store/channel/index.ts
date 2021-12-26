@@ -1,9 +1,9 @@
 import * as api from '../../api/youtube';
 
 import { useStore } from '..';
-import { useNotifications } from './notifications';
-import { usePrompt } from './prompt';
-import { initialState } from '../state/_channel';
+import { useNotifications } from '../notifications';
+import { usePrompt } from '../prompt';
+import { initialState } from './_state';
 
 export const useChannel = (channelId: string) => {
     const [{ channel }, setState] = useStore();

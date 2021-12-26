@@ -1,28 +1,39 @@
 // import { combineReducers } from '../helpers';
-import { AppState, initialState as appInitialState } from './_app';
-import { initialState as userInitialState, UserState } from './_user';
-import { initialState as playerInitialState, PlayerState } from './_player';
+import { AppState, initialState as appInitialState } from './app/_state';
+import { initialState as userInitialState, UserState } from './user/_state';
+import {
+    initialState as playerInitialState,
+    PlayerState
+} from './player/_state';
 import {
     initialState as playlistsInitialState,
     PlaylistsState
-} from './_playlists';
+} from './playlists/_state';
 import {
     initialState as playlistItemsInitialState,
     PlaylistItemsState
-} from './_playlist-items';
-import { ChannelState, initialState as channelInitialState } from './_channel';
+} from './playlist-items/_state';
+import {
+    ChannelState,
+    initialState as channelInitialState
+} from './channel/_state';
 import {
     initialState as subscriptionsInitialState,
     SubscriptionsState
-} from './_subscriptions';
-import { initialState as searchInitialState, SearchState } from './_search';
+} from './subscriptions/_state';
+import {
+    initialState as searchInitialState,
+    SearchState
+} from './search/_state';
 import {
     initialState as notificationsInitialState,
     NotificationState
-} from './_notifications';
-import { initialState as promptInitialState, PromptState } from './_prompt';
-
-import { initialState as menuInitialState, MenuState } from './_menu';
+} from './notifications/_state';
+import {
+    initialState as promptInitialState,
+    PromptState
+} from './prompt/_state';
+import { initialState as menuInitialState, MenuState } from './menu/_state';
 
 export interface RootState {
     app: AppState;

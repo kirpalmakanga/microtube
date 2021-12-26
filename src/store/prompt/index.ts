@@ -1,6 +1,6 @@
 import { useStore } from '..';
 import { delay } from '../../lib/helpers';
-import { initialState, PromptState } from '../state/_prompt';
+import { initialState, PromptState } from './_state';
 
 export const usePrompt = () => {
     const [{ prompt }, setState] = useStore();

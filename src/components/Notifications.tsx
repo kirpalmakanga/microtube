@@ -1,6 +1,6 @@
 import { Component, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
-import { useNotifications } from '../store/hooks/notifications';
+import { useNotifications } from '../store/notifications';
 
 const Notifications: Component = () => {
     const [notifications, { closeNotification }] = useNotifications();

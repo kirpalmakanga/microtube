@@ -4,8 +4,10 @@ import Button from '../components/Button';
 import Icon from '../components/Icon';
 import Img from '../components/Img';
 import Title from '../components/meta/Title';
-import useAppTitle from '../store/hooks/app-title';
-import { useAuth } from '../store/hooks/auth';
+import { useAppTitle } from '../store/app';
+import { useAuth } from '../store/user';
+
+const HeadTitle = (props: { text: string }) => <Title>{props.text}</Title>;
 
 const DefaultHeader = () => {
     const location = useLocation();
@@ -26,7 +28,7 @@ const DefaultHeader = () => {
 
     return (
         <div className="layout__header-row">
-            <Title>{title()}</Title>
+            <HeadTitle text={title()} />
 
             <Show
                 when={

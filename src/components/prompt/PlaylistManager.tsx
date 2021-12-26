@@ -4,7 +4,7 @@ import { createStore } from 'solid-js/store';
 import DropDown from '../DropDown';
 import Button from '../Button';
 import List from '../List';
-import { usePlaylists } from '../../store/hooks/playlists';
+import { usePlaylists } from '../../store/playlists';
 import { preventDefault, stopPropagation } from '../../lib/helpers';
 
 interface PlaylistData {

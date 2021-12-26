@@ -1,8 +1,8 @@
 import { useStore } from '..';
 import * as api from '../../api/youtube';
 import { omit } from '../../lib/helpers';
-import { useNotifications } from './notifications';
-import { initialState } from '../state/_search';
+import { useNotifications } from '../notifications';
+import { initialState } from './_state';
 
 export const useSearch = () => {
     const [{ search }, setState] = useStore();

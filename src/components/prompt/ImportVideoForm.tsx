@@ -1,4 +1,4 @@
-import { Component, createSignal, JSX, onCleanup, onMount } from 'solid-js';
+import { Component, createSignal, JSX } from 'solid-js';
 import { preventDefault, stopPropagation } from '../../lib/helpers';
 
 interface Props {

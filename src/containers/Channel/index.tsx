@@ -3,7 +3,7 @@ import { createSignal, For, JSXElement, onCleanup, onMount } from 'solid-js';
 import Button from '../../components/Button';
 import Img from '../../components/Img';
 import { getThumbnails } from '../../lib/helpers';
-import { useChannel } from '../../store/hooks/channel';
+import { useChannel } from '../../store/channel';
 
 interface TabsProps {
     children: JSXElement[];

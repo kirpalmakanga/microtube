@@ -1,8 +1,8 @@
 import { For, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import { stopPropagation } from '../lib/helpers';
-import { useMenu } from '../store/hooks/menu';
-import { MenuItemData } from '../store/state/_menu';
+import { useMenu } from '../store/menu';
+import { MenuItemData } from '../store/menu/_state';
 import Icon from './Icon';
 
 const Menu = () => {

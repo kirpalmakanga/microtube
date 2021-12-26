@@ -9,9 +9,9 @@ import {
 } from '../../../@types/alltypes';
 import { isMobile } from '../../lib/helpers';
 import { useFullscreen, useKey } from '../../lib/hooks';
-import { useDevices } from '../../store/hooks/devices';
-import { usePlayer } from '../../store/hooks/player';
-import { usePlaylistItems } from '../../store/hooks/playlist-items';
+import { useDevices } from '../../store/app';
+import { usePlayer } from '../../store/player';
+import { usePlaylistItems } from '../../store/playlist-items';
 import { YouTubePlayer } from '../../api/youtube-player';
 
 import Button from './controls/Button';

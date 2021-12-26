@@ -5,11 +5,11 @@ import VideoCard from '../../components/cards/VideoCard';
 import List from '../../components/List';
 import Placeholder from '../../components/Placeholder';
 import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
-import { useChannel } from '../../store/hooks/channel';
-import { useMenu } from '../../store/hooks/menu';
-import { useNotifications } from '../../store/hooks/notifications';
-import { usePlayer } from '../../store/hooks/player';
-import { usePlaylistItems } from '../../store/hooks/playlist-items';
+import { useChannel } from '../../store/channel';
+import { useMenu } from '../../store/menu';
+import { useNotifications } from '../../store/notifications';
+import { usePlayer } from '../../store/player';
+import { usePlaylistItems } from '../../store/playlist-items';
 
 const ChannelVideos = () => {
     const params = useParams();

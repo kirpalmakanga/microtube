@@ -1,8 +1,47 @@
 import { onCleanup, onMount, createMemo } from 'solid-js';
-import { DeviceData, GenericObject } from '../../../@types/alltypes';
+import { useLocation } from 'solid-app-router';
 import { useStore } from '..';
 import { subscribe, emit } from '../../lib/socket';
-import { initialState } from '../state/_app';
+import { initialState } from './_state';
+
+import { DeviceData, GenericObject } from '../../../@types/alltypes';
+
+export const useAppTitle = () => {
+    const location = useLocation();
+    const [state] = useStore();
+
+    const title = createMemo(() => {
+        const { pathname } = location;
+        const {
+            channel: { channelTitle },
+            playlistItems: { playlistTitle },
+            player: {
+                video: { title: videoTitle }
+            }
+        } = state;
+        let title = 'MicroTube';
+
+        if (pathname.startsWith('/subscriptions')) {
+            title = 'Subscriptions';
+        }
+
+        if (pathname.startsWith('/channel') && channelTitle) {
+            title = channelTitle;
+        }
+
+        if (pathname.startsWith('/playlist') && playlistTitle) {
+            title = playlistTitle;
+        }
+
+        if (pathname.startsWith('/video') && videoTitle) {
+            title = videoTitle;
+        }
+
+        return title;
+    }, location.pathname);
+
+    return title;
+};
 
 export const useDevices = () => {
     const [{ user: user, app: app }, setState] = useStore();
@@ -14,7 +53,9 @@ export const useDevices = () => {
     };
 
     const subscribeToDevicesSync = () =>
-        subscribe('devices:sync', (devices) => setState('app', { devices }));
+        subscribe('devices:sync', (devices: DeviceData[]) =>
+            setState('app', { devices })
+        );
 
     const setMasterDevice = (deviceId: string) => {
         const { deviceId: masterDeviceId } =

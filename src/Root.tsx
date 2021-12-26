@@ -10,8 +10,8 @@ import { __DEV__ } from './config/app';
 import Header from './layout/Header';
 // import { enableImportMethods } from './actions.bak/youtube';
 import { isMobile, preventDefault } from './lib/helpers';
-import { useAuth } from './store/hooks/auth';
-import { useNotifications } from './store/hooks/notifications';
+import { useAuth } from './store/user';
+import { useNotifications } from './store/notifications';
 
 const Root: Component = (props) => {
     const [user, { getUserData }] = useAuth();

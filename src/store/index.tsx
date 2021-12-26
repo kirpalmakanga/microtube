@@ -1,6 +1,6 @@
 import { createContext, useContext, createEffect, Component } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import { rootInitialState, RootState } from './state';
+import { rootInitialState, RootState } from './_state';
 import { saveState, loadState } from '../lib/localStorage';
 import { mergeDeep, pick, omit } from '../lib/helpers';
 

@@ -6,10 +6,6 @@ export const saveState = (state: GenericObject) => {
         const serializedState = JSON.stringify(state);
 
         localStorage.setItem(STORAGE_KEY, serializedState);
-
-        return serializedState === null
-            ? undefined
-            : JSON.parse(serializedState);
     } catch (error) {}
 };
 

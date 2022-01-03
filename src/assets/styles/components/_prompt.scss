@@ -34,7 +34,7 @@
     &__header {
         background-color: $brand-primary;
         padding: 16px;
-        border-bottom: 2px solid lighten($brand-primary, 20%);
+        border-bottom: 1px solid lighten($brand-primary, 20%);
         color: $brand-secondary;
         display: flex;
         align-items: center;
@@ -52,7 +52,7 @@
     &__content {
         overflow: auto;
         flex: 1;
-        border-bottom: 2px solid lighten($brand-primary, 20%);
+        border-bottom: 1px solid lighten($brand-primary, 20%);
     }
 
     &__actions {
@@ -78,13 +78,13 @@
     flex-direction: column;
     height: 40vh;
     &__form {
-        border-bottom: 2px solid lighten($brand-primary, 20%);
+        border-bottom: 1px solid lighten($brand-primary, 20%);
         display: flex;
 
         .dropdown {
             color: $brand-secondary;
-            border-left: 2px solid lighten($brand-primary, 20%);
-            border-right: 2px solid lighten($brand-primary, 20%);
+            border-left: 1px solid lighten($brand-primary, 20%);
+            border-right: 1px solid lighten($brand-primary, 20%);
             &__trigger,
             &__list-item {
                 background-color: $brand-primary;

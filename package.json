@@ -9,7 +9,7 @@
     },
     "dependencies": {
         "@minht11/solid-virtual-container": "^0.2.1",
-        "@thisbeyond/solid-dnd": "^0.3.3",
+        "@thisbeyond/solid-dnd": "^0.4.0",
         "date-fns": "^2.27.0",
         "firebase": "^9.6.1",
         "socket.io-client": "^4.4.0",

@@ -1,9 +1,10 @@
 import {
     closestLayoutCenter,
     createSortable,
-    DragDropContext,
+    DragDropProvider,
     DragDropSensors,
-    SortableContext
+    DragEventHandler,
+    SortableProvider
 } from '@thisbeyond/solid-dnd';
 import { Component, createSignal, For, JSX, JSXElement, Show } from 'solid-js';
 import { useOnScreen } from '../lib/hooks';
@@ -42,7 +43,7 @@ const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
 };
 
 const SortableItem: Component<ListItemProps> = (props) => {
-    const sortable = createSortable({ id: props.id });
+    const sortable = createSortable(props.id);
     const [ref, isVisible]: [(el: HTMLElement) => void, () => boolean] =
         useOnScreen();
 
@@ -79,13 +80,7 @@ const DraggableList = (props: ListProps) => {
         );
     };
 
-    const onDragEnd = ({
-        draggable,
-        droppable
-    }: {
-        draggable: any;
-        droppable: any;
-    }) => {
+    const onDragEnd: DragEventHandler = ({ draggable, droppable }) => {
         if (!draggable || !droppable) {
             return;
         }
@@ -106,14 +101,14 @@ const DraggableList = (props: ListProps) => {
     };
 
     return (
-        <DragDropContext
+        <DragDropProvider
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
-            collisionDetectionAlgorith={closestLayoutCenter}
+            collisionDetectionAlgorithm={closestLayoutCenter}
         >
             <DragDropSensors />
 
-            <SortableContext ids={ids()}>
+            <SortableProvider ids={ids()}>
                 <For each={props.items}>
                     {(item) => (
                         <SortableItem id={props.getItemId(item)}>
@@ -121,8 +116,8 @@ const DraggableList = (props: ListProps) => {
                         </SortableItem>
                     )}
                 </For>
-            </SortableContext>
-        </DragDropContext>
+            </SortableProvider>
+        </DragDropProvider>
     );
 };
 

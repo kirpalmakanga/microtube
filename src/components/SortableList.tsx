@@ -20,18 +20,13 @@ interface ListItemProps {
 }
 
 const getSiblings = (e: HTMLElement) => {
-    let siblings = [];
+    const { parentNode } = e;
 
-    if (e.parentNode) {
-        let sibling = e.parentNode.firstChild;
-
-        while (sibling) {
-            if (sibling.nodeType === 1 && sibling !== e) siblings.push(sibling);
-
-            sibling = sibling.nextSibling;
-        }
-    }
-    return siblings as HTMLElement[];
+    if (parentNode) {
+        return Array.from(parentNode.childNodes).filter(
+            (element) => element?.nodeType === 1 && element !== e
+        ) as HTMLElement[];
+    } else return [];
 };
 
 const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {

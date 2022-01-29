@@ -47,10 +47,6 @@
             &:not(:last-child) .QueueItem {
                 border-bottom: 2px solid rgba($brand-primary, 0.5);
             }
-            &.is--dragged {
-                transition: none;
-                z-index: 1;
-            }
         }
     }
 }
@@ -141,9 +137,16 @@
     }
 }
 
+.sortable-overlay {
+    z-index: 1;
+    pointer-events: none;
+}
+
 .sortable {
     cursor: pointer;
     &.is--dragged {
+        transition: transform 0s ease-out;
+        opacity: 0.5;
         cursor: grabbing;
     }
 }

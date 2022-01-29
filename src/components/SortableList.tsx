@@ -4,6 +4,7 @@ import {
     DragDropProvider,
     DragDropSensors,
     DragEventHandler,
+    DragOverlay,
     SortableProvider
 } from '@thisbeyond/solid-dnd';
 import { Component, createSignal, For, JSX, JSXElement, Show } from 'solid-js';
@@ -67,12 +68,15 @@ const SortableItem: Component<ListItemProps> = (props) => {
 const DraggableList = (props: ListProps) => {
     const getItemIds = (items: unknown[]) => items.map(props.getItemId);
     const [items, setItems] = createSignal(getItemIds(props.items));
+    const [activeItem, setActiveItem] = createSignal(null);
     const ids = () => items();
 
-    const onDragStart = ({ draggable: { node } }: { draggable: any }) => {
+    const onDragStart: DragEventHandler = ({ draggable: { id, node } }) => {
         getSiblings(node).forEach(
             (n) => (n.style.transition = 'transform 0.3s ease-out')
         );
+
+        setActiveItem(props.items.find((item) => item.id === id));
     };
 
     const onDragEnd: DragEventHandler = ({ draggable, droppable }) => {
@@ -93,6 +97,8 @@ const DraggableList = (props: ListProps) => {
 
             props.onReorderItems(updatedItems);
         }
+
+        setActiveItem(null);
     };
 
     return (
@@ -112,6 +118,14 @@ const DraggableList = (props: ListProps) => {
                     )}
                 </For>
             </SortableProvider>
+
+            <DragOverlay class="sortable-overlay">
+                <div className="sortable">
+                    <Show when={activeItem()}>
+                        {props.children(activeItem())}
+                    </Show>
+                </div>
+            </DragOverlay>
         </DragDropProvider>
     );
 };

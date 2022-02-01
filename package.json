@@ -1,6 +1,6 @@
 {
     "name": "microtube",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "scripts": {
         "dev": "vite",
         "dev:api": "npm --prefix ../microtube-socket run start:dev",
@@ -11,7 +11,7 @@
         "@minht11/solid-virtual-container": "^0.2.1",
         "@thisbeyond/solid-dnd": "^0.4.0",
         "date-fns": "^2.27.0",
-        "firebase": "^9.6.1",
+        "firebase": "^9.6.5",
         "socket.io-client": "^4.4.0",
         "solid-app-router": "^0.1.14",
         "solid-js": "^1.2.6",

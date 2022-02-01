@@ -29,7 +29,7 @@ const Root: Component = (props) => {
                     'An update for this app is available, click the reload button to apply.',
                     {
                         // @ts-ignore
-                        callback: () => location.reload(true),
+                        callback: () => updateSW(true),
                         callbackButtonText: 'Reload'
                     }
                 );
@@ -38,8 +38,6 @@ const Root: Component = (props) => {
                 openNotification('Offline mode is active.');
             }
         });
-
-        updateSW();
     });
 
     return (

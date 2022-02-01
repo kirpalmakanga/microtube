@@ -2,6 +2,9 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import solidPlugin from 'vite-plugin-solid';
 
+// @ts-ignore
+import { version } from './package.json';
+
 export default defineConfig({
     server: { port: 8080 },
     plugins: [
@@ -11,6 +14,9 @@ export default defineConfig({
                 sourcemap: true
             },
             manifest: {
+                // @ts-ignore
+                version,
+                manifest_version: 2,
                 name: 'MicroTube',
                 short_name: 'MicroTube',
                 theme_color: '#191919',

@@ -14,7 +14,6 @@
     &__action {
         cursor: pointer;
         @include transition();
-        height: 100%;
         background-color: lighten($brand-primary, 10%);
         display: flex;
         align-items: center;

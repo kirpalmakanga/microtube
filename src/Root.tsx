@@ -28,7 +28,6 @@ const Root: Component = (props) => {
                 openNotification(
                     'An update for this app is available, click the reload button to apply.',
                     {
-                        // @ts-ignore
                         callback: () => updateSW(true),
                         callbackButtonText: 'Reload'
                     }

@@ -1,12 +1,9 @@
-@import '_variables';
-@import '_mixins';
+@include font-face('Open Sans', '/fonts/OpenSans', normal, normal);
+@include font-face('Open Sans', '/fonts/OpenSans-Bold', bold, normal);
 
-@include font-face('Open Sans', '../fonts/OpenSans', normal, normal);
-@include font-face('Open Sans', '../fonts/OpenSans-Bold', bold, normal);
-
-@include font-face('Montserrat', '../fonts/Montserrat-Regular', normal, normal);
-@include font-face('Montserrat', '../fonts/Montserrat-Bold', 700, normal);
-@include font-face('Montserrat', '../fonts/Montserrat-ExtraBold', 800, normal);
+@include font-face('Montserrat', '/fonts/Montserrat-Regular', normal, normal);
+@include font-face('Montserrat', '/fonts/Montserrat-Bold', 700, normal);
+@include font-face('Montserrat', '/fonts/Montserrat-ExtraBold', 800, normal);
 
 * {
     box-sizing: border-box;

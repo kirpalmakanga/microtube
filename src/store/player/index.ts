@@ -6,7 +6,7 @@ import { usePrompt } from '../prompt';
 
 import { QueueItem } from '../../../@types/alltypes';
 
-import { __DEV__ } from '../../config/app';
+import { IS_DEV_MODE } from '../../config/app';
 
 import * as api from '../../api/youtube';
 import { saveData, subscribeToData } from '../../api/database';
@@ -19,7 +19,7 @@ export const usePlayer = () => {
     const [, { openNotification }] = useNotifications();
     const [, { openPrompt }] = usePrompt();
 
-    const getCurrentUserId = () => (__DEV__ ? 'dev' : user.id);
+    const getCurrentUserId = () => (IS_DEV_MODE ? 'dev' : user.id);
 
     const queuePath = `users/${getCurrentUserId()}/queue`;
     const currentIdPath = `users/${getCurrentUserId()}/currentId`;

@@ -6,7 +6,7 @@ import Notifications from './components/Notifications';
 import Player from './components/player/Player';
 import Prompt from './components/prompt/Prompt';
 import Sprite from './components/Sprite';
-import { __DEV__ } from './config/app';
+import { IS_DEV_MODE } from './config/app';
 import Header from './layout/Header';
 // import { enableImportMethods } from './actions.bak/youtube';
 import { isMobile, preventDefault } from './lib/helpers';
@@ -46,7 +46,7 @@ const Root: Component = (props) => {
             <div
                 className="layout"
                 classList={{ 'is--mobile': isMobile() }}
-                onContextMenu={__DEV__ ? () => {} : preventDefault()}
+                onContextMenu={IS_DEV_MODE ? () => {} : preventDefault()}
             >
                 <Show when={isAppReady()} fallback={<Loader />}>
                     <Header />

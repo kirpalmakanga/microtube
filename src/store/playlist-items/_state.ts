@@ -1,10 +1,8 @@
-export interface PlaylistItem {
-    playlistItemId: string;
-}
+import { PlaylistItemData } from '../../../@types/alltypes';
 
 export interface PlaylistItemsState {
     playlistTitle: string;
-    items: PlaylistItem[];
+    items: PlaylistItemData[];
     nextPageToken: string;
     totalResults: number | null;
     hasNextPage: boolean;

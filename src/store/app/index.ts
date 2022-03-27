@@ -76,9 +76,10 @@ export const useDevices = () => {
         () =>
             app.devices.find(
                 ({ deviceId: id }: DeviceData) => id === app.deviceId
-            ) || {
+            ) ||
+            ({
                 isMaster: true
-            },
+            } as DeviceData),
         app.deviceId
     );
 

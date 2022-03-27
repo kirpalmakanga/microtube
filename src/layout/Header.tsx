@@ -4,14 +4,12 @@ import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';
 
 const Header = () => {
-    const [player, { closeScreen }] = usePlayer();
-
-    const handleCloseScreen = () => player.isScreenVisible && closeScreen();
+    const [, { setScreenVisibility }] = usePlayer();
 
     return (
         <header
             className="layout__header shadow--2dp"
-            onClick={handleCloseScreen}
+            onClick={() => setScreenVisibility(false)}
         >
             <Routes>
                 <Route path="*" element={<DefaultHeader />} />

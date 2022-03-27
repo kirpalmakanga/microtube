@@ -13,13 +13,13 @@ export type MenuOpener = (data: {
 export interface MenuState {
     items: MenuItemData[];
     isOpen: boolean;
-    menuTitle: string;
+    title: string;
     callbackData: object;
 }
 
 export const initialState = (): MenuState => ({
     items: [],
     isOpen: false,
-    menuTitle: '',
+    title: '',
     callbackData: {}
 });

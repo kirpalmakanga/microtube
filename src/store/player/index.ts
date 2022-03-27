@@ -4,7 +4,7 @@ import { useStore } from '..';
 import { useNotifications } from '../notifications';
 import { usePrompt } from '../prompt';
 
-import { QueueItemData } from '../../../@types/alltypes';
+import { VideoData } from '../../../@types/alltypes';
 
 import { IS_DEV_MODE } from '../../config/app';
 
@@ -27,7 +27,7 @@ export const usePlayer = () => {
     const currentQueueIndex = createMemo(
         () =>
             player.queue.findIndex(
-                ({ id }: QueueItemData) => id === player.currentId
+                ({ id }: VideoData) => id === player.currentId
             ),
         player.currentId
     );
@@ -50,23 +50,23 @@ export const usePlayer = () => {
             }
         });
 
-    const setQueue = (queue: QueueItemData[]) => {
+    const setQueue = (queue: VideoData[]) => {
         setState('player', { queue });
 
         saveData(queuePath, queue);
     };
 
-    const queueItems = (newItems: QueueItemData[]) => {
+    const queueItems = (newItems: VideoData[]) => {
         const items = newItems.filter(
-            ({ id }: QueueItemData) =>
+            ({ id }: VideoData) =>
                 !player.queue.find(
-                    ({ id: queueItemId }: QueueItemData) => queueItemId === id
+                    ({ id: queueItemId }: VideoData) => queueItemId === id
                 )
         );
 
         const { queue: currentQueue, newQueueItems } = player;
 
-        const queue: QueueItemData[] = [...currentQueue, ...items];
+        const queue: VideoData[] = [...currentQueue, ...items];
 
         setState('player', {
             queue,
@@ -78,7 +78,7 @@ export const usePlayer = () => {
         return items;
     };
 
-    const queueItem = (data: QueueItemData) => queueItems([data]);
+    const queueItem = (data: VideoData) => queueItems([data]);
 
     const setActiveQueueItem = (currentId: string) => {
         setState('player', { currentId });
@@ -116,10 +116,8 @@ export const usePlayer = () => {
             }
         });
 
-    const removeQueueItem = ({ id: targetId }: QueueItemData) => {
-        setQueue(
-            player.queue.filter(({ id }: QueueItemData) => id !== targetId)
-        );
+    const removeQueueItem = ({ id: targetId }: VideoData) => {
+        setQueue(player.queue.filter(({ id }: VideoData) => id !== targetId));
 
         if (targetId === player.currentId) {
             saveData(currentIdPath, '');
@@ -136,7 +134,7 @@ export const usePlayer = () => {
             callback: () => {
                 setQueue(
                     player.queue.filter(
-                        ({ id }: QueueItemData) => id === player.currentId
+                        ({ id }: VideoData) => id === player.currentId
                     )
                 );
             }
@@ -157,20 +155,8 @@ export const usePlayer = () => {
         }
     };
 
-    const toggleQueue = () => {
-        const { isQueueVisible: currentIsQueueVisible } = player;
-
-        const isQueueVisible = !currentIsQueueVisible;
-
-        setState('player', {
-            isQueueVisible,
-            ...(!isQueueVisible
-                ? { isScreenVisible: false, newQueueItems: 0 }
-                : {})
-        });
-    };
-
-    const closeScreen = () => setState({ isScreenVisible: false });
+    const setScreenVisibility = (isScreenVisible: boolean) =>
+        setState('player', { isScreenVisible });
 
     const goToNextQueueItem = (next: boolean | undefined = true) => {
         const newIndex = currentQueueIndex() + (next ? 1 : -1);
@@ -197,8 +183,7 @@ export const usePlayer = () => {
             clearVideo,
             getVideo,
             goToNextQueueItem,
-            toggleQueue,
-            closeScreen
+            setScreenVisibility
         }
     ] as const;
 };

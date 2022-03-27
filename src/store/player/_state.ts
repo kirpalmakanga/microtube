@@ -1,17 +1,17 @@
-import { QueueItemData } from '../../../@types/alltypes';
+import { VideoData } from '../../../@types/alltypes';
 
 export interface PlayerState {
-    queue: QueueItemData[];
+    queue: VideoData[];
     currentId: string;
-    isQueueVisible: boolean;
+    isScreenVisible: boolean;
     volume: number;
     newQueueItems: number;
     currentTime: number;
-    video: QueueItemData;
-    currentVideo: QueueItemData;
+    video: VideoData;
+    currentVideo: VideoData;
 }
 
-const initialVideoState = {
+const initialVideoState: VideoData = {
     id: '',
     title: 'No video.',
     description: '',
@@ -21,13 +21,16 @@ const initialVideoState = {
         default: { url: '' },
         high: { url: '' }
     },
-    icon: ''
+    publishedAt: '',
+    channelId: '',
+    channelTitle: '',
+    privacyStatus: ''
 };
 
 export const initialState = (): PlayerState => ({
     queue: [],
     currentId: '',
-    isQueueVisible: false,
+    isScreenVisible: false,
     volume: 100,
     newQueueItems: 0,
     currentTime: 0,

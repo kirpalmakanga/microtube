@@ -69,38 +69,6 @@ export const usePlaylists = (channelId?: string) => {
         }
     };
 
-    const createPlaylist = async (title: string, privacyStatus: string) => {
-        try {
-            const { items } = playlists;
-
-            const playlist = await api.createPlaylist({ title, privacyStatus });
-
-            setState('playlist', {
-                items: [playlist, ...items]
-            });
-
-            return playlist;
-        } catch (error) {
-            openNotification(`Error creating playlist "${title}".`);
-        }
-    };
-
-    const updatePlaylist = async (data: PlaylistData) => {
-        try {
-            const { items } = playlists;
-            const index = items.findIndex(
-                ({ id }: PlaylistData) => id === data.id
-            );
-
-            if (index > -1) items[index] = data;
-            else items.unshift(data);
-
-            setState('playlists', { items });
-        } catch (error) {
-            openNotification(`Error updated playlist "${data.title}".`);
-        }
-    };
-
     const removePlaylist = ({ id, title }: PlaylistData) => {
         openPrompt({
             headerText: `Remove playlist ${title} ?`,
@@ -130,8 +98,6 @@ export const usePlaylists = (channelId?: string) => {
         playlists,
         {
             getPlaylists,
-            createPlaylist,
-            updatePlaylist,
             removePlaylist,
             queuePlaylist,
             launchPlaylist

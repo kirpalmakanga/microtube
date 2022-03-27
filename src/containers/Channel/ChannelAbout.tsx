@@ -8,7 +8,7 @@ const ChannelAbout: Component = () => {
     const [channel] = useChannel(channelId);
 
     const text = createMemo(
-        (text) => (text ? wrapURLs(text) : ''),
+        (text: string) => (text ? wrapURLs(text) : ''),
         channel.description
     );
 

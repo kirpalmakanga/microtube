@@ -13,7 +13,7 @@ import { Transition } from 'solid-transition-group';
 const Prompt: Component = () => {
     const [prompt, { closePrompt }] = usePrompt();
 
-    const isMode = (...args: String[]) => args.includes(prompt.mode);
+    const isMode = (...args: string[]) => args.includes(prompt.mode);
 
     const handleConfirm = (data?: unknown) => {
         closePrompt();

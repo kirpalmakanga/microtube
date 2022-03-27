@@ -1,9 +1,10 @@
 import { Component } from 'solid-js';
-import { QueueItemData } from '../../../@types/alltypes';
+import { VideoData } from '../../../@types/alltypes';
 import { formatTime, preventDefault, stopPropagation } from '../../lib/helpers';
 import Icon from '../Icon';
 
-interface Props extends QueueItemData {
+interface Props extends VideoData {
+    icon: string;
     isActive: boolean;
     onClick: () => void;
     onContextMenu: () => void;

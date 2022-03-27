@@ -54,7 +54,10 @@ const Player = () => {
         volume: 100
     });
 
-    const [storeState, { goToNextQueueItem, clearNewQueueItems }] = usePlayer();
+    const [
+        storeState,
+        { goToNextQueueItem, clearNewQueueItems, setScreenVisibility }
+    ] = usePlayer();
 
     const [, { editPlaylistItem }] = usePlaylistItems();
 
@@ -108,27 +111,29 @@ const Player = () => {
         goToNextQueueItem(next);
 
     const toggleScreen = () => {
-        const isVisible = !state.isScreenVisible;
+        const isScreenVisible = !state.isScreenVisible;
 
         setSyncedPlayerState({
-            isScreenVisible: isVisible,
-            ...(isVisible && !availableDevices.length
+            isScreenVisible,
+            ...(isScreenVisible && !availableDevices.length
                 ? { isQueueVisible: false, isDescriptionVisible: false }
                 : {})
         });
+
+        setScreenVisibility(isScreenVisible);
     };
 
     const toggleQueue = () => {
-        const isVisible = !state.isQueueVisible;
+        const isQueueVisible = !state.isQueueVisible;
 
         setPlayerState({
-            isQueueVisible: isVisible,
-            ...(isVisible && !availableDevices.length
+            isQueueVisible,
+            ...(isQueueVisible && !availableDevices.length
                 ? { isScreenVisible: false, isDescriptionVisible: false }
                 : {})
         });
 
-        if (isVisible) clearNewQueueItems();
+        if (isQueueVisible) clearNewQueueItems();
     };
 
     const toggleInfo = () => {
@@ -293,12 +298,17 @@ const Player = () => {
     }, [currentDevice().isMaster, state.isFullscreen]);
 
     createEffect(() => {
-        const { videoId } = storeState.currentVideo.id;
+        const videoId = storeState.currentVideo.id;
 
         if (!videoId) youtube = null;
 
         return videoId;
     }, storeState.currentVideo.id);
+
+    createEffect(
+        () => setPlayerState({ isScreenVisible: storeState.isScreenVisible }),
+        storeState.isScreenVisible
+    );
 
     onMount(() => {
         const actions: PlayerSyncHandlers = {
@@ -490,7 +500,7 @@ const Player = () => {
                             classList={{
                                 'is-active': state.isQueueVisible,
                                 'badge--active':
-                                    storeState.newQueueItems &&
+                                    !!storeState.newQueueItems &&
                                     !state.isQueueVisible
                             }}
                             onClick={toggleQueue}

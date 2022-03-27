@@ -2,7 +2,7 @@ import { ChannelData } from '../../../@types/alltypes';
 
 export interface SubscriptionsState {
     items: ChannelData[];
-    nextPageToken: String;
+    nextPageToken: string;
     totalResults: number | null;
     hasNextPage: boolean;
 }

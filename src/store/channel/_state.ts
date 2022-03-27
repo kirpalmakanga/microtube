@@ -21,6 +21,7 @@ export interface ChannelState {
     };
     videos: ChannelVideosState;
     playlists: ChannelPlaylistsState;
+    subscriptionId?: string;
 }
 
 export const initialState = (): ChannelState => ({
@@ -42,5 +43,6 @@ export const initialState = (): ChannelState => ({
         nextPageToken: '',
         hasNextPage: true,
         totalResults: null
-    }
+    },
+    subscriptionId: ''
 });

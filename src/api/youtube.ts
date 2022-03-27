@@ -120,7 +120,7 @@ export async function searchVideos({
     pageToken
 }: {
     query: string;
-    forMine: boolean;
+    forMine: number;
     pageToken: string;
 }) {
     const {

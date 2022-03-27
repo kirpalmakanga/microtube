@@ -5,8 +5,13 @@ import { useNotifications } from '../store/notifications';
 const Notifications: Component = () => {
     const [notifications, { closeNotification }] = useNotifications();
     const onValidate = () => {
-        closeNotification();
-        notifications.callback();
+        const { callback } = notifications;
+
+        if (callback) {
+            closeNotification();
+
+            callback();
+        }
     };
 
     return (

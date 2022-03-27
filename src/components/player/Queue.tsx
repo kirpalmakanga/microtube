@@ -1,6 +1,6 @@
 import { Component, onCleanup, onMount, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
-import { QueueItemData, ThumbnailsData } from '../../../@types/alltypes';
+import { VideoData } from '../../../@types/alltypes';
 import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 import { useMenu } from '../../store/menu';
 import { useNotifications } from '../../store/notifications';
@@ -42,7 +42,7 @@ const Queue: Component<Props> = (props) => {
 
     const [, { openMenu }] = useMenu();
 
-    const handleClickMenu = (callbackData: QueueItemData) => () => {
+    const handleClickMenu = (callbackData: VideoData) => () => {
         const { title } = callbackData;
 
         openMenu({
@@ -57,7 +57,7 @@ const Queue: Component<Props> = (props) => {
                 {
                     title: 'Share',
                     icon: 'share',
-                    onClick: ({ id, title }: QueueItemData) => {
+                    onClick: ({ id, title }: VideoData) => {
                         const url = getVideoURL(id);
 
                         if (isMobile()) {
@@ -122,10 +122,10 @@ const Queue: Component<Props> = (props) => {
                             <div className="Queue__Items">
                                 <SortableList
                                     items={player.queue}
-                                    getItemId={({ id }: QueueItemData) => id}
+                                    getItemId={({ id }: VideoData) => id}
                                     onReorderItems={setQueue}
                                 >
-                                    {(data: QueueItemData) => {
+                                    {(data: VideoData) => {
                                         const { id } = data;
                                         const isActive =
                                             id === player.currentId;

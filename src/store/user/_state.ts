@@ -1,5 +1,5 @@
 export interface UserState {
-    uid: string;
+    id: string;
     name: string;
     picture: string;
     isSignedIn: boolean;
@@ -7,7 +7,7 @@ export interface UserState {
 }
 
 export const initialState = (): UserState => ({
-    uid: '',
+    id: '',
     name: '',
     picture: '',
     isSignedIn: false,

@@ -96,23 +96,18 @@ export const usePlaylistItems = (playlistId?: string) => {
 
                         await api.addPlaylistItem(playlist.id, videoId);
 
-                        setState(
-                            'playlists',
-                            'items',
-                            (items: PlaylistData[]) => [
-                                {
-                                    ...playlist,
-                                    thumbnails,
-                                    itemCount: 1
-                                },
-                                ...items
-                            ]
-                        );
+                        setState('playlists', 'items', (items) => [
+                            {
+                                ...playlist,
+                                thumbnails,
+                                itemCount: 1
+                            },
+                            ...items
+                        ]);
                     }
 
                     openNotification(`Added to playlist "${title}".`);
                 } catch (error) {
-                    console.error(error);
                     openNotification('Error editing playlist item.');
                 }
             }
@@ -130,14 +125,11 @@ export const usePlaylistItems = (playlistId?: string) => {
             confirmText: 'Remove',
             callback: async () => {
                 try {
-                    setState(
-                        'playlistItems',
-                        ({ items }: PlaylistItemsState) => ({
-                            items: items.filter(
-                                ({ playlistItemId: itemPlaylistId }) =>
-                                    itemPlaylistId !== playlistItemId
-                            )
-                        })
+                    setState('playlistItems', 'items', (items) =>
+                        items.filter(
+                            ({ playlistItemId: itemPlaylistId }) =>
+                                itemPlaylistId !== playlistItemId
+                        )
                     );
 
                     setState('playlists', ({ items }: PlaylistsState) => {

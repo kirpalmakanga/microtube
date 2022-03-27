@@ -2,7 +2,7 @@ import { PlaylistData } from '../../../@types/alltypes';
 
 export interface PlaylistsState {
     items: PlaylistData[];
-    nextPageToken: String;
+    nextPageToken: string;
     totalResults: number | null;
     hasNextPage: boolean;
 }

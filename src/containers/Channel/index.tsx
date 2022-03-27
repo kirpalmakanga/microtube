@@ -33,7 +33,7 @@ const Channel = () => {
         setSubscriptionStatus(false);
     };
 
-    onMount(() => getData(channelId));
+    onMount(() => getData());
 
     onCleanup(clearData);
 

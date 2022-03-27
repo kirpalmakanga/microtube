@@ -16,17 +16,6 @@ export const ImportVideoForm: Component<Props> = ({ onSubmit }) => {
 
     const handleKeyPress = stopPropagation();
 
-    // let clipboardWatcher: number;
-
-    // onMount(() => {
-    // clipboardWatcher = setImmediateInterval(async () => {
-    //     const text = navigator.clipboard.readText();
-    //     console.log({ text });
-    // }, 200);
-    // });
-
-    // onCleanup(() => clearInterval(clipboardWatcher));
-
     return (
         <form id="importVideos" onSubmit={handleSubmit}>
             <div className="textfield">

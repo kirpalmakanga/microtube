@@ -4,7 +4,7 @@ import * as api from '../../api/youtube';
 import { signIntoDatabase, signOutOfDatabase } from '../../api/database';
 import { useNotifications } from '../notifications';
 
-import { rootInitialState } from '../_state';
+import { rootInitialState, RootState } from '../_state';
 
 export const useAuth = () => {
     const [{ user }, setState] = useStore();
@@ -14,23 +14,21 @@ export const useAuth = () => {
         const { isSignedIn, idToken, accessToken, ...data } =
             await api.getSignedInUser();
 
-        let id = '';
+        const user = {
+            ...data,
+            id: '',
+            isSignedIn
+        };
 
         if (isSignedIn) {
             let {
                 user: { uid }
             } = await signIntoDatabase(idToken, accessToken);
 
-            id = uid;
+            user.id = uid;
         }
 
-        setState('user', {
-            ...data,
-            id,
-            isSignedIn,
-            idToken,
-            accessToken
-        });
+        setState('user', user);
     };
 
     const signIn = async () => {
@@ -59,7 +57,7 @@ export const useAuth = () => {
             await signOutOfDatabase();
 
             for (const [key, state] of Object.entries(rootInitialState())) {
-                setState(key, state);
+                setState(key as keyof RootState, state);
             }
         } catch (error) {
             console.error(error);

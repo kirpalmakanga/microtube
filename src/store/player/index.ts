@@ -116,7 +116,7 @@ export const usePlayer = () => {
             }
         });
 
-    const removeQueueItem = ({ id: targetId }: { id: string }) => {
+    const removeQueueItem = ({ id: targetId }: QueueItemData) => {
         setQueue(
             player.queue.filter(({ id }: QueueItemData) => id !== targetId)
         );

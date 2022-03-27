@@ -86,7 +86,7 @@ const Player = () => {
     };
 
     const handleEditPlaylistItem = () =>
-        editPlaylistItem({ id: storeState.currentVideo.id });
+        editPlaylistItem(storeState.currentVideo);
 
     const setSyncedPlayerState = (data: GenericObject) => {
         setPlayerState(data);

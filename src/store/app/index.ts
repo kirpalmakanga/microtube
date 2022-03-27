@@ -111,5 +111,5 @@ export const useDevices = () => {
         setMasterDevice,
         synchronizePlayer,
         subscribeToPlayerSync
-    };
+    } as const;
 };

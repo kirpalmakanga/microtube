@@ -44,7 +44,6 @@ const SortableItem: Component<ListItemProps> = (props) => {
         useOnScreen();
 
     const onMouseUp: JSX.EventHandler<HTMLDivElement, Event> = (e) => {
-        // @ts-ignore
         sortable.isActiveDraggable && e.preventDefault();
     };
 
@@ -55,7 +54,6 @@ const SortableItem: Component<ListItemProps> = (props) => {
             ref={ref}
             className="sortable"
             classList={{
-                // @ts-ignore
                 'is--dragged': sortable.isActiveDraggable
             }}
             onMouseUp={onMouseUp}

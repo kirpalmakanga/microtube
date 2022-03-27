@@ -1,14 +1,12 @@
 import { Component } from 'solid-js';
+import { QueueItemData } from '../../../@types/alltypes';
 import { formatTime, preventDefault, stopPropagation } from '../../lib/helpers';
 import Icon from '../Icon';
 
-interface Props {
-    title: string;
-    duration: number;
+interface Props extends QueueItemData {
     isActive: boolean;
     onClick: () => void;
     onContextMenu: () => void;
-    icon: string;
 }
 
 const QueueItem: Component<Props> = (props) => (

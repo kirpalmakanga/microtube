@@ -1,7 +1,7 @@
 export interface MenuItemData {
     title: string;
     icon: string;
-    onClick: (data: object) => void;
+    onClick: (...args: any[]) => void;
 }
 
 export type MenuOpener = (data: {

@@ -21,5 +21,5 @@ export const useMenu = () => {
         setState('menu', initialState());
     };
 
-    return [menu, { openMenu, closeMenu }];
+    return [menu, { openMenu, closeMenu }] as const;
 };

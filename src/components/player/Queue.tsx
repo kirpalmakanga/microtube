@@ -1,5 +1,6 @@
 import { Component, onCleanup, onMount, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
+import { QueueItemData, ThumbnailsData } from '../../../@types/alltypes';
 import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 import { useMenu } from '../../store/menu';
 import { useNotifications } from '../../store/notifications';
@@ -18,13 +19,7 @@ interface Props {
     togglePlay: () => void;
 }
 
-interface QueueItemData {
-    id: string;
-    title: string;
-    duration: number;
-    isActive: boolean;
-    icon: string;
-}
+/* TODO: remplacer QUEUEITEMDATA par VideoData */
 
 const Queue: Component<Props> = (props) => {
     const [

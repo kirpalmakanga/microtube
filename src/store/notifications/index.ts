@@ -42,5 +42,5 @@ export const useNotifications = () => {
             openNotification,
             closeNotification
         }
-    ];
+    ] as const;
 };

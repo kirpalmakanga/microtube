@@ -123,5 +123,5 @@ export const useChannel = (channelId: string) => {
             getPlaylists,
             toggleSubscription
         }
-    ];
+    ] as const;
 };

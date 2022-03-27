@@ -4,7 +4,7 @@ import { useStore } from '..';
 import { useNotifications } from '../notifications';
 import { usePrompt } from '../prompt';
 
-import { QueueItem } from '../../../@types/alltypes';
+import { QueueItemData } from '../../../@types/alltypes';
 
 import { IS_DEV_MODE } from '../../config/app';
 
@@ -27,7 +27,7 @@ export const usePlayer = () => {
     const currentQueueIndex = createMemo(
         () =>
             player.queue.findIndex(
-                ({ id }: QueueItem) => id === player.currentId
+                ({ id }: QueueItemData) => id === player.currentId
             ),
         player.currentId
     );
@@ -50,23 +50,23 @@ export const usePlayer = () => {
             }
         });
 
-    const setQueue = (queue: QueueItem[]) => {
+    const setQueue = (queue: QueueItemData[]) => {
         setState('player', { queue });
 
         saveData(queuePath, queue);
     };
 
-    const queueItems = (newItems: QueueItem[]) => {
+    const queueItems = (newItems: QueueItemData[]) => {
         const items = newItems.filter(
-            ({ id }: QueueItem) =>
+            ({ id }: QueueItemData) =>
                 !player.queue.find(
-                    ({ id: queueItemId }: QueueItem) => queueItemId === id
+                    ({ id: queueItemId }: QueueItemData) => queueItemId === id
                 )
         );
 
         const { queue: currentQueue, newQueueItems } = player;
 
-        const queue: QueueItem[] = [...currentQueue, ...items];
+        const queue: QueueItemData[] = [...currentQueue, ...items];
 
         setState('player', {
             queue,
@@ -78,7 +78,7 @@ export const usePlayer = () => {
         return items;
     };
 
-    const queueItem = (data: QueueItem) => queueItems([data]);
+    const queueItem = (data: QueueItemData) => queueItems([data]);
 
     const setActiveQueueItem = (currentId: string) => {
         setState('player', { currentId });
@@ -117,7 +117,9 @@ export const usePlayer = () => {
         });
 
     const removeQueueItem = ({ id: targetId }: { id: string }) => {
-        setQueue(player.queue.filter(({ id }: QueueItem) => id !== targetId));
+        setQueue(
+            player.queue.filter(({ id }: QueueItemData) => id !== targetId)
+        );
 
         if (targetId === player.currentId) {
             saveData(currentIdPath, '');
@@ -134,7 +136,7 @@ export const usePlayer = () => {
             callback: () => {
                 setQueue(
                     player.queue.filter(
-                        ({ id }: QueueItem) => id === player.currentId
+                        ({ id }: QueueItemData) => id === player.currentId
                     )
                 );
             }
@@ -198,5 +200,5 @@ export const usePlayer = () => {
             toggleQueue,
             closeScreen
         }
-    ];
+    ] as const;
 };

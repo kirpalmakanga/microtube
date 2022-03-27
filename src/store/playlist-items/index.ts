@@ -1,9 +1,12 @@
 import { useStore } from '..';
-import { usePlaylists } from '../playlists';
 import { useNotifications } from '../notifications';
 import { usePrompt } from '../prompt';
 
-import { PlaylistData, PlaylistItemData } from '../../../@types/alltypes';
+import {
+    PlaylistData,
+    PlaylistItemData,
+    VideoData
+} from '../../../@types/alltypes';
 
 import * as api from '../../api/youtube';
 import { initialState, PlaylistItemsState } from './_state';
@@ -13,7 +16,6 @@ export const usePlaylistItems = (playlistId?: string) => {
     const [{ playlists, playlistItems }, setState] = useStore();
     const [, { openNotification }] = useNotifications();
     const [, { openPrompt }] = usePrompt();
-    const [, { createPlaylist }] = usePlaylists();
 
     const getPlaylistTitle = async (playlistId: string) => {
         const playlistTitle = await api.getPlaylistTitle(playlistId);
@@ -57,31 +59,7 @@ export const usePlaylistItems = (playlistId?: string) => {
         }
     };
 
-    const addPlaylistItem = async (id: string, playlistId: string) => {
-        try {
-            await api.addPlaylistItem(playlistId, id);
-
-            const {
-                items: [playlist]
-            } = await api.getPlaylists({ ids: [playlistId] });
-
-            if (playlist) {
-                const items = [...playlists.items];
-                const index = items.findIndex(
-                    ({ id }: PlaylistData) => id === playlistId
-                );
-
-                if (index > -1) items[index] = playlist;
-                else items.unshift(playlist);
-
-                setState('playlists', { items });
-            }
-        } catch (error) {
-            openNotification('Error adding playlist item.');
-        }
-    };
-
-    const editPlaylistItem = ({ id: videoId }: PlaylistItemData) => {
+    const editPlaylistItem = ({ id: videoId, thumbnails }: VideoData) => {
         openPrompt({
             mode: 'playlists',
             headerText: 'Save to playlist',
@@ -92,19 +70,49 @@ export const usePlaylistItems = (playlistId?: string) => {
                 privacyStatus
             }: PlaylistData) => {
                 try {
-                    if (!playlistId) {
-                        const { id: newPlaylistId } = await createPlaylist(
-                            title,
-                            privacyStatus
+                    if (playlistId) {
+                        await api.addPlaylistItem(playlistId, videoId);
+
+                        const index = playlists.items.findIndex(
+                            ({ id }: PlaylistData) => id === playlistId
                         );
 
-                        playlistId = newPlaylistId;
-                    }
+                        if (index > -1) {
+                            setState(
+                                'playlists',
+                                'items',
+                                index,
+                                'itemCount',
+                                (c: number) => c + 1
+                            );
+                        }
 
-                    await addPlaylistItem(videoId, playlistId);
+                        /* TODO: update current playlist */
+                    } else {
+                        const playlist = await api.createPlaylist({
+                            title,
+                            privacyStatus
+                        });
+
+                        await api.addPlaylistItem(playlist.id, videoId);
+
+                        setState(
+                            'playlists',
+                            'items',
+                            (items: PlaylistData[]) => [
+                                {
+                                    ...playlist,
+                                    thumbnails,
+                                    itemCount: 1
+                                },
+                                ...items
+                            ]
+                        );
+                    }
 
                     openNotification(`Added to playlist "${title}".`);
                 } catch (error) {
+                    console.error(error);
                     openNotification('Error editing playlist item.');
                 }
             }
@@ -159,10 +167,9 @@ export const usePlaylistItems = (playlistId?: string) => {
         {
             getPlaylistTitle,
             getPlaylistItems,
-            addPlaylistItem,
             editPlaylistItem,
             removePlaylistItem,
             clearPlaylistItems
         }
-    ];
+    ] as const;
 };

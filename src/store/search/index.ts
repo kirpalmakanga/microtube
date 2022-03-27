@@ -50,5 +50,5 @@ export const useSearch = () => {
         }
     };
 
-    return [search, { searchVideos, setSearchTarget, clearSearch }];
+    return [search, { searchVideos, setSearchTarget, clearSearch }] as const;
 };

@@ -4,7 +4,7 @@ export interface PromptState {
     headerText: string;
     confirmText: string;
     cancelText: string;
-    callback: (...args: unknown[]) => void;
+    callback: (...args: any[]) => void | Promise<void>;
 }
 
 export const initialState = (): PromptState => ({

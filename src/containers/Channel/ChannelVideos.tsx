@@ -21,7 +21,7 @@ const ChannelVideos = () => {
     const [, { openNotification }] = useNotifications();
     const [, { openMenu }] = useMenu();
 
-    const handleGetChannelVideos = () => getVideos(params.channelId);
+    const handleGetChannelVideos = () => getVideos();
 
     const handleClickCard =
         ({ id }: VideoData) =>

@@ -42,5 +42,5 @@ export const useSubscriptions = () => {
 
     const clearData = () => setState('subscriptions', initialState());
 
-    return [subscriptions, { getData, clearData }];
+    return [subscriptions, { getData, clearData }] as const;
 };

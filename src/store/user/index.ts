@@ -73,5 +73,5 @@ export const useAuth = () => {
             signIn,
             signOut
         }
-    ];
+    ] as const;
 };

@@ -5,7 +5,7 @@ import { initialState, PromptState } from './_state';
 export const usePrompt = () => {
     const [{ prompt }, setState] = useStore();
 
-    const openPrompt = (payload: PromptState) =>
+    const openPrompt = (payload: Partial<PromptState>) =>
         setState('prompt', { ...payload, isVisible: true });
 
     const closePrompt = async () => {
@@ -18,5 +18,5 @@ export const usePrompt = () => {
         setState('prompt', initialState());
     };
 
-    return [prompt, { openPrompt, closePrompt }];
+    return [prompt, { openPrompt, closePrompt }] as const;
 };

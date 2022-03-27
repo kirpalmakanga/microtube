@@ -136,5 +136,5 @@ export const usePlaylists = (channelId?: string) => {
             queuePlaylist,
             launchPlaylist
         }
-    ];
+    ] as const;
 };

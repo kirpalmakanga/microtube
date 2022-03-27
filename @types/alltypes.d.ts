@@ -51,11 +51,12 @@ interface PlaylistItemData extends VideoData {
     playlistItemId: string;
 }
 
-export interface QueueItem {
+export interface QueueItemData {
     id: string;
     title: string;
-    description: string;
+    thumbnails: ThumbnailsData;
     duration: number;
+    icon: string;
 }
 
 export interface ChannelData {

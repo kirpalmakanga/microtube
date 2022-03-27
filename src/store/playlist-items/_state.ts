@@ -1,6 +1,7 @@
 import { PlaylistItemData } from '../../../@types/alltypes';
 
 export interface PlaylistItemsState {
+    playlistId: string;
     playlistTitle: string;
     items: PlaylistItemData[];
     nextPageToken: string;
@@ -9,6 +10,7 @@ export interface PlaylistItemsState {
 }
 
 export const initialState = (): PlaylistItemsState => ({
+    playlistId: '',
     playlistTitle: '',
     items: [],
     nextPageToken: '',

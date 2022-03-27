@@ -9,8 +9,7 @@ import {
 } from '../../../@types/alltypes';
 
 import * as api from '../../api/youtube';
-import { initialState, PlaylistItemsState } from './_state';
-import { PlaylistsState } from '../playlists/_state';
+import { initialState } from './_state';
 
 export const usePlaylistItems = (playlistId?: string) => {
     const [{ playlists, playlistItems }, setState] = useStore();
@@ -48,6 +47,7 @@ export const usePlaylistItems = (playlistId?: string) => {
                 });
 
                 setState('playlistItems', {
+                    playlistId,
                     items: [...items, ...newItems],
                     nextPageToken,
                     hasNextPage: !!nextPageToken,
@@ -59,7 +59,23 @@ export const usePlaylistItems = (playlistId?: string) => {
         }
     };
 
-    const editPlaylistItem = ({ id: videoId, thumbnails }: VideoData) => {
+    const addPlaylistItem = async (data: VideoData, playlistId: string) => {
+        const { id } = data;
+        const playlistItemId = await api.addPlaylistItem(playlistId, id);
+
+        if (playlistId === playlistItems.playlistId) {
+            setState('playlistItems', 'items', (items) => [
+                ...items,
+                {
+                    ...data,
+                    playlistId,
+                    playlistItemId
+                }
+            ]);
+        }
+    };
+
+    const editPlaylistItem = (videoData: VideoData) => {
         openPrompt({
             mode: 'playlists',
             headerText: 'Save to playlist',
@@ -70,8 +86,10 @@ export const usePlaylistItems = (playlistId?: string) => {
                 privacyStatus
             }: PlaylistData) => {
                 try {
+                    const { thumbnails } = videoData;
+
                     if (playlistId) {
-                        await api.addPlaylistItem(playlistId, videoId);
+                        await addPlaylistItem(videoData, playlistId);
 
                         const index = playlists.items.findIndex(
                             ({ id }: PlaylistData) => id === playlistId
@@ -86,15 +104,13 @@ export const usePlaylistItems = (playlistId?: string) => {
                                 (c: number) => c + 1
                             );
                         }
-
-                        /* TODO: update current playlist */
                     } else {
                         const playlist = await api.createPlaylist({
                             title,
                             privacyStatus
                         });
 
-                        await api.addPlaylistItem(playlist.id, videoId);
+                        await addPlaylistItem(videoData, playlistId);
 
                         setState('playlists', 'items', (items) => [
                             {
@@ -132,14 +148,14 @@ export const usePlaylistItems = (playlistId?: string) => {
                         )
                     );
 
-                    setState('playlists', ({ items }: PlaylistsState) => {
+                    setState('playlists', 'items', (items) => {
                         const index = items.findIndex(
                             ({ id }) => id === playlistId
                         );
 
                         if (index > -1) items[index].itemCount--;
 
-                        return { items };
+                        return items;
                     });
 
                     openNotification(`Removed ${title}.`);

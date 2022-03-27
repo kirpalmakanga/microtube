@@ -318,11 +318,14 @@ export async function getPlaylistItems({
     };
 }
 
-export async function addPlaylistItem(playlistId: string, videoId: string) {
-    const data = await request(
+export async function addPlaylistItem(
+    playlistId: string,
+    videoId: string
+): Promise<string> {
+    const { id } = await request(
         'POST',
         'playlistItems',
-        { part: 'snippet,status,contentDetails' },
+        { part: 'snippet' },
         {
             snippet: {
                 playlistId,
@@ -334,7 +337,7 @@ export async function addPlaylistItem(playlistId: string, videoId: string) {
         }
     );
 
-    return parseVideoData(data);
+    return id;
 }
 
 export async function removePlaylistItem(id: string) {

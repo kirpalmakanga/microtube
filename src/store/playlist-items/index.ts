@@ -110,7 +110,7 @@ export const usePlaylistItems = (playlistId?: string) => {
                             privacyStatus
                         });
 
-                        await addPlaylistItem(videoData, playlistId);
+                        await addPlaylistItem(videoData, playlist.id);
 
                         setState('playlists', 'items', (items) => [
                             {

@@ -65,9 +65,8 @@ const SortableItem: Component<ListItemProps> = (props) => {
 
 const DraggableList = (props: ListProps) => {
     const getItemIds = (items: unknown[]) => items.map(props.getItemId);
-    const [items, setItems] = createSignal(getItemIds(props.items));
+    const [ids, setIds] = createSignal(getItemIds(props.items));
     const [activeItem, setActiveItem] = createSignal(null);
-    const ids = () => items();
 
     const onDragStart: DragEventHandler = ({ draggable: { id, node } }) => {
         getSiblings(node).forEach(
@@ -91,7 +90,7 @@ const DraggableList = (props: ListProps) => {
         if (fromIndex !== toIndex) {
             const updatedItems = reorder(props.items, fromIndex, toIndex);
 
-            setItems(getItemIds(updatedItems));
+            setIds(getItemIds(updatedItems));
 
             props.onReorderItems(updatedItems);
         }

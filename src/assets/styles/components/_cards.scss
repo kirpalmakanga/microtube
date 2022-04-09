@@ -1,4 +1,5 @@
 .card {
+    @include transition(background-color);
     display: flex;
     background-color: lighten($brand-primary, 20%);
     width: 100%;
@@ -7,7 +8,7 @@
 
     .layout:not(.is--mobile) &:active,
     .layout:not(.is--mobile) &:hover {
-        background-color: lighten($brand-primary, 60%);
+        background-color: lighten($brand-primary, 30%);
     }
 
     &__thumbnail {

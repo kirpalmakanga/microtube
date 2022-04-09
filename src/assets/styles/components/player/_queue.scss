@@ -145,7 +145,7 @@
 .sortable {
     cursor: pointer;
     &.is--dragged {
-        transition: transform 0s ease-out;
+        @include transition(transform);
         opacity: 0.5;
         cursor: grabbing;
     }

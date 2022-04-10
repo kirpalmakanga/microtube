@@ -334,7 +334,11 @@ const Player = () => {
         <div
             className="player__container shadow--2dp"
             ref={setFullscreenRef}
-            data-state-fullscreen={state.isFullscreen ? 'enabled' : 'disabled'}
+            data-state-fullscreen={
+                state.isFullscreen && currentDevice().isMaster
+                    ? 'enabled'
+                    : 'disabled'
+            }
             data-state-show-queue={
                 state.isQueueVisible ? 'enabled' : 'disabled'
             }
@@ -344,7 +348,7 @@ const Player = () => {
                     isVisible={
                         isSingleVideo() ||
                         state.isScreenVisible ||
-                        state.isFullscreen
+                        (state.isFullscreen && currentDevice().isMaster)
                     }
                     videoId={storeState.currentVideo.id}
                     onReady={handleYoutubeIframeReady}

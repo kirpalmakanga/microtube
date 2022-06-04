@@ -22,9 +22,9 @@ const SearchForm: Component<Props> = (props) => {
     });
 
     return (
-        <form className="search-form" onSubmit={handleSubmit}>
-            <div className="textfield">
-                <label className="sr-only" htmlFor="search">
+        <form class="search-form" onSubmit={handleSubmit}>
+            <div class="textfield">
+                <label class="sr-only" htmlFor="search">
                     Search
                 </label>
 
@@ -33,7 +33,7 @@ const SearchForm: Component<Props> = (props) => {
                     aria-label="Search"
                     value={input()}
                     name="search"
-                    className="textfield__input"
+                    class="textfield__input"
                     id="search"
                     type="text"
                     placeholder="Search..."

@@ -41,21 +41,21 @@ const DropDown: Component<Props> = (props) => {
         preventDefault(() => !isActiveItem && props.onSelect(value));
 
     return (
-        <div className="dropdown" onClick={stopPropagation()}>
+        <div class="dropdown" onClick={stopPropagation()}>
             <button
-                className="dropdown__trigger"
+                class="dropdown__trigger"
                 onClick={toggleOptions}
                 onBlur={closeOptions}
                 type="button"
             >
-                <span className="dropdown__trigger-title">{label()}</span>
+                <span class="dropdown__trigger-title">{label()}</span>
 
                 <Icon name={isOpen() ? 'chevron-up' : 'chevron-down'} />
             </button>
 
             <Transition name="fade">
                 <Show when={isOpen()}>
-                    <ul className="dropdown__list shadow--2dp">
+                    <ul class="dropdown__list shadow--2dp">
                         <For each={props.options}>
                             {({ label, value }) => {
                                 const isActiveItem =
@@ -63,7 +63,7 @@ const DropDown: Component<Props> = (props) => {
 
                                 return (
                                     <li
-                                        className={'dropdown__list-item'}
+                                        class={'dropdown__list-item'}
                                         classList={{
                                             'is-active': isActiveItem
                                         }}

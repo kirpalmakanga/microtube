@@ -4,7 +4,7 @@ import Icon from './Icon';
 type ButtonType = 'button' | 'submit' | 'reset' | undefined;
 
 export interface ButtonProps {
-    className?: string;
+    class?: string;
     icon?: string;
     title?: string;
     type?: ButtonType;

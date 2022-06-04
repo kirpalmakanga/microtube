@@ -7,9 +7,9 @@ interface Props {
 }
 
 const Time: Component<Props> = (props) => (
-    <div className="PlayerInfoTime">
+    <div class="PlayerInfoTime">
         <span>{props.duration ? formatTime(props.time || 0) : '--'}</span>
-        <span className="PlayerInfoTime__Separator">/</span>
+        <span class="PlayerInfoTime__Separator">/</span>
         <span>{props.duration ? formatTime(props.duration || 0) : '--'}</span>
     </div>
 );

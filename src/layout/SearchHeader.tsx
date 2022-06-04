@@ -15,11 +15,11 @@ const SearchHeader = () => {
         setSearchParams({ query }, { replace: true });
 
     return (
-        <div className="layout__header-row">
+        <div class="layout__header-row">
             <Title>{title()}</Title>
 
             <Link
-                className="layout__back-button icon-button"
+                class="layout__back-button icon-button"
                 href="/"
                 aria-label="Close search"
             >
@@ -31,7 +31,7 @@ const SearchHeader = () => {
                 onSubmit={handleFormSubmit}
             />
 
-            <nav className="navigation">
+            <nav class="navigation">
                 <DropDown
                     currentValue={search.forMine}
                     options={[

@@ -97,7 +97,7 @@ const Queue: Component<Props> = (props) => {
 
     return (
         <section
-            className="Queue shadow--2dp"
+            class="Queue shadow--2dp"
             classList={{ 'is--visible': props.isVisible }}
         >
             <QueueHeader
@@ -109,7 +109,7 @@ const Queue: Component<Props> = (props) => {
 
             <Transition name="fade">
                 <Show when={props.isVisible}>
-                    <div className="Queue__Content">
+                    <div class="Queue__Content">
                         <Show
                             when={player.queue.length}
                             fallback={
@@ -119,7 +119,7 @@ const Queue: Component<Props> = (props) => {
                                 />
                             }
                         >
-                            <div className="Queue__Items">
+                            <div class="Queue__Items">
                                 <SortableList
                                     items={player.queue}
                                     getItemId={({ id }: VideoData) => id}

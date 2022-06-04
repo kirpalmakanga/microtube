@@ -25,27 +25,21 @@ const Prompt: Component = () => {
         <>
             <Transition name="fade">
                 <Show when={prompt.isVisible}>
-                    <div
-                        className="dialog__overlay"
-                        onClick={closePrompt}
-                    ></div>
+                    <div class="dialog__overlay" onClick={closePrompt}></div>
                 </Show>
             </Transition>
 
             <Transition name="slide-up">
                 <Show when={prompt.isVisible}>
-                    <div
-                        className="dialog shadow--2dp"
-                        onClick={stopPropagation()}
-                    >
-                        <header className="dialog__header">
+                    <div class="dialog shadow--2dp" onClick={stopPropagation()}>
+                        <header class="dialog__header">
                             <Icon name="prompt" />
 
                             <span>{prompt.headerText}</span>
                         </header>
 
                         <Show when={isMode('import', 'playlists')}>
-                            <div className="dialog__content">
+                            <div class="dialog__content">
                                 <Show when={isMode('import')}>
                                     <ImportVideoForm onSubmit={handleConfirm} />
                                 </Show>
@@ -58,10 +52,10 @@ const Prompt: Component = () => {
                             </div>
                         </Show>
 
-                        <footer className="dialog__actions">
+                        <footer class="dialog__actions">
                             <Show when={prompt.cancelText}>
                                 <Button
-                                    className="button is--close shadow--2dp"
+                                    class="button is--close shadow--2dp"
                                     onClick={closePrompt}
                                     title={prompt.cancelText}
                                 />
@@ -69,7 +63,7 @@ const Prompt: Component = () => {
 
                             <Show when={isMode('import')}>
                                 <Button
-                                    className="button shadow--2dp"
+                                    class="button shadow--2dp"
                                     title={prompt.confirmText}
                                     type="submit"
                                     form="importVideos"
@@ -78,7 +72,7 @@ const Prompt: Component = () => {
 
                             <Show when={isMode('default')}>
                                 <Button
-                                    className="button shadow--2dp"
+                                    class="button shadow--2dp"
                                     title={prompt.confirmText}
                                     onClick={handleConfirm}
                                 />

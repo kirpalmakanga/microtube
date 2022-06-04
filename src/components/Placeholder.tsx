@@ -8,7 +8,7 @@ interface Props {
 }
 
 const Placeholder: Component<Props> = ({ icon, text, children = null }) => (
-    <div className="placeholder">
+    <div class="placeholder">
         <Icon name={icon} />
         <p>{text}</p>
         {children}

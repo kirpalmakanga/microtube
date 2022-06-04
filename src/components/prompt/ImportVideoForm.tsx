@@ -18,10 +18,10 @@ export const ImportVideoForm: Component<Props> = ({ onSubmit }) => {
 
     return (
         <form id="importVideos" onSubmit={handleSubmit}>
-            <div className="textfield">
+            <div class="textfield">
                 <textarea
                     id="videoId"
-                    className="textfield__textarea"
+                    class="textfield__textarea"
                     value={text()}
                     onChange={handleChange}
                     onKeyPress={handleKeyPress}

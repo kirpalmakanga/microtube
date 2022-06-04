@@ -10,9 +10,9 @@ interface TabsProps {
 }
 
 const Tabs = (props: TabsProps) => (
-    <ul className="tabs">
+    <ul class="tabs">
         <For each={props.children}>
-            {(child) => <li className="tab">{child}</li>}
+            {(child) => <li class="tab">{child}</li>}
         </For>
     </ul>
 );
@@ -38,23 +38,23 @@ const Channel = () => {
     onCleanup(clearData);
 
     return (
-        <div className="channel">
-            <div className="channel__header">
-                <div className="channel__header-inner">
-                    <div className="channel__thumbnail">
+        <div class="channel">
+            <div class="channel__header">
+                <div class="channel__header-inner">
+                    <div class="channel__thumbnail">
                         <Img
                             src={getThumbnails(channel.thumbnails, 'medium')}
                             alt="Channel thumbnail"
                         />
                     </div>
 
-                    <div className="channel__details">
-                        <div className="channel__details-title">
+                    <div class="channel__details">
+                        <div class="channel__details-title">
                             {channel.channelTitle}
                         </div>
 
                         <Button
-                            className="button"
+                            class="button"
                             disabled={isSubscribing()}
                             title={
                                 isSubscribing()
@@ -82,7 +82,7 @@ const Channel = () => {
                 </Tabs>
             </div>
 
-            <div className="channel__content">
+            <div class="channel__content">
                 <Outlet />
             </div>
         </div>

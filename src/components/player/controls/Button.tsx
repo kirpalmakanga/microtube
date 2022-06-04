@@ -2,7 +2,7 @@ import { Component, splitProps } from 'solid-js';
 import Icon from '../../Icon';
 
 interface Props {
-    className: string;
+    class: string;
     classList?: { [key: string]: boolean };
     icon: string;
     badge?: unknown;

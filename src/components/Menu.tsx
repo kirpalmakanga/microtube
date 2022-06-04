@@ -12,28 +12,28 @@ const Menu = () => {
         <>
             <Transition name="fade">
                 <Show when={menu.isOpen}>
-                    <div className="menu__overlay" onClick={closeMenu}></div>
+                    <div class="menu__overlay" onClick={closeMenu}></div>
                 </Show>
             </Transition>
 
             <Transition name="slide-up">
                 <Show when={menu.isOpen}>
-                    <div className="menu__container shadow--2dp">
+                    <div class="menu__container shadow--2dp">
                         <Show when={menu.title}>
                             <div
-                                className="menu__header"
+                                class="menu__header"
                                 onClick={stopPropagation()}
                             >
                                 {menu.title}
                             </div>
                         </Show>
 
-                        <ul className="menu__items">
+                        <ul class="menu__items">
                             <For each={menu.items}>
                                 {({ title, icon, onClick }: MenuItemData) => (
                                     <li>
                                         <button
-                                            className="menu__item"
+                                            class="menu__item"
                                             type="button"
                                             onClick={() => {
                                                 closeMenu();

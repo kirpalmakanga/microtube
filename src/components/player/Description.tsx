@@ -11,7 +11,7 @@ const Description: Component<Props> = (props) => {
         props.text
     );
 
-    return <div className="PlayerDescription" innerHTML={text()}></div>;
+    return <div class="PlayerDescription" innerHTML={text()}></div>;
 };
 
 export default Description;

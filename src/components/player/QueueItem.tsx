@@ -12,35 +12,33 @@ interface Props extends VideoData {
 
 const QueueItem: Component<Props> = (props) => (
     <div
-        className="QueueItem shadow--2dp"
+        class="QueueItem shadow--2dp"
         classList={{ 'is-active': props.isActive }}
         onDragStart={preventDefault(stopPropagation())}
     >
         <div
-            className="QueueItem__Content"
+            class="QueueItem__Content"
             onClick={props.onClick}
             onContextMenu={props.onContextMenu}
         >
-            <div className="QueueItem__Button icon-button">
+            <div class="QueueItem__Button icon-button">
                 <Icon name={props.icon} />
             </div>
 
-            <div className="QueueItem__Title">{props.title}</div>
+            <div class="QueueItem__Title">{props.title}</div>
 
-            <div className="QueueItem__Duration">
-                {formatTime(props.duration)}
-            </div>
+            <div class="QueueItem__Duration">{formatTime(props.duration)}</div>
         </div>
 
         <div
-            className="QueueItem__Button icon-button is-drag"
+            class="QueueItem__Button icon-button is-drag"
             onContextMenu={preventDefault()}
         >
             <Icon name="drag" />
         </div>
 
         <button
-            className="QueueItem__Button icon-button"
+            class="QueueItem__Button icon-button"
             onClick={stopPropagation(props.onContextMenu)}
         >
             <Icon name="more" />

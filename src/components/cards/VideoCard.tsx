@@ -16,9 +16,9 @@ interface Props extends VideoData {
 }
 
 const VideoCard: Component<Props> = (props) => (
-    <div className="card" onContextMenu={props.onClickMenu}>
-        <div className="card__content" onClick={props.onClick}>
-            <div className="card__thumbnail">
+    <div class="card" onContextMenu={props.onClickMenu}>
+        <div class="card__content" onClick={props.onClick}>
+            <div class="card__thumbnail">
                 <Img
                     src={getThumbnails(props.thumbnails, 'medium')}
                     alt={props.title}
@@ -26,17 +26,17 @@ const VideoCard: Component<Props> = (props) => (
                 />
 
                 <Show when={props.duration}>
-                    <span className="card__thumbnail-badge">
+                    <span class="card__thumbnail-badge">
                         {formatTime(props.duration)}
                     </span>
                 </Show>
             </div>
 
-            <div className="card__text">
-                <h2 className="card__title">{props.title}</h2>
+            <div class="card__text">
+                <h2 class="card__title">{props.title}</h2>
 
                 <Show when={props.privacyStatus !== 'deleted'}>
-                    <h3 className="card__subtitle author">
+                    <h3 class="card__subtitle author">
                         <Link
                             href={`/channel/${props.channelId}`}
                             onClick={stopPropagation()}
@@ -47,16 +47,16 @@ const VideoCard: Component<Props> = (props) => (
                 </Show>
 
                 <Show when={props.publishedAt}>
-                    <h3 className="card__subtitle date">
+                    <h3 class="card__subtitle date">
                         {formatDate(props.publishedAt, 'MMMM do yyyy')}
                     </h3>
                 </Show>
             </div>
         </div>
 
-        <div className="card__buttons">
+        <div class="card__buttons">
             <Button
-                className="card__button icon-button"
+                class="card__button icon-button"
                 icon="more"
                 onClick={props.onClickMenu}
             />

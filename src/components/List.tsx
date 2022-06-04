@@ -6,7 +6,7 @@ import Icon from './Icon';
 type ListItemProps = { data: any };
 
 interface Props {
-    className?: string;
+    class?: string;
     items: unknown[];
     itemSize?: number | undefined;
     children: (props: ListItemProps) => JSXElement;
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const Loader = () => (
-    <div className="list__loading">
+    <div class="list__loading">
         <Icon name="loading" />
     </div>
 );
@@ -62,12 +62,8 @@ const List = (props: Props) => {
     onCleanup(() => (isUnmounting = true));
 
     return (
-        <div className="list">
-            <div
-                className="list__inner"
-                ref={scrollTarget}
-                onScroll={handleScroll}
-            >
+        <div class="list">
+            <div class="list__inner" ref={scrollTarget} onScroll={handleScroll}>
                 <VirtualContainer
                     items={isLoading() ? [...props.items, null] : props.items}
                     itemSize={{ height: getItemSize() }}
@@ -76,7 +72,7 @@ const List = (props: Props) => {
                 >
                     {(itemProps) => (
                         <div
-                            className="list__item"
+                            class="list__item"
                             style={itemProps.style}
                             role="listitem"
                         >

@@ -28,7 +28,7 @@ const Img: Component<Props> = (props) => {
     }
 
     return (
-        <span className="image">
+        <span class="image">
             <Show
                 when={img && img.complete}
                 fallback={
@@ -36,7 +36,7 @@ const Img: Component<Props> = (props) => {
                         <Show
                             when={state.isLoaded && !state.hasError}
                             fallback={
-                                <span className="image__placeholder">
+                                <span class="image__placeholder">
                                     <Icon name="image" />
                                 </span>
                             }

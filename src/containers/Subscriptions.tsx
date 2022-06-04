@@ -23,7 +23,7 @@ const Subscriptions = () => {
             }
         >
             <List
-                className="channels"
+                class="channels"
                 items={subscriptions.items}
                 loadItems={getData}
             >

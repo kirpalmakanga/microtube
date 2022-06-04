@@ -44,14 +44,14 @@ const Root: Component = (props) => {
             <Sprite />
 
             <div
-                className="layout"
+                class="layout"
                 classList={{ 'is--mobile': isMobile() }}
                 onContextMenu={IS_DEV_MODE ? () => {} : preventDefault()}
             >
                 <Show when={isAppReady()} fallback={<Loader />}>
                     <Header />
 
-                    <main className="layout__content">{props.children}</main>
+                    <main class="layout__content">{props.children}</main>
 
                     <Notifications />
 

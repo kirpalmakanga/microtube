@@ -6,7 +6,7 @@ interface Props {
 
 const Icon: Component<Props> = (props: Props) => (
     <Show when={props.name}>
-        <span className="icon">
+        <span class="icon">
             <svg>
                 <use href={`#icon-${props.name}`} />
             </svg>

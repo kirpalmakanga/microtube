@@ -11,14 +11,14 @@ const DevicesSelector: Component<Props> = (props) => {
         props.onClickItem(deviceId);
 
     return (
-        <div className="player__controls-devices shadow--2dp">
-            <ul className="player__controls-devices-list">
+        <div class="player__controls-devices shadow--2dp">
+            <ul class="player__controls-devices-list">
                 <li
-                    className="device"
+                    class="device"
                     onClick={handleClickItem(props.currentDevice.deviceId)}
                 >
-                    <span className="device__desc">Current device</span>
-                    <span className="device__name">
+                    <span class="device__desc">Current device</span>
+                    <span class="device__name">
                         {`${props.currentDevice.deviceName} ${
                             props.currentDevice.isMaster ? '(active)' : ''
                         }`}
@@ -27,12 +27,9 @@ const DevicesSelector: Component<Props> = (props) => {
 
                 <For each={props.devices}>
                     {({ deviceId, deviceName, isMaster }) => (
-                        <li
-                            className="device"
-                            onClick={handleClickItem(deviceId)}
-                        >
-                            <span className="device__desc">Browser</span>
-                            <span className="device__name">
+                        <li class="device" onClick={handleClickItem(deviceId)}>
+                            <span class="device__desc">Browser</span>
+                            <span class="device__name">
                                 {`${deviceName} ${isMaster ? '(active)' : ''}`}
                             </span>
                         </li>

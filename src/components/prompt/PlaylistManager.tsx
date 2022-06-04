@@ -49,9 +49,9 @@ const NewPlayListForm: Component<FormProps> = ({ onSubmit }) => {
     const handleSubmit = preventDefault(() => onSubmit(state as PlaylistData));
 
     return (
-        <form className="playlist-menu__form" onSubmit={handleSubmit}>
+        <form class="playlist-menu__form" onSubmit={handleSubmit}>
             <input
-                className="playlist-menu__item-text"
+                class="playlist-menu__item-text"
                 name="title"
                 value={state.title}
                 placeholder="Playlist title"
@@ -79,22 +79,19 @@ export const PlaylistManager: Component<Props> = ({ onClickItem }) => {
         const { title, itemCount } = data;
 
         return (
-            <button
-                className="playlist-menu__item"
-                onClick={makeOnClickItem(data)}
-            >
-                <span className="playlist-menu__item-text">{title}</span>
+            <button class="playlist-menu__item" onClick={makeOnClickItem(data)}>
+                <span class="playlist-menu__item-text">{title}</span>
 
-                <span className="playlist-menu__item-count">{itemCount}</span>
+                <span class="playlist-menu__item-count">{itemCount}</span>
             </button>
         );
     };
 
     return (
-        <div className="playlist-menu">
+        <div class="playlist-menu">
             <NewPlayListForm onSubmit={onCreatePlaylist} />
 
-            <div className="playlist-menu__items">
+            <div class="playlist-menu__items">
                 <List
                     items={playlists.items}
                     loadItems={getPlaylists}

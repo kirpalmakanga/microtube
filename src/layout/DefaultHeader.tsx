@@ -27,7 +27,7 @@ const DefaultHeader = () => {
     };
 
     return (
-        <div className="layout__header-row">
+        <div class="layout__header-row">
             <HeadTitle text={title()} />
 
             <Show
@@ -39,20 +39,20 @@ const DefaultHeader = () => {
             >
                 <Button
                     onClick={() => navigate('/')}
-                    className="layout__back-button icon-button"
+                    class="layout__back-button icon-button"
                     aria-label="Go to homepage"
                     icon="arrow-left"
                 />
             </Show>
 
-            <span className="layout__title">
-                <span className="layout__title-inner">{title()}</span>
+            <span class="layout__title">
+                <span class="layout__title-inner">{title()}</span>
             </span>
 
-            <nav className="navigation">
+            <nav class="navigation">
                 <Show when={user.isSignedIn}>
                     <Link
-                        className="navigation__link icon-button"
+                        class="navigation__link icon-button"
                         aria-label="Open search"
                         href="/search"
                     >
@@ -61,7 +61,7 @@ const DefaultHeader = () => {
 
                     <Show when={location.pathname !== '/'}>
                         <Link
-                            className="navigation__link icon-button"
+                            class="navigation__link icon-button"
                             aria-label="Playlists"
                             href="/"
                         >
@@ -71,7 +71,7 @@ const DefaultHeader = () => {
 
                     <Show when={location.pathname !== '/subscriptions'}>
                         <Link
-                            className="navigation__link icon-button"
+                            class="navigation__link icon-button"
                             href="/subscriptions"
                             aria-label="Open subscriptions"
                         >
@@ -80,9 +80,9 @@ const DefaultHeader = () => {
                     </Show>
                 </Show>
 
-                <div className="navigation__menu">
+                <div class="navigation__menu">
                     <Button
-                        className="navigation__link icon-button avatar"
+                        class="navigation__link icon-button avatar"
                         onClick={handleClickUser}
                         icon={user.isSignedIn && !user.picture ? 'user' : ''}
                     >
@@ -92,14 +92,14 @@ const DefaultHeader = () => {
                     </Button>
 
                     <Show when={isMenuOpen()}>
-                        <div className="navigation__menu__content shadow--2dp">
+                        <div class="navigation__menu__content shadow--2dp">
                             <Show when={user.name}>
-                                <p className="navigation__menu__content__text">
+                                <p class="navigation__menu__content__text">
                                     {user.name}
                                 </p>
                             </Show>
                             <Button
-                                className="button shadow--2dp"
+                                class="button shadow--2dp"
                                 icon="log-out"
                                 title={user.isSignedIn ? 'Log out' : 'Log in'}
                                 onClick={handleLogging}

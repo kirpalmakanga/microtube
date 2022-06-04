@@ -332,7 +332,7 @@ const Player = () => {
 
     return (
         <div
-            className="player__container shadow--2dp"
+            class="player__container shadow--2dp"
             ref={setFullscreenRef}
             data-state-fullscreen={
                 state.isFullscreen && currentDevice().isMaster
@@ -391,11 +391,11 @@ const Player = () => {
                 </Show>
             </Transition>
 
-            <div className="player shadow--2dp">
-                <div className="player__inner shadow--2dp">
+            <div class="player shadow--2dp">
+                <div class="player__inner shadow--2dp">
                     <Show when={!isSingleVideo()}>
                         <Button
-                            className="player__controls-button icon-button"
+                            class="player__controls-button icon-button"
                             onClick={() => goToVideo(false)}
                             icon="chevron-left"
                             ariaLabel="Go to previous video"
@@ -403,7 +403,7 @@ const Player = () => {
                     </Show>
 
                     <Button
-                        className="player__controls-button icon-button"
+                        class="player__controls-button icon-button"
                         onClick={togglePlay}
                         icon={
                             state.isBuffering
@@ -419,7 +419,7 @@ const Player = () => {
 
                     <Show when={!isSingleVideo()}>
                         <Button
-                            className="player__controls-button icon-button"
+                            class="player__controls-button icon-button"
                             onClick={() => goToVideo(true)}
                             icon="chevron-right"
                             ariaLabel="Go to next video"
@@ -443,7 +443,7 @@ const Player = () => {
 
                     <Show when={availableDevices().length && !isSingleVideo()}>
                         <Button
-                            className="player__controls-button icon-button"
+                            class="player__controls-button icon-button"
                             classList={{
                                 'is-active': state.isDevicesSelectorVisible
                             }}
@@ -455,11 +455,11 @@ const Player = () => {
 
                     <Show when={!isMobile() && storeState.currentVideo.id}>
                         <div
-                            className="player__controls-volume"
+                            class="player__controls-volume"
                             onWheel={handleWheelVolume}
                         >
                             <Button
-                                className="player__controls-button icon-button"
+                                class="player__controls-button icon-button"
                                 onClick={toggleMute}
                                 icon={
                                     state.volume === 0
@@ -479,7 +479,7 @@ const Player = () => {
                     </Show>
 
                     <Button
-                        className="player__controls-button icon-button"
+                        class="player__controls-button icon-button"
                         classList={{
                             'is-active': state.isDescriptionVisible
                         }}
@@ -500,7 +500,7 @@ const Player = () => {
                         }
                     >
                         <Button
-                            className="player__controls-button badge icon-button"
+                            class="player__controls-button badge icon-button"
                             classList={{
                                 'is-active': state.isQueueVisible,
                                 'badge--active':
@@ -520,7 +520,7 @@ const Player = () => {
 
                     <Show when={!isSingleVideo() && !state.isFullscreen}>
                         <Button
-                            className="player__controls-button icon-button"
+                            class="player__controls-button icon-button"
                             classList={{ 'is-active': state.isScreenVisible }}
                             onClick={toggleScreen}
                             icon="screen"
@@ -534,7 +534,7 @@ const Player = () => {
 
                     <Show when={isSingleVideo()}>
                         <Button
-                            className="player__controls-button icon-button"
+                            class="player__controls-button icon-button"
                             onClick={handleEditPlaylistItem}
                             icon="folder-add"
                             ariaLabel="Save to playlist"
@@ -543,7 +543,7 @@ const Player = () => {
 
                     <Show when={storeState.currentVideo.id}>
                         <Button
-                            className="player__controls-button icon-button"
+                            class="player__controls-button icon-button"
                             onClick={toggleFullscreen}
                             icon={state.isFullscreen ? 'close' : 'expand'}
                             ariaLabel={

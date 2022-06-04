@@ -133,23 +133,23 @@ const Info: Component<Props> = (props) => {
     onCleanup(clearWatchers);
 
     return (
-        <div className="PlayerInfo">
+        <div class="PlayerInfo">
             <InfoProgress
                 percentElapsed={props.duration ? time() / props.duration : 0}
                 percentLoaded={state.loaded}
             />
 
-            <div className="PlayerInfo__Title">{props.title}</div>
+            <div class="PlayerInfo__Title">{props.title}</div>
 
             <InfoTime time={time()} duration={props.duration} />
 
-            <label className="sr-only" htmlFor="seek-time">
+            <label class="sr-only" htmlFor="seek-time">
                 Seek time
             </label>
 
             <input
                 id="seek-time"
-                className="PlayerInfo__Seek"
+                class="PlayerInfo__Seek"
                 aria-label="Seek time"
                 type="range"
                 min="0"

@@ -11,24 +11,24 @@ interface Props {
 }
 
 const SubscriptionCard: Component<Props> = (props) => (
-    <div className="card">
-        <div className="card__content" onClick={props.onClick}>
-            <div className="card__thumbnail">
+    <div class="card">
+        <div class="card__content" onClick={props.onClick}>
+            <div class="card__thumbnail">
                 <Img
                     src={getThumbnails(props.thumbnails, 'medium')}
                     alt={props.title}
                     background
                 />
 
-                <span className="card__thumbnail-badge">
+                <span class="card__thumbnail-badge">
                     {`${props.totalItemCount} video${
                         props.totalItemCount > 1 ? 's' : ''
                     }`}
                 </span>
             </div>
 
-            <div className="card__text">
-                <h2 className="card__title">{props.title}</h2>
+            <div class="card__text">
+                <h2 class="card__title">{props.title}</h2>
             </div>
         </div>
     </div>

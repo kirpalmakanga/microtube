@@ -9,33 +9,33 @@ interface Props {
 }
 
 const QueueHeader: Component<Props> = (props) => (
-    <header className="layout__header shadow--2dp">
-        <div className="layout__header-row">
+    <header class="layout__header shadow--2dp">
+        <div class="layout__header-row">
             <Button
-                className="navigation__link layout__back-button icon-button"
+                class="navigation__link layout__back-button icon-button"
                 aria-label="Close queue"
                 onClick={props.onClickClose}
                 icon="chevron-down"
             />
 
-            <span className="layout__title">
-                <span className="layout__title-inner">
+            <span class="layout__title">
+                <span class="layout__title-inner">
                     {`Queue (${props.itemCount} item${
                         props.itemCount > 1 ? 's' : ''
                     })`}
                 </span>
             </span>
 
-            <nav className="navigation">
+            <nav class="navigation">
                 <Button
-                    className="navigation__link icon-button"
+                    class="navigation__link icon-button"
                     onClick={props.onClickImport}
                     aria-label="Import videos"
                     icon="add"
                 />
 
                 <Button
-                    className="navigation__link icon-button"
+                    class="navigation__link icon-button"
                     onClick={props.onClickClear}
                     aria-label="Clear queue"
                     icon="delete"

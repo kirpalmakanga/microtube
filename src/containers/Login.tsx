@@ -14,7 +14,7 @@ const Login: Component = () => {
                 text="You must be logged in to access this content."
             >
                 <Button
-                    className="button shadow--2dp"
+                    class="button shadow--2dp"
                     icon="user"
                     title="Log in"
                     type="button"

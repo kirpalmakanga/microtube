@@ -11,7 +11,7 @@ const VolumeRange: Component<Props> = (props) => {
     }) => props.onChange(parseInt(value));
 
     return (
-        <div className="player__controls-volume-range">
+        <div class="player__controls-volume-range">
             <input
                 type="range"
                 min="0"

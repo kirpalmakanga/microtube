@@ -17,14 +17,14 @@ const Notifications: Component = () => {
     return (
         <Transition name="slide-up">
             <Show when={notifications.isVisible}>
-                <div className="notification">
-                    <div className="notification__text">
+                <div class="notification">
+                    <div class="notification__text">
                         {notifications.message}
                     </div>
 
                     <Show when={notifications.callback}>
                         <button
-                            className="notification__action icon-button"
+                            class="notification__action icon-button"
                             onClick={onValidate}
                         >
                             {notifications.callbackButtonText}
@@ -32,7 +32,7 @@ const Notifications: Component = () => {
                     </Show>
 
                     <button
-                        className="notification__action icon-button is--close"
+                        class="notification__action icon-button is--close"
                         onClick={closeNotification}
                     >
                         Close

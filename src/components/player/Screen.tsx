@@ -26,7 +26,7 @@ interface Props {
 
 const Screen: Component<Props> = (props) => (
     <div
-        className="screen"
+        class="screen"
         classList={{ 'is--visible': props.isVisible }}
         onClick={props.onClick}
     >

@@ -8,7 +8,7 @@ const Header = () => {
 
     return (
         <header
-            className="layout__header shadow--2dp"
+            class="layout__header shadow--2dp"
             onClick={() => setScreenVisibility(false)}
         >
             <Routes>

@@ -1,5 +1,4 @@
 import {
-    closestLayoutCenter,
     createSortable,
     DragDropProvider,
     DragDropSensors,
@@ -52,7 +51,7 @@ const SortableItem: Component<ListItemProps> = (props) => {
             // @ts-ignore
             use:sortable
             ref={ref}
-            className="sortable"
+            class="sortable"
             classList={{
                 'is--dragged': sortable.isActiveDraggable
             }}
@@ -99,11 +98,7 @@ const DraggableList = (props: ListProps) => {
     };
 
     return (
-        <DragDropProvider
-            onDragStart={onDragStart}
-            onDragEnd={onDragEnd}
-            collisionDetectionAlgorithm={closestLayoutCenter}
-        >
+        <DragDropProvider onDragStart={onDragStart} onDragEnd={onDragEnd}>
             <DragDropSensors />
 
             <SortableProvider ids={ids()}>
@@ -117,7 +112,7 @@ const DraggableList = (props: ListProps) => {
             </SortableProvider>
 
             <DragOverlay class="sortable-overlay">
-                <div className="sortable">
+                <div class="sortable">
                     <Show when={activeItem()}>
                         {props.children(activeItem())}
                     </Show>

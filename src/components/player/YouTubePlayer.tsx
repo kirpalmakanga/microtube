@@ -9,7 +9,7 @@ import { isEqual } from '../../lib/helpers';
 
 interface Props {
     id?: string;
-    className?: string;
+    class?: string;
     videoId: string;
     options: Options;
     onReady: (playerInstance: YouTubePlayer) => void;
@@ -150,7 +150,7 @@ export const Player: Component<Props> = (props) => {
     onCleanup(destroyPlayer);
 
     return (
-        <div className={props.className}>
+        <div class={props.class}>
             <div id={getContainerId()}></div>
         </div>
     );

@@ -16,7 +16,7 @@ interface ListProps {
 }
 interface ListItemProps {
     id: number | string;
-    children: unknown;
+    children: JSXElement;
 }
 
 const getSiblings = (e: HTMLElement) => {

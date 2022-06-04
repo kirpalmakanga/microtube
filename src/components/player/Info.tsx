@@ -143,7 +143,7 @@ const Info: Component<Props> = (props) => {
 
             <InfoTime time={time()} duration={props.duration} />
 
-            <label class="sr-only" htmlFor="seek-time">
+            <label class="sr-only" for="seek-time">
                 Seek time
             </label>
 

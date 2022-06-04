@@ -5,13 +5,13 @@ import Icon from './Icon';
 
 interface OptionsData {
     label: string;
-    value: unknown;
+    value: any;
 }
 
 interface Props {
     currentValue: string | number;
     options: OptionsData[];
-    onSelect: (value: unknown) => void;
+    onSelect: (value: any) => void;
 }
 
 const DropDown: Component<Props> = (props) => {

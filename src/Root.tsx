@@ -1,4 +1,4 @@
-import { Component, createSignal, onMount, Show } from 'solid-js';
+import { Component, createSignal, JSXElement, onMount, Show } from 'solid-js';
 import { registerSW } from 'virtual:pwa-register';
 import Loader from './components/Loader';
 import Menu from './components/Menu';
@@ -13,7 +13,11 @@ import { isMobile, preventDefault } from './lib/helpers';
 import { useAuth } from './store/user';
 import { useNotifications } from './store/notifications';
 
-const Root: Component = (props) => {
+interface Props {
+    children: JSXElement;
+}
+
+const Root: Component<Props> = (props) => {
     const [user, { getUserData }] = useAuth();
     const [, { openNotification }] = useNotifications();
     const [isAppReady, setIsAppReady] = createSignal(false);

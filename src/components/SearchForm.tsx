@@ -24,7 +24,7 @@ const SearchForm: Component<Props> = (props) => {
     return (
         <form class="search-form" onSubmit={handleSubmit}>
             <div class="textfield">
-                <label class="sr-only" htmlFor="search">
+                <label class="sr-only" for="search">
                     Search
                 </label>
 

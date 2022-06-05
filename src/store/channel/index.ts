@@ -99,7 +99,7 @@ export const useChannel = (channelId: string) => {
 
                         await api.unsubscribeFromChannel(subscriptionId);
                     } catch (error) {
-                        openNotification('Error unsubscribing to channel.');
+                        openNotification('Error unsubscribing from channel.');
                     }
                 }
             });

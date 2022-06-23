@@ -11,12 +11,16 @@ import Button from '../Button';
 import Img from '../Img';
 
 interface Props extends VideoData {
+    index?: number;
     onClick: () => void;
     onClickMenu: () => void;
 }
 
 const VideoCard: Component<Props> = (props) => (
     <div class="card" onContextMenu={props.onClickMenu}>
+        <Show when={typeof props.index === 'number'}>
+            <div class="card__index">{props.index || 0 + 1}</div>
+        </Show>
         <div class="card__content" onClick={props.onClick}>
             <div class="card__thumbnail">
                 <Img

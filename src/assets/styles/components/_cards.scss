@@ -11,6 +11,16 @@
         background-color: lighten($brand-primary, 30%);
     }
 
+    &__index {
+        background-color: $brand-primary;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
     &__thumbnail {
         display: flex;
         position: relative;

@@ -3,7 +3,7 @@ import { createSignal, JSXElement, onCleanup, onMount, Show } from 'solid-js';
 import { throttle } from '../lib/helpers';
 import Icon from './Icon';
 
-type ListItemProps = { data: any };
+type ListItemProps = { index: number; data: any };
 
 interface Props {
     class?: string;
@@ -81,6 +81,7 @@ const List = (props: Props) => {
                                 fallback={<Loader />}
                             >
                                 {props.children({
+                                    index: itemProps.index,
                                     data: itemProps.item
                                 })}
                             </Show>

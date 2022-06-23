@@ -6,7 +6,15 @@ import {
     DragOverlay,
     SortableProvider
 } from '@thisbeyond/solid-dnd';
-import { Component, createSignal, For, JSX, JSXElement, Show } from 'solid-js';
+import {
+    Component,
+    createSignal,
+    For,
+    JSX,
+    JSXElement,
+    ParentComponent,
+    Show
+} from 'solid-js';
 import { useOnScreen } from '../lib/hooks';
 interface ListProps {
     items: any[];
@@ -37,7 +45,7 @@ const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
     return result;
 };
 
-const SortableItem: Component<ListItemProps> = (props) => {
+const SortableItem: ParentComponent<ListItemProps> = (props) => {
     const sortable = createSortable(props.id);
     const [ref, isVisible]: [(el: HTMLElement) => void, () => boolean] =
         useOnScreen();

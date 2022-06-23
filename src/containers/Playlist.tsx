@@ -95,9 +95,10 @@ const Playlists: Component = () => {
             }
         >
             <List items={playlistItems.items} loadItems={getPlaylistItems}>
-                {({ data }) => (
+                {({ index, data }) => (
                     <VideoCard
                         {...data}
+                        index={index}
                         onClick={handleClickCard(data)}
                         onClickMenu={handleClickMenu(data)}
                     />

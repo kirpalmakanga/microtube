@@ -22,8 +22,8 @@ interface Props {
 }
 
 const Info: Component<Props> = (props) => {
-    let timeWatcher: number | null;
-    let loadingWatcher: number | null;
+    let timeWatcher: number | null = null;
+    let loadingWatcher: number | null = null;
 
     const [state, setState] = createStore({
         loaded: 0,
@@ -47,6 +47,8 @@ const Info: Component<Props> = (props) => {
         clearWatchers();
 
         timeWatcher = setImmediateInterval(async () => {
+            if (timeWatcher === null) return;
+
             const currentTime = await props.getCurrentTime();
 
             if (currentTime !== null) {
@@ -55,6 +57,8 @@ const Info: Component<Props> = (props) => {
         }, 200);
 
         loadingWatcher = setImmediateInterval(async () => {
+            if (loadingWatcher === null) return;
+
             const loaded = await props.getLoadingProgress();
 
             if (loaded !== null) {

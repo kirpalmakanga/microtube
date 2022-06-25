@@ -6,19 +6,11 @@ import {
     DragOverlay,
     SortableProvider
 } from '@thisbeyond/solid-dnd';
-import {
-    Component,
-    createSignal,
-    For,
-    JSX,
-    JSXElement,
-    ParentComponent,
-    Show
-} from 'solid-js';
+import { createSignal, For, JSXElement, ParentComponent, Show } from 'solid-js';
 import { useOnScreen } from '../lib/hooks';
 interface ListProps {
     items: any[];
-    children: (data: any) => JSXElement;
+    children: (data: any, index?: number) => JSXElement;
     getItemId: (props: any) => number | string;
     onReorderItems: (updatedItems: any[]) => void;
 }
@@ -47,12 +39,7 @@ const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
 
 const SortableItem: ParentComponent<ListItemProps> = (props) => {
     const sortable = createSortable(props.id);
-    const [ref, isVisible]: [(el: HTMLElement) => void, () => boolean] =
-        useOnScreen();
-
-    const onMouseUp: JSX.EventHandler<HTMLDivElement, Event> = (e) => {
-        sortable.isActiveDraggable && e.preventDefault();
-    };
+    const [ref, isVisible] = useOnScreen();
 
     return (
         <div
@@ -61,9 +48,8 @@ const SortableItem: ParentComponent<ListItemProps> = (props) => {
             ref={ref}
             class="sortable"
             classList={{
-                'is--dragged': sortable.isActiveDraggable
+                'is--dragged no-pointer': sortable.isActiveDraggable
             }}
-            onMouseUp={onMouseUp}
         >
             <Show when={isVisible()}>{props.children}</Show>
         </div>
@@ -111,16 +97,16 @@ const DraggableList = (props: ListProps) => {
 
             <SortableProvider ids={ids()}>
                 <For each={props.items}>
-                    {(item) => (
+                    {(item, index) => (
                         <SortableItem id={props.getItemId(item)}>
-                            {props.children(item)}
+                            {props.children(item, index() + 1)}
                         </SortableItem>
                     )}
                 </For>
             </SortableProvider>
 
             <DragOverlay class="sortable-overlay">
-                <div class="sortable">
+                <div class="sortable no-pointer">
                     <Show when={activeItem()}>
                         {props.children(activeItem())}
                     </Show>

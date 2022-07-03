@@ -1,4 +1,4 @@
-import { Component, createSignal, Show } from 'solid-js';
+import { Component, createMemo, createSignal, Show } from 'solid-js';
 import { VideoData } from '../../../@types/alltypes';
 import { formatTime } from '../../lib/helpers';
 import Icon from '../Icon';
@@ -15,6 +15,7 @@ const QueueItem: Component<Props> = (props) => {
     const [isHovered, setIsHovered] = createSignal(false);
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
+    const duration = createMemo(() => formatTime(props.duration));
 
     return (
         <div
@@ -43,9 +44,7 @@ const QueueItem: Component<Props> = (props) => {
             >
                 <div class="QueueItem__Title">{props.title}</div>
 
-                <div class="QueueItem__Duration">
-                    {formatTime(props.duration)}
-                </div>
+                <div class="QueueItem__Duration">{duration()}</div>
             </div>
 
             <button

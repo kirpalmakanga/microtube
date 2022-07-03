@@ -1,6 +1,6 @@
 import { Component, createSignal, Show } from 'solid-js';
 import { VideoData } from '../../../@types/alltypes';
-import { formatTime, preventDefault, stopPropagation } from '../../lib/helpers';
+import { formatTime } from '../../lib/helpers';
 import Icon from '../Icon';
 
 interface Props extends VideoData {
@@ -13,15 +13,15 @@ interface Props extends VideoData {
 
 const QueueItem: Component<Props> = (props) => {
     const [isHovered, setIsHovered] = createSignal(false);
-
-    const toggleHover = () => setIsHovered(!isHovered());
+    const handleMouseEnter = () => setIsHovered(true);
+    const handleMouseLeave = () => setIsHovered(false);
 
     return (
         <div
             class="QueueItem shadow--2dp"
             classList={{ 'is-active': props.isActive }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
             <div class="QueueItem__Button icon-button is-drag">
                 <Show
@@ -50,7 +50,7 @@ const QueueItem: Component<Props> = (props) => {
 
             <button
                 class="QueueItem__Button icon-button"
-                onClick={stopPropagation(props.onContextMenu)}
+                onClick={props.onContextMenu}
             >
                 <Icon name="more" />
             </button>

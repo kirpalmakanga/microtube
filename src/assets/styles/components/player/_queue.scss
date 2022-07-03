@@ -139,16 +139,21 @@
     }
 }
 
-.sortable-overlay {
-    z-index: 1;
-    pointer-events: none;
-}
-
 .sortable {
     cursor: pointer;
+
     &.is--dragged {
-        @include transition(transform);
         opacity: 0.5;
         cursor: grabbing;
+        pointer-events: none;
+    }
+
+    &.has--transition {
+        @include transition(transform);
+    }
+
+    &-overlay {
+        z-index: 1;
+        pointer-events: none;
     }
 }

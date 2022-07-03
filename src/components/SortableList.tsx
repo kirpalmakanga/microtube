@@ -4,9 +4,19 @@ import {
     DragDropSensors,
     DragEventHandler,
     DragOverlay,
-    SortableProvider
+    SortableProvider,
+    closestCenter
 } from '@thisbeyond/solid-dnd';
-import { createSignal, For, JSXElement, ParentComponent, Show } from 'solid-js';
+import {
+    createEffect,
+    createMemo,
+    createSignal,
+    For,
+    JSXElement,
+    ParentComponent,
+    Show
+} from 'solid-js';
+import { isEqual } from '../lib/helpers';
 import { useOnScreen } from '../lib/hooks';
 interface ListProps {
     items: any[];
@@ -38,43 +48,48 @@ const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
 };
 
 const SortableItem: ParentComponent<ListItemProps> = (props) => {
-    const sortable = createSortable(props.id);
-    const [ref, isVisible] = useOnScreen();
+    let sortable = createSortable(props.id);
+
+    createEffect((previousId) => {
+        if (props.id !== previousId) sortable = createSortable(props.id);
+
+        return props.id;
+    }, props.id);
 
     return (
         <div
             // @ts-ignore
             use:sortable
-            ref={ref}
             class="sortable"
             classList={{
-                'is--dragged no-pointer': sortable.isActiveDraggable
+                'is--dragged has-transition': sortable.isActiveDraggable
             }}
         >
-            <Show when={isVisible()}>{props.children}</Show>
+            {props.children}
         </div>
     );
 };
 
-const DraggableList = (props: ListProps) => {
-    const getItemIds = (items: unknown[]) => items.map(props.getItemId);
-    const [ids, setIds] = createSignal(getItemIds(props.items));
+const SortableList = (props: ListProps) => {
     const [activeItem, setActiveItem] = createSignal(null);
+    const ids = createMemo(() => props.items.map(props.getItemId));
 
     const onDragStart: DragEventHandler = ({ draggable: { id, node } }) => {
-        getSiblings(node).forEach(
-            (n) => (n.style.transition = 'transform 0.3s ease-out')
-        );
+        getSiblings(node).forEach((n) => n.classList.add('has--transition'));
 
-        setActiveItem(props.items.find((item) => item.id === id));
+        setActiveItem(props.items.find((item) => props.getItemId(item) === id));
     };
 
     const onDragEnd: DragEventHandler = ({ draggable, droppable }) => {
+        getSiblings(draggable.node).forEach((n) =>
+            n.classList.remove('has-transition')
+        );
+
+        setActiveItem(null);
+
         if (!draggable || !droppable) {
             return;
         }
-
-        getSiblings(draggable.node).forEach((n) => (n.style.transition = ''));
 
         const currentItems = ids();
         const fromIndex = currentItems.indexOf(draggable.id);
@@ -83,16 +98,16 @@ const DraggableList = (props: ListProps) => {
         if (fromIndex !== toIndex) {
             const updatedItems = reorder(props.items, fromIndex, toIndex);
 
-            setIds(getItemIds(updatedItems));
-
-            props.onReorderItems(updatedItems);
+            requestAnimationFrame(() => props.onReorderItems(updatedItems));
         }
-
-        setActiveItem(null);
     };
 
     return (
-        <DragDropProvider onDragStart={onDragStart} onDragEnd={onDragEnd}>
+        <DragDropProvider
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            collisionDetector={closestCenter}
+        >
             <DragDropSensors />
 
             <SortableProvider ids={ids()}>
@@ -106,7 +121,7 @@ const DraggableList = (props: ListProps) => {
             </SortableProvider>
 
             <DragOverlay class="sortable-overlay">
-                <div class="sortable no-pointer">
+                <div class="sortable">
                     <Show when={activeItem()}>
                         {props.children(activeItem())}
                     </Show>
@@ -116,4 +131,4 @@ const DraggableList = (props: ListProps) => {
     );
 };
 
-export default DraggableList;
+export default SortableList;

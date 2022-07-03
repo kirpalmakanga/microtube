@@ -76,9 +76,7 @@ export const useOnScreen = (
 
     onMount(() => {
         observer = new IntersectionObserver(
-            ([entry]) => {
-                setIntersecting(entry.isIntersecting);
-            },
+            ([entry]) => setIntersecting(entry.isIntersecting),
             {
                 rootMargin
             }

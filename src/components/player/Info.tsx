@@ -93,8 +93,10 @@ const Info: Component<Props> = (props) => {
     const time = () =>
         state.isSeeking ? state.seekingTime : state.currentTime;
 
-    createEffect(() => {
-        setState({ currentTime: 0, loaded: 0, seekingTime: 0 });
+    createEffect((videoId) => {
+        if (props.videoId !== videoId) {
+            setState({ currentTime: 0, loaded: 0, seekingTime: 0 });
+        }
 
         return props.videoId;
     }, props.videoId);

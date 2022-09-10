@@ -6,7 +6,8 @@ import {
     SortableProvider,
     closestCenter,
     Transformer,
-    useDragDropContext
+    useDragDropContext,
+    Id
 } from '@thisbeyond/solid-dnd';
 import {
     createEffect,
@@ -21,11 +22,11 @@ import {
 interface ListProps {
     items: any[];
     children: (data: any, index?: number) => JSXElement;
-    getItemId: (props: any) => number | string;
+    getItemId: (props: any) => Id;
     onReorderItems: (updatedItems: any[]) => void;
 }
 interface ListItemProps {
-    id: number | string;
+    id: Id;
     children: JSXElement;
 }
 
@@ -84,6 +85,8 @@ const List = (props: ListProps) => {
 
     onDragEnd(({ draggable, droppable }) => {
         setActiveItem(null);
+
+        console.log({ draggable, droppable });
 
         if (!draggable || !droppable) {
             return;

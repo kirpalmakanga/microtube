@@ -101,6 +101,8 @@ const List = (props: ListProps) => {
             return;
         }
 
+        console.log('proceed');
+
         const currentItems = ids();
         const fromIndex = currentItems.indexOf(draggable.id);
         const toIndex = currentItems.indexOf(droppable.id);
@@ -108,7 +110,7 @@ const List = (props: ListProps) => {
         removeTransformer('draggables', draggable.id, transformer.id);
 
         getSiblings(draggable.node).forEach((n) =>
-            n.classList.remove('has-transition')
+            n.classList.remove('has--transition')
         );
 
         if (fromIndex !== toIndex) {

@@ -29,16 +29,6 @@ interface ListItemProps {
     children: JSXElement;
 }
 
-const getSiblings = (e: HTMLElement) => {
-    const { parentNode } = e;
-
-    if (parentNode) {
-        return Array.from(parentNode.childNodes).filter(
-            (element) => element?.nodeType === 1 && element !== e
-        ) as HTMLElement[];
-    } else return [];
-};
-
 const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
     const result = [...list];
 
@@ -48,6 +38,7 @@ const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
 };
 
 const SortableItem: ParentComponent<ListItemProps> = (props) => {
+    const [state] = useDragDropContext();
     let sortable = createSortable(props.id);
 
     createEffect((previousId) => {
@@ -62,7 +53,8 @@ const SortableItem: ParentComponent<ListItemProps> = (props) => {
             use:sortable
             class="sortable"
             classList={{
-                'is--dragged has-transition': sortable.isActiveDraggable
+                'is--dragged': sortable.isActiveDraggable,
+                'has--transition': !!state.active.draggable
             }}
         >
             {props.children}
@@ -85,10 +77,6 @@ const List = (props: ListProps) => {
     onDragStart(({ draggable }) => {
         addTransformer('draggables', draggable.id, transformer);
 
-        getSiblings(draggable.node).forEach((n) =>
-            n.classList.add('has--transition')
-        );
-
         setActiveItem(
             props.items.find((item) => props.getItemId(item) === draggable.id)
         );
@@ -101,17 +89,11 @@ const List = (props: ListProps) => {
             return;
         }
 
-        console.log('proceed');
-
         const currentItems = ids();
         const fromIndex = currentItems.indexOf(draggable.id);
         const toIndex = currentItems.indexOf(droppable.id);
 
         removeTransformer('draggables', draggable.id, transformer.id);
-
-        getSiblings(draggable.node).forEach((n) =>
-            n.classList.remove('has--transition')
-        );
 
         if (fromIndex !== toIndex) {
             const updatedItems = reorder(props.items, fromIndex, toIndex);

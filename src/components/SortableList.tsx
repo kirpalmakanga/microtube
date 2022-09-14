@@ -40,7 +40,7 @@ const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
     return result;
 };
 
-const SortableItem: ParentComponent<ListItemProps> = (props) => {
+const Sortable: ParentComponent<ListItemProps> = (props) => {
     const [state] = useDragDropContext();
     let sortable = createSortable(props.id);
 
@@ -119,16 +119,16 @@ const List = (props: ListProps) => {
         <>
             <SortableProvider ids={ids()}>
                 <For each={props.items}>
-                    {(item, index) => (
-                        <SortableItem id={props.getItemId(item)}>
-                            {props.children(item, index() + 1)}
-                        </SortableItem>
+                    {(item) => (
+                        <Sortable id={props.getItemId(item)}>
+                            {props.children(item)}
+                        </Sortable>
                     )}
                 </For>
             </SortableProvider>
 
             <DragOverlay class="sortable-overlay">
-                <div class="sortable shadow--2dp">
+                <div class="sortable shadow--2dp cursor-grabbing">
                     <div class="sortable__drag-handle">
                         <Icon name="drag" />
                     </div>

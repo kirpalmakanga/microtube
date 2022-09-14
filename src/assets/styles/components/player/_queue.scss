@@ -120,18 +120,6 @@
                 width: 24px;
             }
         }
-
-        &:focus {
-            outline: none;
-        }
-
-        &.is-drag {
-            cursor: grab;
-
-            &:active {
-                cursor: grabbing;
-            }
-        }
     }
 
     &.is-active {

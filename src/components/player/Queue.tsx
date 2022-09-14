@@ -125,7 +125,7 @@ const Queue: Component<Props> = (props) => {
                                     getItemId={({ id }: VideoData) => id}
                                     onReorderItems={setQueue}
                                 >
-                                    {(data: VideoData, index) => {
+                                    {(data: VideoData) => {
                                         const { id } = data;
                                         const isActive =
                                             id === player.currentId;
@@ -143,7 +143,6 @@ const Queue: Component<Props> = (props) => {
                                         return (
                                             <QueueItem
                                                 {...data}
-                                                index={index}
                                                 isActive={isActive}
                                                 icon={icon}
                                                 onClick={() =>

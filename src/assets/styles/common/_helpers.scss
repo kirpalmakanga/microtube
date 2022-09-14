@@ -26,3 +26,9 @@
 .no-pointer {
     pointer-events: none;
 }
+
+.cursor {
+    &-grabbing {
+        cursor: grabbing;
+    }
+}

@@ -7,7 +7,8 @@ import {
     closestCenter,
     Transformer,
     useDragDropContext,
-    Id
+    Id,
+    transformStyle
 } from '@thisbeyond/solid-dnd';
 import {
     createEffect,
@@ -18,6 +19,7 @@ import {
     ParentComponent,
     Show
 } from 'solid-js';
+import Icon from './Icon';
 
 interface ListProps {
     items: any[];
@@ -51,13 +53,21 @@ const SortableItem: ParentComponent<ListItemProps> = (props) => {
     return (
         <div
             // @ts-ignore
-            use:sortable
+            ref={sortable.ref}
             class="sortable"
             classList={{
                 'is--dragged': sortable.isActiveDraggable,
                 'has--transition': !!state.active.draggable
             }}
+            style={transformStyle(sortable.transform)}
         >
+            <div
+                class="sortable__drag-handle is-drag"
+                {...sortable.dragActivators}
+            >
+                <Icon name="drag" />
+            </div>
+
             {props.children}
         </div>
     );
@@ -118,7 +128,11 @@ const List = (props: ListProps) => {
             </SortableProvider>
 
             <DragOverlay class="sortable-overlay">
-                <div class="sortable">
+                <div class="sortable shadow--2dp">
+                    <div class="sortable__drag-handle">
+                        <Icon name="drag" />
+                    </div>
+
                     <Show when={activeItem()}>
                         {props.children(activeItem())}
                     </Show>

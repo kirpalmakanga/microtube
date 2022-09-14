@@ -44,7 +44,7 @@
             height: 50px;
             position: relative;
 
-            &:not(:last-child) .QueueItem {
+            &:not(:last-child) {
                 border-bottom: 1px solid lighten($brand-primary, 15%);
             }
         }
@@ -57,6 +57,9 @@
     -webkit-tap-highlight-color: transparent;
     position: relative;
     background-color: lighten($brand-primary, 20%);
+    flex: 1;
+    overflow: hidden;
+    user-select: none;
 
     @media screen and (min-width: 480px) {
         &:hover {
@@ -80,7 +83,7 @@
         text-transform: uppercase;
         font-size: 12px;
         font-family: $font-primary;
-        padding: 15px 15px 15px 0px;
+        padding: 16px;
 
         @media screen and (min-width: 480px) {
             font-size: 16px;
@@ -140,7 +143,40 @@
 }
 
 .sortable {
+    overflow: hidden;
     cursor: pointer;
+    display: flex;
+    background-color: lighten($brand-primary, 20%);
+
+    &__drag-handle {
+        padding: 0;
+        background-color: transparent;
+        fill: $brand-secondary;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        height: 48px;
+        width: 40px;
+        cursor: grab;
+
+        &:active {
+            cursor: grabbing;
+        }
+
+        svg {
+            height: 22px;
+            width: 22px;
+            @media screen and (min-width: 480px) {
+                height: 24px;
+                width: 24px;
+            }
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
 
     &.is--dragged {
         opacity: 0.5;

@@ -1,4 +1,4 @@
-@mixin transition($property: all, $duration: 0.2s, $easing: ease-out) {
+@mixin transition($property: all, $duration: 0.15s, $easing: ease-out) {
     transition: $property $duration $easing;
 }
 

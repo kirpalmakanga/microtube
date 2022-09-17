@@ -48,6 +48,8 @@ const Root: ParentComponent = (props) => {
                 classList={{ 'is--mobile': isMobile() }}
                 onContextMenu={IS_DEV_MODE ? () => {} : preventDefault()}
             >
+                <Loader />
+
                 <Show when={isAppReady()} fallback={<Loader />}>
                     <Header />
 

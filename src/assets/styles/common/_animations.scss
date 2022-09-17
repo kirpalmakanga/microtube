@@ -1,24 +1,3 @@
-@-webkit-keyframes rotating {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-@keyframes rotating {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.rotating {
-    animation: rotating 2s linear infinite;
-}
-
 .fade-enter-active,
 .fade-exit-active {
     transition: opacity 0.3s;

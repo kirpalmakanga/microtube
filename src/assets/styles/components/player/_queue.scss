@@ -59,7 +59,6 @@
     background-color: lighten($brand-primary, 20%);
     flex: 1;
     overflow: hidden;
-    user-select: none;
 
     @media screen and (min-width: 480px) {
         &:hover {
@@ -84,6 +83,10 @@
         font-size: 12px;
         font-family: $font-primary;
         padding: 16px;
+
+        &::selection {
+            background-color: transparent;
+        }
 
         @media screen and (min-width: 480px) {
             font-size: 16px;

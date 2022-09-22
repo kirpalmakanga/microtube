@@ -64,6 +64,7 @@ const Sortable: ParentComponent<ListItemProps> = (props) => {
             <div
                 class="sortable__drag-handle is-drag"
                 {...sortable.dragActivators}
+                style={{ 'touch-action': 'none' }}
             >
                 <Icon name="drag" />
             </div>

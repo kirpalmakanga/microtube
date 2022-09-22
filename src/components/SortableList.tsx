@@ -96,11 +96,7 @@ const List = (props: ListProps) => {
     onDragEnd(({ draggable, droppable }) => {
         setActiveItem(null);
 
-        console.log({ draggable, droppable });
-
-        if (!draggable || !droppable) {
-            return;
-        }
+        if (!draggable || !droppable) return;
 
         const currentItems = ids();
         const fromIndex = currentItems.indexOf(draggable.id);

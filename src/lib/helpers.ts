@@ -199,23 +199,19 @@ export const wrapURLs = (text: string) => {
         .replace(emailAddressPattern, '<a href="mailto:$&">$&</a>');
 };
 
-export const loadScript = (src: string) => {
-    return new Promise((resolve: (value?: unknown) => void, reject) => {
-        try {
-            if (document.querySelector(`script[src="${src}"]`)) {
-                resolve();
-            } else {
-                const js = document.createElement('script');
+export const loadScript = async (src: string) => {
+    if (!document.querySelector(`script[src="${src}"]`)) {
+        const js = document.createElement('script');
 
-                document.body.appendChild(js);
+        document.body.appendChild(js);
 
-                js.src = src;
-                js.onload = resolve;
-            }
-        } catch (err) {
-            reject(err);
-        }
-    });
+        return new Promise((resolve, reject) => {
+            js.onload = resolve;
+            js.onerror = reject;
+
+            js.src = src;
+        });
+    }
 };
 
 export const setImmediateInterval = (

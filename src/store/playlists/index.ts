@@ -65,6 +65,7 @@ export const usePlaylists = (channelId?: string) => {
                 });
             }
         } catch (error) {
+            console.log();
             openNotification('Error fetching playlists.');
         }
     };

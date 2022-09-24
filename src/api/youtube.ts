@@ -1,7 +1,8 @@
+import axios from 'axios';
 import { ChannelData, GenericObject, VideoData } from '../../@types/alltypes';
-import { API_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SCOPE } from '../config/api';
 import { parseVideoData, parsePlaylistData, parseChannelData } from './parsers';
-import { loadScript, parseVideoId, pick } from '../lib/helpers';
+import { parseVideoId, pick } from '../lib/helpers';
+import { SOCKET_URL } from '../config/app';
 
 interface SearchResultItem {
     id: { videoId: string };
@@ -9,105 +10,52 @@ interface SearchResultItem {
 
 const ITEMS_PER_REQUEST = 50;
 
-const loadAPI = async () => {
-    await loadScript(API_URL);
+export const instance = axios.create({
+    baseURL: 'https://content.googleapis.com/youtube/v3'
+});
 
-    return window.gapi;
+export const getAuthorizationUrl = async () => {
+    const {
+        data: { url }
+    } = await axios.get(`${SOCKET_URL}/authorization`);
+
+    return url;
 };
 
-const getService = async (service: string) => {
-    const gapi = await loadAPI();
+export const logIn = async (code: string) => {
+    const { data } = await axios.get(`${SOCKET_URL}/token?code=${code}`);
 
-    if (!gapi[service]) {
-        await new Promise((resolve) => gapi.load(service, resolve));
-    }
-
-    return gapi[service];
+    return data;
 };
 
-const getAuthInstance = async () => {
-    const auth2 = await getService('auth2');
+export const refreshAccessToken = async (refreshToken) => {
+    const {
+        data: { accessToken }
+    } = await axios.get(`${SOCKET_URL}/token`);
 
-    return auth2.init({
-        clientId: GOOGLE_CLIENT_ID,
-        scope: GOOGLE_CLIENT_SCOPE
-    });
+    return accessToken;
 };
 
-export const getSignedInUser = async () => {
-    const GoogleAuth = await getAuthInstance();
-
-    const isSignedIn = GoogleAuth.isSignedIn.get();
-
-    const currentUser = GoogleAuth.currentUser.get();
-
-    let user = {
-        id: '',
-        name: '',
-        picture: ''
-    };
-
-    if (isSignedIn) {
-        const userProfile = currentUser.getBasicProfile();
-
-        user = {
-            id: userProfile.getId(),
-            name: userProfile.getName(),
-            picture: userProfile.getImageUrl()
-        };
-    }
-
-    const { id_token: idToken = '', access_token: accessToken = '' } =
-        isSignedIn ? currentUser.getAuthResponse(true) : {};
-
-    return {
-        ...user,
-        isSignedIn,
-        idToken,
-        accessToken
-    };
-};
-
-export const signIn = async () => {
-    const auth = await getAuthInstance();
-
-    return auth.signIn({
-        prompt: 'select_account'
-    });
-};
-
-export const signOut = async () => {
-    const auth = await getAuthInstance();
-
-    return auth.signOut();
-};
-
-function removeEmptyParams(params: GenericObject) {
+const removeEmptyParams = (params: GenericObject) => {
     for (const p in params) {
         if (!params[p]) {
             delete params[p];
         }
     }
     return params;
-}
+};
 
 const request = async (
     method: string,
     path: string,
     params?: GenericObject,
-    body?: Object
+    data?: GenericObject
 ) => {
-    const client = await getService('client');
-
-    const { result } = await client.request({
+    const { data: result } = await instance({
         method,
-        path: `/youtube/v3/${path}`,
-        ...(params
-            ? {
-                  params: removeEmptyParams(params)
-              }
-            : {}),
-        ...(body ? { body } : {})
+        url: `/${path}`,
+        data,
+        params: params ? removeEmptyParams(params) : undefined
     });
 
     return result;
@@ -127,7 +75,7 @@ export async function searchVideos({
         items: searchResults,
         nextPageToken,
         pageInfo: { totalResults }
-    } = await request('GET', 'search', {
+    } = await request('get', 'search', {
         part: 'id, snippet',
         type: 'video',
         q: query,
@@ -154,7 +102,7 @@ export async function searchVideos({
 }
 
 export async function getVideo(urlOrId = '') {
-    const { items } = await request('GET', 'videos', {
+    const { items } = await request('get', 'videos', {
         id: parseVideoId(urlOrId),
         part: 'contentDetails, snippet, status'
     });
@@ -163,7 +111,7 @@ export async function getVideo(urlOrId = '') {
 }
 
 export async function getVideosFromIds(ids: string[]) {
-    const { items } = await request('GET', 'videos', {
+    const { items } = await request('get', 'videos', {
         part: 'contentDetails, snippet, status',
         id: ids.join(','),
         maxResults: ITEMS_PER_REQUEST
@@ -189,7 +137,7 @@ export async function getPlaylists({
         items,
         nextPageToken,
         pageInfo: { totalResults }
-    } = await request('GET', 'playlists', {
+    } = await request('get', 'playlists', {
         pageToken,
         mine,
         id: ids.join(','),
@@ -234,7 +182,7 @@ export async function createPlaylist({
     privacyStatus: string;
 }) {
     const data = await request(
-        'POST',
+        'post',
         'playlists',
         {
             part: 'snippet,status,contentDetails'
@@ -253,13 +201,13 @@ export async function createPlaylist({
 }
 
 export async function removePlaylist(id: string) {
-    return request('DELETE', 'playlists', {
+    return request('delete', 'playlists', {
         id
     });
 }
 
 export async function getPlaylistTitle(id: string) {
-    const { items } = await request('GET', 'playlists', {
+    const { items } = await request('get', 'playlists', {
         id,
         part: 'snippet'
     });
@@ -282,7 +230,7 @@ export async function getPlaylistItems({
         items: playlistItems,
         nextPageToken,
         pageInfo: { totalResults }
-    } = await request('GET', 'playlistItems', {
+    } = await request('get', 'playlistItems', {
         playlistId,
         pageToken,
         part: 'snippet, status',
@@ -323,7 +271,7 @@ export async function addPlaylistItem(
     videoId: string
 ): Promise<string> {
     const { id } = await request(
-        'POST',
+        'post',
         'playlistItems',
         { part: 'snippet' },
         {
@@ -341,13 +289,13 @@ export async function addPlaylistItem(
 }
 
 export async function removePlaylistItem(id: string) {
-    return request('DELETE', 'playlistItems', {
+    return request('delete', 'playlistItems', {
         id
     });
 }
 /* Subscriptions */
 async function getChannelsFromIds(ids: string[]) {
-    const { items } = await request('GET', 'channels', {
+    const { items } = await request('get', 'channels', {
         part: 'snippet',
         id: ids.join(','),
         maxResults: ITEMS_PER_REQUEST
@@ -363,7 +311,7 @@ export async function getSubscriptions({ pageToken = '', mine = false }) {
         items: subscriptions,
         nextPageToken,
         pageInfo: { totalResults }
-    } = await request('GET', 'subscriptions', {
+    } = await request('get', 'subscriptions', {
         pageToken,
         mine,
         part: 'id, snippet, contentDetails',
@@ -421,7 +369,7 @@ export async function getSubscriptions({ pageToken = '', mine = false }) {
 
 /* Channels */
 export async function getChannel(id: string) {
-    const { items } = await request('GET', 'channels', {
+    const { items } = await request('get', 'channels', {
         id,
         part: 'snippet, contentDetails'
     });
@@ -436,7 +384,7 @@ export async function getChannel(id: string) {
 
     const {
         items: [{ id: subscriptionId } = { id: '' }]
-    } = await request('GET', 'subscriptions', {
+    } = await request('get', 'subscriptions', {
         mine: true,
         forChannelId: id,
         part: 'id'
@@ -452,7 +400,7 @@ export async function getChannelVideos({
     channelId: string;
     pageToken: string;
 }) {
-    const { items, nextPageToken, pageInfo } = await request('GET', 'search', {
+    const { items, nextPageToken, pageInfo } = await request('get', 'search', {
         part: 'snippet',
         type: 'video',
         order: 'date',
@@ -476,7 +424,7 @@ export async function getChannelVideos({
 
 export async function subscribeToChannel(channelId: string) {
     const { id } = await request(
-        'POST',
+        'post',
         'subscriptions',
         { part: 'snippet' },
         {
@@ -493,5 +441,5 @@ export async function subscribeToChannel(channelId: string) {
 }
 
 export async function unsubscribeFromChannel(id: string) {
-    return request('DELETE', 'subscriptions', { id });
+    return request('delete', 'subscriptions', { id });
 }

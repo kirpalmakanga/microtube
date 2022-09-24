@@ -1,10 +1,4 @@
-import {
-    createContext,
-    useContext,
-    createEffect,
-    Component,
-    Context
-} from 'solid-js';
+import { createContext, useContext, createEffect, Component } from 'solid-js';
 import { createStore, SetStoreFunction, Store } from 'solid-js/store';
 import { rootInitialState, RootState } from './_state';
 import { saveState, loadState } from '../lib/localStorage';
@@ -20,9 +14,10 @@ export const StoreProvider: Component = (props) => {
     const store = createProvidedStore();
 
     createEffect(() => {
-        const [{ player, search }] = store;
+        const [{ user, player, search }] = store;
 
         saveState({
+            user,
             player: omit(player, 'newQueueItems', 'video'),
             search: pick(search, 'forMine')
         });

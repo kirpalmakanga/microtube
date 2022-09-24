@@ -14,12 +14,12 @@ import { useAuth } from './store/user';
 import { useNotifications } from './store/notifications';
 
 const Root: ParentComponent = (props) => {
-    const [user, { getUserData }] = useAuth();
+    const [user, { bindAccessTokens }] = useAuth();
     const [, { openNotification }] = useNotifications();
     const [isAppReady, setIsAppReady] = createSignal(false);
 
     onMount(async () => {
-        await getUserData();
+        await bindAccessTokens();
 
         setIsAppReady(true);
 

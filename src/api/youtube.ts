@@ -28,10 +28,10 @@ export const logIn = async (code: string) => {
     return data;
 };
 
-export const refreshAccessToken = async (refreshToken) => {
+export const refreshAccessToken = async (refreshToken: string) => {
     const {
         data: { accessToken }
-    } = await axios.get(`${SOCKET_URL}/token`);
+    } = await axios.get(`${SOCKET_URL}/refresh`, { params: { refreshToken } });
 
     return accessToken;
 };

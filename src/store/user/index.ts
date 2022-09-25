@@ -31,7 +31,7 @@ export const useAuth = () => {
                     config
                 } = error;
 
-                if (status === 403 && !config._retry) {
+                if ([401, 403].includes(status) && !config._retry) {
                     const accessToken = await refreshAccessToken(refreshToken);
 
                     setState('user', { accessToken });

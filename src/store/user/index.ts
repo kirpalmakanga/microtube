@@ -8,6 +8,7 @@ import {
 import { signIntoDatabase, signOutOfDatabase } from '../../api/database';
 
 import { rootInitialState, RootState } from '../_state';
+import { createEffect } from 'solid-js';
 
 /* TODO: find where to sign in database (signIntoDatabase(idToken, accessToken)) */
 
@@ -44,6 +45,13 @@ export const useAuth = () => {
                 return Promise.reject(error);
             }
         );
+
+        createEffect(() => {
+            const { idToken, accessToken } = user;
+
+            if (idToken && accessToken) signIntoDatabase(idToken, accessToken);
+            else signOutOfDatabase();
+        });
     };
 
     const signIn = async () => {
@@ -52,15 +60,11 @@ export const useAuth = () => {
         window.location.href = url;
     };
 
-    const setInterceptors = () => {};
-
     const setUser = (data) => {
         setState('user', {
             ...data,
             isSignedIn: true
         });
-
-        setInterceptors();
     };
 
     const signOut = async () => {

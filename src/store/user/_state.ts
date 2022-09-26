@@ -4,6 +4,7 @@ export interface UserState {
     picture: string;
     accessToken: string;
     refreshToken: string;
+    idToken: string;
     isSignedIn: boolean;
     isSigningIn: boolean;
 }
@@ -14,6 +15,7 @@ export const initialState = (): UserState => ({
     picture: '',
     accessToken: '',
     refreshToken: '',
+    idToken: '',
     isSignedIn: false,
     isSigningIn: false
 });

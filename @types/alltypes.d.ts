@@ -2,12 +2,6 @@ export const SIZE_DEFAULT = 'default';
 export const SIZE_MEDIUM = 'medium';
 export const SIZE_HIGH = 'high';
 
-declare global {
-    interface Window {
-        gapi: any;
-    }
-}
-
 interface DeviceData {
     deviceId: string;
     deviceName: string;

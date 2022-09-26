@@ -23,7 +23,9 @@ export const getAuthorizationUrl = async () => {
 };
 
 export const logIn = async (code: string) => {
-    const { data } = await axios.get(`${SOCKET_URL}/token?code=${code}`);
+    const { data } = await axios.get(`${SOCKET_URL}/token`, {
+        params: { code }
+    });
 
     return data;
 };

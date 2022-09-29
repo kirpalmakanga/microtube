@@ -1,6 +1,5 @@
 import { Navigate, Outlet, Route, Routes } from 'solid-app-router';
 import { Component, lazy, Show } from 'solid-js';
-import Loader from './components/Loader';
 import Login from './containers/Login';
 import Callback from './containers/Callback';
 import NotFound from './containers/NotFound';
@@ -10,10 +9,8 @@ const Protected = () => {
     const [state] = useStore();
 
     return (
-        <Show when={!state.user.isSigningIn} fallback={<Loader />}>
-            <Show when={state.user.isSignedIn} fallback={<Login />}>
-                <Outlet />
-            </Show>
+        <Show when={state.user.isSignedIn} fallback={<Login />}>
+            <Outlet />
         </Show>
     );
 };

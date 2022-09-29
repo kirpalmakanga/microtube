@@ -6,7 +6,6 @@ export interface UserState {
     refreshToken: string;
     idToken: string;
     isSignedIn: boolean;
-    isSigningIn: boolean;
 }
 
 export const initialState = (): UserState => ({
@@ -16,6 +15,5 @@ export const initialState = (): UserState => ({
     accessToken: '',
     refreshToken: '',
     idToken: '',
-    isSignedIn: false,
-    isSigningIn: false
+    isSignedIn: false
 });

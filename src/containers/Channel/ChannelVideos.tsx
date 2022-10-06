@@ -1,5 +1,5 @@
-import { useNavigate, useParams } from 'solid-app-router';
 import { Show } from 'solid-js';
+import { useNavigate, useParams } from '@solidjs/router';
 import { VideoData } from '../../../@types/alltypes';
 import VideoCard from '../../components/cards/VideoCard';
 import List from '../../components/List';

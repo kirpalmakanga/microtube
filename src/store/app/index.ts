@@ -1,5 +1,5 @@
 import { onCleanup, onMount, createMemo } from 'solid-js';
-import { useLocation } from 'solid-app-router';
+import { useLocation } from '@solidjs/router';
 import { useStore } from '..';
 import { subscribe, emit } from '../../lib/socket';
 import { initialState } from './_state';

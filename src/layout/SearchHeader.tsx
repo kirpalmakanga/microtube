@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'solid-app-router';
+import { Link, useSearchParams } from '@solidjs/router';
 import DropDown from '../components/DropDown';
 import Icon from '../components/Icon';
 import Title from '../components/meta/Title';

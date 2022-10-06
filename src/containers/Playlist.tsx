@@ -1,5 +1,5 @@
-import { useNavigate, useParams } from 'solid-app-router';
 import { Component, onCleanup, onMount, Show } from 'solid-js';
+import { useNavigate, useParams } from '@solidjs/router';
 import { PlaylistItemData } from '../../@types/alltypes';
 import VideoCard from '../components/cards/VideoCard';
 import List from '../components/List';

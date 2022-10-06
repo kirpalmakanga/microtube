@@ -1,5 +1,5 @@
-import { useParams } from 'solid-app-router';
 import { Component, createMemo } from 'solid-js';
+import { useParams } from '@solidjs/router';
 import { wrapURLs } from '../../lib/helpers';
 import { useChannel } from '../../store/channel';
 

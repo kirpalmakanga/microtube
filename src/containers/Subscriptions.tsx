@@ -1,5 +1,5 @@
-import { useNavigate } from 'solid-app-router';
 import { Show } from 'solid-js';
+import { useNavigate } from '@solidjs/router';
 import ChannelCard from '../components/cards/ChannelCard';
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';

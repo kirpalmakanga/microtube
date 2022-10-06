@@ -1,5 +1,5 @@
-import { useNavigate, useSearchParams } from 'solid-app-router';
 import { Component, onMount } from 'solid-js';
+import { useNavigate, useSearchParams } from '@solidjs/router';
 import Loader from '../components/Loader';
 import { logIn } from '../api/youtube';
 import { useAuth } from '../store/user';

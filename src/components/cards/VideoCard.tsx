@@ -1,4 +1,4 @@
-import { Link } from 'solid-app-router';
+import { Link } from '@solidjs/router';
 import { Component, Show } from 'solid-js';
 import { VideoData } from '../../../@types/alltypes';
 import {

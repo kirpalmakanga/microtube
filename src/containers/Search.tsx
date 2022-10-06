@@ -1,4 +1,3 @@
-import { useNavigate, useSearchParams } from 'solid-app-router';
 import {
     createEffect,
     createSignal,
@@ -7,6 +6,7 @@ import {
     onMount,
     Show
 } from 'solid-js';
+import { useNavigate, useSearchParams } from '@solidjs/router';
 import { VideoData } from '../../@types/alltypes';
 import VideoCard from '../components/cards/VideoCard';
 import List from '../components/List';

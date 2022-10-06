@@ -1,4 +1,4 @@
-import { Route, Routes } from 'solid-app-router';
+import { Route, Routes } from '@solidjs/router';
 import { usePlayer } from '../store/player';
 import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';

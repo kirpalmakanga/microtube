@@ -1,6 +1,6 @@
 .fade-enter-active,
 .fade-exit-active {
-    transition: opacity 0.3s;
+    transition: opacity 0.15s;
 }
 .fade-enter,
 .fade-exit-to {
@@ -9,7 +9,7 @@
 
 .slide-up-enter-active,
 .slide-up-exit-active {
-    transition: transform 0.3s;
+    transition: transform 0.15s;
 }
 .slide-up-enter,
 .slide-up-exit-to {
@@ -18,7 +18,7 @@
 
 .slide-down-enter-active,
 .slide-down-exit-active {
-    transition: transform 0.3s;
+    transition: transform 0.15s;
 }
 .slide-down-enter,
 .slide-down-exit-to {

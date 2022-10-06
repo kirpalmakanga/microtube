@@ -4,8 +4,6 @@ import { useStore } from '..';
 import { useNotifications } from '../notifications';
 import { usePrompt } from '../prompt';
 
-import { VideoData } from '../../../@types/alltypes';
-
 import { IS_DEV_MODE } from '../../config/app';
 
 import * as api from '../../api/youtube';

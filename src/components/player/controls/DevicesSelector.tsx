@@ -1,5 +1,4 @@
 import { Component, For } from 'solid-js';
-import { DeviceData } from '../../../../@types/alltypes';
 interface Props {
     devices: DeviceData[];
     currentDevice: DeviceData;

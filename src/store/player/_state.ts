@@ -1,5 +1,3 @@
-import { VideoData } from '../../../@types/alltypes';
-
 export interface PlayerState {
     queue: VideoData[];
     currentId: string;

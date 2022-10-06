@@ -1,5 +1,4 @@
 import { Component, createMemo } from 'solid-js';
-import { VideoData } from '../../../@types/alltypes';
 import { formatTime } from '../../lib/helpers';
 import Icon from '../Icon';
 

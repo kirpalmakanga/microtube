@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { ChannelData, GenericObject, VideoData } from '../../@types/alltypes';
 import { parseVideoData, parsePlaylistData, parseChannelData } from './parsers';
 import { parseVideoId, pick } from '../lib/helpers';
 import { SOCKET_URL } from '../config/app';

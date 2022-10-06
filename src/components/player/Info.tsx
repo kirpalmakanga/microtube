@@ -1,10 +1,5 @@
 import { Component, createEffect, JSX, onCleanup, onMount } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import {
-    GenericObject,
-    PlayerSyncHandlers,
-    PlayerSyncPayload
-} from '../../../@types/alltypes';
 import { preventDefault, setImmediateInterval } from '../../lib/helpers';
 import { emit, subscribe } from '../../lib/socket';
 import InfoProgress from './controls/InfoProgress';

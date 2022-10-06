@@ -1,6 +1,5 @@
 import { Component, onCleanup, onMount, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
-import { VideoData } from '../../../@types/alltypes';
 import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 import { useMenu } from '../../store/menu';
 import { useNotifications } from '../../store/notifications';

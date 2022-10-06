@@ -1,5 +1,3 @@
-import { PlaylistData } from '../../../@types/alltypes';
-
 export interface PlaylistsState {
     items: PlaylistData[];
     nextPageToken: string;

@@ -1,5 +1,3 @@
-import { PlaylistItemData } from '../../../@types/alltypes';
-
 export interface PlaylistItemsState {
     playlistId: string;
     playlistTitle: string;

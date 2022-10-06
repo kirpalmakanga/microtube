@@ -1,4 +1,3 @@
-import { ThumbnailsData, ShareConfig } from '../../@types/alltypes';
 import format from 'date-fns/fp/format';
 
 export const preventDefault =

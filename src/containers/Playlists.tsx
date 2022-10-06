@@ -1,6 +1,5 @@
 import { Component, Show } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
-import { PlaylistData } from '../../@types/alltypes';
 import PlaylistCard from '../components/cards/PlaylistCard';
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';

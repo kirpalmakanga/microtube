@@ -1,12 +1,6 @@
 import { createEffect, onCleanup, onMount, Show } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
-import {
-    GenericObject,
-    HTMLElementWheelEvent,
-    PlayerSyncHandlers,
-    PlayerSyncPayload
-} from '../../../@types/alltypes';
 import { isMobile } from '../../lib/helpers';
 import { useFullscreen, useKey } from '../../lib/hooks';
 import { useDevices } from '../../store/app';

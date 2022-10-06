@@ -4,8 +4,6 @@ import { useStore } from '..';
 import { subscribe, emit } from '../../lib/socket';
 import { initialState } from './_state';
 
-import { DeviceData, GenericObject } from '../../../@types/alltypes';
-
 export const useAppTitle = () => {
     const location = useLocation();
     const [state] = useStore();

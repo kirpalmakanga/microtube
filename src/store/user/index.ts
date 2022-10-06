@@ -10,15 +10,18 @@ import { signIntoDatabase, signOutOfDatabase } from '../../api/database';
 import { rootInitialState, RootState } from '../_state';
 import { createEffect } from 'solid-js';
 
-/* TODO: find where to sign in database (signIntoDatabase(idToken, accessToken)) */
-
 export const useAuth = () => {
     const [{ user }, setState] = useStore();
 
+    const refreshTokens = async () => {
+        const data = await refreshAccessToken(user.refreshToken);
+
+        setState('user', data);
+    };
+
     const bindAccessTokens = async () => {
         instance.interceptors.request.use((config) => {
-            const { accessToken } = user;
-            config.headers = { Authorization: `Bearer ${accessToken}` };
+            config.headers = { Authorization: `Bearer ${user.accessToken}` };
 
             return config;
         });
@@ -26,16 +29,13 @@ export const useAuth = () => {
         instance.interceptors.response.use(
             (response) => response,
             async (error) => {
-                const { refreshToken } = user;
                 const {
                     response: { status },
                     config
                 } = error;
 
                 if ([401, 403].includes(status) && !config._retry) {
-                    const accessToken = await refreshAccessToken(refreshToken);
-
-                    setState('user', { accessToken });
+                    await refreshTokens();
 
                     config._retry = true;
 
@@ -46,11 +46,24 @@ export const useAuth = () => {
             }
         );
 
-        createEffect(() => {
+        createEffect((previousAccessToken) => {
             const { idToken, accessToken } = user;
 
-            if (idToken && accessToken) signIntoDatabase(idToken, accessToken);
-            else signOutOfDatabase();
+            if (accessToken && accessToken !== previousAccessToken) {
+                (async () => {
+                    try {
+                        console.log('signIntoDatabase');
+
+                        await signIntoDatabase(idToken, accessToken);
+                    } catch (error) {
+                        console.log('refreshTokens');
+
+                        await refreshTokens();
+                    }
+                })();
+            } else if (!accessToken) signOutOfDatabase();
+
+            return accessToken;
         });
     };
 

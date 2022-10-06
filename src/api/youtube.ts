@@ -31,11 +31,11 @@ export const logIn = async (code: string) => {
 };
 
 export const refreshAccessToken = async (refreshToken: string) => {
-    const {
-        data: { accessToken }
-    } = await axios.get(`${SOCKET_URL}/refresh`, { params: { refreshToken } });
+    const { data } = await axios.get(`${SOCKET_URL}/refresh`, {
+        params: { refreshToken }
+    });
 
-    return accessToken;
+    return data;
 };
 
 const removeEmptyParams = (params: GenericObject) => {

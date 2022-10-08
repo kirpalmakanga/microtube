@@ -17,8 +17,6 @@ const Header = () => {
                     <Route path="*" element={<DefaultHeader />} />
 
                     <Route path="/search" element={<SearchHeader />} />
-
-                    <Route path="/search/:query" element={<SearchHeader />} />
                 </Routes>
             </Transition>
         </header>

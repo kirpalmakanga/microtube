@@ -103,7 +103,10 @@ const Search = () => {
     onCleanup(clearSearch);
 
     return (
-        <Show when={searchParams.query && shouldMountList()}>
+        <Show
+            when={searchParams.query && shouldMountList()}
+            fallback={<div class="flex flex-column flex-fill"></div>}
+        >
             <Show
                 when={search.totalResults === null || search.totalResults > 0}
                 fallback={<Placeholder icon="list" text="No results found." />}

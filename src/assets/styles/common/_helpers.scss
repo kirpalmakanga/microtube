@@ -36,3 +36,15 @@
         cursor: grabbing;
     }
 }
+
+.flex {
+    display: flex;
+
+    &-column {
+        flex-direction: column;
+    }
+
+    &-fill {
+        flex: 1;
+    }
+}

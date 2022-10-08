@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { parseVideoData, parsePlaylistData, parseChannelData } from './parsers';
 import { parseVideoId, pick } from '../lib/helpers';
-import { SOCKET_URL } from '../config/app';
+import { API_URL } from '../config/app';
 
 interface SearchResultItem {
     id: { videoId: string };
@@ -16,13 +16,13 @@ export const instance = axios.create({
 export const getAuthorizationUrl = async () => {
     const {
         data: { url }
-    } = await axios.get(`${SOCKET_URL}/authorization`);
+    } = await axios.get(`${API_URL}/authorization`);
 
     return url;
 };
 
 export const logIn = async (code: string) => {
-    const { data } = await axios.get(`${SOCKET_URL}/token`, {
+    const { data } = await axios.get(`${API_URL}/token`, {
         params: { code }
     });
 
@@ -30,7 +30,7 @@ export const logIn = async (code: string) => {
 };
 
 export const refreshAccessToken = async (refreshToken: string) => {
-    const { data } = await axios.get(`${SOCKET_URL}/refresh`, {
+    const { data } = await axios.get(`${API_URL}/refresh`, {
         params: { refreshToken }
     });
 

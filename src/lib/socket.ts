@@ -1,11 +1,11 @@
 import { io, Socket } from 'socket.io-client';
-import { SOCKET_URL } from '../config/app';
+import { API_URL } from '../config/app';
 
 let socket: Socket | null = null;
 
 const getSocket = () => {
     if (!socket) {
-        socket = io(SOCKET_URL, { transports: ['websocket'] });
+        socket = io(API_URL, { transports: ['websocket'] });
     }
 
     return socket;

@@ -1,15 +1,19 @@
 import { defineConfig } from 'vite';
-import { VitePWA } from 'vite-plugin-pwa';
+import { VitePWA as pwaPlugin } from 'vite-plugin-pwa';
 import solidPlugin from 'vite-plugin-solid';
+import windiPlugin from 'vite-plugin-windicss';
 
 // @ts-ignore
 import { version } from './package.json';
 
 export default defineConfig({
-    server: { port: 8080 },
+    server: {
+        port: 8080
+    },
     plugins: [
         solidPlugin(),
-        VitePWA({
+        windiPlugin(),
+        pwaPlugin({
             workbox: {
                 sourcemap: true
             },
@@ -20,8 +24,8 @@ export default defineConfig({
                 manifest_version: 2,
                 name: 'MicroTube',
                 short_name: 'MicroTube',
-                theme_color: '#191919',
-                background_color: '#191919',
+                theme_color: '#21222c',
+                background_color: '#21222c',
                 display: 'standalone',
                 scope: '/',
                 start_url: '/',

@@ -9,7 +9,7 @@ const Header = () => {
 
     return (
         <header
-            class="layout__header shadow--2dp"
+            class="relative z-1 flex h-12 bg-primary-900 shadow"
             onClick={() => setScreenVisibility(false)}
         >
             <Transition name="fade" mode="outin">

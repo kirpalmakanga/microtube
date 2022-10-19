@@ -1,23 +1,11 @@
-@import 'common/_normalize';
 @import 'common/_variables';
 @import 'common/_animations';
 @import 'common/_mixins';
-@import 'common/_helpers';
 @import 'common/_global';
 
-@import 'layouts/_header';
-@import 'layouts/_content';
-
 @import 'components/_prompt';
-@import 'components/_buttons';
-@import 'components/_dropdown';
-@import 'components/_cards';
-@import 'components/_forms';
 @import 'components/_tabs';
-@import 'components/_list';
-@import 'components/_notifications';
 @import 'components/_channel';
-@import 'components/_menu';
 @import 'components/_range';
 
 @import 'components/player/_player';

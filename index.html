@@ -32,6 +32,26 @@
         <link rel="icon" href="/favicon.svg" />
 
         <title>MicroTube</title>
+
+        <style type="text/css">
+            body,
+            html {
+                min-height: 100vh;
+            }
+
+            body {
+                color: #fdfdfd;
+                margin: 0;
+                position: relative;
+                background-color: #46485d;
+                font-family: 'Open Sans', sans-serif;
+            }
+
+            #app {
+                height: 100vh;
+                overflow: hidden;
+            }
+        </style>
     </head>
     <body>
         <noscript>
@@ -39,7 +59,7 @@
             to continue.
         </noscript>
 
-        <div id="app" class="app"></div>
+        <div id="app"></div>
 
         <script type="module" src="/src/main.tsx"></script>
     </body>

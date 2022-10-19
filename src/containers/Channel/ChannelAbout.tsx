@@ -12,7 +12,12 @@ const ChannelAbout: Component = () => {
         channel.description
     );
 
-    return <div class="channel__description" innerHTML={text()}></div>;
+    return (
+        <div
+            class="flex flex-col text-light-50 gap-2 p-4"
+            innerHTML={text()}
+        ></div>
+    );
 };
 
 export default ChannelAbout;

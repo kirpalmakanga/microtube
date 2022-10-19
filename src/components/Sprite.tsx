@@ -1,5 +1,3 @@
-const style = { display: 'none' };
-
 const Sprite = () => (
     <svg class="hidden">
         <symbol id="icon-arrow-left" viewBox="0 0 24 24">

@@ -6,11 +6,18 @@ import {
     onMount,
     Show
 } from 'solid-js';
-import { useNavigate, useSearchParams } from '@solidjs/router';
-import VideoCard from '../components/cards/VideoCard';
+import { NavLink, useNavigate, useSearchParams } from '@solidjs/router';
 import List from '../components/List';
+import ListItem from '../components/ListItem';
 import Placeholder from '../components/Placeholder';
-import { copyText, getVideoURL, isMobile, shareURL } from '../lib/helpers';
+import {
+    copyText,
+    formatDate,
+    getVideoURL,
+    isMobile,
+    shareURL,
+    stopPropagation
+} from '../lib/helpers';
 import { useMenu } from '../store/menu';
 import { useNotifications } from '../store/notifications';
 import { usePlayer } from '../store/player';
@@ -113,8 +120,20 @@ const Search = () => {
             >
                 <List items={search.items} loadItems={handleSearchVideos}>
                     {({ data }) => (
-                        <VideoCard
+                        <ListItem
                             {...data}
+                            subtitle={
+                                <NavLink
+                                    href={`/channel/${data.channelId}`}
+                                    onClick={stopPropagation()}
+                                >
+                                    {data.channelTitle}
+                                </NavLink>
+                            }
+                            subSubtitle={formatDate(
+                                data.publishedAt,
+                                'MMMM do yyyy'
+                            )}
                             onClick={handleClickCard(data)}
                             onClickMenu={handleClickMenu(data)}
                         />

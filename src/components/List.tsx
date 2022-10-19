@@ -13,9 +13,23 @@ interface Props {
     loadItems: Function;
 }
 
+//     &__loading {
+//         padding: 1rem 0;
+//         display: flex;
+//         flex: 1;
+//         align-items: center;
+//         justify-content: center;
+
+//         .icon {
+//             color: $white;
+//             height: 2rem;
+//             width: 2rem;
+//         }
+//     }
+// }
 const Loader = () => (
-    <div class="list__loading">
-        <Icon name="loading" />
+    <div class="flex flex-grow items-center justify-center p-4">
+        <Icon class="text-light-50 w-8 h-8" name="loading" />
     </div>
 );
 
@@ -62,8 +76,12 @@ const List = (props: Props) => {
     onCleanup(() => (isUnmounting = true));
 
     return (
-        <div class="list">
-            <div class="list__inner" ref={scrollTarget} onScroll={handleScroll}>
+        <div class="relative flex-grow">
+            <div
+                class="absolute inset-0 flex flex-col overflow-y-auto"
+                ref={scrollTarget}
+                onScroll={handleScroll}
+            >
                 <VirtualContainer
                     items={isLoading() ? [...props.items, null] : props.items}
                     itemSize={{ height: getItemSize() }}
@@ -72,9 +90,8 @@ const List = (props: Props) => {
                 >
                     {(itemProps) => (
                         <div
-                            class="list__item"
+                            class="flex w-full not-last:(border-b-1 border-primary-800)"
                             style={itemProps.style}
-                            role="listitem"
                         >
                             <Show
                                 when={itemProps.index < props.items.length}

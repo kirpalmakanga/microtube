@@ -1,13 +1,21 @@
 import { Component, onCleanup, onMount, Show } from 'solid-js';
-import { useNavigate, useParams } from '@solidjs/router';
-import VideoCard from '../components/cards/VideoCard';
+import { NavLink, useNavigate, useParams } from '@solidjs/router';
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
-import { copyText, getVideoURL, isMobile, shareURL } from '../lib/helpers';
+import {
+    copyText,
+    formatDate,
+    formatTime,
+    getVideoURL,
+    isMobile,
+    shareURL,
+    stopPropagation
+} from '../lib/helpers';
 import { useMenu } from '../store/menu';
 import { useNotifications } from '../store/notifications';
 import { usePlayer } from '../store/player';
 import { usePlaylistItems } from '../store/playlist-items';
+import ListItem from '../components/ListItem';
 
 const Playlists: Component = () => {
     const params = useParams();
@@ -95,9 +103,22 @@ const Playlists: Component = () => {
         >
             <List items={playlistItems.items} loadItems={getPlaylistItems}>
                 {({ index, data }) => (
-                    <VideoCard
+                    <ListItem
                         {...data}
                         index={index}
+                        badge={formatTime(data.duration)}
+                        subtitle={
+                            <NavLink
+                                href={`/channel/${data.channelId}`}
+                                onClick={stopPropagation()}
+                            >
+                                {data.channelTitle}
+                            </NavLink>
+                        }
+                        subSubtitle={formatDate(
+                            data.publishedAt,
+                            'MMMM do yyyy'
+                        )}
                         onClick={handleClickCard(data)}
                         onClickMenu={handleClickMenu(data)}
                     />

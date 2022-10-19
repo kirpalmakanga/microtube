@@ -44,16 +44,16 @@ const Root: ParentComponent = (props) => {
             <Sprite />
 
             <div
-                class="layout"
+                class="relative flex flex-col flex-grow justify-between h-full"
                 classList={{ 'is--mobile': isMobile() }}
                 onContextMenu={IS_DEV_MODE ? () => {} : preventDefault()}
             >
                 <Show when={isAppReady()} fallback={<Loader />}>
                     <Header />
 
-                    <main class="layout__content">{props.children}</main>
-
-                    <Notifications />
+                    <main class="relative flex flex-col flex-grow overflow-hidden">
+                        {props.children}
+                    </main>
 
                     <Show when={user.isSignedIn}>
                         <Player />
@@ -63,6 +63,8 @@ const Root: ParentComponent = (props) => {
                         <Menu />
                     </Show>
                 </Show>
+
+                <Notifications />
             </div>
         </>
     );

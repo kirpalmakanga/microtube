@@ -22,25 +22,16 @@ const SearchForm: Component<Props> = (props) => {
     });
 
     return (
-        <form class="search-form" onSubmit={handleSubmit}>
-            <div class="textfield">
-                <label class="sr-only" for="search">
-                    Search
-                </label>
-
-                <input
-                    ref={inputRef}
-                    aria-label="Search"
-                    value={input()}
-                    name="search"
-                    class="textfield__input"
-                    id="search"
-                    type="text"
-                    placeholder="Search..."
-                    onKeyPress={stopPropagation()}
-                    onChange={handleInput}
-                />
-            </div>
+        <form class="flex flex-grow" onSubmit={handleSubmit}>
+            <input
+                ref={inputRef}
+                class="h-12 px-4 flex-grow transition-colors bg-primary-700 focus:(outline-none bg-primary-600) text-100 placeholder-100 placeholder-opacity-50 caret-white caret-opacity-50"
+                value={input()}
+                type="text"
+                placeholder="Search..."
+                onKeyPress={stopPropagation()}
+                onChange={handleInput}
+            />
         </form>
     );
 };

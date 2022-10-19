@@ -54,7 +54,7 @@ const Channel = () => {
                         </div>
 
                         <Button
-                            class="button"
+                            class="flex items-center gap-2 px-4 py-2 bg-primary-900 hover:bg-primary-800 transition-colors font-bold text-light-50 shadow--2dp"
                             disabled={isSubscribing()}
                             title={
                                 isSubscribing()

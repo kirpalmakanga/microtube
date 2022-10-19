@@ -1,5 +1,8 @@
 import { Router } from '@solidjs/router';
 import { render } from 'solid-js/web';
+
+import 'virtual:windi.css';
+
 import './assets/styles/app.scss';
 import Root from './Root';
 import Routes from './Routes';

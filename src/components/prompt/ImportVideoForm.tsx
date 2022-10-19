@@ -17,19 +17,17 @@ export const ImportVideoForm: Component<Props> = ({ onSubmit }) => {
     const handleKeyPress = stopPropagation();
 
     return (
-        <form id="importVideos" onSubmit={handleSubmit}>
-            <div class="textfield">
-                <textarea
-                    id="videoId"
-                    class="textfield__textarea"
-                    value={text()}
-                    onChange={handleChange}
-                    onKeyPress={handleKeyPress}
-                    autofocus
-                    placeholder="URLs/IDs..."
-                    rows={10}
-                />
-            </div>
+        <form id="importVideos" class="flex flex-grow" onSubmit={handleSubmit}>
+            <textarea
+                id="videoId"
+                class="bg-primary-800 focus:(bg-primary-700 outline-none) transition-colors w-full h-full p-4"
+                value={text()}
+                onChange={handleChange}
+                onKeyPress={handleKeyPress}
+                autofocus
+                placeholder="URLs/IDs..."
+                rows={10}
+            />
         </form>
     );
 };

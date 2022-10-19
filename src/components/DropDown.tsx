@@ -72,10 +72,11 @@ const DropDown: Component<Props> = (props) => {
     // }
 
     return (
-        <div class="relative" onClick={stopPropagation()}>
+        <div class="relative">
             <button
                 class="h-12 p-4 flex items-center gap-2 transition-colors text-light-50 bg-primary-900 hover:bg-primary-800"
-                onClick={toggleOptions}
+                type="button"
+                onClick={stopPropagation(toggleOptions)}
                 onBlur={closeOptions}
             >
                 <span class="font-montserrat text-sm">{label()}</span>
@@ -100,9 +101,11 @@ const DropDown: Component<Props> = (props) => {
                                         classList={{
                                             'bg-primary-700': isActiveItem
                                         }}
-                                        onClick={handleOptionClick(
-                                            value,
-                                            isActiveItem
+                                        onClick={stopPropagation(
+                                            handleOptionClick(
+                                                value,
+                                                isActiveItem
+                                            )
                                         )}
                                     >
                                         {label}

@@ -1,4 +1,4 @@
-import { Component, Show } from 'solid-js';
+import { Component, createEffect, Show } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
 import Icon from './Icon';
@@ -11,23 +11,35 @@ interface Props {
     background?: boolean;
 }
 
+interface State {
+    isLoaded: boolean;
+    hasError: boolean;
+    img: HTMLImageElement | null;
+}
+
 const Img: Component<Props> = (props) => {
-    const [state, setState] = createStore({
+    const [state, setState] = createStore<State>({
         isLoaded: false,
-        hasError: false
+        hasError: false,
+        img: null
     });
 
-    let img;
+    createEffect((currentSrc) => {
+        const { src } = props;
 
-    if (props.src) {
-        img = new Image();
-        img.src = props.src;
-    }
+        if (src && src !== currentSrc) {
+            const img = new Image();
 
-    if (img && !img.complete) {
-        img.onload = () => setState({ isLoaded: true });
-        img.onerror = () => setState({ hasError: true });
-    }
+            img.onload = () => setState({ isLoaded: true });
+            img.onerror = () => setState({ hasError: true });
+
+            img.src = src;
+
+            setState('img', img);
+        }
+
+        return src;
+    });
 
     return (
         <span
@@ -35,7 +47,7 @@ const Img: Component<Props> = (props) => {
             classList={{ [props.class || '']: !!props.class }}
         >
             <Show
-                when={img && img.complete}
+                when={state.img?.complete}
                 fallback={
                     <Transition name="fade">
                         <Show

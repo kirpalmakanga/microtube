@@ -15,6 +15,7 @@ const playerOptions: Options = {
 interface Props {
     videoId: string;
     isVisible: boolean;
+    isFullscreen: boolean;
     onReady: (playerInstance: YouTubePlayer) => void;
     onBuffering: () => void;
     onPlay?: () => void;
@@ -24,10 +25,20 @@ interface Props {
     onClick?: () => void;
 }
 
+//     @media screen and (min-width: 480px) {
+//         bottom: 50px;
+//     }
+
 const Screen: Component<Props> = (props) => (
     <div
-        class="screen"
-        classList={{ 'is--visible': props.isVisible }}
+        class="fixed left-0 right-0 flex bg-primary-700 transition-opacity"
+        classList={{
+            'top-12 bottom-12': !props.isFullscreen,
+            'top-0 bottom-0': props.isFullscreen,
+            'opacity-0 invisible': !props.isVisible,
+            'opacity-100 visible': props.isVisible,
+            '': !!props.videoId
+        }}
         onClick={props.onClick}
     >
         <Show
@@ -35,6 +46,7 @@ const Screen: Component<Props> = (props) => (
             fallback={<Placeholder icon="screen" text="No video." />}
         >
             <Player
+                class="relative flex-grow after:(content-DEFAULT absolute inset-0) iframe:(w-full h-full)"
                 videoId={props.videoId}
                 options={playerOptions}
                 onReady={props.onReady}

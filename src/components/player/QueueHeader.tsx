@@ -1,5 +1,6 @@
 import { Component } from 'solid-js';
 import Button from '../Button';
+import Icon from '../Icon';
 
 interface Props {
     itemCount: number;
@@ -9,39 +10,46 @@ interface Props {
 }
 
 const QueueHeader: Component<Props> = (props) => (
-    <header class="layout__header shadow--2dp">
-        <div class="layout__header-row">
-            <Button
-                class="navigation__link layout__back-button icon-button"
-                aria-label="Close queue"
-                onClick={props.onClickClose}
-                icon="chevron-down"
+    <header class="flex items-center h-12 bg-primary-900 shadow z-1">
+        <Button
+            class="group relative flex items-center justify-center h-12 w-12 bg-primary-900"
+            onClick={props.onClickClose}
+        >
+            <Icon
+                class="text-light-50 group-hover:text-opacity-50 transition-colors w-6 h-6"
+                name="chevron-down"
             />
+        </Button>
 
-            <span class="layout__title">
-                <span class="layout__title-inner">
-                    {`Queue (${props.itemCount} item${
-                        props.itemCount > 1 ? 's' : ''
-                    })`}
-                </span>
+        <span class="flex-grow overflow-hidden">
+            <span class="font-montserrat overflow-ellipsis overflow-hidden whitespace-nowrap">
+                {`Queue (${props.itemCount} item${
+                    props.itemCount > 1 ? 's' : ''
+                })`}
             </span>
+        </span>
 
-            <nav class="navigation">
-                <Button
-                    class="navigation__link icon-button"
-                    onClick={props.onClickImport}
-                    aria-label="Import videos"
-                    icon="add"
+        <nav class="flex">
+            <Button
+                class="group relative flex items-center justify-center h-12 w-12 bg-primary-900"
+                onClick={props.onClickImport}
+            >
+                <Icon
+                    class="text-light-50 group-hover:text-opacity-50 transition-colors w-6 h-6"
+                    name="add"
                 />
+            </Button>
 
-                <Button
-                    class="navigation__link icon-button"
-                    onClick={props.onClickClear}
-                    aria-label="Clear queue"
-                    icon="delete"
+            <Button
+                class="group relative flex items-center justify-center h-12 w-12 bg-primary-900"
+                onClick={props.onClickClear}
+            >
+                <Icon
+                    class="text-light-50 group-hover:text-opacity-50 transition-colors w-6 h-6"
+                    name="delete"
                 />
-            </nav>
-        </div>
+            </Button>
+        </nav>
     </header>
 );
 

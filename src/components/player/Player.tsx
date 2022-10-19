@@ -1,4 +1,4 @@
-import { createEffect, onCleanup, onMount, Show } from 'solid-js';
+import { createEffect, createMemo, onCleanup, onMount, Show } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
 import { isMobile } from '../../lib/helpers';
@@ -324,15 +324,17 @@ const Player = () => {
 
     onCleanup(() => unsubscribeFromFullscreen());
 
+    const isFullscreen = createMemo(
+        () => state.isFullscreen && currentDevice().isMaster
+    );
+
     return (
         <div
-            class="player__container shadow--2dp"
+            class="flex flex-col justify-end shadow z-1"
+            classList={{
+                'fixed inset-0 bg-primary-900 z-2': isFullscreen()
+            }}
             ref={setFullscreenRef}
-            data-state-fullscreen={
-                state.isFullscreen && currentDevice().isMaster
-                    ? 'enabled'
-                    : 'disabled'
-            }
             data-state-show-queue={
                 state.isQueueVisible ? 'enabled' : 'disabled'
             }
@@ -342,8 +344,9 @@ const Player = () => {
                     isVisible={
                         isSingleVideo() ||
                         state.isScreenVisible ||
-                        (state.isFullscreen && currentDevice().isMaster)
+                        isFullscreen()
                     }
+                    isFullscreen={isFullscreen()}
                     videoId={storeState.currentVideo.id}
                     onReady={handleYoutubeIframeReady}
                     onEnd={handleVideoEnd}
@@ -385,19 +388,16 @@ const Player = () => {
                 </Show>
             </Transition>
 
-            <div class="player shadow--2dp">
-                <div class="player__inner shadow--2dp">
+            <div class="relative bg-primary-900 shadow">
+                <div class="flex flex-wrap shadow">
                     <Show when={!isSingleVideo()}>
                         <Button
-                            class="player__controls-button icon-button"
                             onClick={() => goToVideo(false)}
                             icon="chevron-left"
-                            ariaLabel="Go to previous video"
                         />
                     </Show>
 
                     <Button
-                        class="player__controls-button icon-button"
                         onClick={togglePlay}
                         icon={
                             state.isBuffering
@@ -406,17 +406,12 @@ const Player = () => {
                                 ? 'pause'
                                 : 'play'
                         }
-                        ariaLabel={
-                            state.isPlaying ? 'Pause video' : 'Play video'
-                        }
                     />
 
                     <Show when={!isSingleVideo()}>
                         <Button
-                            class="player__controls-button icon-button"
                             onClick={() => goToVideo(true)}
                             icon="chevron-right"
-                            ariaLabel="Go to next video"
                         />
                     </Show>
 
@@ -437,12 +432,8 @@ const Player = () => {
 
                     <Show when={availableDevices().length && !isSingleVideo()}>
                         <Button
-                            class="player__controls-button icon-button"
-                            classList={{
-                                'is-active': state.isDevicesSelectorVisible
-                            }}
+                            isActive={state.isDevicesSelectorVisible}
                             icon="devices"
-                            ariaLabel="Devices"
                             onClick={handleToggleDevices}
                         />
                     </Show>
@@ -453,15 +444,11 @@ const Player = () => {
                             onWheel={handleWheelVolume}
                         >
                             <Button
-                                class="player__controls-button icon-button"
                                 onClick={toggleMute}
                                 icon={
                                     state.volume === 0
                                         ? 'volume-off'
                                         : 'volume-up'
-                                }
-                                ariaLabel={
-                                    state.volume === 0 ? 'Unmute' : 'Mute'
                                 }
                             />
 
@@ -473,16 +460,8 @@ const Player = () => {
                     </Show>
 
                     <Button
-                        class="player__controls-button icon-button"
-                        classList={{
-                            'is-active': state.isDescriptionVisible
-                        }}
+                        isActive={state.isDescriptionVisible}
                         icon="info"
-                        ariaLabel={
-                            state.isDescriptionVisible
-                                ? 'Hide description'
-                                : 'Show description'
-                        }
                         onClick={toggleInfo}
                     />
 
@@ -494,9 +473,8 @@ const Player = () => {
                         }
                     >
                         <Button
-                            class="player__controls-button badge icon-button"
+                            isActive={state.isQueueVisible}
                             classList={{
-                                'is-active': state.isQueueVisible,
                                 'badge--active':
                                     !!storeState.newQueueItems &&
                                     !state.isQueueVisible
@@ -504,47 +482,28 @@ const Player = () => {
                             onClick={toggleQueue}
                             badge={storeState.newQueueItems}
                             icon="list"
-                            ariaLabel={
-                                state.isQueueVisible
-                                    ? 'Hide queue'
-                                    : 'Show queue'
-                            }
                         />
                     </Show>
 
                     <Show when={!isSingleVideo() && !state.isFullscreen}>
                         <Button
-                            class="player__controls-button icon-button"
-                            classList={{ 'is-active': state.isScreenVisible }}
+                            isActive={state.isScreenVisible}
                             onClick={toggleScreen}
                             icon="screen"
-                            ariaLabel={
-                                state.isScreenVisible
-                                    ? 'Hide screen'
-                                    : 'Open screen'
-                            }
                         />
                     </Show>
 
                     <Show when={isSingleVideo()}>
                         <Button
-                            class="player__controls-button icon-button"
                             onClick={handleEditPlaylistItem}
                             icon="folder-add"
-                            ariaLabel="Save to playlist"
                         />
                     </Show>
 
                     <Show when={storeState.currentVideo.id}>
                         <Button
-                            class="player__controls-button icon-button"
                             onClick={toggleFullscreen}
                             icon={state.isFullscreen ? 'close' : 'expand'}
-                            ariaLabel={
-                                state.isFullscreen
-                                    ? 'Exit Fullscreen'
-                                    : 'Enable Fullscreen'
-                            }
                         />
                     </Show>
                 </div>

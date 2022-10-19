@@ -11,7 +11,12 @@ const Description: Component<Props> = (props) => {
         props.text
     );
 
-    return <div class="PlayerDescription" innerHTML={text()}></div>;
+    return (
+        <div
+            class="fixed left-0 right-0 top-12 bottom-12 bg-primary-700 text-light-50 whitespace-prewrap"
+            innerHTML={text()}
+        ></div>
+    );
 };
 
 export default Description;

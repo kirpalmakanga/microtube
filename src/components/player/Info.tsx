@@ -133,25 +133,27 @@ const Info: Component<Props> = (props) => {
 
     onCleanup(clearWatchers);
 
+    //     @media screen and (min-width: 480px) {
+    //         width: initial;
+    //         order: initial;
+    //         flex: 1;
+    //     }
+
     return (
-        <div class="PlayerInfo">
+        <div class="relative flex flex-col justify-center flex-grow px-2 overflow-hidden">
             <InfoProgress
                 percentElapsed={props.duration ? time() / props.duration : 0}
                 percentLoaded={state.loaded}
             />
 
-            <div class="PlayerInfo__Title">{props.title}</div>
+            <div class="text-sm text-light-50 uppercase font-montserrat overflow-hidden overflow-ellipsis whitespace-nowrap">
+                {props.title}
+            </div>
 
             <InfoTime time={time()} duration={props.duration} />
 
-            <label class="sr-only" for="seek-time">
-                Seek time
-            </label>
-
             <input
-                id="seek-time"
-                class="PlayerInfo__Seek"
-                aria-label="Seek time"
+                class="absolute inset-0 opacity-0 cursor-pointer active:cursor-grabbing"
                 type="range"
                 min="0"
                 max={props.duration}

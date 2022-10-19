@@ -9,11 +9,11 @@ interface Props {
 
 const Progress: Component<Props> = (props) => {
     return (
-        <div class="PlayerInfoProgress">
-            <div class="PlayerInfoProgress__Gutter">
+        <div class="flex flex-grow absolute inset-0 opacity-50">
+            <div class="relative flex flex-grow overflow-hidden">
                 <Show when={props.percentLoaded}>
                     <div
-                        class="PlayerInfoProgress__Gutter__Loaded"
+                        class="absolute inset-0 transition-transform -translate-y-full bg-primary-700"
                         style={{
                             transform: `translateX(${formatPercent(
                                 props.percentLoaded
@@ -24,7 +24,7 @@ const Progress: Component<Props> = (props) => {
 
                 <Show when={props.percentElapsed}>
                     <div
-                        class="PlayerInfoProgress__Gutter__Played"
+                        class="absolute inset-0 transition-transform -translate-y-full bg-primary-500"
                         style={{
                             opacity: props.percentElapsed ? 1 : 0,
                             transform: `translateX(${formatPercent(

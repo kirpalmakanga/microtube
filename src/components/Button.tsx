@@ -21,6 +21,7 @@ export interface ButtonProps {
 
 const Button: Component<ButtonProps> = (props) => {
     const [localProps, buttonProps] = splitProps(props, [
+        'disabled',
         'class',
         'icon',
         'iconClass',
@@ -32,6 +33,7 @@ const Button: Component<ButtonProps> = (props) => {
     return (
         <button
             {...buttonProps}
+            disabled={localProps.disabled || localProps.isLoading}
             classList={{ [localProps.class || '']: !!localProps.class }}
         >
             <span class="relative">

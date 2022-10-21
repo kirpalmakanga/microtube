@@ -61,7 +61,7 @@ const Prompt: Component = () => {
                         <footer class="flex justify-end gap-4 p-4">
                             <Show when={prompt.cancelText}>
                                 <Button
-                                    class="flex items-center justify-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-400 transition-colors font-bold text-light-50 shadow"
+                                    class="flex items-center justify-center gap-2 px-4 py-1 bg-red-500 hover:bg-red-400 transition-colors font-bold text-light-50 rounded shadow"
                                     onClick={closePrompt}
                                     title={prompt.cancelText}
                                 />
@@ -69,7 +69,7 @@ const Prompt: Component = () => {
 
                             <Show when={isMode('import')}>
                                 <Button
-                                    class="flex items-center justify-center gap-2 px-4 py-2 bg-primary-800 hover:bg-primary-700 transition-colors font-bold text-light-50 shadow"
+                                    class="flex items-center justify-center gap-2 px-4 py-1 bg-primary-800 hover:bg-primary-700 transition-colors font-bold text-light-50 rounded shadow"
                                     title={prompt.confirmText}
                                     type="submit"
                                     form="importVideos"
@@ -78,7 +78,7 @@ const Prompt: Component = () => {
 
                             <Show when={isMode('default')}>
                                 <Button
-                                    class="flex items-center justify-center gap-2 px-4 py-2 bg-primary-800 hover:bg-primary-700 transition-colors font-bold text-light-50 shadow"
+                                    class="flex items-center justify-center gap-2 px-4 py-1 bg-primary-800 hover:bg-primary-700 transition-colors font-bold text-light-50 rounded shadow"
                                     title={prompt.confirmText}
                                     onClick={handleConfirm}
                                 />

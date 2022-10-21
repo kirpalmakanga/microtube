@@ -40,37 +40,6 @@ const DropDown: Component<Props> = (props) => {
     const handleOptionClick = (value: unknown, isActiveItem: boolean) =>
         preventDefault(() => !isActiveItem && props.onSelect(value));
 
-    //     &__list {
-    //         padding: 0;
-    //         margin: 0;
-    //         overflow-x: hidden;
-    //         position: absolute;
-    //         top: 100%;
-    //         left: 0;
-    //         width: 100%;
-    //     }
-
-    //     &__trigger,
-    //     &__list-item {
-    //         &-title {
-    //             white-space: nowrap;
-    //         }
-    //         @include transition();
-    //         background-color: $brand-primary;
-    //         color: $brand-secondary;
-    //         height: 50px;
-    //         display: flex;
-    //         align-items: center;
-    //         cursor: pointer;
-    //         padding: 0 1rem;
-
-    //         &:hover,
-    //         &.is-active {
-    //             background-color: lighten($brand-primary, 5%);
-    //         }
-    //     }
-    // }
-
     return (
         <div class="relative">
             <button

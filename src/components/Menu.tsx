@@ -36,7 +36,7 @@ const Menu = () => {
                                 {({ title, icon, onClick }: MenuItemData) => (
                                     <li class="flex border-t-1 border-primary-700">
                                         <button
-                                            class="flex items-center gap-4 flex-grow bg-primary-800 hover:bg-primary-700 text-light-50 transition-colors font-montserrat p-4"
+                                            class="flex items-center gap-4 flex-grow bg-primary-800 hover:bg-primary-700 text-light-50 text-sm transition-colors font-montserrat p-4"
                                             type="button"
                                             onClick={() => {
                                                 closeMenu();
@@ -45,7 +45,7 @@ const Menu = () => {
                                         >
                                             <Show when={icon}>
                                                 <Icon
-                                                    class="h-6 w-6"
+                                                    class="h-5 w-5"
                                                     name={icon}
                                                 />
                                             </Show>

@@ -19,6 +19,10 @@ export default defineConfig({
             fontFamily: {
                 open: '"Open Sans", sans-serif',
                 montserrat: '"Montserrat", sans-serif'
+            },
+            cursor: {
+                grab: 'grab',
+                grabbing: 'grabbing'
             }
         }
     }

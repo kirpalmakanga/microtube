@@ -389,7 +389,7 @@ const Player = () => {
             </Transition>
 
             <div class="relative bg-primary-900 shadow">
-                <div class="flex flex-wrap shadow">
+                <div class="flex <sm:flex-wrap shadow">
                     <Show when={!isSingleVideo()}>
                         <Button
                             onClick={() => goToVideo(false)}
@@ -439,10 +439,7 @@ const Player = () => {
                     </Show>
 
                     <Show when={!isMobile() && storeState.currentVideo.id}>
-                        <div
-                            class="player__controls-volume"
-                            onWheel={handleWheelVolume}
-                        >
+                        <div class="relative group" onWheel={handleWheelVolume}>
                             <Button
                                 onClick={toggleMute}
                                 icon={
@@ -452,10 +449,12 @@ const Player = () => {
                                 }
                             />
 
-                            <VolumeRange
-                                value={state.volume}
-                                onChange={setVolume}
-                            />
+                            <div class="absolute bottom-full right-0 w-36 opacity-0 invisible group-hover:(opacity-100 visible)">
+                                <VolumeRange
+                                    value={state.volume}
+                                    onChange={setVolume}
+                                />
+                            </div>
                         </div>
                     </Show>
 

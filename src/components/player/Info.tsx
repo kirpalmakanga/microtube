@@ -133,20 +133,14 @@ const Info: Component<Props> = (props) => {
 
     onCleanup(clearWatchers);
 
-    //     @media screen and (min-width: 480px) {
-    //         width: initial;
-    //         order: initial;
-    //         flex: 1;
-    //     }
-
     return (
-        <div class="relative flex flex-col justify-center flex-grow px-2 overflow-hidden">
+        <div class="relative flex flex-col flex-grow justify-center px-2 overflow-hidden">
             <InfoProgress
                 percentElapsed={props.duration ? time() / props.duration : 0}
                 percentLoaded={state.loaded}
             />
 
-            <div class="text-sm text-light-50 uppercase font-montserrat overflow-hidden overflow-ellipsis whitespace-nowrap">
+            <div class="relative w-full text-sm text-light-50 uppercase font-montserrat overflow-hidden overflow-ellipsis whitespace-nowrap">
                 {props.title}
             </div>
 

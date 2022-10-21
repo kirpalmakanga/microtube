@@ -53,20 +53,28 @@ const Sortable: ParentComponent<ListItemProps> = (props) => {
     return (
         <div
             // @ts-ignore
-            ref={sortable.ref}
-            class="sortable"
+            use:sortable
+            // ref={sortable.ref}
+            class="flex overflow-hidden h-12 not-last:border-b-1 border-primary-600 bg-primary-700"
             classList={{
-                'is--dragged': sortable.isActiveDraggable,
-                'has--transition': !!state.active.draggable
+                'opacity-50': sortable.isActiveDraggable,
+                'transition-transform': !!state.active.draggable
             }}
-            style={transformStyle(sortable.transform)}
+            // style={transformStyle(sortable.transform)}
         >
             <div
-                class="sortable__drag-handle is-drag"
+                class="flex flex-shrink-0 items-center justify-center h-12 w-12 group"
+                classList={{
+                    'cursor-grab': !sortable.isActiveDraggable,
+                    'cursor-grabbing': sortable.isActiveDraggable
+                }}
                 {...sortable.dragActivators}
                 style={{ 'touch-action': 'none' }}
             >
-                <Icon name="drag" />
+                <Icon
+                    class="text-light-50 group-hover:(text-opacity-50) transition-colors w-5 h-5"
+                    name="drag"
+                />
             </div>
 
             {props.children}
@@ -124,10 +132,10 @@ const List = (props: ListProps) => {
                 </For>
             </SortableProvider>
 
-            <DragOverlay class="sortable-overlay">
-                <div class="sortable shadow--2dp cursor-grabbing">
-                    <div class="sortable__drag-handle">
-                        <Icon name="drag" />
+            <DragOverlay class="pointer-events-none z-1">
+                <div class="flex overflow-hidden shadow cursor-grabbing bg-primary-700">
+                    <div class="flex flex-shrink-0 items-center justify-center h-12 w-12">
+                        <Icon class="text-light-50 w-5 h-5" name="drag" />
                     </div>
 
                     <Show when={activeItem()}>

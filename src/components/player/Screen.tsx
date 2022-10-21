@@ -25,10 +25,6 @@ interface Props {
     onClick?: () => void;
 }
 
-//     @media screen and (min-width: 480px) {
-//         bottom: 50px;
-//     }
-
 const Screen: Component<Props> = (props) => (
     <div
         class="fixed left-0 right-0 flex bg-primary-700 transition-opacity"
@@ -46,7 +42,7 @@ const Screen: Component<Props> = (props) => (
             fallback={<Placeholder icon="screen" text="No video." />}
         >
             <Player
-                class="relative flex-grow after:(content-DEFAULT absolute inset-0) iframe:(w-full h-full)"
+                class="relative flex-grow after:(content-DEFAULT absolute inset-0) children:(w-full h-full)"
                 videoId={props.videoId}
                 options={playerOptions}
                 onReady={props.onReady}

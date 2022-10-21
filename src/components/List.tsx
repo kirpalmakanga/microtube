@@ -13,20 +13,6 @@ interface Props {
     loadItems: Function;
 }
 
-//     &__loading {
-//         padding: 1rem 0;
-//         display: flex;
-//         flex: 1;
-//         align-items: center;
-//         justify-content: center;
-
-//         .icon {
-//             color: $white;
-//             height: 2rem;
-//             width: 2rem;
-//         }
-//     }
-// }
 const Loader = () => (
     <div class="flex flex-grow items-center justify-center p-4">
         <Icon class="text-light-50 w-8 h-8" name="loading" />

@@ -15,7 +15,7 @@
         "date-fns": "^2.27.0",
         "firebase": "^9.10.0",
         "socket.io-client": "^4.4.1",
-        "solid-js": "^1.5.7",
+        "solid-js": "^1.6.0",
         "solid-transition-group": "^0.0.11",
         "uuid": "^8.3.2"
     },

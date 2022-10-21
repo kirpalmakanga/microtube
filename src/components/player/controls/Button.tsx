@@ -1,4 +1,5 @@
 import { Component, splitProps } from 'solid-js';
+import { Transition } from 'solid-transition-group';
 import Icon from '../../Icon';
 
 interface Props {
@@ -20,17 +21,23 @@ const Button: Component<Props> = (props) => {
     return (
         <button
             {...buttonProps}
-            class="relative flex items-center justify-center bg-primary-900 h-12 w-12 group"
+            class="relative flex flex-shrink-0 items-center justify-center bg-primary-900 h-12 w-12 group"
             classList={{
-                'after:(content-DEFAULT absolute left-0 right-0 bottom-0 h-2px bg-light-50)':
-                    localProps.isActive
+                'after:opacity-100': localProps.isActive
             }}
-            data-badge={localProps.badge}
         >
             <Icon
                 class="text-light-50 group-hover:text-opacity-50 transition-colors w-6 h-6"
                 name={localProps.icon}
             />
+
+            <Transition name="fade">
+                <Show when={localProps.badge}>
+                    <span class="absolute top-2 right-2 bg-red-500 px-1 py-0.125em text-xs rounded">
+                        {localProps.badge || ''}
+                    </span>
+                </Show>
+            </Transition>
         </button>
     );
 };

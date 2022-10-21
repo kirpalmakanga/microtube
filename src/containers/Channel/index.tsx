@@ -11,6 +11,7 @@ import Button from '../../components/Button';
 import Img from '../../components/Img';
 import { getThumbnails } from '../../lib/helpers';
 import { useChannel } from '../../store/channel';
+import { Transition } from 'solid-transition-group';
 
 interface TabsProps {
     items: { title: string; path: string }[];
@@ -22,8 +23,8 @@ const Tabs: Component<TabsProps> = (props) => (
             {(data) => (
                 <li class="flex-grow">
                     <NavLink
-                        class="relative block bg-primary-900 text-light-50 hover:text-opacity-80 transition-colors text-center p-2"
-                        activeClass="after:(content-DEFAULT absolute bottom-0 left-0 right-0 h-2px bg-light-50)"
+                        class="relative block bg-primary-900 font-montserrat text-light-50 hover:text-opacity-80 transition-colors text-center p-2 after:(content-DEFAULT absolute bottom-0 left-0 right-0 h-2px bg-light-50 opacity-0 transition-opacity)"
+                        activeClass="after:opacity-100"
                         href={data.path}
                         replace
                     >
@@ -64,10 +65,12 @@ const Channel = () => {
                 />
 
                 <div class="flex flex-col gap-4">
-                    <h1 class="text-light-50">{channel.channelTitle}</h1>
+                    <h1 class="font-montserrat text-light-50">
+                        {channel.channelTitle}
+                    </h1>
 
                     <Button
-                        class="flex items-center justify-center gap-2 px-4 py-2 bg-primary-900 hover:bg-primary-800 transition-colors font-bold text-light-50 shadow"
+                        class="flex items-center justify-center gap-2 px-4 py-1 bg-primary-900 hover:bg-primary-800 transition-colors font-bold text-light-50 rounded shadow"
                         isLoading={isSubscribing()}
                         disabled={isSubscribing()}
                         title={
@@ -101,7 +104,9 @@ const Channel = () => {
             />
 
             <div class="flex flex-col flex-grow">
-                <Outlet />
+                <Transition name="fade" mode="outin">
+                    <Outlet />
+                </Transition>
             </div>
         </div>
     );

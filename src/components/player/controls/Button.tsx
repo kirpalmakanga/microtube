@@ -1,11 +1,11 @@
-import { Component, splitProps } from 'solid-js';
+import { Component, Show, splitProps } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import Icon from '../../Icon';
 
 interface Props {
     classList?: { [key: string]: boolean };
     icon: string;
-    badge?: unknown;
+    badge?: string | number;
     children?: string | Element;
     isActive?: boolean;
     onClick: () => void;

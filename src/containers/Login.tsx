@@ -34,7 +34,7 @@ const Login: Component = () => {
             text="You must be logged in to access this content."
         >
             <Button
-                class="flex items-center gap-2 px-4 py-2 bg-primary-900 hover:bg-primary-800 transition-colors font-bold text-light-50 shadow--2dp"
+                class="flex items-center justify-center gap-2 px-4 py-1 bg-primary-900 hover:bg-primary-800 transition-colors font-montserrat text-light-50 rounded shadow"
                 icon="user"
                 title="Log in"
                 type="button"

@@ -70,7 +70,7 @@ const Channel = () => {
                     </h1>
 
                     <Button
-                        class="flex items-center justify-center gap-2 px-4 py-1 bg-primary-900 hover:bg-primary-800 transition-colors font-bold text-light-50 rounded shadow"
+                        class="flex items-center justify-center gap-2 px-4 py-1 bg-primary-900 hover:bg-primary-800 transition-colors font-montserrat text-light-50 rounded shadow"
                         isLoading={isSubscribing()}
                         disabled={isSubscribing()}
                         title={

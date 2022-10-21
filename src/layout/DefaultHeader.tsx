@@ -117,7 +117,7 @@ const DefaultHeader = () => {
                                 </Show>
 
                                 <Button
-                                    class="flex items-center justify-center gap-2 font-montserrat text-light-50 bg-primary-800 hover:bg-primary-700 shadow px-4 py-1"
+                                    class="flex items-center justify-center gap-2 px-4 py-1 bg-primary-800 hover:bg-primary-700 transition-colors text-light-50 font-montserrat rounded shadow"
                                     icon="log-out"
                                     iconClass="h-6 w-6"
                                     title={

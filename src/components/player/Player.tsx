@@ -30,23 +30,27 @@ interface PlayerInnerState {
     volume: number;
 }
 
+const getInitialState = () => ({
+    isFullscreen: false,
+    isPlaying: false,
+    isBuffering: false,
+    isMuted: false,
+    isQueueVisible: false,
+    isScreenVisible: false,
+    isDevicesSelectorVisible: false,
+    isDescriptionVisible: false,
+    volume: 100
+});
+
 const Player = () => {
     let isStartup: boolean = true;
     let youtube: YouTubePlayer | null;
     let youtubeVolume: number = 100;
     let unsubscribeFromFullscreen: () => void;
 
-    const [state, setPlayerState] = createStore<PlayerInnerState>({
-        isFullscreen: false,
-        isPlaying: false,
-        isBuffering: false,
-        isMuted: false,
-        isQueueVisible: false,
-        isScreenVisible: false,
-        isDevicesSelectorVisible: false,
-        isDescriptionVisible: false,
-        volume: 100
-    });
+    const [state, setPlayerState] = createStore<PlayerInnerState>(
+        getInitialState()
+    );
 
     const [
         storeState,
@@ -292,9 +296,15 @@ const Player = () => {
     }, [currentDevice().isMaster, state.isFullscreen]);
 
     createEffect(() => {
-        const videoId = storeState.currentVideo.id;
+        const {
+            currentVideo: { id: videoId }
+        } = storeState;
 
-        if (!videoId) youtube = null;
+        if (!videoId) {
+            youtube = null;
+
+            setPlayerState(getInitialState());
+        }
 
         return videoId;
     }, storeState.currentVideo.id);

@@ -29,7 +29,7 @@ interface ListProps {
 }
 interface ListItemProps {
     id: Id;
-    children: JSXElement;
+    hasTransition: boolean;
 }
 
 const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
@@ -41,14 +41,13 @@ const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
 };
 
 const Sortable: ParentComponent<ListItemProps> = (props) => {
-    const [state] = useDragDropContext();
     let sortable = createSortable(props.id);
 
-    createEffect((previousId) => {
-        if (props.id !== previousId) sortable = createSortable(props.id);
+    // createEffect((previousId) => {
+    //     if (props.id !== previousId) sortable = createSortable(props.id);
 
-        return props.id;
-    }, props.id);
+    //     return props.id;
+    // }, props.id);
 
     return (
         <div
@@ -58,7 +57,7 @@ const Sortable: ParentComponent<ListItemProps> = (props) => {
             class="flex overflow-hidden h-12 not-last:border-b-1 border-primary-600 bg-primary-700"
             classList={{
                 'opacity-50': sortable.isActiveDraggable,
-                'transition-transform': !!state.active.draggable
+                'transition-transform': props.hasTransition
             }}
             // style={transformStyle(sortable.transform)}
         >
@@ -83,8 +82,14 @@ const Sortable: ParentComponent<ListItemProps> = (props) => {
 };
 
 const List = (props: ListProps) => {
-    const [, { addTransformer, removeTransformer, onDragStart, onDragEnd }] =
-        useDragDropContext();
+    const context = useDragDropContext();
+
+    if (!context) return;
+
+    const [
+        state,
+        { addTransformer, removeTransformer, onDragStart, onDragEnd }
+    ] = context;
 
     const [activeItem, setActiveItem] = createSignal(null);
     const ids = createMemo(() => props.items.map(props.getItemId));
@@ -125,7 +130,10 @@ const List = (props: ListProps) => {
             <SortableProvider ids={ids()}>
                 <For each={props.items}>
                     {(item) => (
-                        <Sortable id={props.getItemId(item)}>
+                        <Sortable
+                            id={props.getItemId(item)}
+                            hasTransition={!!state.active.draggable}
+                        >
                             {props.children(item)}
                         </Sortable>
                     )}

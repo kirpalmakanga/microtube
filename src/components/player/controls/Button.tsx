@@ -34,7 +34,7 @@ const Button: Component<Props> = (props) => {
             <Transition name="fade">
                 <Show when={localProps.badge}>
                     <span class="absolute top-2 right-2 bg-red-500 px-1 py-0.125em text-xs rounded">
-                        {localProps.badge || ''}
+                        {localProps.badge}
                     </span>
                 </Show>
             </Transition>

@@ -309,11 +309,6 @@ const Player = () => {
         return videoId;
     }, storeState.currentVideo.id);
 
-    createEffect(
-        () => setPlayerState({ isScreenVisible: storeState.isScreenVisible }),
-        storeState.isScreenVisible
-    );
-
     onMount(() => {
         const actions: PlayerSyncHandlers = {
             'update-state': (state: PlayerInnerState) => setPlayerState(state)

@@ -95,13 +95,13 @@ const DefaultHeader = () => {
 
                 <div class="relative">
                     <Button
-                        class="h-12 flex items-center justify-center"
+                        class="group h-12 flex items-center justify-center"
                         onClick={handleClickUser}
                         icon={user.isSignedIn && !user.picture ? 'user' : ''}
                     >
                         <Show when={user.picture}>
                             <Img
-                                class="w-8 h-8 rounded-full"
+                                class="group-hover:opacity-50 transition-opacity w-8 h-8 rounded-full"
                                 src={user.picture}
                             />
                         </Show>

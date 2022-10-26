@@ -33,12 +33,12 @@ const Playlists: Component = () => {
             callbackData,
             items: [
                 {
-                    title: 'Queue playlist',
+                    title: 'Queue',
                     icon: 'circle-add',
                     onClick: queuePlaylist
                 },
                 {
-                    title: 'Launch playlist',
+                    title: 'Launch',
                     icon: 'play',
                     onClick: launchPlaylist
                 },
@@ -61,7 +61,7 @@ const Playlists: Component = () => {
                     }
                 },
                 {
-                    title: 'Remove playlist',
+                    title: 'Remove',
                     icon: 'delete',
                     onClick: removePlaylist
                 }

@@ -46,8 +46,6 @@ const Img: Component<Props> = (props) => {
             class="block relative overflow-hidden"
             classList={{ [props.class || '']: !!props.class }}
         >
-            {state.isLoaded ? 'true' : 'false'}
-            {state.img?.complete ? 'true' : 'false'}
             <Transition name="fade">
                 <Switch>
                     <Match

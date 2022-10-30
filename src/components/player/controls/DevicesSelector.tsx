@@ -10,7 +10,7 @@ const DevicesSelector: Component<Props> = (props) => {
         props.onClickItem(deviceId);
 
     return (
-        <div class="absolute bottom-12 left-0 right-0 shadow--2dp">
+        <div class="absolute bottom-12 left-0 right-0 shadow">
             <ul class="player__controls-devices-list">
                 <li
                     class="flex flex-col bg-primary-800 hover:bg-primary-700 transition-colors font-montserrat px-4 py-2 cursor-pointer"

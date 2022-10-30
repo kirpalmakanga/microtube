@@ -21,7 +21,7 @@ const Button: Component<Props> = (props) => {
     return (
         <button
             {...buttonProps}
-            class="relative flex flex-shrink-0 items-center justify-center bg-primary-900 h-12 w-12 group after:(content-DEFAULT absolute bottom-0 left-0 right-0 h-2px bg-light-50 transition-opacity)"
+            class="relative flex flex-shrink-0 items-center justify-center bg-primary-900 h-12 w-12 group after:(content-DEFAULT absolute bottom-0 left-0 right-0 h-2px bg-light-50 transition-opacity) <md:order-1"
             classList={{
                 'after:opacity-0': !localProps.isActive,
                 'after:opacity-100': localProps.isActive

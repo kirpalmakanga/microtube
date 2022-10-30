@@ -6,7 +6,7 @@ import { useFullscreen, useKey } from '../../lib/hooks';
 import { useDevices } from '../../store/app';
 import { usePlayer } from '../../store/player';
 import { usePlaylistItems } from '../../store/playlist-items';
-import { YouTubePlayer } from '../../api/youtube-player';
+import { YouTubePlayerInstance } from '../../api/youtube-player';
 
 import Button from './controls/Button';
 import DevicesSelector from './controls/DevicesSelector';
@@ -44,7 +44,7 @@ const getInitialState = () => ({
 
 const Player = () => {
     let isStartup: boolean = true;
-    let youtube: YouTubePlayer | null;
+    let youtube: YouTubePlayerInstance | null;
     let youtubeVolume: number = 100;
     let unsubscribeFromFullscreen: () => void;
 
@@ -144,7 +144,9 @@ const Player = () => {
                 : {})
         });
     };
-    const handleYoutubeIframeReady = (playerInstance: YouTubePlayer) => {
+    const handleYoutubeIframeReady = (
+        playerInstance: YouTubePlayerInstance
+    ) => {
         youtube = playerInstance;
     };
 

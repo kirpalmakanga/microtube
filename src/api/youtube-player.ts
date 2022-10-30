@@ -1,6 +1,9 @@
 import { loadScript } from '../lib/helpers';
 
-type PlayerConstructor = new (id: string, options: Options) => YouTubePlayer;
+type PlayerConstructor = new (
+    id: string,
+    options: Options
+) => YouTubePlayerInstance;
 
 declare global {
     interface Window {
@@ -61,7 +64,7 @@ export interface Options {
     };
 }
 
-export interface YouTubePlayer {
+export interface YouTubePlayerInstance {
     addEventListener: (
         event: string,
         listener: (event: CustomEvent) => void

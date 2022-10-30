@@ -1,4 +1,4 @@
-import { Component, createEffect, Show } from 'solid-js';
+import { Component, createEffect, Match, Show, Switch } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
 import Icon from './Icon';
@@ -46,41 +46,35 @@ const Img: Component<Props> = (props) => {
             class="block relative overflow-hidden"
             classList={{ [props.class || '']: !!props.class }}
         >
-            <Show
-                when={state.img?.complete}
-                fallback={
-                    <Transition name="fade">
-                        <Show
-                            when={state.isLoaded && !state.hasError}
-                            fallback={
-                                <span class="absolute inset-0 flex items-center justify-center bg-primary-600">
-                                    <Icon
-                                        class="w-6 h-6 text-primary-100"
-                                        name="image"
-                                    />
-                                </span>
-                            }
-                        >
-                            <img
-                                class="block overflow-hidden"
-                                classList={{
-                                    [props.imgClass || '']: !!props.imgClass
-                                }}
-                                src={props.src}
-                                alt={props.alt}
+            {state.isLoaded ? 'true' : 'false'}
+            {state.img?.complete ? 'true' : 'false'}
+            <Transition name="fade">
+                <Switch>
+                    <Match
+                        when={
+                            props.src && (state.img?.complete || state.isLoaded)
+                        }
+                    >
+                        <img
+                            class="block overflow-hidden"
+                            classList={{
+                                [props.imgClass || '']: !!props.imgClass
+                            }}
+                            src={props.src}
+                            alt={props.alt}
+                        />
+                    </Match>
+
+                    <Match when={true}>
+                        <span class="absolute inset-0 flex items-center justify-center bg-primary-600">
+                            <Icon
+                                class="w-6 h-6 text-primary-100"
+                                name="image"
                             />
-                        </Show>
-                    </Transition>
-                }
-            >
-                <img
-                    classList={{
-                        [props.imgClass || '']: !!props.imgClass
-                    }}
-                    src={props.src}
-                    alt={props.alt}
-                />
-            </Show>
+                        </span>
+                    </Match>
+                </Switch>
+            </Transition>
         </span>
     );
 };

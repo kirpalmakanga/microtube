@@ -25,5 +25,6 @@ export default defineConfig({
                 grabbing: 'grabbing'
             }
         }
-    }
+    },
+    plugins: [require('@windicss/plugin-scrollbar')]
 });

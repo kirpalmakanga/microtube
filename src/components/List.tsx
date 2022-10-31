@@ -64,7 +64,7 @@ const List = (props: Props) => {
     return (
         <div class="relative flex-grow">
             <div
-                class="absolute inset-0 flex flex-col overflow-y-auto"
+                class="absolute inset-0 flex flex-col overflow-y-auto scrollbar-thin scrollbar-track-primary-600 scrollbar-thumb-primary-400 hover:scrollbar-thumb-primary-300"
                 ref={scrollTarget}
                 onScroll={handleScroll}
             >

@@ -121,7 +121,7 @@ const Queue: Component<Props> = (props) => {
                                 />
                             }
                         >
-                            <div class="absolute inset-0 overflow-y-auto">
+                            <div class="absolute inset-0 overflow-y-auto scrollbar-thin scrollbar-track-primary-600 scrollbar-thumb-primary-400 hover:scrollbar-thumb-primary-300">
                                 <SortableList
                                     items={player.queue}
                                     getItemId={({ id }: VideoData) => id}

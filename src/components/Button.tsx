@@ -39,7 +39,10 @@ const Button: Component<ButtonProps> = (props) => {
             <span class="relative">
                 <span
                     class="flex items-center gap-2 transition-opacity"
-                    classList={{ 'opacity-0': localProps.isLoading }}
+                    classList={{
+                        'opacity-100': !localProps.isLoading,
+                        'opacity-0': localProps.isLoading
+                    }}
                 >
                     <Show when={localProps.icon}>
                         <Icon

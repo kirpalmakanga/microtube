@@ -422,6 +422,26 @@ const Player = () => {
                         />
                     </Show>
 
+                    <Show when={!isMobile() && storeState.currentVideo.id}>
+                        <div class="relative group" onWheel={handleWheelVolume}>
+                            <Button
+                                onClick={toggleMute}
+                                icon={
+                                    state.volume === 0
+                                        ? 'volume-off'
+                                        : 'volume-up'
+                                }
+                            />
+
+                            <div class="absolute bottom-full right-0 w-36 opacity-0 invisible group-hover:(opacity-100 visible)">
+                                <VolumeRange
+                                    value={state.volume}
+                                    onChange={setVolume}
+                                />
+                            </div>
+                        </div>
+                    </Show>
+
                     <Info
                         isWatchingDisabled={
                             state.isBuffering ||
@@ -443,26 +463,6 @@ const Player = () => {
                             icon="devices"
                             onClick={handleToggleDevices}
                         />
-                    </Show>
-
-                    <Show when={!isMobile() && storeState.currentVideo.id}>
-                        <div class="relative group" onWheel={handleWheelVolume}>
-                            <Button
-                                onClick={toggleMute}
-                                icon={
-                                    state.volume === 0
-                                        ? 'volume-off'
-                                        : 'volume-up'
-                                }
-                            />
-
-                            <div class="absolute bottom-full right-0 w-36 opacity-0 invisible group-hover:(opacity-100 visible)">
-                                <VolumeRange
-                                    value={state.volume}
-                                    onChange={setVolume}
-                                />
-                            </div>
-                        </div>
                     </Show>
 
                     <Button

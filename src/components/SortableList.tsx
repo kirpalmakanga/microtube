@@ -140,7 +140,7 @@ const List = (props: ListProps) => {
                 </For>
             </SortableProvider>
 
-            <DragOverlay class="pointer-events-none z-1">
+            <DragOverlay class="pointer-events-none z-1 left-0 right-0">
                 <div class="flex overflow-hidden shadow cursor-grabbing bg-primary-700">
                     <div class="flex flex-shrink-0 items-center justify-center h-12 w-12">
                         <Icon class="text-light-50 w-5 h-5" name="drag" />

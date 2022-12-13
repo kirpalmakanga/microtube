@@ -5,4 +5,4 @@ export const IS_DEV_MODE: boolean = import.meta.env.MODE === 'development';
 
 export const API_URL: string = IS_DEV_MODE
     ? 'https://api.microtube.dev'
-    : 'https://microtube-api.herokuapp.com';
+    : 'https://microtube-api.vercel.app';

@@ -1,6 +1,6 @@
 ## MicroTube
 
-Lightweight Youtube app made with React, TypeScript and Vite
+Lightweight Youtube app made with Solid, TypeScript and Vite
 
 ![Screenshot](./screenshot.png)
 

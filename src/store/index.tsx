@@ -9,14 +9,12 @@ import { rootInitialState, RootState } from './_state';
 import { saveState, loadState } from '../lib/localStorage';
 import { mergeDeep, pick, omit } from '../lib/helpers';
 
-const initialState = mergeDeep(rootInitialState(), loadState() || {});
 const StoreContext = createContext();
 
-const createProvidedStore = () =>
-    createStore<RootState>(initialState as RootState);
-
 export const StoreProvider: ParentComponent = (props) => {
-    const store = createProvidedStore();
+    const store = createStore<RootState>(
+        mergeDeep(rootInitialState(), loadState() || {}) as RootState
+    );
 
     createEffect(() => {
         const [{ user, player, search }] = store;

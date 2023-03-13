@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import { VitePWA as pwaPlugin } from 'vite-plugin-pwa';
 import solidPlugin from 'vite-plugin-solid';
 import windiPlugin from 'vite-plugin-windicss';
+import devTools from 'solid-devtools/vite';
 
 // @ts-ignore
 import { version } from './package.json';
@@ -11,6 +12,7 @@ export default defineConfig({
         port: 8080
     },
     plugins: [
+        devTools(),
         solidPlugin(),
         windiPlugin(),
         pwaPlugin({

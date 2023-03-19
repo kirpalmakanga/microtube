@@ -16,7 +16,7 @@
         "firebase": "^9.10.0",
         "socket.io-client": "^4.4.1",
         "solid-js": "^1.6.14",
-        "solid-transition-group": "^0.0.13",
+        "solid-transition-group": "^0.1.1",
         "uuid": "^9.0.0"
     },
     "devDependencies": {

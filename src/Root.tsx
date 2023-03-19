@@ -1,9 +1,9 @@
-import { createSignal, onMount, ParentComponent, Show } from 'solid-js';
+import { createSignal, lazy, onMount, ParentComponent, Show } from 'solid-js';
 import { registerSW } from 'virtual:pwa-register';
 import Loader from './components/Loader';
 import Menu from './components/Menu';
 import Notifications from './components/Notifications';
-import Player from './components/player/Player';
+// import Player from './components/player/Player';
 import Prompt from './components/prompt/Prompt';
 import Sprite from './components/Sprite';
 import { IS_DEV_MODE } from './config/app';
@@ -12,6 +12,8 @@ import Header from './layout/Header';
 import { isMobile, preventDefault } from './lib/helpers';
 import { useAuth } from './store/user';
 import { useNotifications } from './store/notifications';
+
+const Player = lazy(() => import('./components/player/Player'));
 
 const Root: ParentComponent = (props) => {
     const [user, { bindAccessTokens }] = useAuth();

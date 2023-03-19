@@ -2,21 +2,23 @@ import { Navigate, Outlet, Route, Routes } from '@solidjs/router';
 import { Component, lazy, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 
-import Login from './containers/Login';
-import Callback from './containers/Callback';
-import NotFound from './containers/NotFound';
-
-import Playlists from './containers/Playlists';
-import Playlist from './containers/Playlist';
-import Video from './containers/Video';
-import Search from './containers/Search';
-import Subscriptions from './containers/Subscriptions';
-import Channel from './containers/Channel';
-import ChannelVideos from './containers/Channel/ChannelVideos';
-import ChannelPlaylists from './containers/Channel/ChannelPlaylists';
-import ChannelAbout from './containers/Channel/ChannelAbout';
-
 import { useStore } from './store';
+
+const Login = lazy(() => import('./containers/Login'));
+const Callback = lazy(() => import('./containers/Callback'));
+const NotFound = lazy(() => import('./containers/NotFound'));
+
+const Playlists = lazy(() => import('./containers/Playlists'));
+const Playlist = lazy(() => import('./containers/Playlist'));
+const Video = lazy(() => import('./containers/Video'));
+const Search = lazy(() => import('./containers/Search'));
+const Subscriptions = lazy(() => import('./containers/Subscriptions'));
+const Channel = lazy(() => import('./containers/Channel'));
+const ChannelVideos = lazy(() => import('./containers/Channel/ChannelVideos'));
+const ChannelPlaylists = lazy(
+    () => import('./containers/Channel/ChannelPlaylists')
+);
+const ChannelAbout = lazy(() => import('./containers/Channel/ChannelAbout'));
 
 const Protected = () => {
     const [state] = useStore();

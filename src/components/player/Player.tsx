@@ -456,7 +456,7 @@ const Player = () => {
                                 }
                             />
 
-                            <div class="absolute bottom-full right-0 w-36 opacity-0 invisible group-hover:(opacity-100 visible)">
+                            <div class="absolute bottom-full right-0 w-36 transition-opacity opacity-0 invisible group-hover:(opacity-100 visible)">
                                 <VolumeRange
                                     value={state.volume}
                                     onChange={setVolume}

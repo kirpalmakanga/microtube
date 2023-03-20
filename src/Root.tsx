@@ -5,7 +5,6 @@ import Menu from './components/Menu';
 import Notifications from './components/Notifications';
 // import Player from './components/player/Player';
 import Prompt from './components/prompt/Prompt';
-import Sprite from './components/Sprite';
 import { IS_DEV_MODE } from './config/app';
 import Header from './layout/Header';
 // import { enableImportMethods } from './actions.bak/youtube';
@@ -43,8 +42,6 @@ const Root: ParentComponent = (props) => {
 
     return (
         <>
-            <Sprite />
-
             <div
                 class="relative flex flex-col flex-grow justify-between h-full"
                 classList={{ 'is--mobile': isMobile() }}

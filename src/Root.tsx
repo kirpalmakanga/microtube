@@ -11,6 +11,7 @@ import Header from './layout/Header';
 import { isMobile, preventDefault } from './lib/helpers';
 import { useAuth } from './store/user';
 import { useNotifications } from './store/notifications';
+import IconSprite from './components/IconSprite';
 
 const Player = lazy(() => import('./components/player/Player'));
 
@@ -42,6 +43,8 @@ const Root: ParentComponent = (props) => {
 
     return (
         <>
+            <IconSprite />
+
             <div
                 class="relative flex flex-col flex-grow justify-between h-full"
                 classList={{ 'is--mobile': isMobile() }}

@@ -54,7 +54,7 @@ const Sortable: ParentComponent<ListItemProps> = (props) => {
             // @ts-ignore
             use:sortable
             // ref={sortable.ref}
-            class="flex overflow-hidden h-12 not-last:border-b-1 border-primary-600 bg-primary-700"
+            class="flex overflow-hidden h-12 not-last:border-b-1 border-primary-600 bg-primary-700 touch-none"
             classList={{
                 'opacity-50': sortable.isActiveDraggable,
                 'transition-transform': props.hasTransition

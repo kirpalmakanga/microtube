@@ -11,7 +11,6 @@ import Header from './layout/Header';
 import { isMobile, preventDefault } from './lib/helpers';
 import { useAuth } from './store/user';
 import { useNotifications } from './store/notifications';
-import IconSprite from './components/IconSprite';
 
 const Player = lazy(() => import('./components/player/Player'));
 
@@ -43,14 +42,12 @@ const Root: ParentComponent = (props) => {
 
     return (
         <>
-            <IconSprite />
-
             <div
                 class="relative flex flex-col flex-grow justify-between h-full"
                 classList={{ 'is--mobile': isMobile() }}
                 onContextMenu={IS_DEV_MODE ? () => {} : preventDefault()}
             >
-                <Show when={isAppReady()} fallback={<Loader />}>
+                <Show when={false} fallback={<Loader />}>
                     <Header />
 
                     <main class="relative flex flex-col flex-grow overflow-hidden">

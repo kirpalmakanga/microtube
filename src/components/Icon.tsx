@@ -11,7 +11,7 @@ const Icon: Component<Props> = (props: Props) => (
         classList={{ [props.class || '']: !!props.class }}
     >
         <svg class="fill-current w-full h-full">
-            <use href={`#icon-${props.name}`} />
+            <use href={`/icons.svg#icon-${props.name}`} />
         </svg>
     </span>
 );

@@ -19,7 +19,7 @@ export default defineConfig({
             workbox: {
                 sourcemap: true
             },
-            includeAssets: ['fonts/*'],
+            includeAssets: ['fonts/*', 'favicon.svg', 'icons.svg'],
             manifest: {
                 // @ts-ignore
                 version,

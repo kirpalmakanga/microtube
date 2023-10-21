@@ -1,4 +1,3 @@
-import { NavLink } from '@solidjs/router';
 import { Component, Show } from 'solid-js';
 import { getThumbnails } from '../lib/helpers';
 import Button from './Button';
@@ -23,7 +22,7 @@ const ListItem: Component<Props> = (props) => {
             onContextMenu={props.onClickMenu}
         >
             <Show when={typeof props.index === 'number'}>
-                <div class="flex items-center justify-center text-light-50 bg-primary-900 font-montserrat p-4">
+                <div class="flex items-center justify-center text-sm text-light-50 bg-primary-900 font-montserrat p-4">
                     {(props.index || 0) + 1}
                 </div>
             </Show>
@@ -72,7 +71,7 @@ const ListItem: Component<Props> = (props) => {
                     <Button
                         class="flex flex-grow items-center justify-center bg-primary-900 hover:bg-primary-800 transition-colors text-light-50 p-2"
                         icon="more"
-                        iconClass="w-6 h-6"
+                        iconClass="w-5 h-5"
                         onClick={props.onClickMenu}
                     />
                 </div>

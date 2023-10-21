@@ -406,13 +406,7 @@ const Player = () => {
 
                     <Button
                         onClick={togglePlay}
-                        icon={
-                            state.isBuffering
-                                ? 'loading'
-                                : state.isPlaying
-                                ? 'pause'
-                                : 'play'
-                        }
+                        icon={state.isPlaying ? 'pause' : 'play'}
                     />
 
                     <Show when={!isSingleVideo()}>

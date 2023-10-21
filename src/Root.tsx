@@ -47,7 +47,7 @@ const Root: ParentComponent = (props) => {
                 classList={{ 'is--mobile': isMobile() }}
                 onContextMenu={IS_DEV_MODE ? () => {} : preventDefault()}
             >
-                <Show when={false} fallback={<Loader />}>
+                <Show when={isAppReady()} fallback={<Loader />}>
                     <Header />
 
                     <main class="relative flex flex-col flex-grow overflow-hidden">

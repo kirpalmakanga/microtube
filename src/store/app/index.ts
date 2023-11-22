@@ -1,4 +1,4 @@
-import { onCleanup, onMount, createMemo } from 'solid-js';
+import { createMemo } from 'solid-js';
 import { useLocation } from '@solidjs/router';
 import { useStore } from '..';
 // import { subscribe, emit } from '../../lib/socket';
@@ -8,7 +8,7 @@ export const useAppTitle = () => {
     const location = useLocation();
     const [state] = useStore();
 
-    const title = createMemo(() => {
+    return createMemo(() => {
         const { pathname } = location;
         const {
             channel: { channelTitle },
@@ -36,9 +36,7 @@ export const useAppTitle = () => {
         }
 
         return title;
-    }, location.pathname);
-
-    return title;
+    });
 };
 
 export const useDevices = () => {

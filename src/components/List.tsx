@@ -1,7 +1,7 @@
 import { VirtualContainer } from '@minht11/solid-virtual-container';
 import { createSignal, JSXElement, onCleanup, onMount, Show } from 'solid-js';
 import { throttle } from '../lib/helpers';
-import Icon from './Icon';
+import LoadingIcon from './LoadingIcon';
 
 type ListItemProps = { index: number; data: any };
 
@@ -15,7 +15,7 @@ interface Props {
 
 const Loader = () => (
     <div class="flex flex-grow items-center justify-center p-4">
-        <Icon class="text-light-50 w-8 h-8" name="loading" />
+        <LoadingIcon class="text-light-50 w-8 h-8" />
     </div>
 );
 

@@ -41,31 +41,29 @@ const Root: ParentComponent = (props) => {
     });
 
     return (
-        <>
-            <div
-                class="relative flex flex-col flex-grow justify-between h-full"
-                classList={{ 'is--mobile': isMobile() }}
-                onContextMenu={IS_DEV_MODE ? () => {} : preventDefault()}
-            >
-                <Show when={isAppReady()} fallback={<Loader />}>
-                    <Header />
+        <div
+            class="relative flex flex-col flex-grow justify-between h-full"
+            classList={{ 'is--mobile': isMobile() }}
+            onContextMenu={IS_DEV_MODE ? () => {} : preventDefault()}
+        >
+            <Show when={isAppReady()} fallback={<Loader />}>
+                <Header />
 
-                    <main class="relative flex flex-col flex-grow overflow-hidden">
-                        {props.children}
-                    </main>
+                <main class="relative flex flex-col flex-grow overflow-hidden">
+                    {props.children}
+                </main>
 
-                    <Show when={user.isSignedIn}>
-                        <Player />
+                <Show when={user.isSignedIn}>
+                    <Player />
 
-                        <Prompt />
+                    <Prompt />
 
-                        <Menu />
-                    </Show>
+                    <Menu />
                 </Show>
+            </Show>
 
-                <Notifications />
-            </div>
-        </>
+            <Notifications />
+        </div>
     );
 };
 

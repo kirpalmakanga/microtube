@@ -76,6 +76,8 @@ const Player = () => {
 
     const isSingleVideo = () => !!storeState.video.id;
 
+    const hasCurrentVideo = () => !!storeState.currentVideo.id;
+
     const handleToggleDevices = () =>
         setPlayerState({
             isDevicesSelectorVisible: !state.isDevicesSelectorVisible
@@ -401,18 +403,21 @@ const Player = () => {
                         <Button
                             onClick={() => goToVideo(false)}
                             icon="chevron-left"
+                            disabled={!hasCurrentVideo()}
                         />
                     </Show>
 
                     <Button
                         onClick={togglePlay}
                         icon={state.isPlaying ? 'pause' : 'play'}
+                        disabled={!hasCurrentVideo()}
                     />
 
                     <Show when={!isSingleVideo()}>
                         <Button
                             onClick={() => goToVideo(true)}
                             icon="chevron-right"
+                            disabled={!hasCurrentVideo()}
                         />
                     </Show>
 
@@ -459,11 +464,13 @@ const Player = () => {
                         </div>
                     </Show>
 
-                    <Button
-                        isActive={state.isDescriptionVisible}
-                        icon="info"
-                        onClick={toggleInfo}
-                    />
+                    <Show when={hasCurrentVideo() || isSingleVideo()}>
+                        <Button
+                            isActive={state.isDescriptionVisible}
+                            icon="info"
+                            onClick={toggleInfo}
+                        />
+                    </Show>
 
                     <Show
                         when={
@@ -485,7 +492,13 @@ const Player = () => {
                         />
                     </Show>
 
-                    <Show when={!isSingleVideo() && !state.isFullscreen}>
+                    <Show
+                        when={
+                            hasCurrentVideo() &&
+                            !isSingleVideo() &&
+                            !state.isFullscreen
+                        }
+                    >
                         <Button
                             isActive={state.isScreenVisible}
                             onClick={toggleScreen}
@@ -500,7 +513,7 @@ const Player = () => {
                         />
                     </Show>
 
-                    <Show when={storeState.currentVideo.id}>
+                    <Show when={hasCurrentVideo()}>
                         <Button
                             onClick={toggleFullscreen}
                             icon={state.isFullscreen ? 'close' : 'expand'}

@@ -28,7 +28,7 @@ const Button: Component<Props> = (props) => {
             }}
         >
             <Icon
-                class="text-light-50 group-hover:text-opacity-50 transition-colors w-6 h-6"
+                class="text-light-50 group-hover:text-opacity-50 transition-colors w-5 h-5"
                 name={localProps.icon}
             />
 

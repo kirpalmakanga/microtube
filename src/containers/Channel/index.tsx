@@ -2,11 +2,11 @@ import {
     Component,
     createSignal,
     For,
-    JSXElement,
     onCleanup,
-    onMount
+    onMount,
+    ParentComponent
 } from 'solid-js';
-import { NavLink, Outlet, useParams } from '@solidjs/router';
+import { A, useParams } from '@solidjs/router';
 import Button from '../../components/Button';
 import Img from '../../components/Img';
 import { getThumbnails } from '../../lib/helpers';
@@ -22,21 +22,21 @@ const Tabs: Component<TabsProps> = (props) => (
         <For each={props.items}>
             {(data) => (
                 <li class="flex-grow">
-                    <NavLink
+                    <A
                         class="relative block bg-primary-900 font-montserrat text-light-50 hover:text-opacity-80 transition-colors text-center p-2 after:(content-DEFAULT absolute bottom-0 left-0 right-0 h-2px bg-light-50 opacity-0 transition-opacity)"
                         activeClass="!after:opacity-100"
                         href={data.path}
                         replace
                     >
                         {data.title}
-                    </NavLink>
+                    </A>
                 </li>
             )}
         </For>
     </ul>
 );
 
-const Channel = () => {
+const Channel: ParentComponent = (props) => {
     const { channelId } = useParams();
 
     const [channel, { getData, clearData, toggleSubscription }] =
@@ -105,7 +105,7 @@ const Channel = () => {
 
             <div class="flex flex-col flex-grow">
                 <Transition name="fade" mode="outin">
-                    <Outlet />
+                    {props.children}
                 </Transition>
             </div>
         </div>

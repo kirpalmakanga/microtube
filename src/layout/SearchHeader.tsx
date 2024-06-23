@@ -1,4 +1,4 @@
-import { NavLink, useSearchParams } from '@solidjs/router';
+import { A, useSearchParams } from '@solidjs/router';
 import DropDown from '../components/DropDown';
 import Icon from '../components/Icon';
 import Title from '../components/meta/Title';
@@ -18,12 +18,12 @@ const SearchHeader = () => {
         <div class="flex flex-grow items-center px-4">
             <Title>{title()}</Title>
 
-            <NavLink
+            <A
                 class="relative flex items-center justify-center h-12 w-12 -ml-4 transition-colors bg-primary-900 hover:bg-primary-800"
                 href="/"
             >
                 <Icon class="text-light-50 w-6 h-6" name="arrow-left" />
-            </NavLink>
+            </A>
 
             <SearchForm
                 query={searchParams.query || ''}

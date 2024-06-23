@@ -6,7 +6,7 @@ import {
     onMount,
     Show
 } from 'solid-js';
-import { NavLink, useNavigate, useSearchParams } from '@solidjs/router';
+import { A, useNavigate, useSearchParams } from '@solidjs/router';
 import List from '../components/List';
 import ListItem from '../components/ListItem';
 import Placeholder from '../components/Placeholder';
@@ -33,7 +33,13 @@ const Search = () => {
     const [, { openMenu }] = useMenu();
     const [, { openNotification }] = useNotifications();
     const [shouldMountList, setShouldMountList] = createSignal(false);
-    const handleSearchVideos = () => searchVideos(searchParams.query);
+    const handleSearchVideos = () => {
+        const { query } = searchParams;
+
+        if (query) {
+            searchVideos(query);
+        }
+    };
     const handleClickCard =
         ({ id }: VideoData) =>
         () =>
@@ -123,12 +129,12 @@ const Search = () => {
                         <ListItem
                             {...data}
                             subtitle={
-                                <NavLink
+                                <A
                                     href={`/channel/${data.channelId}`}
                                     onClick={stopPropagation()}
                                 >
                                     {data.channelTitle}
-                                </NavLink>
+                                </A>
                             }
                             subSubtitle={formatDate(
                                 data.publishedAt,

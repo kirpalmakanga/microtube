@@ -9,27 +9,26 @@
     },
     "dependencies": {
         "@minht11/solid-virtual-container": "^0.2.1",
-        "@solidjs/router": "^0.8.3",
-        "@thisbeyond/solid-dnd": "^0.7.4",
-        "axios": "^1.5.1",
-        "date-fns": "^2.30.0",
+        "@solidjs/router": "^0.13.6",
+        "@thisbeyond/solid-dnd": "^0.7.5",
+        "axios": "^1.7.2",
+        "date-fns": "^3.6.0",
         "firebase": "^10.5.0",
         "socket.io-client": "^4.7.2",
-        "solid-js": "^1.8.3",
+        "solid-js": "^1.8.17",
         "solid-transition-group": "^0.2.3",
-        "uuid": "^9.0.1"
+        "uuid": "^10.0.0"
     },
     "devDependencies": {
-        "@types/uuid": "^9.0.6",
+        "@types/uuid": "^10.0.0",
         "@windicss/plugin-scrollbar": "^1.2.3",
-        "eslint": "^8.52.0",
-        "eslint-plugin-solid": "^0.13.0",
-        "sass": "^1.69.4",
-        "solid-devtools": "^0.27.7",
-        "vite": "^5.0.2",
-        "vite-plugin-pwa": "^0.16.5",
-        "vite-plugin-solid": "^2.7.2",
-        "vite-plugin-windicss": "^1.9.1",
+        "eslint": "^8.57.0",
+        "eslint-plugin-solid": "^0.14.1",
+        "sass": "^1.77.6",
+        "vite": "^5.3.1",
+        "vite-plugin-pwa": "^0.20.0",
+        "vite-plugin-solid": "^2.10.2",
+        "vite-plugin-windicss": "^1.9.3",
         "windicss": "^3.5.6"
     }
 }

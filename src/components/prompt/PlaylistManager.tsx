@@ -68,9 +68,10 @@ const NewPlayListForm: Component<FormProps> = ({ onSubmit }) => {
             />
 
             <Button
-                class="border-l-1 border-primary-700 bg-primary-900 hover:bg-primary-800 transition-colors px-4 py-2"
+                class="border-l-1 border-primary-700 bg-primary-900 hover:bg-primary-800 transition-colors px-4 py-2 disabled:opacity-80"
                 type="submit"
                 title="Create"
+                disabled={!state.title}
             />
         </form>
     );

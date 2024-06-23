@@ -1,4 +1,4 @@
-import format from 'date-fns/fp/format';
+import { format } from 'date-fns';
 
 export const preventDefault =
     (func = (e: Event) => {}) =>
@@ -27,7 +27,7 @@ export const getThumbnails = (
 };
 
 export const formatDate = (date: string, formatString: string) =>
-    format(formatString, new Date(date));
+    format(new Date(date), formatString);
 
 export const parseDuration = (PT: string) => {
     if (!PT) {

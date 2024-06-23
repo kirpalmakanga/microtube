@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from '@solidjs/router';
+import { A, useLocation } from '@solidjs/router';
 import { createSignal, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import Button from '../components/Button';
@@ -37,15 +37,15 @@ const DefaultHeader = () => {
                     location.pathname !== '/login'
                 }
             >
-                <NavLink
+                <A
                     class="group relative flex items-center justify-center h-12 w-12 -ml-4 bg-primary-900"
                     href="/"
                 >
                     <Icon
-                        class="transition text-light-50 group-hover:text-opacity-50 w-6 h-6"
+                        class="transition text-light-50 group-hover:text-opacity-50 w-5 h-5"
                         name="arrow-left"
                     />
-                </NavLink>
+                </A>
             </Show>
 
             <span class="flex flex-grow overflow-hidden">
@@ -58,38 +58,38 @@ const DefaultHeader = () => {
 
             <nav class="flex gap-4 ml-2">
                 <Show when={user.isSignedIn}>
-                    <NavLink
+                    <A
                         class="group h-12 flex items-center justify-center"
                         href="/search"
                     >
                         <Icon
-                            class="transition text-light-50 group-hover:text-opacity-50 w-6 h-6"
+                            class="transition text-light-50 group-hover:text-opacity-50 w-5 h-5"
                             name="search"
                         />
-                    </NavLink>
+                    </A>
 
                     <Show when={location.pathname !== '/'}>
-                        <NavLink
+                        <A
                             class="group h-12 flex items-center justify-center"
                             href="/"
                         >
                             <Icon
-                                class="transition text-light-50 group-hover:text-opacity-50 w-6 h-6"
+                                class="transition text-light-50 group-hover:text-opacity-50 w-5 h-5"
                                 name="folder"
                             />
-                        </NavLink>
+                        </A>
                     </Show>
 
                     <Show when={location.pathname !== '/subscriptions'}>
-                        <NavLink
+                        <A
                             class="group h-12 flex items-center justify-center"
                             href="/subscriptions"
                         >
                             <Icon
-                                class="transition text-light-50 group-hover:text-opacity-50 w-6 h-6"
+                                class="transition text-light-50 group-hover:text-opacity-50 w-5 h-5"
                                 name="users"
                             />
-                        </NavLink>
+                        </A>
                     </Show>
                 </Show>
 

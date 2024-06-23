@@ -1,5 +1,5 @@
 import { Component, onCleanup, onMount, Show } from 'solid-js';
-import { NavLink, useNavigate, useParams } from '@solidjs/router';
+import { A, useNavigate, useParams } from '@solidjs/router';
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 import {
@@ -108,12 +108,12 @@ const Playlists: Component = () => {
                         index={index}
                         badge={formatTime(data.duration)}
                         subtitle={
-                            <NavLink
+                            <A
                                 href={`/channel/${data.channelId}`}
                                 onClick={stopPropagation()}
                             >
                                 {data.channelTitle}
-                            </NavLink>
+                            </A>
                         }
                         subSubtitle={formatDate(
                             data.publishedAt,

@@ -13,7 +13,7 @@ const ListItemMeta: Component<Props> = (props) => (
         </h2>
 
         <Show when={props.subtitle}>
-            <h3 class="text-sm text-light-50 text-opacity-80 hover:text-opacity-60 transition-colors whitespace-nowrap overflow-ellipsis overflow-hidden">
+            <h3 class="text-sm text-light-50 text-opacity-80 hover:text-opacity-50 transition-colors whitespace-nowrap overflow-ellipsis overflow-hidden">
                 {props.subtitle}
             </h3>
         </Show>

@@ -8,7 +8,7 @@ interface Props {
 }
 
 const ListItem: Component<Props> = (props) => (
-    <div class="relative flex mr-4 ">
+    <div class="relative flex">
         <Img
             class="w-48"
             imgClass="w-full h-full object-cover"

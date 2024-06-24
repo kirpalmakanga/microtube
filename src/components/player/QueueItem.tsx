@@ -26,7 +26,7 @@ const QueueItem: Component<Props> = (props) => {
             }}
         >
             <div
-                class="flex flex-grow text-light-50 leading-none font-montserrat overflow-hidden"
+                class="flex flex-grow text-light-50 leading-none font-montserrat overflow-hidden gap-4"
                 onClick={props.onClick}
                 onContextMenu={props.onContextMenu}
             >

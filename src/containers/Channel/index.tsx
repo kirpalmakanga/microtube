@@ -23,7 +23,7 @@ const Tabs: Component<TabsProps> = (props) => (
             {(data) => (
                 <li class="flex-grow">
                     <A
-                        class="relative block bg-primary-900 font-montserrat text-light-50 hover:text-opacity-80 transition-colors text-center p-2 after:(content-DEFAULT absolute bottom-0 left-0 right-0 h-2px bg-light-50 opacity-0 transition-opacity)"
+                        class="relative block bg-primary-900 font-montserrat text-light-50 hover:text-opacity-50 transition-colors text-center p-2 after:(content-DEFAULT absolute bottom-0 left-0 right-0 h-2px bg-light-50 opacity-0 transition-opacity)"
                         activeClass="!after:opacity-100"
                         href={data.path}
                         replace

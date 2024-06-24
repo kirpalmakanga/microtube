@@ -1,7 +1,6 @@
 import { Component, Show } from 'solid-js';
 import { getThumbnails } from '../lib/helpers';
 import Button from './Button';
-import Img from './Img';
 import ListItemThumbnail from './ListItemThumbnail';
 import ListItemMeta from './ListItemMeta';
 
@@ -23,13 +22,13 @@ const ListItem: Component<Props> = (props) => {
             onContextMenu={props.onClickMenu}
         >
             <Show when={typeof props.index === 'number'}>
-                <div class="flex items-center justify-center text-sm text-light-50 bg-primary-900 font-montserrat p-4">
+                <div class="flex items-center justify-center text-sm text-light-50 font-montserrat p-4">
                     {(props.index || 0) + 1}
                 </div>
             </Show>
 
             <div
-                class="flex flex-grow overflow-hidden p-4 gap-4 cursor-pointer"
+                class="flex flex-grow overflow-hidden py-4 gap-4 cursor-pointer"
                 onClick={props.onClick}
             >
                 <ListItemThumbnail
@@ -48,7 +47,7 @@ const ListItem: Component<Props> = (props) => {
             <Show when={props.onClickMenu}>
                 <div class="flex flex-col">
                     <Button
-                        class="flex flex-grow items-center justify-center bg-primary-900 hover:bg-primary-800 transition-colors text-light-50 p-2"
+                        class="flex flex-grow items-center justify-center transition-colors text-light-50 hover:text-opacity-50 p-2"
                         icon="more"
                         iconClass="w-5 h-5"
                         onClick={props.onClickMenu}

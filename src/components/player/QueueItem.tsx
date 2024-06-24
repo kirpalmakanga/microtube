@@ -1,14 +1,15 @@
-import { Component, createMemo } from 'solid-js';
+import { Component, Show, createMemo } from 'solid-js';
 import { A } from '@solidjs/router';
 import { formatTime, getThumbnails, stopPropagation } from '../../lib/helpers';
 import Icon from '../Icon';
 import ListItemThumbnail from '../ListItemThumbnail';
 import ListItemMeta from '../ListItemMeta';
+import EqualizerIcon from '../EqualizerIcon';
 
 interface Props extends VideoData {
     index?: number;
-    icon: string;
     isActive: boolean;
+    isPlaying: boolean;
     onClick: () => void;
     onClickLink: () => void;
     onContextMenu: () => void;
@@ -25,6 +26,15 @@ const QueueItem: Component<Props> = (props) => {
                 'bg-primary-600 hover:bg-primary-500': props.isActive
             }}
         >
+            <div class="absolute left-0 top-0 bottom-0 flex flex-shrink-0 items-center justify-center w-10 text-light-50 text-sm group-hover:hidden">
+                <Show when={props.isActive} fallback={props.index}>
+                    <EqualizerIcon
+                        class="w-6 h-6"
+                        isAnimated={props.isPlaying}
+                    />
+                </Show>
+            </div>
+
             <div
                 class="flex flex-grow text-light-50 leading-none font-montserrat overflow-hidden gap-4"
                 onClick={props.onClick}

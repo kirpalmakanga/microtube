@@ -130,44 +130,14 @@ const Queue: Component<Props> = (props) => {
                             }
                         >
                             <div class="absolute inset-0 overflow-y-auto scrollbar-thin scrollbar-track-primary-600 scrollbar-thumb-primary-400 hover:scrollbar-thumb-primary-300">
-                                {/* <For each={player.queue}>
-                                    {(data: VideoData) => {
-                                        const { id } = data;
-                                        const isActive =
-                                            id === player.currentId;
-
-                                        let icon = 'play';
-
-                                        // if (isActive && props.isPlaying) {
-                                        //     icon = 'pause';
-                                        // }
-
-                                        return (
-                                            <QueueItem
-                                                {...data}
-                                                isActive={isActiveItem(id)}
-                                                icon={icon}
-                                                onClick={handleClickItem(id)}
-                                                onClickLink={props.toggleQueue}
-                                                onContextMenu={handleClickMenu(
-                                                    data
-                                                )}
-                                            />
-                                        );
-                                    }}
-                                </For> */}
-
                                 <SortableList
+                                    sortableClass="h-34 not-last:border-b-1 border-primary-600"
                                     items={player.queue}
                                     getItemId={({ id }: VideoData) => id}
                                     onReorderItems={setQueue}
                                 >
-                                    {(data: VideoData) => {
+                                    {(data: VideoData, index) => {
                                         const { id } = data;
-                                        const isActive =
-                                            id === player.currentId;
-
-                                        let icon = 'play';
 
                                         // if (isActive && props.isPlaying) {
                                         //     icon = 'pause';
@@ -176,8 +146,12 @@ const Queue: Component<Props> = (props) => {
                                         return (
                                             <QueueItem
                                                 {...data}
+                                                index={index}
                                                 isActive={isActiveItem(id)}
-                                                icon={icon}
+                                                isPlaying={
+                                                    isActiveItem(id) &&
+                                                    props.isPlaying
+                                                }
                                                 onClick={handleClickItem(id)}
                                                 onClickLink={props.toggleQueue}
                                                 onContextMenu={handleClickMenu(

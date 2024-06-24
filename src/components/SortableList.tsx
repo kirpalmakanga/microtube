@@ -23,6 +23,7 @@ import Icon from './Icon';
 
 interface ListProps {
     items: any[];
+    sortableClass?: string;
     children: (data: any, index?: number) => JSXElement;
     getItemId: (props: any) => Id;
     onReorderItems: (updatedItems: any[]) => void;
@@ -30,6 +31,7 @@ interface ListProps {
 interface ListItemProps {
     id: Id;
     hasTransition: boolean;
+    class?: string;
 }
 
 const reorder = (list: unknown[], fromIndex: number, toIndex: number) => {
@@ -51,18 +53,17 @@ const Sortable: ParentComponent<ListItemProps> = (props) => {
 
     return (
         <div
-            // @ts-ignore
-            use:sortable
             ref={sortable.ref}
-            class="relative flex overflow-hidden h-34 not-last:border-b-1 border-primary-600 touch-none"
+            class="relative flex overflow-hidden touch-none group"
             classList={{
                 'opacity-50': sortable.isActiveDraggable,
-                'transition-transform': props.hasTransition
+                'transition-transform': props.hasTransition,
+                [props.class || '']: !!props.class
             }}
-            // style={transformStyle(sortable.transform)}
+            style={transformStyle(sortable.transform)}
         >
             <div
-                class="absolute left-0 top-0 bottom-0 flex flex-shrink-0 items-center justify-center w-10 touch-none text-light-50 hover:text-opacity-50 transition-colors"
+                class="absolute left-0 top-0 bottom-0 flex flex-shrink-0 items-center justify-center w-10 touch-none text-light-50 hover:text-opacity-50 transition-colors hidden group-hover:flex"
                 classList={{
                     'cursor-grab': !sortable.isActiveDraggable,
                     'cursor-grabbing': sortable.isActiveDraggable
@@ -125,12 +126,13 @@ const List = (props: ListProps) => {
         <>
             <SortableProvider ids={ids()}>
                 <For each={props.items}>
-                    {(item) => (
+                    {(item, index) => (
                         <Sortable
                             id={props.getItemId(item)}
                             hasTransition={!!state.active.draggable}
+                            class={props.sortableClass}
                         >
-                            {props.children(item)}
+                            {props.children(item, index() + 1)}
                         </Sortable>
                     )}
                 </For>

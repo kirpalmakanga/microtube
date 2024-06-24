@@ -1,12 +1,16 @@
 import { Component, createMemo } from 'solid-js';
-import { formatTime } from '../../lib/helpers';
+import { A } from '@solidjs/router';
+import { formatTime, getThumbnails, stopPropagation } from '../../lib/helpers';
 import Icon from '../Icon';
+import ListItemThumbnail from '../ListItemThumbnail';
+import ListItemMeta from '../ListItemMeta';
 
 interface Props extends VideoData {
     index?: number;
     icon: string;
     isActive: boolean;
     onClick: () => void;
+    onClickLink: () => void;
     onContextMenu: () => void;
 }
 
@@ -15,22 +19,36 @@ const QueueItem: Component<Props> = (props) => {
 
     return (
         <div
-            class="flex flex-grow items-center h-12 transition-colors cursor-pointer overflow-hidden"
+            class="flex flex-grow items-center h-34 transition-colors cursor-pointer overflow-hidden pl-12"
             classList={{
                 'bg-primary-700 hover:bg-primary-600': !props.isActive,
                 'bg-primary-600 hover:bg-primary-500': props.isActive
             }}
         >
             <div
-                class="flex flex-grow items-center text-light-50 leading-none font-montserrat overflow-hidden"
+                class="flex flex-grow text-light-50 leading-none font-montserrat overflow-hidden"
                 onClick={props.onClick}
                 onContextMenu={props.onContextMenu}
             >
-                <div class="flex-grow text-sm uppercase  overflow-ellipsis overflow-hidden whitespace-nowrap px-4">
-                    {props.title}
-                </div>
+                <ListItemThumbnail
+                    img={getThumbnails(props.thumbnails, 'medium')}
+                    alt={props.title}
+                    badge={duration()}
+                />
 
-                <div class="text-xs">{duration()}</div>
+                <ListItemMeta
+                    title={props.title}
+                    subtitle={
+                        <A
+                            href={`/channel/${props.channelId}`}
+                            onClick={stopPropagation(props.onClickLink)}
+                        >
+                            {props.channelTitle}
+                        </A>
+                    }
+                />
+
+                <div class="text-xs"></div>
             </div>
 
             <button

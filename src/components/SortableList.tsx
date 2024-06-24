@@ -53,8 +53,8 @@ const Sortable: ParentComponent<ListItemProps> = (props) => {
         <div
             // @ts-ignore
             use:sortable
-            // ref={sortable.ref}
-            class="flex overflow-hidden h-12 not-last:border-b-1 border-primary-600 bg-primary-700 touch-none"
+            ref={sortable.ref}
+            class="relative flex overflow-hidden h-34 not-last:border-b-1 border-primary-600 touch-none"
             classList={{
                 'opacity-50': sortable.isActiveDraggable,
                 'transition-transform': props.hasTransition
@@ -62,13 +62,12 @@ const Sortable: ParentComponent<ListItemProps> = (props) => {
             // style={transformStyle(sortable.transform)}
         >
             <div
-                class="flex flex-shrink-0 items-center justify-center h-12 w-12 group"
+                class="absolute left-0 top-0 bottom-0 flex flex-shrink-0 items-center justify-center w-12 group touch-none"
                 classList={{
                     'cursor-grab': !sortable.isActiveDraggable,
                     'cursor-grabbing': sortable.isActiveDraggable
                 }}
                 {...sortable.dragActivators}
-                style={{ 'touch-action': 'none' }}
             >
                 <Icon
                     class="text-light-50 group-hover:(text-opacity-50) transition-colors w-5 h-5"
@@ -141,8 +140,8 @@ const List = (props: ListProps) => {
             </SortableProvider>
 
             <DragOverlay class="pointer-events-none z-1 left-0 right-0">
-                <div class="flex overflow-hidden shadow cursor-grabbing bg-primary-700">
-                    <div class="flex flex-shrink-0 items-center justify-center h-12 w-12">
+                <div class="relative flex overflow-hidden shadow cursor-grabbing bg-primary-700">
+                    <div class="absolute left-0 top-0 bottom-0 flex flex-shrink-0 items-center justify-center w-12">
                         <Icon class="text-light-50 w-5 h-5" name="drag" />
                     </div>
 

@@ -1,4 +1,4 @@
-import { Component, onCleanup, onMount, Show } from 'solid-js';
+import { Component, For, onCleanup, onMount, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 import { useMenu } from '../../store/menu';
@@ -17,8 +17,6 @@ interface Props {
     toggleQueue: () => void;
     togglePlay: () => void;
 }
-
-/* TODO: remplacer QUEUEITEMDATA par VideoData */
 
 const Queue: Component<Props> = (props) => {
     const [
@@ -80,6 +78,16 @@ const Queue: Component<Props> = (props) => {
         });
     };
 
+    const isActiveItem = (id: string) => id === player.currentId;
+
+    const handleClickItem = (id: string) => () => {
+        if (isActiveItem(id)) {
+            props.togglePlay();
+        } else {
+            setActiveQueueItem(id);
+        }
+    };
+
     let unsubscribeFromQueue: () => void;
     let unsubscribeFromCurrentQueueId: () => void;
 
@@ -122,6 +130,33 @@ const Queue: Component<Props> = (props) => {
                             }
                         >
                             <div class="absolute inset-0 overflow-y-auto scrollbar-thin scrollbar-track-primary-600 scrollbar-thumb-primary-400 hover:scrollbar-thumb-primary-300">
+                                {/* <For each={player.queue}>
+                                    {(data: VideoData) => {
+                                        const { id } = data;
+                                        const isActive =
+                                            id === player.currentId;
+
+                                        let icon = 'play';
+
+                                        // if (isActive && props.isPlaying) {
+                                        //     icon = 'pause';
+                                        // }
+
+                                        return (
+                                            <QueueItem
+                                                {...data}
+                                                isActive={isActiveItem(id)}
+                                                icon={icon}
+                                                onClick={handleClickItem(id)}
+                                                onClickLink={props.toggleQueue}
+                                                onContextMenu={handleClickMenu(
+                                                    data
+                                                )}
+                                            />
+                                        );
+                                    }}
+                                </For> */}
+
                                 <SortableList
                                     items={player.queue}
                                     getItemId={({ id }: VideoData) => id}
@@ -134,24 +169,17 @@ const Queue: Component<Props> = (props) => {
 
                                         let icon = 'play';
 
-                                        if (isActive && props.isBuffering) {
-                                            icon = 'loading';
-                                        }
-
-                                        if (isActive && props.isPlaying) {
-                                            icon = 'pause';
-                                        }
+                                        // if (isActive && props.isPlaying) {
+                                        //     icon = 'pause';
+                                        // }
 
                                         return (
                                             <QueueItem
                                                 {...data}
-                                                isActive={isActive}
+                                                isActive={isActiveItem(id)}
                                                 icon={icon}
-                                                onClick={() =>
-                                                    isActive
-                                                        ? props.togglePlay()
-                                                        : setActiveQueueItem(id)
-                                                }
+                                                onClick={handleClickItem(id)}
+                                                onClickLink={props.toggleQueue}
                                                 onContextMenu={handleClickMenu(
                                                     data
                                                 )}

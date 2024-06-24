@@ -19,7 +19,7 @@ const QueueItem: Component<Props> = (props) => {
 
     return (
         <div
-            class="flex flex-grow items-center h-34 transition-colors cursor-pointer overflow-hidden pl-12"
+            class="flex flex-grow items-center h-34 transition-colors cursor-pointer overflow-hidden pl-10"
             classList={{
                 'bg-primary-700 hover:bg-primary-600': !props.isActive,
                 'bg-primary-600 hover:bg-primary-500': props.isActive

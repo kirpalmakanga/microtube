@@ -62,17 +62,14 @@ const Sortable: ParentComponent<ListItemProps> = (props) => {
             // style={transformStyle(sortable.transform)}
         >
             <div
-                class="absolute left-0 top-0 bottom-0 flex flex-shrink-0 items-center justify-center w-12 group touch-none"
+                class="absolute left-0 top-0 bottom-0 flex flex-shrink-0 items-center justify-center w-10 touch-none text-light-50 hover:text-opacity-50 transition-colors"
                 classList={{
                     'cursor-grab': !sortable.isActiveDraggable,
                     'cursor-grabbing': sortable.isActiveDraggable
                 }}
                 {...sortable.dragActivators}
             >
-                <Icon
-                    class="text-light-50 group-hover:(text-opacity-50) transition-colors w-5 h-5"
-                    name="drag"
-                />
+                <Icon class="w-5 h-5" name="drag" />
             </div>
 
             {props.children}
@@ -141,7 +138,7 @@ const List = (props: ListProps) => {
 
             <DragOverlay class="pointer-events-none z-1 left-0 right-0">
                 <div class="relative flex overflow-hidden shadow cursor-grabbing bg-primary-700">
-                    <div class="absolute left-0 top-0 bottom-0 flex flex-shrink-0 items-center justify-center w-12">
+                    <div class="absolute left-0 top-0 bottom-0 flex flex-shrink-0 items-center justify-center w-10">
                         <Icon class="text-light-50 w-5 h-5" name="drag" />
                     </div>
 

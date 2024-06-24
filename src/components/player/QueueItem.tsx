@@ -52,7 +52,7 @@ const QueueItem: Component<Props> = (props) => {
             </div>
 
             <button
-                class="flex flex-shrink-0 items-center justify-center h-10 w-10 group"
+                class="flex flex-shrink-0 items-center justify-center h-full w-10 group"
                 onClick={props.onContextMenu}
             >
                 <Icon

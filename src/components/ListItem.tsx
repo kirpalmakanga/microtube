@@ -2,6 +2,8 @@ import { Component, Show } from 'solid-js';
 import { getThumbnails } from '../lib/helpers';
 import Button from './Button';
 import Img from './Img';
+import ListItemThumbnail from './ListItemThumbnail';
+import ListItemMeta from './ListItemMeta';
 
 interface Props {
     index?: number;
@@ -10,7 +12,6 @@ interface Props {
     subSubtitle: string;
     badge: string;
     thumbnails: ThumbnailsData;
-    itemCount: number;
     onClick: () => void;
     onClickMenu: () => void;
 }
@@ -28,42 +29,20 @@ const ListItem: Component<Props> = (props) => {
             </Show>
 
             <div
-                class="flex flex-grow overflow-hidden p-4 cursor-pointer"
+                class="flex flex-grow overflow-hidden p-4 gap-4 cursor-pointer"
                 onClick={props.onClick}
             >
-                <div class="relative flex mr-4 ">
-                    <Img
-                        class="w-48"
-                        imgClass="w-full h-full object-cover"
-                        src={getThumbnails(props.thumbnails, 'medium')}
-                        alt={props.title}
-                        background
-                    />
+                <ListItemThumbnail
+                    img={getThumbnails(props.thumbnails, 'medium')}
+                    alt={props.title}
+                    badge={props.badge}
+                />
 
-                    <Show when={props.badge}>
-                        <span class="absolute bottom-2 right-2 bg-primary-700 bg-opacity-80 text-light-50 font-montserrat text-xs rounded px-2 py-1">
-                            {props.badge}
-                        </span>
-                    </Show>
-                </div>
-
-                <div class="flex flex-col gap-1 overflow-hidden">
-                    <h2 class="text-light-50  font-montserrat whitespace-nowrap overflow-ellipsis overflow-hidden">
-                        {props.title}
-                    </h2>
-
-                    <Show when={props.subtitle}>
-                        <h3 class="text-sm text-light-50 text-opacity-80 hover:text-opacity-60 transition-colors author">
-                            {props.subtitle}
-                        </h3>
-                    </Show>
-
-                    <Show when={props.subSubtitle}>
-                        <h4 class="text-xs text-light-50 text-opacity-60">
-                            {props.subSubtitle}
-                        </h4>
-                    </Show>
-                </div>
+                <ListItemMeta
+                    title={props.title}
+                    subtitle={props.subtitle}
+                    subSubtitle={props.subSubtitle}
+                />
             </div>
 
             <Show when={props.onClickMenu}>

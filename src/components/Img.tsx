@@ -32,8 +32,6 @@ const Img: Component<Props> = (props) => {
                 return;
             }
 
-            console.log('load !');
-
             const img = new Image();
 
             img.src = props.src;
@@ -47,7 +45,6 @@ const Img: Component<Props> = (props) => {
         } catch (e) {
             setState({ hasError: true });
         } finally {
-            console.log('hey');
             setState({ isLoading: false });
         }
     };
@@ -62,10 +59,7 @@ const Img: Component<Props> = (props) => {
         return src;
     }, props.src);
 
-    onMount(() => {
-        console.log('mount ?');
-        loadImage();
-    });
+    onMount(loadImage);
 
     return (
         <span

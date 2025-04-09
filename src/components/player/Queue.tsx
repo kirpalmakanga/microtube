@@ -104,7 +104,7 @@ const Queue: Component<Props> = (props) => {
 
     return (
         <section
-            class="fixed top-0 right-0 left-0 bottom-12 flex flex-col bg-primary-400 transition-transform transform shadow overflow-hidden"
+            class="fixed top-0 right-0 left-0 bottom-12 flex flex-col bg-primary-500 transition-transform transform shadow overflow-hidden"
             classList={{
                 'translate-y-full': !props.isVisible,
                 'translate-y-0': props.isVisible

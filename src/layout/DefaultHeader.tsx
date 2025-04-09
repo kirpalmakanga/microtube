@@ -1,5 +1,6 @@
-import { Link, useLocation, useNavigate } from 'solid-app-router';
+import { A, useLocation } from '@solidjs/router';
 import { createSignal, Show } from 'solid-js';
+import { Transition } from 'solid-transition-group';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
 import Img from '../components/Img';
@@ -11,7 +12,6 @@ const HeadTitle = (props: { text: string }) => <Title>{props.text}</Title>;
 
 const DefaultHeader = () => {
     const location = useLocation();
-    const navigate = useNavigate();
     const [user, { signIn, signOut }] = useAuth();
     const [isMenuOpen, setMenuState] = createSignal(false);
 
@@ -27,7 +27,7 @@ const DefaultHeader = () => {
     };
 
     return (
-        <div class="layout__header-row">
+        <div class="flex flex-grow items-center px-4">
             <HeadTitle text={title()} />
 
             <Show
@@ -37,75 +37,97 @@ const DefaultHeader = () => {
                     location.pathname !== '/login'
                 }
             >
-                <Button
-                    onClick={() => navigate('/')}
-                    class="layout__back-button icon-button"
-                    aria-label="Go to homepage"
-                    icon="arrow-left"
-                />
+                <A
+                    class="group relative flex items-center justify-center h-12 w-12 -ml-4 bg-primary-900"
+                    href="/"
+                >
+                    <Icon
+                        class="transition text-light-50 group-hover:text-opacity-50 w-5 h-5"
+                        name="arrow-left"
+                    />
+                </A>
             </Show>
 
-            <span class="layout__title">
-                <span class="layout__title-inner">{title()}</span>
+            <span class="flex flex-grow overflow-hidden">
+                <span class="font-montserrat text-light-50 overflow-ellipsis whitespace-nowrap overflow-hidden">
+                    {title()}
+                    {/* erio erofi erio fiogntriun dfsoincfqfoiqjsd fionqonfg dso
+                    fqno */}
+                </span>
             </span>
 
-            <nav class="navigation">
+            <nav class="flex gap-4 ml-2">
                 <Show when={user.isSignedIn}>
-                    <Link
-                        class="navigation__link icon-button"
-                        aria-label="Open search"
+                    <A
+                        class="group h-12 flex items-center justify-center"
                         href="/search"
                     >
-                        <Icon name="search" />
-                    </Link>
+                        <Icon
+                            class="transition text-light-50 group-hover:text-opacity-50 w-5 h-5"
+                            name="search"
+                        />
+                    </A>
 
                     <Show when={location.pathname !== '/'}>
-                        <Link
-                            class="navigation__link icon-button"
-                            aria-label="Playlists"
+                        <A
+                            class="group h-12 flex items-center justify-center"
                             href="/"
                         >
-                            <Icon name="folder" />
-                        </Link>
+                            <Icon
+                                class="transition text-light-50 group-hover:text-opacity-50 w-5 h-5"
+                                name="folder"
+                            />
+                        </A>
                     </Show>
 
                     <Show when={location.pathname !== '/subscriptions'}>
-                        <Link
-                            class="navigation__link icon-button"
+                        <A
+                            class="group h-12 flex items-center justify-center"
                             href="/subscriptions"
-                            aria-label="Open subscriptions"
                         >
-                            <Icon name="users" />
-                        </Link>
+                            <Icon
+                                class="transition text-light-50 group-hover:text-opacity-50 w-5 h-5"
+                                name="users"
+                            />
+                        </A>
                     </Show>
                 </Show>
 
-                <div class="navigation__menu">
+                <div class="relative">
                     <Button
-                        class="navigation__link icon-button avatar"
+                        class="group h-12 flex items-center justify-center"
                         onClick={handleClickUser}
                         icon={user.isSignedIn && !user.picture ? 'user' : ''}
                     >
                         <Show when={user.picture}>
-                            <Img src={user.picture} alt="avatar" />
+                            <Img
+                                class="group-hover:opacity-50 transition-opacity w-8 h-8 rounded-full"
+                                src={user.picture}
+                            />
                         </Show>
                     </Button>
 
-                    <Show when={isMenuOpen()}>
-                        <div class="navigation__menu__content shadow--2dp">
-                            <Show when={user.name}>
-                                <p class="navigation__menu__content__text">
-                                    {user.name}
-                                </p>
-                            </Show>
-                            <Button
-                                class="button shadow--2dp"
-                                icon="log-out"
-                                title={user.isSignedIn ? 'Log out' : 'Log in'}
-                                onClick={handleLogging}
-                            ></Button>
-                        </div>
-                    </Show>
+                    <Transition name="fade">
+                        <Show when={isMenuOpen()}>
+                            <div class="absolute top-full right-0 p-4 bg-primary-900 shadow">
+                                <Show when={user.name}>
+                                    <p class="text-light-50 text-xl font-montserrat mb-4">
+                                        {user.name}
+                                    </p>
+                                </Show>
+
+                                <Button
+                                    class="flex items-center justify-center gap-2 px-4 py-1 bg-primary-800 hover:bg-primary-700 transition-colors text-light-50 font-montserrat rounded shadow"
+                                    icon="log-out"
+                                    iconClass="h-6 w-6"
+                                    title={
+                                        user.isSignedIn ? 'Log out' : 'Log in'
+                                    }
+                                    onClick={handleLogging}
+                                />
+                            </div>
+                        </Show>
+                    </Transition>
                 </div>
             </nav>
         </div>

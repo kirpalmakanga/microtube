@@ -2,12 +2,6 @@ import { useStore } from '..';
 import { useNotifications } from '../notifications';
 import { usePrompt } from '../prompt';
 
-import {
-    PlaylistData,
-    PlaylistItemData,
-    VideoData
-} from '../../../@types/alltypes';
-
 import * as api from '../../api/youtube';
 import { initialState } from './_state';
 

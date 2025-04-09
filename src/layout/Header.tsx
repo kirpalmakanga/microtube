@@ -1,23 +1,29 @@
-import { Route, Routes } from 'solid-app-router';
+import { Match, Switch } from 'solid-js';
+import { useLocation } from '@solidjs/router';
 import { usePlayer } from '../store/player';
 import DefaultHeader from './DefaultHeader';
 import SearchHeader from './SearchHeader';
 
 const Header = () => {
     const [, { setScreenVisibility }] = usePlayer();
+    const location = useLocation();
+
+    const handleClickHeader = () => setScreenVisibility(false);
 
     return (
         <header
-            class="layout__header shadow--2dp"
-            onClick={() => setScreenVisibility(false)}
+            class="relative z-1 flex h-12 bg-primary-900 shadow"
+            onClick={handleClickHeader}
         >
-            <Routes>
-                <Route path="*" element={<DefaultHeader />} />
+            <Switch>
+                <Match when={location.pathname.startsWith('/search')}>
+                    <SearchHeader />
+                </Match>
 
-                <Route path="/search" element={<SearchHeader />} />
-
-                <Route path="/search/:query" element={<SearchHeader />} />
-            </Routes>
+                <Match when={true}>
+                    <DefaultHeader />
+                </Match>
+            </Switch>
         </header>
     );
 };

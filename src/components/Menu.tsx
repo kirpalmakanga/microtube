@@ -12,16 +12,19 @@ const Menu = () => {
         <>
             <Transition name="fade">
                 <Show when={menu.isOpen}>
-                    <div class="menu__overlay" onClick={closeMenu}></div>
+                    <div
+                        class="fixed inset-0 bg-primary-900 bg-opacity-50 cursor-pointer z-10"
+                        onClick={closeMenu}
+                    ></div>
                 </Show>
             </Transition>
 
             <Transition name="slide-up">
                 <Show when={menu.isOpen}>
-                    <div class="menu__container shadow--2dp">
+                    <div class="fixed left-0 right-0 bottom-0 shadow z-10">
                         <Show when={menu.title}>
                             <div
-                                class="menu__header"
+                                class="p-4 bg-primary-900 text-light-50 font-montserrat"
                                 onClick={stopPropagation()}
                             >
                                 {menu.title}
@@ -31,9 +34,9 @@ const Menu = () => {
                         <ul class="menu__items">
                             <For each={menu.items}>
                                 {({ title, icon, onClick }: MenuItemData) => (
-                                    <li>
+                                    <li class="flex border-t-1 border-primary-700">
                                         <button
-                                            class="menu__item"
+                                            class="flex items-center gap-4 flex-grow bg-primary-800 hover:bg-primary-700 text-light-50 text-sm transition-colors font-montserrat p-4"
                                             type="button"
                                             onClick={() => {
                                                 closeMenu();
@@ -41,7 +44,10 @@ const Menu = () => {
                                             }}
                                         >
                                             <Show when={icon}>
-                                                <Icon name={icon} />
+                                                <Icon
+                                                    class="h-5 w-5"
+                                                    name={icon}
+                                                />
                                             </Show>
 
                                             <span>{title}</span>

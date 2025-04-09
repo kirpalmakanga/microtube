@@ -1,5 +1,4 @@
-import { ThumbnailsData, ShareConfig } from '../../@types/alltypes';
-import format from 'date-fns/fp/format';
+import { format } from 'date-fns';
 
 export const preventDefault =
     (func = (e: Event) => {}) =>
@@ -28,7 +27,7 @@ export const getThumbnails = (
 };
 
 export const formatDate = (date: string, formatString: string) =>
-    format(formatString, new Date(date));
+    format(new Date(date), formatString);
 
 export const parseDuration = (PT: string) => {
     if (!PT) {
@@ -166,6 +165,8 @@ export function pick<T extends object, K extends keyof T>(
     base: T,
     ...keys: K[]
 ): Pick<T, K> {
+    if (!keys.length) return base;
+
     const entries = keys.map((key) => [key, base[key]]);
 
     return Object.fromEntries(entries);
@@ -175,6 +176,8 @@ export function omit<T extends object, K extends keyof T>(
     base: T,
     ...keys: K[]
 ): Omit<T, K> {
+    if (!keys.length) return base;
+
     const result = { ...base };
 
     for (const key of keys) delete result[key];
@@ -183,39 +186,35 @@ export function omit<T extends object, K extends keyof T>(
 }
 
 export const wrapURLs = (text: string) => {
-    // http://, https://, ftp://
     const urlPattern =
         /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
 
-    // www. sans http:// or https://
     const pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
 
-    // Email addresses
     const emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
 
     return text
-        .replace(urlPattern, '<a href="$&">$&</a>')
-        .replace(pseudoUrlPattern, '$1<a href="http://$2">$2</a>')
+        .replace(urlPattern, '<a href="$&" target="_blank">$&</a>')
+        .replace(
+            pseudoUrlPattern,
+            '$1<a href="http://$2" target="_blank">$2</a>'
+        )
         .replace(emailAddressPattern, '<a href="mailto:$&">$&</a>');
 };
 
-export const loadScript = (src: string) => {
-    return new Promise((resolve: (value?: unknown) => void, reject) => {
-        try {
-            if (document.querySelector(`script[src="${src}"]`)) {
-                resolve();
-            } else {
-                const js = document.createElement('script');
+export const loadScript = async (src: string) => {
+    if (!document.querySelector(`script[src="${src}"]`)) {
+        const js = document.createElement('script');
 
-                document.body.appendChild(js);
+        document.body.appendChild(js);
 
-                js.src = src;
-                js.onload = resolve;
-            }
-        } catch (err) {
-            reject(err);
-        }
-    });
+        return new Promise((resolve, reject) => {
+            js.onload = resolve;
+            js.onerror = reject;
+
+            js.src = src;
+        });
+    }
 };
 
 export const setImmediateInterval = (

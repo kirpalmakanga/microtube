@@ -1,13 +1,12 @@
-import { useNavigate } from 'solid-app-router';
 import { Component, Show } from 'solid-js';
-import { PlaylistData } from '../../@types/alltypes';
-import PlaylistCard from '../components/cards/PlaylistCard';
+import { useNavigate } from '@solidjs/router';
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 import { copyText, getPlaylistURL, isMobile, shareURL } from '../lib/helpers';
 import { useMenu } from '../store/menu';
 import { useNotifications } from '../store/notifications';
 import { usePlaylists } from '../store/playlists';
+import ListItem from '../components/ListItem';
 
 const Playlists: Component = () => {
     const navigate = useNavigate();
@@ -34,12 +33,12 @@ const Playlists: Component = () => {
             callbackData,
             items: [
                 {
-                    title: 'Queue playlist',
+                    title: 'Queue',
                     icon: 'circle-add',
                     onClick: queuePlaylist
                 },
                 {
-                    title: 'Launch playlist',
+                    title: 'Launch',
                     icon: 'play',
                     onClick: launchPlaylist
                 },
@@ -62,7 +61,7 @@ const Playlists: Component = () => {
                     }
                 },
                 {
-                    title: 'Remove playlist',
+                    title: 'Remove',
                     icon: 'delete',
                     onClick: removePlaylist
                 }
@@ -82,8 +81,11 @@ const Playlists: Component = () => {
         >
             <List items={playlists.items} loadItems={getPlaylists}>
                 {({ data }) => (
-                    <PlaylistCard
+                    <ListItem
                         {...data}
+                        badge={`${data.itemCount} video${
+                            data.itemCount !== 1 ? 's' : ''
+                        }`}
                         onClick={handleClickCard(data)}
                         onClickMenu={handleClickMenu(data)}
                     />

@@ -1,6 +1,6 @@
-import { useNavigate } from 'solid-app-router';
 import { Show } from 'solid-js';
-import ChannelCard from '../components/cards/ChannelCard';
+import { useNavigate } from '@solidjs/router';
+import ListItem from '../components/ListItem';
 import List from '../components/List';
 import Placeholder from '../components/Placeholder';
 import { useSubscriptions } from '../store/subscriptions';
@@ -31,7 +31,7 @@ const Subscriptions = () => {
                     const { id } = data;
 
                     return (
-                        <ChannelCard
+                        <ListItem
                             {...data}
                             onClick={() => navigate(`/channel/${id}`)}
                         />

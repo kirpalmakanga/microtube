@@ -1,8 +1,7 @@
-import { useNavigate, useParams } from 'solid-app-router';
 import { Component, Show } from 'solid-js';
-import { PlaylistData } from '../../../@types/alltypes';
-import PlaylistCard from '../../components/cards/PlaylistCard';
+import { useNavigate, useParams } from '@solidjs/router';
 import List from '../../components/List';
+import ListItem from '../../components/ListItem';
 import Placeholder from '../../components/Placeholder';
 import {
     copyText,
@@ -85,8 +84,11 @@ const Playlists: Component = () => {
         >
             <List items={channel.playlists.items} loadItems={getPlaylists}>
                 {({ data }) => (
-                    <PlaylistCard
+                    <ListItem
                         {...data}
+                        badge={`${data.itemCount} video${
+                            data.itemCount !== 1 ? 's' : ''
+                        }`}
                         onClick={handleClickCard(data)}
                         onClickMenu={handleClickMenu(data)}
                     />

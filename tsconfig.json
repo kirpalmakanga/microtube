@@ -9,7 +9,8 @@
         "allowSyntheticDefaultImports": true,
         "jsx": "preserve",
         "jsxImportSource": "solid-js",
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "types": ["vite-plugin-pwa/client"]
     },
     "exclude": ["node_modules", "dist", "./**/*.js", "./**/*.jsx"]
 }

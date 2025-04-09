@@ -1,12 +1,7 @@
 import { Component, createEffect, JSX, onCleanup, onMount } from 'solid-js';
 import { createStore } from 'solid-js/store';
-import {
-    GenericObject,
-    PlayerSyncHandlers,
-    PlayerSyncPayload
-} from '../../../@types/alltypes';
 import { preventDefault, setImmediateInterval } from '../../lib/helpers';
-import { emit, subscribe } from '../../lib/socket';
+// import { emit, subscribe } from '../../lib/socket';
 import InfoProgress from './controls/InfoProgress';
 import InfoTime from './controls/InfoTime';
 
@@ -78,10 +73,10 @@ const Info: Component<Props> = (props) => {
 
         setState({ isSeeking: false, currentTime: seekingTime });
 
-        emit('player:sync', {
-            action: 'seek-time',
-            data: { seekingTime }
-        });
+        // emit('player:sync', {
+        //     action: 'seek-time',
+        //     data: { seekingTime }
+        // });
 
         props.onEndSeeking(seekingTime);
     };
@@ -127,36 +122,32 @@ const Info: Component<Props> = (props) => {
                 setState({ loaded })
         };
 
-        subscribe('player:sync', ({ action, data }: PlayerSyncPayload) => {
-            const { [action]: handler } = actions;
+        // subscribe('player:sync', ({ action, data }: PlayerSyncPayload) => {
+        //     const { [action]: handler } = actions;
 
-            if (handler) {
-                handler(data);
-            }
-        });
+        //     if (handler) {
+        //         handler(data);
+        //     }
+        // });
     });
 
     onCleanup(clearWatchers);
 
     return (
-        <div class="PlayerInfo">
+        <div class="relative flex flex-col flex-grow justify-center px-2 overflow-hidden h-12">
             <InfoProgress
                 percentElapsed={props.duration ? time() / props.duration : 0}
                 percentLoaded={state.loaded}
             />
 
-            <div class="PlayerInfo__Title">{props.title}</div>
+            <div class="relative w-full text-sm text-light-50 uppercase font-montserrat overflow-hidden overflow-ellipsis whitespace-nowrap">
+                {props.title}
+            </div>
 
             <InfoTime time={time()} duration={props.duration} />
 
-            <label class="sr-only" for="seek-time">
-                Seek time
-            </label>
-
             <input
-                id="seek-time"
-                class="PlayerInfo__Seek"
-                aria-label="Seek time"
+                class="absolute inset-0 opacity-0 cursor-pointer active:cursor-grabbing"
                 type="range"
                 min="0"
                 max={props.duration}

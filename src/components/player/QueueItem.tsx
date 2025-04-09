@@ -1,57 +1,74 @@
-import { Component, createMemo, createSignal, Show } from 'solid-js';
-import { VideoData } from '../../../@types/alltypes';
-import { formatTime } from '../../lib/helpers';
+import { Component, Show, createMemo } from 'solid-js';
+import { A } from '@solidjs/router';
+import { formatTime, getThumbnails, stopPropagation } from '../../lib/helpers';
 import Icon from '../Icon';
+import ListItemThumbnail from '../ListItemThumbnail';
+import ListItemMeta from '../ListItemMeta';
+import EqualizerIcon from '../EqualizerIcon';
 
 interface Props extends VideoData {
     index?: number;
-    icon: string;
     isActive: boolean;
+    isPlaying: boolean;
     onClick: () => void;
+    onClickLink: () => void;
     onContextMenu: () => void;
 }
 
 const QueueItem: Component<Props> = (props) => {
-    const [isHovered, setIsHovered] = createSignal(false);
-    const handleMouseEnter = () => setIsHovered(true);
-    const handleMouseLeave = () => setIsHovered(false);
     const duration = createMemo(() => formatTime(props.duration));
 
     return (
         <div
-            class="QueueItem shadow--2dp"
-            classList={{ 'is-active': props.isActive }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+            class="flex flex-grow items-center h-34 transition-colors cursor-pointer overflow-hidden pl-10"
+            classList={{
+                'bg-primary-700 hover:bg-primary-600': !props.isActive,
+                'bg-primary-600 hover:bg-primary-500': props.isActive
+            }}
         >
-            <div class="QueueItem__Button icon-button is-drag">
-                <Show
-                    when={isHovered() || !props.index}
-                    fallback={
-                        <Show when={props.isActive} fallback={props.index}>
-                            <Icon name={props.icon} />
-                        </Show>
-                    }
-                >
-                    <Icon name="drag" />
+            <div class="absolute left-0 top-0 bottom-0 flex flex-shrink-0 items-center justify-center w-10 text-light-50 text-sm group-hover:hidden">
+                <Show when={props.isActive} fallback={props.index}>
+                    <EqualizerIcon
+                        class="w-6 h-6"
+                        isAnimated={props.isPlaying}
+                    />
                 </Show>
             </div>
 
             <div
-                class="QueueItem__Content"
+                class="flex flex-grow text-light-50 leading-none font-montserrat overflow-hidden gap-4"
                 onClick={props.onClick}
                 onContextMenu={props.onContextMenu}
             >
-                <div class="QueueItem__Title">{props.title}</div>
+                <ListItemThumbnail
+                    img={getThumbnails(props.thumbnails, 'medium')}
+                    alt={props.title}
+                    badge={duration()}
+                />
 
-                <div class="QueueItem__Duration">{duration()}</div>
+                <ListItemMeta
+                    title={props.title}
+                    subtitle={
+                        <A
+                            href={`/channel/${props.channelId}`}
+                            onClick={stopPropagation(props.onClickLink)}
+                        >
+                            {props.channelTitle}
+                        </A>
+                    }
+                />
+
+                <div class="text-xs"></div>
             </div>
 
             <button
-                class="QueueItem__Button icon-button"
+                class="flex flex-shrink-0 items-center justify-center h-full w-10 group"
                 onClick={props.onContextMenu}
             >
-                <Icon name="more" />
+                <Icon
+                    class="text-light-50 group-hover:(text-opacity-50) transition-colors w-5 h-5"
+                    name="more"
+                />
             </button>
         </div>
     );

@@ -1,7 +1,7 @@
 import { VirtualContainer } from '@minht11/solid-virtual-container';
 import { createSignal, JSXElement, onCleanup, onMount, Show } from 'solid-js';
 import { throttle } from '../lib/helpers';
-import Icon from './Icon';
+import LoadingIcon from './LoadingIcon';
 
 type ListItemProps = { index: number; data: any };
 
@@ -14,8 +14,8 @@ interface Props {
 }
 
 const Loader = () => (
-    <div class="list__loading">
-        <Icon name="loading" />
+    <div class="flex flex-grow items-center justify-center p-4">
+        <LoadingIcon class="text-light-50 w-8 h-8" />
     </div>
 );
 
@@ -62,8 +62,12 @@ const List = (props: Props) => {
     onCleanup(() => (isUnmounting = true));
 
     return (
-        <div class="list">
-            <div class="list__inner" ref={scrollTarget} onScroll={handleScroll}>
+        <div class="relative flex-grow">
+            <div
+                class="absolute inset-0 flex flex-col overflow-y-auto scrollbar-thin scrollbar-track-primary-600 scrollbar-thumb-primary-400 hover:scrollbar-thumb-primary-300"
+                ref={scrollTarget}
+                onScroll={handleScroll}
+            >
                 <VirtualContainer
                     items={isLoading() ? [...props.items, null] : props.items}
                     itemSize={{ height: getItemSize() }}
@@ -72,9 +76,8 @@ const List = (props: Props) => {
                 >
                     {(itemProps) => (
                         <div
-                            class="list__item"
+                            class="flex w-full not-last:(border-b-1 border-primary-800)"
                             style={itemProps.style}
-                            role="listitem"
                         >
                             <Show
                                 when={itemProps.index < props.items.length}

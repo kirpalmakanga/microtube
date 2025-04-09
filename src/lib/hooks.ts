@@ -1,5 +1,4 @@
 import { createSignal, onCleanup, onMount } from 'solid-js';
-import { KeyboardEventName } from '../../@types/alltypes';
 
 export const useFullscreen = () => {
     let container: HTMLElement | null = null;

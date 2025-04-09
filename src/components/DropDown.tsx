@@ -41,21 +41,24 @@ const DropDown: Component<Props> = (props) => {
         preventDefault(() => !isActiveItem && props.onSelect(value));
 
     return (
-        <div class="dropdown" onClick={stopPropagation()}>
+        <div class="relative">
             <button
-                class="dropdown__trigger"
-                onClick={toggleOptions}
-                onBlur={closeOptions}
+                class="h-12 p-4 flex items-center gap-2 transition-colors text-light-50 bg-primary-900 hover:bg-primary-800"
                 type="button"
+                onClick={stopPropagation(toggleOptions)}
+                onBlur={closeOptions}
             >
-                <span class="dropdown__trigger-title">{label()}</span>
+                <span class="font-montserrat text-sm">{label()}</span>
 
-                <Icon name={isOpen() ? 'chevron-up' : 'chevron-down'} />
+                <Icon
+                    class="h-6 w-6"
+                    name={isOpen() ? 'chevron-up' : 'chevron-down'}
+                />
             </button>
 
             <Transition name="fade">
                 <Show when={isOpen()}>
-                    <ul class="dropdown__list shadow--2dp">
+                    <ul class="absolute right-0 left-0 top-full shadow">
                         <For each={props.options}>
                             {({ label, value }) => {
                                 const isActiveItem =
@@ -63,13 +66,15 @@ const DropDown: Component<Props> = (props) => {
 
                                 return (
                                     <li
-                                        class={'dropdown__list-item'}
+                                        class="h-12 p-4 flex items-centerfont-montserrat text-light-50 text-sm transition-colors bg-primary-900 hover:bg-primary-800 cursor-pointer"
                                         classList={{
-                                            'is-active': isActiveItem
+                                            'bg-primary-700': isActiveItem
                                         }}
-                                        onClick={handleOptionClick(
-                                            value,
-                                            isActiveItem
+                                        onClick={stopPropagation(
+                                            handleOptionClick(
+                                                value,
+                                                isActiveItem
+                                            )
                                         )}
                                     >
                                         {label}

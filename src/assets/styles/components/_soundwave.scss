@@ -1,0 +1,53 @@
+@keyframes short-eq {
+    0% {
+        height: 8px;
+    }
+
+    50% {
+        height: 4px;
+    }
+
+    100% {
+        height: 8px;
+    }
+}
+
+@keyframes tall-eq {
+    0% {
+        height: 16px;
+    }
+
+    50% {
+        height: 6px;
+    }
+
+    100% {
+        height: 16px;
+    }
+}
+
+.wave {
+    .eq-bar {
+        transform: scale(1, -1) translate(0, -24px);
+
+        &--1 {
+            animation-delay: 0s;
+        }
+
+        &--2 {
+            animation-delay: 0.17s;
+        }
+
+        &--3 {
+            animation-delay: 0.34s;
+        }
+    }
+
+    &.is--animated {
+        .eq-bar {
+            animation-name: short-eq;
+            animation-duration: 0.5s;
+            animation-iteration-count: infinite;
+        }
+    }
+}

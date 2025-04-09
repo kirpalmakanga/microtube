@@ -46,12 +46,14 @@ const NewPlayListForm: Component<FormProps> = ({ onSubmit }) => {
         currentTarget: HTMLInputElement;
     }) => setValue(name, value);
 
-    const handleSubmit = preventDefault(() => onSubmit(state as PlaylistData));
+    const handleSubmit = preventDefault(
+        () => state.title && onSubmit(state as PlaylistData)
+    );
 
     return (
-        <form class="playlist-menu__form" onSubmit={handleSubmit}>
+        <form class="flex z-1 shadow" onSubmit={handleSubmit}>
             <input
-                class="playlist-menu__item-text"
+                class="flex-grow bg-primary-800 focus:outline-none px-4 py-2 border-r-1 border-primary-700"
                 name="title"
                 value={state.title}
                 placeholder="Playlist title"
@@ -65,7 +67,12 @@ const NewPlayListForm: Component<FormProps> = ({ onSubmit }) => {
                 onSelect={handlePrivacyStatusChange}
             />
 
-            <Button type="submit" title="Create" />
+            <Button
+                class="border-l-1 border-primary-700 bg-primary-900 hover:bg-primary-800 transition-colors px-4 py-2 disabled:(opacity-80 pointer-events-none)"
+                type="submit"
+                title="Create"
+                disabled={!state.title}
+            />
         </form>
     );
 };
@@ -79,27 +86,30 @@ export const PlaylistManager: Component<Props> = ({ onClickItem }) => {
         const { title, itemCount } = data;
 
         return (
-            <button class="playlist-menu__item" onClick={makeOnClickItem(data)}>
-                <span class="playlist-menu__item-text">{title}</span>
+            <button
+                class="flex items-center bg-primary-700 hover:bg-primary-600 transition-colors w-full text-left overflow-hidden"
+                onClick={makeOnClickItem(data)}
+            >
+                <span class="flex-grow text-light-50 font-montserrat overflow-ellipsis overflow-hidden p-4">
+                    {title}
+                </span>
 
-                <span class="playlist-menu__item-count">{itemCount}</span>
+                <span class="p-4">{itemCount}</span>
             </button>
         );
     };
 
     return (
-        <div class="playlist-menu">
+        <div class="flex flex-col h-40vh">
             <NewPlayListForm onSubmit={onCreatePlaylist} />
 
-            <div class="playlist-menu__items">
-                <List
-                    items={playlists.items}
-                    loadItems={getPlaylists}
-                    itemSize={50}
-                >
-                    {ListItem}
-                </List>
-            </div>
+            <List
+                items={playlists.items}
+                loadItems={getPlaylists}
+                itemSize={50}
+            >
+                {ListItem}
+            </List>
         </div>
     );
 };

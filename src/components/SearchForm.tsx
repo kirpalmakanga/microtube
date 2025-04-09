@@ -9,8 +9,6 @@ const SearchForm: Component<Props> = (props) => {
     const [input, setInput] = createSignal(props.query || '');
     let inputRef: HTMLDivElement | undefined = undefined;
 
-    onMount(() => inputRef?.focus());
-
     const handleInput: JSX.EventHandler<HTMLInputElement, Event> = ({
         currentTarget: { value }
     }) => setInput(value);
@@ -21,26 +19,19 @@ const SearchForm: Component<Props> = (props) => {
         if (newQuery && newQuery !== props.query) props.onSubmit(newQuery);
     });
 
-    return (
-        <form class="search-form" onSubmit={handleSubmit}>
-            <div class="textfield">
-                <label class="sr-only" for="search">
-                    Search
-                </label>
+    onMount(() => inputRef?.focus());
 
-                <input
-                    ref={inputRef}
-                    aria-label="Search"
-                    value={input()}
-                    name="search"
-                    class="textfield__input"
-                    id="search"
-                    type="text"
-                    placeholder="Search..."
-                    onKeyPress={stopPropagation()}
-                    onChange={handleInput}
-                />
-            </div>
+    return (
+        <form class="flex flex-grow" onSubmit={handleSubmit}>
+            <input
+                ref={inputRef}
+                class="h-12 px-4 flex-grow transition-colors bg-primary-600 focus:(outline-none bg-primary-500) text-100 placeholder-100 placeholder-opacity-50 caret-white caret-opacity-50"
+                value={input()}
+                type="text"
+                placeholder="Search..."
+                onKeyPress={stopPropagation()}
+                onChange={handleInput}
+            />
         </form>
     );
 };

@@ -1,9 +1,3 @@
-import {
-    ChannelData,
-    PlaylistData,
-    ThumbnailsData,
-    VideoData
-} from '../../@types/alltypes';
 import { parseDuration } from '../lib/helpers';
 
 interface YoutubeVideoData {

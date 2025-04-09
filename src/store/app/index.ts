@@ -1,16 +1,14 @@
-import { onCleanup, onMount, createMemo } from 'solid-js';
-import { useLocation } from 'solid-app-router';
+import { createMemo } from 'solid-js';
+import { useLocation } from '@solidjs/router';
 import { useStore } from '..';
-import { subscribe, emit } from '../../lib/socket';
-import { initialState } from './_state';
-
-import { DeviceData, GenericObject } from '../../../@types/alltypes';
+// import { subscribe, emit } from '../../lib/socket';
+// import { initialState } from './_state';
 
 export const useAppTitle = () => {
     const location = useLocation();
     const [state] = useStore();
 
-    const title = createMemo(() => {
+    return createMemo(() => {
         const { pathname } = location;
         const {
             channel: { channelTitle },
@@ -38,9 +36,7 @@ export const useAppTitle = () => {
         }
 
         return title;
-    }, location.pathname);
-
-    return title;
+    });
 };
 
 export const useDevices = () => {
@@ -49,28 +45,25 @@ export const useDevices = () => {
     const connectLocalDevice = () => {
         const { appCodeName: deviceName } = navigator;
 
-        emit('device:add', { deviceId: app.deviceId, deviceName });
+        // emit('device:add', { deviceId: app.deviceId, deviceName });
     };
-
-    const subscribeToDevicesSync = () =>
-        subscribe('devices:sync', (devices: DeviceData[]) =>
-            setState('app', { devices })
-        );
 
     const setMasterDevice = (deviceId: string) => {
         const { deviceId: masterDeviceId } =
             app.devices.find(({ isMaster }: DeviceData) => isMaster) || {};
 
-        if (deviceId !== masterDeviceId) {
-            emit('device:active', deviceId);
-        }
+        // if (deviceId !== masterDeviceId) {
+        //     emit('device:active', deviceId);
+        // }
     };
 
-    const synchronizePlayer = (data: GenericObject) =>
-        emit('player:sync', data);
+    const synchronizePlayer = (data: GenericObject) => {
+        // emit('player:sync', data);
+    };
 
-    const subscribeToPlayerSync = (callback: (response: any) => void) =>
-        subscribe('player:sync', callback);
+    const subscribeToPlayerSync = (callback: (response: any) => void) => {
+        // subscribe('player:sync', callback);
+    };
 
     const currentDevice = createMemo(
         () =>
@@ -91,20 +84,23 @@ export const useDevices = () => {
         app.deviceId
     );
 
-    onMount(() => {
-        subscribe('connect', () => {
-            emit('room', user.id);
+    // onMount(() => {
+    //     subscribe('connect', () => {
+    //         emit('room', user.id);
 
-            connectLocalDevice();
-            subscribeToDevicesSync();
-        });
+    //         connectLocalDevice();
 
-        subscribe('disconnect', () =>
-            setState('app', { devices: initialState().devices })
-        );
-    });
+    //         subscribe('devices:sync', (devices: DeviceData[]) =>
+    //             setState('app', { devices })
+    //         );
+    //     });
 
-    onCleanup(() => emit('device:delete', app.deviceId));
+    //     subscribe('disconnect', () =>
+    //         setState('app', { devices: initialState().devices })
+    //     );
+    // });
+
+    // onCleanup(() => emit('device:delete', app.deviceId));
 
     return {
         currentDevice,

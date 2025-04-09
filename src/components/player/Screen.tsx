@@ -1,7 +1,7 @@
-import { Component, Show } from 'solid-js';
+import { Component, Show, splitProps } from 'solid-js';
 import Placeholder from '../Placeholder';
-import { Player } from './YouTubePlayer';
-import { Options, YouTubePlayer } from '../../api/youtube-player';
+import { YoutubePlayer } from './YouTubePlayer';
+import { Options, YouTubePlayerInstance } from '../../api/youtube-player';
 
 const playerOptions: Options = {
     playerVars: {
@@ -15,7 +15,8 @@ const playerOptions: Options = {
 interface Props {
     videoId: string;
     isVisible: boolean;
-    onReady: (playerInstance: YouTubePlayer) => void;
+    isFullscreen: boolean;
+    onReady: (playerInstance: YouTubePlayerInstance) => void;
     onBuffering: () => void;
     onPlay?: () => void;
     onPause?: () => void;
@@ -24,29 +25,40 @@ interface Props {
     onClick?: () => void;
 }
 
-const Screen: Component<Props> = (props) => (
-    <div
-        class="screen"
-        classList={{ 'is--visible': props.isVisible }}
-        onClick={props.onClick}
-    >
-        <Show
-            when={props.videoId}
-            fallback={<Placeholder icon="screen" text="No video." />}
+const Screen: Component<Props> = (props) => {
+    const [playerProps, screenProps] = splitProps(props, [
+        'videoId',
+        'onReady',
+        'onEnd',
+        'onBuffering',
+        'onPlay',
+        'onPause',
+        'onStateChange'
+    ]);
+
+    return (
+        <div
+            class="fixed left-0 right-0 flex bg-primary-700 transition-opacity"
+            classList={{
+                'top-12 bottom-12': !screenProps.isFullscreen,
+                'top-0 bottom-0': screenProps.isFullscreen,
+                'opacity-0 invisible': !screenProps.isVisible,
+                'opacity-100 visible': screenProps.isVisible
+            }}
+            onClick={screenProps.onClick}
         >
-            <Player
-                videoId={props.videoId}
-                options={playerOptions}
-                onReady={props.onReady}
-                onEnd={props.onEnd}
-                onPlay={props.onPlay}
-                onPause={props.onPause}
-                onBuffering={props.onBuffering}
-                onStateChange={props.onStateChange}
-                onError={(err) => console.error(err)}
-            />
-        </Show>
-    </div>
-);
+            <Show
+                when={playerProps.videoId}
+                fallback={<Placeholder icon="screen" text="No video." />}
+            >
+                <YoutubePlayer
+                    class="relative flex-grow after:(content-DEFAULT absolute inset-0) children:(w-full h-full)"
+                    options={playerOptions}
+                    {...playerProps}
+                />
+            </Show>
+        </div>
+    );
+};
 
 export default Screen;

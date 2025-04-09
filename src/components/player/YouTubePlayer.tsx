@@ -3,7 +3,7 @@ import {
     createYoutubePlayer,
     Options,
     PLAYBACK_STATES,
-    YouTubePlayer
+    YouTubePlayerInstance
 } from '../../api/youtube-player';
 import { isEqual } from '../../lib/helpers';
 
@@ -12,8 +12,8 @@ interface Props {
     class?: string;
     videoId: string;
     options: Options;
-    onReady: (playerInstance: YouTubePlayer) => void;
-    onError: (error: unknown) => void;
+    onReady: (playerInstance: YouTubePlayerInstance) => void;
+    onError?: (error: unknown) => void;
     onBuffering: () => void;
     onPlay?: () => void;
     onPause?: () => void;
@@ -29,12 +29,12 @@ interface NewOptions {
 
 const noop = () => {};
 
-export const Player: Component<Props> = (props) => {
+export const YoutubePlayer: Component<Props> = (props) => {
     const {
         playerVars: { start, end }
     }: any = props.options;
 
-    let internalPlayer: YouTubePlayer;
+    let internalPlayer: YouTubePlayerInstance;
 
     const getContainerId = () => props.id || 'youtube-player';
 
@@ -90,7 +90,7 @@ export const Player: Component<Props> = (props) => {
         } catch (error: unknown) {
             console.error(error);
 
-            props.onError(error);
+            props.onError?.(error);
         }
     };
 

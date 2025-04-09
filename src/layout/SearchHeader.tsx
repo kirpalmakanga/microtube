@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'solid-app-router';
+import { A, useSearchParams } from '@solidjs/router';
 import DropDown from '../components/DropDown';
 import Icon from '../components/Icon';
 import Title from '../components/meta/Title';
@@ -15,23 +15,22 @@ const SearchHeader = () => {
         setSearchParams({ query }, { replace: true });
 
     return (
-        <div class="layout__header-row">
+        <div class="flex flex-grow items-center px-4">
             <Title>{title()}</Title>
 
-            <Link
-                class="layout__back-button icon-button"
+            <A
+                class="relative flex items-center justify-center h-12 w-12 -ml-4 transition-colors bg-primary-900 hover:bg-primary-800"
                 href="/"
-                aria-label="Close search"
             >
-                <Icon name="arrow-left" />
-            </Link>
+                <Icon class="text-light-50 w-6 h-6" name="arrow-left" />
+            </A>
 
             <SearchForm
                 query={searchParams.query || ''}
                 onSubmit={handleFormSubmit}
             />
 
-            <nav class="navigation">
+            <nav class="-mr-4">
                 <DropDown
                     currentValue={search.forMine}
                     options={[

@@ -1,5 +1,4 @@
 import { Component, For } from 'solid-js';
-import { DeviceData } from '../../../../@types/alltypes';
 interface Props {
     devices: DeviceData[];
     currentDevice: DeviceData;
@@ -11,14 +10,14 @@ const DevicesSelector: Component<Props> = (props) => {
         props.onClickItem(deviceId);
 
     return (
-        <div class="player__controls-devices shadow--2dp">
+        <div class="absolute bottom-12 left-0 right-0 shadow">
             <ul class="player__controls-devices-list">
                 <li
-                    class="device"
+                    class="flex flex-col bg-primary-800 hover:bg-primary-700 transition-colors font-montserrat px-4 py-2 cursor-pointer"
                     onClick={handleClickItem(props.currentDevice.deviceId)}
                 >
-                    <span class="device__desc">Current device</span>
-                    <span class="device__name">
+                    <span class="text-light-50">Current device</span>
+                    <span class="text-sm text-light-50 text-opacity-50">
                         {`${props.currentDevice.deviceName} ${
                             props.currentDevice.isMaster ? '(active)' : ''
                         }`}
@@ -27,9 +26,12 @@ const DevicesSelector: Component<Props> = (props) => {
 
                 <For each={props.devices}>
                     {({ deviceId, deviceName, isMaster }) => (
-                        <li class="device" onClick={handleClickItem(deviceId)}>
-                            <span class="device__desc">Browser</span>
-                            <span class="device__name">
+                        <li
+                            class="flex flex-col bg-primary-800 hover:bg-primary-700 transition-colors font-montserrat px-4 py-2 cursor-pointer"
+                            onClick={handleClickItem(deviceId)}
+                        >
+                            <span class="text-light-50">Browser</span>
+                            <span class="text-sm text-light-50 text-opacity-50">
                                 {`${deviceName} ${isMaster ? '(active)' : ''}`}
                             </span>
                         </li>

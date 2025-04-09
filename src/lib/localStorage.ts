@@ -1,4 +1,3 @@
-import { GenericObject } from '../../@types/alltypes';
 import { STORAGE_KEY } from '../config/app';
 
 export const saveState = (state: GenericObject) => {

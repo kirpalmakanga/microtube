@@ -1,6 +1,5 @@
-import { Component, onCleanup, onMount, Show } from 'solid-js';
+import { Component, For, onCleanup, onMount, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
-import { VideoData } from '../../../@types/alltypes';
 import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 import { useMenu } from '../../store/menu';
 import { useNotifications } from '../../store/notifications';
@@ -18,8 +17,6 @@ interface Props {
     toggleQueue: () => void;
     togglePlay: () => void;
 }
-
-/* TODO: remplacer QUEUEITEMDATA par VideoData */
 
 const Queue: Component<Props> = (props) => {
     const [
@@ -81,6 +78,16 @@ const Queue: Component<Props> = (props) => {
         });
     };
 
+    const isActiveItem = (id: string) => id === player.currentId;
+
+    const handleClickItem = (id: string) => () => {
+        if (isActiveItem(id)) {
+            props.togglePlay();
+        } else {
+            setActiveQueueItem(id);
+        }
+    };
+
     let unsubscribeFromQueue: () => void;
     let unsubscribeFromCurrentQueueId: () => void;
 
@@ -97,8 +104,11 @@ const Queue: Component<Props> = (props) => {
 
     return (
         <section
-            class="Queue shadow--2dp"
-            classList={{ 'is--visible': props.isVisible }}
+            class="fixed top-0 right-0 left-0 bottom-12 flex flex-col bg-primary-400 transition-transform transform shadow overflow-hidden"
+            classList={{
+                'translate-y-full': !props.isVisible,
+                'translate-y-0': props.isVisible
+            }}
         >
             <QueueHeader
                 itemCount={player.queue.length}
@@ -109,7 +119,7 @@ const Queue: Component<Props> = (props) => {
 
             <Transition name="fade">
                 <Show when={props.isVisible}>
-                    <div class="Queue__Content">
+                    <div class="relative flex flex-col flex-grow">
                         <Show
                             when={player.queue.length}
                             fallback={
@@ -119,38 +129,31 @@ const Queue: Component<Props> = (props) => {
                                 />
                             }
                         >
-                            <div class="Queue__Items">
+                            <div class="absolute inset-0 overflow-y-auto scrollbar-thin scrollbar-track-primary-600 scrollbar-thumb-primary-400 hover:scrollbar-thumb-primary-300">
                                 <SortableList
+                                    sortableClass="h-34 not-last:border-b-1 border-primary-600"
                                     items={player.queue}
                                     getItemId={({ id }: VideoData) => id}
                                     onReorderItems={setQueue}
                                 >
                                     {(data: VideoData, index) => {
                                         const { id } = data;
-                                        const isActive =
-                                            id === player.currentId;
 
-                                        let icon = 'play';
-
-                                        if (isActive && props.isBuffering) {
-                                            icon = 'loading';
-                                        }
-
-                                        if (isActive && props.isPlaying) {
-                                            icon = 'pause';
-                                        }
+                                        // if (isActive && props.isPlaying) {
+                                        //     icon = 'pause';
+                                        // }
 
                                         return (
                                             <QueueItem
                                                 {...data}
                                                 index={index}
-                                                isActive={isActive}
-                                                icon={icon}
-                                                onClick={() =>
-                                                    isActive
-                                                        ? props.togglePlay()
-                                                        : setActiveQueueItem(id)
+                                                isActive={isActiveItem(id)}
+                                                isPlaying={
+                                                    isActiveItem(id) &&
+                                                    props.isPlaying
                                                 }
+                                                onClick={handleClickItem(id)}
+                                                onClickLink={props.toggleQueue}
                                                 onContextMenu={handleClickMenu(
                                                     data
                                                 )}

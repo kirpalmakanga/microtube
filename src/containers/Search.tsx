@@ -1,4 +1,3 @@
-import { useNavigate, useSearchParams } from 'solid-app-router';
 import {
     createEffect,
     createSignal,
@@ -7,11 +6,18 @@ import {
     onMount,
     Show
 } from 'solid-js';
-import { VideoData } from '../../@types/alltypes';
-import VideoCard from '../components/cards/VideoCard';
+import { A, useNavigate, useSearchParams } from '@solidjs/router';
 import List from '../components/List';
+import ListItem from '../components/ListItem';
 import Placeholder from '../components/Placeholder';
-import { copyText, getVideoURL, isMobile, shareURL } from '../lib/helpers';
+import {
+    copyText,
+    formatDate,
+    getVideoURL,
+    isMobile,
+    shareURL,
+    stopPropagation
+} from '../lib/helpers';
 import { useMenu } from '../store/menu';
 import { useNotifications } from '../store/notifications';
 import { usePlayer } from '../store/player';
@@ -27,7 +33,13 @@ const Search = () => {
     const [, { openMenu }] = useMenu();
     const [, { openNotification }] = useNotifications();
     const [shouldMountList, setShouldMountList] = createSignal(false);
-    const handleSearchVideos = () => searchVideos(searchParams.query);
+    const handleSearchVideos = () => {
+        const { query } = searchParams;
+
+        if (query) {
+            searchVideos(query);
+        }
+    };
     const handleClickCard =
         ({ id }: VideoData) =>
         () =>
@@ -104,15 +116,30 @@ const Search = () => {
     onCleanup(clearSearch);
 
     return (
-        <Show when={searchParams.query && shouldMountList()}>
+        <Show
+            when={searchParams.query && shouldMountList()}
+            fallback={<div class="flex flex-column flex-fill"></div>}
+        >
             <Show
                 when={search.totalResults === null || search.totalResults > 0}
                 fallback={<Placeholder icon="list" text="No results found." />}
             >
                 <List items={search.items} loadItems={handleSearchVideos}>
                     {({ data }) => (
-                        <VideoCard
+                        <ListItem
                             {...data}
+                            subtitle={
+                                <A
+                                    href={`/channel/${data.channelId}`}
+                                    onClick={stopPropagation()}
+                                >
+                                    {data.channelTitle}
+                                </A>
+                            }
+                            subSubtitle={formatDate(
+                                data.publishedAt,
+                                'MMMM do yyyy'
+                            )}
                             onClick={handleClickCard(data)}
                             onClickMenu={handleClickMenu(data)}
                         />

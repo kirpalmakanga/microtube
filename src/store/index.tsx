@@ -21,7 +21,7 @@ export const StoreProvider: ParentComponent = (props) => {
 
         saveState({
             user,
-            player: omit(player, 'newQueueItems', 'video'),
+            player: omit(player, 'newQueueItems', 'video', 'currentVideo'),
             search: pick(search, 'forMine')
         });
     });

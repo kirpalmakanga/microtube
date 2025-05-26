@@ -12,7 +12,7 @@ const Header = () => {
 
     return (
         <header
-            class="relative z-1 flex h-12 bg-primary-900 shadow"
+            class="relative z-2 flex h-12 bg-primary-900 shadow"
             onClick={handleClickHeader}
         >
             <Switch>

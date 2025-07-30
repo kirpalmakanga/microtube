@@ -16,12 +16,6 @@ declare global {
         [SIZE_HIGH]: File;
     }
 
-    interface DeviceData {
-        deviceId: string;
-        deviceName: string;
-        isMaster: boolean;
-    }
-
     type GenericObject = { [key: string]: any };
 
     interface UserData {

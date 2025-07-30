@@ -32,6 +32,10 @@ export type EventType =
     | 'onApiChange'
     | 'onVolumeChange';
 
+export enum YoutubePlaybackState {
+    UNSTARTED = -1
+}
+
 export interface Options {
     width?: number | string;
     height?: number | string;

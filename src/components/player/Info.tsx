@@ -134,7 +134,7 @@ const Info: Component<Props> = (props) => {
     onCleanup(clearWatchers);
 
     return (
-        <div class="relative flex flex-col flex-grow justify-center px-2 overflow-hidden h-12">
+        <div class="relative flex flex-col flex-grow justify-center px-2 overflow-hidden h-12 border-l-1 border-r-1 border-gray-700 border-opacity-50">
             <InfoProgress
                 percentElapsed={props.duration ? time() / props.duration : 0}
                 percentLoaded={state.loaded}

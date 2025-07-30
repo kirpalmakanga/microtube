@@ -1,8 +1,6 @@
 import { createMemo } from 'solid-js';
 import { useLocation } from '@solidjs/router';
 import { useStore } from '..';
-// import { subscribe, emit } from '../../lib/socket';
-// import { initialState } from './_state';
 
 export const useAppTitle = () => {
     const location = useLocation();
@@ -37,76 +35,4 @@ export const useAppTitle = () => {
 
         return title;
     });
-};
-
-export const useDevices = () => {
-    const [{ user: user, app: app }, setState] = useStore();
-
-    const connectLocalDevice = () => {
-        const { appCodeName: deviceName } = navigator;
-
-        // emit('device:add', { deviceId: app.deviceId, deviceName });
-    };
-
-    const setMasterDevice = (deviceId: string) => {
-        const { deviceId: masterDeviceId } =
-            app.devices.find(({ isMaster }: DeviceData) => isMaster) || {};
-
-        // if (deviceId !== masterDeviceId) {
-        //     emit('device:active', deviceId);
-        // }
-    };
-
-    const synchronizePlayer = (data: GenericObject) => {
-        // emit('player:sync', data);
-    };
-
-    const subscribeToPlayerSync = (callback: (response: any) => void) => {
-        // subscribe('player:sync', callback);
-    };
-
-    const currentDevice = createMemo(
-        () =>
-            app.devices.find(
-                ({ deviceId: id }: DeviceData) => id === app.deviceId
-            ) ||
-            ({
-                isMaster: true
-            } as DeviceData),
-        app.deviceId
-    );
-
-    const availableDevices = createMemo(
-        () =>
-            app.devices.filter(
-                ({ deviceId: id }: DeviceData) => id !== app.deviceId
-            ),
-        app.deviceId
-    );
-
-    // onMount(() => {
-    //     subscribe('connect', () => {
-    //         emit('room', user.id);
-
-    //         connectLocalDevice();
-
-    //         subscribe('devices:sync', (devices: DeviceData[]) =>
-    //             setState('app', { devices })
-    //         );
-    //     });
-
-    //     subscribe('disconnect', () =>
-    //         setState('app', { devices: initialState().devices })
-    //     );
-    // });
-
-    // onCleanup(() => emit('device:delete', app.deviceId));
-
-    return {
-        currentDevice,
-        availableDevices,
-        setMasterDevice,
-        synchronizePlayer,
-        subscribeToPlayerSync
-    } as const;
 };

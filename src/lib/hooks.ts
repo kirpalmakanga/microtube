@@ -1,39 +1,39 @@
 import { createSignal, onCleanup, onMount } from 'solid-js';
 
 export const useFullscreen = () => {
+    const eventName = 'fullscreenchange';
+
     let container: HTMLElement | null = null;
 
-    const subscribeToFullscreen = (callback: Function) => {
-        const eventName = 'fullscreenchange';
-        const eventHandler = () => {
-            const isFullscreen = document.fullscreenElement === container;
+    const [isFullscreen, setIsFullscreen] = createSignal<boolean>(false);
 
-            callback(isFullscreen);
-        };
-        document.addEventListener(eventName, eventHandler, true);
+    function onFullscreenChange() {
+        setIsFullscreen(document.fullscreenElement === container);
+    }
 
-        return () => document.removeEventListener(eventName, eventHandler);
-    };
+    onMount(() => {
+        document.addEventListener(eventName, onFullscreenChange, true);
+    });
 
-    const setFullscreenRef = (node: HTMLElement) => (container = node);
-
-    const requestFullscreen = async () => {
-        try {
-            await container?.requestFullscreen();
-        } catch (error) {}
-    };
-
-    const exitFullscreen = async () => {
-        try {
-            await document.exitFullscreen();
-        } catch (error) {}
-    };
+    onCleanup(() => {
+        document.removeEventListener(eventName, onFullscreenChange);
+    });
 
     return {
-        setFullscreenRef,
-        subscribeToFullscreen,
-        requestFullscreen,
-        exitFullscreen
+        isFullscreen,
+        fullscreenRef(node: HTMLElement) {
+            container = node;
+        },
+        enterFullscreen() {
+            if (container) {
+                container.requestFullscreen();
+            } else {
+                throw new Error('useFullscreen: Invalid target element.');
+            }
+        },
+        exitFullscreen() {
+            document.exitFullscreen();
+        }
     };
 };
 

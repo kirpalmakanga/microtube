@@ -235,14 +235,16 @@ export const shareURL = (config: ShareConfig) => navigator.share(config);
 
 export const copyText = (text: string) => navigator.clipboard.writeText(text);
 
-const isObject = (item: unknown) =>
-    item !== null && typeof item === 'object' && !Array.isArray(item);
+function isObject(item: unknown) {
+    return item !== null && typeof item === 'object' && !Array.isArray(item);
+}
 
 export const mergeDeep = (
     target: { [key: string]: any },
     ...sources: { [key: string]: any }[]
 ): Object => {
     if (!sources.length) return target;
+
     const source = sources.shift();
 
     if (isObject(target) && isObject(source)) {
@@ -259,54 +261,25 @@ export const mergeDeep = (
     return mergeDeep(target, ...sources);
 };
 
-export const isEqual = (obj1: unknown, obj2: unknown) => {
-    type GenericObject = {
-        [key: string]: unknown;
-    };
+export function isEqual(a: unknown, b: unknown): boolean {
+    if (a === b) return true;
 
-    function getType(obj: unknown) {
-        return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+    if (a == null || b == null) return a === b;
+
+    if (typeof a !== typeof b) return false;
+
+    if (Array.isArray(a) && Array.isArray(b)) {
+        if (a.length !== b.length) return false;
+        return a.every((item, index) => isEqual(item, b[index]));
     }
 
-    function areArraysEqual(arr1: unknown[], arr2: unknown[]) {
-        if (arr1.length !== arr2.length) return false;
+    if (typeof a === 'object' && typeof b === 'object') {
+        const keysA = Object.keys(a) as (keyof typeof a)[];
+        const keysB = Object.keys(b) as (keyof typeof b)[];
 
-        for (let i = 0; i < arr1.length; i++) {
-            if (!isEqual(arr1[i], arr2[i])) return false;
-        }
-
-        return true;
+        if (keysA.length !== keysB.length) return false;
+        return keysA.every((key) => key in b && isEqual(a[key], b[key]));
     }
 
-    function areObjectsEqual(obj1: GenericObject, obj2: GenericObject) {
-        if (Object.keys(obj1).length !== Object.keys(obj2).length) return false;
-
-        for (let key in obj1) {
-            if (Object.prototype.hasOwnProperty.call(obj1, key)) {
-                if (!isEqual(obj1[key], obj2[key])) return false;
-            }
-        }
-
-        return true;
-    }
-
-    function areFunctionsEqual(func1: Function, func2: Function) {
-        return func1.toString() === func2.toString();
-    }
-
-    function arePrimitivesEqual(primitive1: unknown, primitive2: unknown) {
-        return primitive1 === primitive2;
-    }
-
-    let type = getType(obj1);
-
-    if (type !== getType(obj2)) return false;
-
-    if (type === 'array')
-        return areArraysEqual(obj1 as unknown[], obj2 as unknown[]);
-    if (type === 'object')
-        return areObjectsEqual(obj1 as GenericObject, obj2 as GenericObject);
-    if (type === 'function')
-        return areFunctionsEqual(obj1 as Function, obj2 as Function);
-    return arePrimitivesEqual(obj1, obj2);
-};
+    return false;
+}

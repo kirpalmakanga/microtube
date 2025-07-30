@@ -15,7 +15,7 @@ export const useFullscreen = () => {
         return () => document.removeEventListener(eventName, eventHandler);
     };
 
-    const setFullscreenRef = (node: HTMLDivElement) => (container = node);
+    const setFullscreenRef = (node: HTMLElement) => (container = node);
 
     const requestFullscreen = async () => {
         try {

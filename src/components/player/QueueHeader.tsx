@@ -10,18 +10,8 @@ interface Props {
 }
 
 const QueueHeader: Component<Props> = (props) => (
-    <header class="flex items-center h-12 bg-primary-900 shadow z-1">
-        <Button
-            class="group relative flex items-center justify-center h-12 w-12 bg-primary-900"
-            onClick={props.onClickClose}
-        >
-            <Icon
-                class="text-light-50 group-hover:text-opacity-50 transition-colors w-6 h-6"
-                name="chevron-down"
-            />
-        </Button>
-
-        <span class="flex-grow overflow-hidden">
+    <header class="flex items-center h-12 bg-primary-900 shadow">
+        <span class="flex-grow overflow-hidden px-4">
             <span class="font-montserrat overflow-ellipsis overflow-hidden whitespace-nowrap">
                 {`Queue (${props.itemCount} item${
                     props.itemCount > 1 ? 's' : ''
@@ -29,25 +19,26 @@ const QueueHeader: Component<Props> = (props) => (
             </span>
         </span>
 
-        <nav class="flex">
+        <nav class="flex px-4 gap-2">
             <Button
-                class="group relative flex items-center justify-center h-12 w-12 bg-primary-900"
+                class="group relative flex items-center justify-center h-8 w-8 rounded bg-primary-800 hover:bg-primary-700 transition-colors"
                 onClick={props.onClickImport}
             >
-                <Icon
-                    class="text-light-50 group-hover:text-opacity-50 transition-colors w-6 h-6"
-                    name="add"
-                />
+                <Icon class="text-light-50 w-5 h-5" name="add" />
             </Button>
 
             <Button
-                class="group relative flex items-center justify-center h-12 w-12 bg-primary-900"
+                class="group relative flex items-center justify-center h-8 w-8 rounded bg-primary-800 hover:bg-primary-700 transition-colors"
                 onClick={props.onClickClear}
             >
-                <Icon
-                    class="text-light-50 group-hover:text-opacity-50 transition-colors w-6 h-6"
-                    name="delete"
-                />
+                <Icon class="text-light-50 w-5 h-5" name="delete" />
+            </Button>
+
+            <Button
+                class="group relative flex items-center justify-center h-8 w-8 rounded bg-primary-800 bg-red-500 hover:bg-red-400 transition-colors"
+                onClick={props.onClickClose}
+            >
+                <Icon class="text-light-50 w-5 h-5 " name="close" />
             </Button>
         </nav>
     </header>

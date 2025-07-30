@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { parseVideoData, parsePlaylistData, parseChannelData } from './parsers';
 import { parseVideoId, pick } from '../lib/helpers';
-import { API_URL } from '../config/app';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface SearchResultItem {
     id: { videoId: string };

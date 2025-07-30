@@ -1,7 +1,6 @@
 import { Component, createEffect, JSX, onCleanup, onMount } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { preventDefault, setImmediateInterval } from '../../lib/helpers';
-// import { emit, subscribe } from '../../lib/socket';
 import InfoProgress from './controls/InfoProgress';
 import InfoTime from './controls/InfoTime';
 
@@ -73,11 +72,6 @@ const Info: Component<Props> = (props) => {
 
         setState({ isSeeking: false, currentTime: seekingTime });
 
-        // emit('player:sync', {
-        //     action: 'seek-time',
-        //     data: { seekingTime }
-        // });
-
         props.onEndSeeking(seekingTime);
     };
 
@@ -121,14 +115,6 @@ const Info: Component<Props> = (props) => {
             'update-loading': ({ loaded }: GenericObject) =>
                 setState({ loaded })
         };
-
-        // subscribe('player:sync', ({ action, data }: PlayerSyncPayload) => {
-        //     const { [action]: handler } = actions;
-
-        //     if (handler) {
-        //         handler(data);
-        //     }
-        // });
     });
 
     onCleanup(clearWatchers);

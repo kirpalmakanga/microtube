@@ -28,7 +28,7 @@ const ListItem: Component<Props> = (props) => {
             </Show>
 
             <div
-                class="flex flex-grow overflow-hidden py-4 gap-4 cursor-pointer"
+                class="flex flex-grow overflow-hidden p-4 gap-4 cursor-pointer"
                 onClick={props.onClick}
             >
                 <ListItemThumbnail

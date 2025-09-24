@@ -25,7 +25,7 @@ const Prompt: Component = () => {
         <>
             <Transition name="fade">
                 <Show when={prompt.isVisible}>
-                    <div class="fixed inset-0 bg-primary-900 bg-opacity-50 cursor-pointer z-11"></div>
+                    <div class="fixed inset-0 bg-dark-900 bg-opacity-80 cursor-pointer z-11"></div>
                 </Show>
             </Transition>
 

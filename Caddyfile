@@ -1,0 +1,5 @@
+microtube.local {
+	encode gzip
+
+	reverse_proxy localhost:8080
+}

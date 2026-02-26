@@ -5,7 +5,13 @@
         "dev": "vite",
         "dev:api": "npm --prefix ../microtube-api run start:dev",
         "build": "vite build",
-        "serve": "vite preview"
+        "serve": "vite preview",
+        "caddy:run": "caddy run",
+        "caddy:reload": "caddy reload",
+        "fmt": "oxfmt",
+        "fmt:check": "oxfmt --check",
+        "lint": "oxlint",
+        "lint:fix": "oxlint --fix"
     },
     "dependencies": {
         "@minht11/solid-virtual-container": "^0.2.1",
@@ -14,6 +20,8 @@
         "axios": "^1.7.2",
         "date-fns": "^3.6.0",
         "firebase": "^10.5.0",
+        "oxfmt": "^0.35.0",
+        "oxlint": "^1.50.0",
         "socket.io-client": "^4.7.2",
         "solid-js": "^1.8.17",
         "solid-transition-group": "^0.2.3",

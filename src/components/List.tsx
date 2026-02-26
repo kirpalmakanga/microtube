@@ -48,13 +48,10 @@ const List = (props: Props) => {
 
     const getItemSize = () => props.itemSize || 150;
 
-    let scrollTarget: HTMLDivElement | undefined;
+    let scrollTarget = undefined as HTMLDivElement | undefined;
 
     onMount(() => {
-        if (
-            !scrollTarget ||
-            getItemSize() * props.items.length <= scrollTarget.offsetHeight
-        ) {
+        if (scrollTarget && getItemSize() * props.items.length <= scrollTarget.offsetHeight) {
             _loadItems();
         }
     });
@@ -79,10 +76,7 @@ const List = (props: Props) => {
                             class="flex w-full not-last:(border-b-1 border-primary-800)"
                             style={itemProps.style}
                         >
-                            <Show
-                                when={itemProps.index < props.items.length}
-                                fallback={<Loader />}
-                            >
+                            <Show when={itemProps.index < props.items.length} fallback={<Loader />}>
                                 {props.children({
                                     index: itemProps.index,
                                     data: itemProps.item

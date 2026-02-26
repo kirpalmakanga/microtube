@@ -1,27 +1,25 @@
-import { Component, createMemo, createSignal, For, Show } from 'solid-js';
+import { createMemo, createSignal, For, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import { preventDefault, stopPropagation } from '../lib/helpers';
 import Icon from './Icon';
 
-interface OptionsData {
+export interface DropDownOption<T> {
     label: string;
-    value: any;
+    value: T;
 }
 
-interface Props {
-    currentValue: string | number;
-    options: OptionsData[];
-    onSelect: (value: any) => void;
+interface DropDownProps<T> {
+    currentValue: T;
+    options: DropDownOption<T>[];
+    onSelect: (value: T) => void;
 }
 
-const DropDown: Component<Props> = (props) => {
+function DropDown<T>(props: DropDownProps<T>) {
     const [isOpen, setOpenStatus] = createSignal(false);
     const label = createMemo(
         () => {
             const { label = '', value } =
-                props.options.find(
-                    ({ value }: OptionsData) => value === props.currentValue
-                ) || {};
+                props.options.find(({ value }) => value === props.currentValue) || {};
 
             return label || String(value);
         },
@@ -37,7 +35,7 @@ const DropDown: Component<Props> = (props) => {
         setOpenStatus(!isOpen());
     };
 
-    const handleOptionClick = (value: unknown, isActiveItem: boolean) =>
+    const handleOptionClick = (value: T, isActiveItem: boolean) =>
         preventDefault(() => !isActiveItem && props.onSelect(value));
 
     return (
@@ -50,10 +48,7 @@ const DropDown: Component<Props> = (props) => {
             >
                 <span class="font-montserrat text-sm">{label()}</span>
 
-                <Icon
-                    class="h-6 w-6"
-                    name={isOpen() ? 'chevron-up' : 'chevron-down'}
-                />
+                <Icon class="h-6 w-6" name={isOpen() ? 'chevron-up' : 'chevron-down'} />
             </button>
 
             <Transition name="fade">
@@ -61,8 +56,7 @@ const DropDown: Component<Props> = (props) => {
                     <ul class="absolute right-0 left-0 top-full shadow">
                         <For each={props.options}>
                             {({ label, value }) => {
-                                const isActiveItem =
-                                    props.currentValue === value;
+                                const isActiveItem = props.currentValue === value;
 
                                 return (
                                     <li
@@ -71,10 +65,7 @@ const DropDown: Component<Props> = (props) => {
                                             'bg-primary-700': isActiveItem
                                         }}
                                         onClick={stopPropagation(
-                                            handleOptionClick(
-                                                value,
-                                                isActiveItem
-                                            )
+                                            handleOptionClick(value, isActiveItem)
                                         )}
                                     >
                                         {label}
@@ -87,6 +78,6 @@ const DropDown: Component<Props> = (props) => {
             </Transition>
         </div>
     );
-};
+}
 
 export default DropDown;

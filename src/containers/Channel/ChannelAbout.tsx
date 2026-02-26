@@ -7,17 +7,9 @@ const ChannelAbout: Component = () => {
     const { channelId } = useParams();
     const [channel] = useChannel(channelId);
 
-    const text = createMemo(
-        (text: string) => (text ? wrapURLs(text) : ''),
-        channel.description
-    );
+    const text = createMemo((text: string) => (text ? wrapURLs(text) : ''), channel.description);
 
-    return (
-        <div
-            class="flex flex-col text-light-50 gap-2 p-4"
-            innerHTML={text()}
-        ></div>
-    );
+    return <div class="flex flex-col text-light-50 gap-2 p-4" innerHTML={text()}></div>;
 };
 
 export default ChannelAbout;

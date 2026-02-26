@@ -10,15 +10,7 @@ import {
     Id,
     transformStyle
 } from '@thisbeyond/solid-dnd';
-import {
-    createEffect,
-    createMemo,
-    createSignal,
-    For,
-    JSXElement,
-    ParentComponent,
-    Show
-} from 'solid-js';
+import { createMemo, createSignal, For, JSXElement, ParentComponent, Show } from 'solid-js';
 import Icon from './Icon';
 
 interface ListProps {
@@ -83,10 +75,7 @@ const List = (props: ListProps) => {
 
     if (!context) return;
 
-    const [
-        state,
-        { addTransformer, removeTransformer, onDragStart, onDragEnd }
-    ] = context;
+    const [state, { addTransformer, removeTransformer, onDragStart, onDragEnd }] = context;
 
     const [activeItem, setActiveItem] = createSignal(null);
     const ids = createMemo(() => props.items.map(props.getItemId));
@@ -99,9 +88,7 @@ const List = (props: ListProps) => {
     onDragStart(({ draggable }) => {
         addTransformer('draggables', draggable.id, transformer);
 
-        setActiveItem(
-            props.items.find((item) => props.getItemId(item) === draggable.id)
-        );
+        setActiveItem(props.items.find((item) => props.getItemId(item) === draggable.id));
     });
 
     onDragEnd(({ draggable, droppable }) => {
@@ -144,9 +131,7 @@ const List = (props: ListProps) => {
                         <Icon class="text-light-50 w-5 h-5" name="drag" />
                     </div>
 
-                    <Show when={activeItem()}>
-                        {props.children(activeItem())}
-                    </Show>
+                    <Show when={activeItem()}>{props.children(activeItem())}</Show>
                 </div>
             </DragOverlay>
         </>

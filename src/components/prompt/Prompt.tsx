@@ -48,15 +48,11 @@ const Prompt: Component = () => {
                             <Show when={isMode('import', 'playlists')}>
                                 <div class="flex flex-col flex-grow overflow-y-auto border-b-1 border-primary-700">
                                     <Show when={isMode('import')}>
-                                        <ImportVideoForm
-                                            onSubmit={handleConfirm}
-                                        />
+                                        <ImportVideoForm onSubmit={handleConfirm} />
                                     </Show>
 
                                     <Show when={isMode('playlists')}>
-                                        <PlaylistManager
-                                            onClickItem={handleConfirm}
-                                        />
+                                        <PlaylistManager onClickItem={handleConfirm} />
                                     </Show>
                                 </div>
                             </Show>

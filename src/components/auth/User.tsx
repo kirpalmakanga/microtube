@@ -13,9 +13,7 @@ const Login = () => {
             <div>Avatar</div>
             <div>Name</div>
 
-            <Button onClick={() => {}}>
-                {isSignedIn ? 'Log out' : 'Log in'}
-            </Button>
+            <Button onClick={() => {}}>{isSignedIn ? 'Log out' : 'Log in'}</Button>
         </div>
     );
 };

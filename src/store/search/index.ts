@@ -1,6 +1,6 @@
 import { useStore } from '..';
 import * as api from '../../api/youtube';
-import { omit } from '../../lib/helpers';
+import { captureError, omit } from '../../lib/helpers';
 import { useNotifications } from '../notifications';
 import { initialState } from './_state';
 
@@ -13,17 +13,11 @@ export const useSearch = () => {
             forMine
         });
 
-    const clearSearch = () =>
-        setState('search', omit(initialState(), 'forMine'));
+    const clearSearch = () => setState('search', omit(initialState(), 'forMine'));
 
     const searchVideos = async (query: string) => {
         try {
-            const {
-                items,
-                hasNextPage,
-                forMine,
-                nextPageToken: pageToken
-            } = search;
+            const { items, hasNextPage, forMine, nextPageToken: pageToken } = search;
 
             if (!hasNextPage) {
                 return;
@@ -46,6 +40,8 @@ export const useSearch = () => {
                 totalResults
             });
         } catch (error) {
+            captureError(error);
+
             openNotification('Error searching videos.');
         }
     };

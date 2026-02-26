@@ -1,7 +1,7 @@
-import { Component } from 'solid-js';
+import { Component, JSX } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
-import DropDown from '../DropDown';
+import DropDown, { DropDownOption } from '../DropDown';
 import Button from '../Button';
 import List from '../List';
 import { usePlaylists } from '../../store/playlists';
@@ -22,7 +22,7 @@ interface FormProps {
     onSubmit: (data: PlaylistData) => void;
 }
 
-const privacyOptions = [
+const privacyOptions: DropDownOption<string>[] = [
     { label: 'Public', value: 'public' },
     { label: 'Private', value: 'private' },
     { label: 'Unlisted', value: 'unlisted' }
@@ -34,21 +34,19 @@ const NewPlayListForm: Component<FormProps> = ({ onSubmit }) => {
         privacyStatus: 'public'
     });
 
-    const setValue = (key: string, value: unknown) =>
-        setState({ [key]: value });
+    const setValue = (key: string, value: unknown) => setState({ [key]: value });
 
-    const handlePrivacyStatusChange = (value: unknown) =>
-        setValue('privacyStatus', value as string);
+    const handlePrivacyStatusChange = (value: string) => {
+        setValue('privacyStatus', value);
+    };
 
-    const handleInput = ({
+    const handleInput: JSX.EventHandler<HTMLInputElement, Event> = ({
         currentTarget: { name, value }
-    }: {
-        currentTarget: HTMLInputElement;
-    }) => setValue(name, value);
+    }) => {
+        setValue(name, value);
+    };
 
-    const handleSubmit = preventDefault(
-        () => state.title && onSubmit(state as PlaylistData)
-    );
+    const handleSubmit = preventDefault(() => state.title && onSubmit(state as PlaylistData));
 
     return (
         <form class="flex z-1 shadow" onSubmit={handleSubmit}>
@@ -103,11 +101,7 @@ export const PlaylistManager: Component<Props> = ({ onClickItem }) => {
         <div class="flex flex-col h-40vh">
             <NewPlayListForm onSubmit={onCreatePlaylist} />
 
-            <List
-                items={playlists.items}
-                loadItems={getPlaylists}
-                itemSize={50}
-            >
+            <List items={playlists.items} loadItems={getPlaylists} itemSize={50}>
                 {ListItem}
             </List>
         </div>

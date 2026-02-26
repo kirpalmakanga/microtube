@@ -13,11 +13,7 @@ interface Props {
 }
 
 const Button: Component<Props> = (props) => {
-    const [localProps, buttonProps] = splitProps(props, [
-        'isActive',
-        'badge',
-        'icon'
-    ]);
+    const [localProps, buttonProps] = splitProps(props, ['isActive', 'badge', 'icon']);
 
     return (
         <button

@@ -9,7 +9,7 @@ import { IS_DEV_MODE } from '../../config/app';
 import * as api from '../../api/youtube';
 import { saveData, subscribeToData } from '../../api/database';
 
-import { splitLines, parseVideoId, chunk, isEqual } from '../../lib/helpers';
+import { splitLines, parseVideoId, chunk, isEqual, captureError } from '../../lib/helpers';
 import { initialState } from './_state';
 
 export const usePlayer = () => {
@@ -23,10 +23,7 @@ export const usePlayer = () => {
     const currentIdPath = `users/${getCurrentUserId()}/currentId`;
 
     const currentQueueIndex = createMemo(
-        () =>
-            player.queue.findIndex(
-                ({ id }: VideoData) => id === player.currentId
-            ),
+        () => player.queue.findIndex(({ id }: VideoData) => id === player.currentId),
         player.currentId
     );
 
@@ -57,9 +54,7 @@ export const usePlayer = () => {
     const queueItems = (newItems: VideoData[]) => {
         const items = newItems.filter(
             ({ id }: VideoData) =>
-                !player.queue.find(
-                    ({ id: queueItemId }: VideoData) => queueItemId === id
-                )
+                !player.queue.find(({ id: queueItemId }: VideoData) => queueItemId === id)
         );
 
         const { queue: currentQueue, newQueueItems } = player;
@@ -90,6 +85,8 @@ export const usePlayer = () => {
 
             queueItems(items);
         } catch (error) {
+            captureError(error);
+
             openNotification('Error queuing videos.');
         }
     };
@@ -130,16 +127,11 @@ export const usePlayer = () => {
             confirmText: 'Clear',
             cancelText: 'Cancel',
             callback: () => {
-                setQueue(
-                    player.queue.filter(
-                        ({ id }: VideoData) => id === player.currentId
-                    )
-                );
+                setQueue(player.queue.filter(({ id }: VideoData) => id === player.currentId));
             }
         });
 
-    const clearVideo = () =>
-        setState('player', { video: initialState().video });
+    const clearVideo = () => setState('player', { video: initialState().video });
 
     const getVideo = async (videoId: string) => {
         try {
@@ -149,6 +141,8 @@ export const usePlayer = () => {
 
             setState('player', { video });
         } catch (error) {
+            captureError(error);
+
             openNotification('Error fetching video.');
         }
     };

@@ -11,31 +11,14 @@ const Subscriptions = () => {
 
     return (
         <Show
-            when={
-                subscriptions.totalResults === null ||
-                subscriptions.totalResults > 0
-            }
-            fallback={
-                <Placeholder
-                    icon="list"
-                    text="You haven't subscribed to any channel yet."
-                />
-            }
+            when={subscriptions.totalResults === null || subscriptions.totalResults > 0}
+            fallback={<Placeholder icon="list" text="You haven't subscribed to any channel yet." />}
         >
-            <List
-                class="channels"
-                items={subscriptions.items}
-                loadItems={getData}
-            >
+            <List class="channels" items={subscriptions.items} loadItems={getData}>
                 {({ data }) => {
                     const { id } = data;
 
-                    return (
-                        <ListItem
-                            {...data}
-                            onClick={() => navigate(`/channel/${id}`)}
-                        />
-                    );
+                    return <ListItem {...data} onClick={() => navigate(`/channel/${id}`)} />;
                 }}
             </List>
         </Show>

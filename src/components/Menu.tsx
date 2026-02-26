@@ -44,10 +44,7 @@ const Menu = () => {
                                             }}
                                         >
                                             <Show when={icon}>
-                                                <Icon
-                                                    class="h-5 w-5"
-                                                    name={icon}
-                                                />
+                                                <Icon class="h-5 w-5" name={icon} />
                                             </Show>
 
                                             <span>{title}</span>

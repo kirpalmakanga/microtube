@@ -12,9 +12,7 @@ const QueueHeader: Component<Props> = (props) => (
     <header class="flex items-center h-12 bg-primary-900 shadow">
         <span class="flex-grow overflow-hidden px-4">
             <span class="font-montserrat overflow-ellipsis overflow-hidden whitespace-nowrap">
-                {`Queue (${props.itemCount} item${
-                    props.itemCount > 1 ? 's' : ''
-                })`}
+                {`Queue (${props.itemCount} item${props.itemCount > 1 ? 's' : ''})`}
             </span>
         </span>
 

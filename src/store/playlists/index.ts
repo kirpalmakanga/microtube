@@ -3,6 +3,7 @@ import * as api from '../../api/youtube';
 import { usePlayer } from '../player';
 import { usePrompt } from '../prompt';
 import { useNotifications } from '../notifications';
+import { captureError } from '../../lib/helpers';
 
 export const usePlaylists = (channelId?: string) => {
     const [{ playlists }, setState] = useStore();
@@ -10,10 +11,7 @@ export const usePlaylists = (channelId?: string) => {
     const [, { setActiveQueueItem, queueItems }] = usePlayer();
     const [, { openPrompt }] = usePrompt();
 
-    const queuePlaylist = async (
-        { id: playlistId }: PlaylistData,
-        play: boolean
-    ) => {
+    const queuePlaylist = async ({ id: playlistId }: PlaylistData, play: boolean) => {
         const getItems = async (pageToken?: string) => {
             const { items, nextPageToken } = await api.getPlaylistItems({
                 playlistId,
@@ -36,6 +34,8 @@ export const usePlaylists = (channelId?: string) => {
         try {
             await getItems();
         } catch (error) {
+            captureError(error);
+
             openNotification('Error queueing playlist items.');
         }
     };
@@ -64,7 +64,8 @@ export const usePlaylists = (channelId?: string) => {
                 });
             }
         } catch (error) {
-            console.log();
+            captureError(error);
+
             openNotification('Error fetching playlists.');
         }
     };
@@ -79,15 +80,15 @@ export const usePlaylists = (channelId?: string) => {
                     const { items } = playlists;
 
                     setState('playlists', {
-                        items: items.filter(
-                            ({ id: itemId }: PlaylistData) => itemId !== id
-                        )
+                        items: items.filter(({ id: itemId }: PlaylistData) => itemId !== id)
                     });
 
                     openNotification(`Removed playlist "${title}".`);
 
                     await api.removePlaylist(id);
                 } catch (error) {
+                    captureError(error);
+
                     openNotification('Error deleting playlist.');
                 }
             }

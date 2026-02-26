@@ -1,14 +1,11 @@
 import { useStore } from '..';
 
-import {
-    instance,
-    getAuthorizationUrl,
-    refreshAccessToken
-} from '../../api/youtube';
+import { instance, getAuthorizationUrl, refreshAccessToken } from '../../api/youtube';
 import { signIntoDatabase, signOutOfDatabase } from '../../api/database';
 
 import { rootInitialState, RootState } from '../_state';
 import { createEffect } from 'solid-js';
+import { captureError } from '../../lib/helpers';
 
 export const useAuth = () => {
     const [{ user }, setState] = useStore();
@@ -21,7 +18,7 @@ export const useAuth = () => {
 
     const bindAccessTokens = async () => {
         instance.interceptors.request.use((config) => {
-            config.headers = { Authorization: `Bearer ${user.accessToken}` };
+            config.headers.set('Authorization', `Bearer ${user.accessToken}`);
 
             return config;
         });
@@ -52,11 +49,9 @@ export const useAuth = () => {
             if (accessToken && accessToken !== previousAccessToken) {
                 (async () => {
                     try {
-                        console.log('signIntoDatabase');
-
                         await signIntoDatabase(idToken, accessToken);
                     } catch (error) {
-                        console.log('refreshTokens');
+                        captureError(error);
 
                         await refreshTokens();
                     }

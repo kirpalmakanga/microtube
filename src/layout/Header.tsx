@@ -11,10 +11,7 @@ const Header = () => {
     const handleClickHeader = () => setScreenVisibility(false);
 
     return (
-        <header
-            class="relative z-2 flex h-12 bg-primary-900 shadow"
-            onClick={handleClickHeader}
-        >
+        <header class="relative z-2 flex h-12 bg-primary-900 shadow" onClick={handleClickHeader}>
             <Switch>
                 <Match when={location.pathname.startsWith('/search')}>
                     <SearchHeader />

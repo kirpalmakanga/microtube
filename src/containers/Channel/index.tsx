@@ -1,11 +1,4 @@
-import {
-    Component,
-    createSignal,
-    For,
-    onCleanup,
-    onMount,
-    ParentComponent
-} from 'solid-js';
+import { Component, createSignal, For, onCleanup, onMount, ParentComponent } from 'solid-js';
 import { A, useParams } from '@solidjs/router';
 import Button from '../../components/Button';
 import Img from '../../components/Img';
@@ -39,8 +32,7 @@ const Tabs: Component<TabsProps> = (props) => (
 const Channel: ParentComponent = (props) => {
     const { channelId } = useParams();
 
-    const [channel, { getData, clearData, toggleSubscription }] =
-        useChannel(channelId);
+    const [channel, { getData, clearData, toggleSubscription }] = useChannel(channelId);
 
     const [isSubscribing, setSubscriptionStatus] = createSignal(false);
 
@@ -65,9 +57,7 @@ const Channel: ParentComponent = (props) => {
                 />
 
                 <div class="flex flex-col gap-4">
-                    <h1 class="font-montserrat text-light-50">
-                        {channel.channelTitle}
-                    </h1>
+                    <h1 class="font-montserrat text-light-50">{channel.channelTitle}</h1>
 
                     <Button
                         class="flex items-center justify-center gap-2 px-4 py-1 bg-primary-900 hover:bg-primary-800 transition-colors font-montserrat text-light-50 rounded shadow"
@@ -77,8 +67,8 @@ const Channel: ParentComponent = (props) => {
                             isSubscribing()
                                 ? ''
                                 : channel.subscriptionId
-                                ? 'Unsubscribe'
-                                : 'Subscribe'
+                                  ? 'Unsubscribe'
+                                  : 'Subscribe'
                         }
                         icon={isSubscribing() ? 'loading' : ''}
                         onClick={handleSubscription}

@@ -1,6 +1,5 @@
 import { Component, Show } from 'solid-js';
 import Button from './Button';
-import Icon from './Icon';
 import { Transition } from 'solid-transition-group';
 
 interface Props {

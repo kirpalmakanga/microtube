@@ -15,9 +15,7 @@ const Progress: Component<Props> = (props) => {
                     <div
                         class="absolute inset-0 transition-transform -translate-y-full bg-primary-700"
                         style={{
-                            transform: `translateX(${formatPercent(
-                                props.percentLoaded
-                            )}%)`
+                            transform: `translateX(${formatPercent(props.percentLoaded)}%)`
                         }}
                     />
                 </Show>
@@ -27,9 +25,7 @@ const Progress: Component<Props> = (props) => {
                         class="absolute inset-0 transition-transform -translate-y-full bg-primary-500"
                         style={{
                             opacity: props.percentElapsed ? 1 : 0,
-                            transform: `translateX(${formatPercent(
-                                props.percentElapsed
-                            )}%)`
+                            transform: `translateX(${formatPercent(props.percentElapsed)}%)`
                         }}
                     />
                 </Show>

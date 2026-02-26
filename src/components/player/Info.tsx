@@ -79,8 +79,7 @@ const Info: Component<Props> = (props) => {
         currentTarget: { value: seekingTime }
     }) => setState({ seekingTime: parseInt(seekingTime) });
 
-    const time = () =>
-        state.isSeeking ? state.seekingTime : state.currentTime;
+    const time = () => (state.isSeeking ? state.seekingTime : state.currentTime);
 
     createEffect((videoId) => {
         if (props.videoId !== videoId) {

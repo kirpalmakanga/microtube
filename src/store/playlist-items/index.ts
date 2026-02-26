@@ -4,6 +4,7 @@ import { usePrompt } from '../prompt';
 
 import * as api from '../../api/youtube';
 import { initialState } from './_state';
+import { captureError } from '../../lib/helpers';
 
 export const usePlaylistItems = (playlistId?: string) => {
     const [{ playlists, playlistItems }, setState] = useStore();
@@ -24,11 +25,7 @@ export const usePlaylistItems = (playlistId?: string) => {
                 throw new Error('playlistId is required');
             }
 
-            const {
-                items,
-                nextPageToken: pageToken,
-                hasNextPage
-            } = playlistItems;
+            const { items, nextPageToken: pageToken, hasNextPage } = playlistItems;
 
             if (hasNextPage) {
                 const {
@@ -49,6 +46,8 @@ export const usePlaylistItems = (playlistId?: string) => {
                 });
             }
         } catch (error) {
+            captureError(error);
+
             openNotification('Error fetching playlist items.');
         }
     };
@@ -74,11 +73,7 @@ export const usePlaylistItems = (playlistId?: string) => {
             mode: 'playlists',
             headerText: 'Save to playlist',
             cancelText: 'Close',
-            callback: async ({
-                id: playlistId,
-                title,
-                privacyStatus
-            }: PlaylistData) => {
+            callback: async ({ id: playlistId, title, privacyStatus }: PlaylistData) => {
                 try {
                     const { thumbnails } = videoData;
 
@@ -118,17 +113,15 @@ export const usePlaylistItems = (playlistId?: string) => {
 
                     openNotification(`Added to playlist "${title}".`);
                 } catch (error) {
+                    captureError(error);
+
                     openNotification('Error editing playlist item.');
                 }
             }
         });
     };
 
-    const removePlaylistItem = ({
-        playlistItemId,
-        playlistId,
-        title
-    }: PlaylistItemData) => {
+    const removePlaylistItem = ({ playlistItemId, playlistId, title }: PlaylistItemData) => {
         openPrompt({
             headerText: `Remove "${title}" ?`,
             cancelText: 'Cancel',
@@ -143,9 +136,7 @@ export const usePlaylistItems = (playlistId?: string) => {
                     );
 
                     setState('playlists', 'items', (items) => {
-                        const index = items.findIndex(
-                            ({ id }) => id === playlistId
-                        );
+                        const index = items.findIndex(({ id }) => id === playlistId);
 
                         if (index > -1) items[index].itemCount--;
 
@@ -156,6 +147,8 @@ export const usePlaylistItems = (playlistId?: string) => {
 
                     await api.removePlaylistItem(playlistItemId);
                 } catch (error) {
+                    captureError(error);
+
                     openNotification('Error deleting playlist item.');
                 }
             }

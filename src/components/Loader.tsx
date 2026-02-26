@@ -1,5 +1,4 @@
 import { Component } from 'solid-js';
-import Icon from './Icon';
 import LoadingIcon from './LoadingIcon';
 
 const Loader: Component = () => (

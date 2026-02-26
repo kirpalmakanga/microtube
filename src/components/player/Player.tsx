@@ -5,10 +5,7 @@ import { isMobile } from '../../lib/helpers';
 import { useFullscreen, useKey } from '../../lib/hooks';
 import { usePlayer } from '../../store/player';
 import { usePlaylistItems } from '../../store/playlist-items';
-import {
-    YoutubePlaybackState,
-    YouTubePlayerInstance
-} from '../../api/youtube-player';
+import { YoutubePlaybackState, YouTubePlayerInstance } from '../../api/youtube-player';
 import VolumeRange from './controls/VolumeRange';
 import Info from './Info';
 import Queue from './Queue';
@@ -41,19 +38,14 @@ const Player = () => {
     let youtube: YouTubePlayerInstance | null;
     let youtubeVolume: number = 100;
 
-    const [state, setPlayerState] = createStore<PlayerInnerState>(
-        getInitialPlayerState()
-    );
+    const [state, setPlayerState] = createStore<PlayerInnerState>(getInitialPlayerState());
 
-    const [
-        storeState,
-        { goToNextQueueItem, clearNewQueueItems, setScreenVisibility }
-    ] = usePlayer();
+    const [storeState, { goToNextQueueItem, clearNewQueueItems, setScreenVisibility }] =
+        usePlayer();
 
     const [, { editPlaylistItem }] = usePlaylistItems();
 
-    const { isFullscreen, fullscreenRef, enterFullscreen, exitFullscreen } =
-        useFullscreen();
+    const { isFullscreen, fullscreenRef, enterFullscreen, exitFullscreen } = useFullscreen();
 
     function isSingleVideo() {
         return !!storeState.video.id;
@@ -92,9 +84,7 @@ const Player = () => {
 
         setPlayerState({
             isScreenVisible,
-            ...(isScreenVisible
-                ? { isQueueVisible: false, isDescriptionVisible: false }
-                : {})
+            ...(isScreenVisible ? { isQueueVisible: false, isDescriptionVisible: false } : {})
         });
 
         setScreenVisibility(isScreenVisible);
@@ -105,9 +95,7 @@ const Player = () => {
 
         setPlayerState({
             isQueueVisible,
-            ...(isQueueVisible
-                ? { isScreenVisible: false, isDescriptionVisible: false }
-                : {})
+            ...(isQueueVisible ? { isScreenVisible: false, isDescriptionVisible: false } : {})
         });
 
         if (isQueueVisible) clearNewQueueItems();
@@ -118,9 +106,7 @@ const Player = () => {
 
         setPlayerState({
             isDescriptionVisible: isVisible,
-            ...(isVisible
-                ? { isScreenVisible: false, isQueueVisible: false }
-                : {})
+            ...(isVisible ? { isScreenVisible: false, isQueueVisible: false } : {})
         });
     }
 
@@ -128,9 +114,7 @@ const Player = () => {
         youtube = playerInstance;
     }
 
-    function handleYoutubeIframeStateChange(
-        playbackStateId: YoutubePlaybackState
-    ) {
+    function handleYoutubeIframeStateChange(playbackStateId: YoutubePlaybackState) {
         switch (playbackStateId) {
             case YoutubePlaybackState.UNSTARTED:
                 if (!isStartup) {
@@ -270,14 +254,10 @@ const Player = () => {
             classList={{
                 'fixed inset-0 bg-primary-900': isFullscreen()
             }}
-            data-state-show-queue={
-                state.isQueueVisible ? 'enabled' : 'disabled'
-            }
+            data-state-show-queue={state.isQueueVisible ? 'enabled' : 'disabled'}
         >
             <Screen
-                isVisible={
-                    isSingleVideo() || state.isScreenVisible || isFullscreen()
-                }
+                isVisible={isSingleVideo() || state.isScreenVisible || isFullscreen()}
                 isFullscreen={isFullscreen()}
                 videoId={storeState.currentVideo.id}
                 onReady={handleYoutubeIframeReady}
@@ -330,9 +310,7 @@ const Player = () => {
                     </div>
 
                     <Info
-                        isWatchingDisabled={
-                            state.isBuffering || !state.isPlaying
-                        }
+                        isWatchingDisabled={state.isBuffering || !state.isPlaying}
                         videoId={storeState.currentVideo.id}
                         title={storeState.currentVideo.title}
                         duration={storeState.currentVideo.duration}
@@ -344,24 +322,14 @@ const Player = () => {
 
                     <div class="flex items-center px-4 gap-2">
                         <Show when={!isMobile() && storeState.currentVideo.id}>
-                            <div
-                                class="relative group"
-                                onWheel={handleWheelVolume}
-                            >
+                            <div class="relative group" onWheel={handleWheelVolume}>
                                 <IconButton
                                     onClick={toggleMute}
-                                    icon={
-                                        state.volume === 0
-                                            ? 'volume-off'
-                                            : 'volume-up'
-                                    }
+                                    icon={state.volume === 0 ? 'volume-off' : 'volume-up'}
                                 />
 
                                 <div class="absolute bottom-full right-0 w-36 transition-opacity opacity-0 invisible group-hover:(opacity-100 visible)">
-                                    <VolumeRange
-                                        value={state.volume}
-                                        onChange={setVolume}
-                                    />
+                                    <VolumeRange value={state.volume} onChange={setVolume} />
                                 </div>
                             </div>
                         </Show>
@@ -379,8 +347,7 @@ const Player = () => {
                                 isActive={state.isQueueVisible}
                                 classList={{
                                     'badge--active':
-                                        !!storeState.newQueueItems &&
-                                        !state.isQueueVisible
+                                        !!storeState.newQueueItems && !state.isQueueVisible
                                 }}
                                 onClick={toggleQueue}
                                 badge={storeState.newQueueItems}
@@ -388,13 +355,7 @@ const Player = () => {
                             />
                         </Show>
 
-                        <Show
-                            when={
-                                hasCurrentVideo() &&
-                                !isSingleVideo() &&
-                                !isFullscreen()
-                            }
-                        >
+                        <Show when={hasCurrentVideo() && !isSingleVideo() && !isFullscreen()}>
                             <IconButton
                                 isActive={state.isScreenVisible}
                                 onClick={toggleScreen}
@@ -403,10 +364,7 @@ const Player = () => {
                         </Show>
 
                         <Show when={isSingleVideo()}>
-                            <IconButton
-                                onClick={handleEditPlaylistItem}
-                                icon="folder-add"
-                            />
+                            <IconButton onClick={handleEditPlaylistItem} icon="folder-add" />
                         </Show>
 
                         <Show when={hasCurrentVideo()}>

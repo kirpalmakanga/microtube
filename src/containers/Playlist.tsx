@@ -93,13 +93,8 @@ const Playlists: Component = () => {
 
     return (
         <Show
-            when={
-                playlistItems.totalResults === null ||
-                playlistItems.totalResults > 0
-            }
-            fallback={
-                <Placeholder icon="list" text="This playlist is empty." />
-            }
+            when={playlistItems.totalResults === null || playlistItems.totalResults > 0}
+            fallback={<Placeholder icon="list" text="This playlist is empty." />}
         >
             <List items={playlistItems.items} loadItems={getPlaylistItems}>
                 {({ index, data }) => (
@@ -108,17 +103,11 @@ const Playlists: Component = () => {
                         index={index}
                         badge={formatTime(data.duration)}
                         subtitle={
-                            <A
-                                href={`/channel/${data.channelId}`}
-                                onClick={stopPropagation()}
-                            >
+                            <A href={`/channel/${data.channelId}`} onClick={stopPropagation()}>
                                 {data.channelTitle}
                             </A>
                         }
-                        subSubtitle={formatDate(
-                            data.publishedAt,
-                            'MMMM do yyyy'
-                        )}
+                        subSubtitle={formatDate(data.publishedAt, 'MMMM do yyyy')}
                         onClick={handleClickCard(data)}
                         onClickMenu={handleClickMenu(data)}
                     />

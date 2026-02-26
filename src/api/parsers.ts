@@ -29,14 +29,7 @@ interface YoutubeChannelData {
 export const parseVideoData = ({
     id,
     contentDetails: { duration },
-    snippet: {
-        title,
-        description,
-        thumbnails,
-        channelId,
-        channelTitle,
-        publishedAt
-    },
+    snippet: { title, description, thumbnails, channelId, channelTitle, publishedAt },
     status: { privacyStatus = 'deleted' }
 }: YoutubeVideoData): VideoData => ({
     id,

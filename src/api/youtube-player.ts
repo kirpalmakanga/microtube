@@ -1,9 +1,6 @@
 import { loadScript } from '../lib/helpers';
 
-type PlayerConstructor = new (
-    id: string,
-    options: Options
-) => YouTubePlayerInstance;
+type PlayerConstructor = new (id: string, options: Options) => YouTubePlayerInstance;
 
 declare global {
     interface Window {
@@ -25,12 +22,7 @@ type IframeApiType = {
     Player: PlayerConstructor;
 };
 
-export type EventType =
-    | 'onReady'
-    | 'onStateChange'
-    | 'onError'
-    | 'onApiChange'
-    | 'onVolumeChange';
+export type EventType = 'onReady' | 'onStateChange' | 'onError' | 'onApiChange' | 'onVolumeChange';
 
 export enum YoutubePlaybackState {
     UNSTARTED = -1
@@ -69,10 +61,7 @@ export interface Options {
 }
 
 export interface YouTubePlayerInstance {
-    addEventListener: (
-        event: string,
-        listener: (event: CustomEvent) => void
-    ) => void;
+    addEventListener: (event: string, listener: (event: CustomEvent) => void) => void;
     destroy: () => void;
     getAvailablePlaybackRates: () => ReadonlyArray<number>;
     getAvailableQualityLevels: () => ReadonlyArray<string>;
@@ -138,10 +127,7 @@ export interface YouTubePlayerInstance {
     playVideo: () => void;
     playVideoAt: (index: number) => void;
     previousVideo: () => void;
-    removeEventListener: (
-        event: string,
-        listener: (event: CustomEvent) => void
-    ) => void;
+    removeEventListener: (event: string, listener: (event: CustomEvent) => void) => void;
     seekTo: (seconds: number, allowSeekAhead: boolean) => void;
     setLoop: (loopPlaylists: boolean) => void;
     setPlaybackQuality: (suggestedQuality: string) => void;

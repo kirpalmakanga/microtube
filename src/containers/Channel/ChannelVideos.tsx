@@ -3,13 +3,7 @@ import { useNavigate, useParams } from '@solidjs/router';
 import List from '../../components/List';
 import ListItem from '../../components/ListItem';
 import Placeholder from '../../components/Placeholder';
-import {
-    copyText,
-    formatDate,
-    getVideoURL,
-    isMobile,
-    shareURL
-} from '../../lib/helpers';
+import { copyText, formatDate, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 import { useChannel } from '../../store/channel';
 import { useMenu } from '../../store/menu';
 import { useNotifications } from '../../store/notifications';
@@ -74,28 +68,14 @@ const ChannelVideos = () => {
 
     return (
         <Show
-            when={
-                channel.videos.totalResults === null ||
-                channel.videos.totalResults > 0
-            }
-            fallback={
-                <Placeholder
-                    icon="list"
-                    text="This channel hasn't uploaded videos."
-                />
-            }
+            when={channel.videos.totalResults === null || channel.videos.totalResults > 0}
+            fallback={<Placeholder icon="list" text="This channel hasn't uploaded videos." />}
         >
-            <List
-                items={channel.videos.items}
-                loadItems={handleGetChannelVideos}
-            >
+            <List items={channel.videos.items} loadItems={handleGetChannelVideos}>
                 {({ data }) => (
                     <ListItem
                         {...data}
-                        subSubtitle={formatDate(
-                            data.publishedAt,
-                            'MMMM do yyyy'
-                        )}
+                        subSubtitle={formatDate(data.publishedAt, 'MMMM do yyyy')}
                         onClick={handleClickCard(data)}
                         onClickMenu={handleClickMenu(data)}
                     />

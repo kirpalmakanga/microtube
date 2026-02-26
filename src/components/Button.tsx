@@ -61,9 +61,7 @@ const Button: Component<ButtonProps> = (props) => {
                 <Transition name="fade">
                     <Show when={localProps.isLoading}>
                         <span class="absolute inset-0 flex items-center justify-center">
-                            <LoadingIcon
-                                class={localProps.iconClass || 'w-5 h-5'}
-                            />
+                            <LoadingIcon class={localProps.iconClass || 'w-5 h-5'} />
                         </span>
                     </Show>
                 </Transition>

@@ -11,10 +11,8 @@ import ListItem from '../components/ListItem';
 const Playlists: Component = () => {
     const navigate = useNavigate();
 
-    const [
-        playlists,
-        { getPlaylists, removePlaylist, queuePlaylist, launchPlaylist }
-    ] = usePlaylists();
+    const [playlists, { getPlaylists, removePlaylist, queuePlaylist, launchPlaylist }] =
+        usePlaylists();
 
     const [, { openNotification }] = useNotifications();
 
@@ -72,20 +70,13 @@ const Playlists: Component = () => {
     return (
         <Show
             when={playlists.totalResults === null || playlists.totalResults > 0}
-            fallback={
-                <Placeholder
-                    icon="list"
-                    text="You haven't created playlists yet."
-                />
-            }
+            fallback={<Placeholder icon="list" text="You haven't created playlists yet." />}
         >
             <List items={playlists.items} loadItems={getPlaylists}>
                 {({ data }) => (
                     <ListItem
                         {...data}
-                        badge={`${data.itemCount} video${
-                            data.itemCount !== 1 ? 's' : ''
-                        }`}
+                        badge={`${data.itemCount} video${data.itemCount !== 1 ? 's' : ''}`}
                         onClick={handleClickCard(data)}
                         onClickMenu={handleClickMenu(data)}
                     />

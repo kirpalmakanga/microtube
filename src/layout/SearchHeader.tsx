@@ -1,18 +1,22 @@
 import { A, useSearchParams } from '@solidjs/router';
-import DropDown from '../components/DropDown';
+import DropDown, { DropDownOption } from '../components/DropDown';
 import Icon from '../components/Icon';
 import Title from '../components/meta/Title';
 import SearchForm from '../components/SearchForm';
 import { useAppTitle } from '../store/app';
 import { useSearch } from '../store/search';
 
+const searchModeOptions: DropDownOption<0 | 1>[] = [
+    { label: 'All videos', value: 0 },
+    { label: 'My Videos', value: 1 }
+];
+
 const SearchHeader = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [search, { setSearchTarget }] = useSearch();
     const title = useAppTitle();
 
-    const handleFormSubmit = (query: string) =>
-        setSearchParams({ query }, { replace: true });
+    const handleFormSubmit = (query: string) => setSearchParams({ query }, { replace: true });
 
     return (
         <div class="flex flex-grow items-center px-4">
@@ -25,18 +29,12 @@ const SearchHeader = () => {
                 <Icon class="text-light-50 w-6 h-6" name="arrow-left" />
             </A>
 
-            <SearchForm
-                query={searchParams.query || ''}
-                onSubmit={handleFormSubmit}
-            />
+            <SearchForm query={searchParams.query || ''} onSubmit={handleFormSubmit} />
 
             <nav class="-mr-4">
                 <DropDown
                     currentValue={search.forMine}
-                    options={[
-                        { label: 'All videos', value: 0 },
-                        { label: 'My Videos', value: 1 }
-                    ]}
+                    options={searchModeOptions}
                     onSelect={setSearchTarget}
                 />
             </nav>

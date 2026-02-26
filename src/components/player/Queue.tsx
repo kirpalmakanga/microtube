@@ -1,4 +1,4 @@
-import { Component, For, onCleanup, onMount, Show } from 'solid-js';
+import { Component, onCleanup, onMount, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 import { useMenu } from '../../store/menu';
@@ -122,12 +122,7 @@ const Queue: Component<Props> = (props) => {
                     <div class="relative flex flex-col flex-grow">
                         <Show
                             when={player.queue.length}
-                            fallback={
-                                <Placeholder
-                                    icon="list"
-                                    text="The queue is empty."
-                                />
-                            }
+                            fallback={<Placeholder icon="list" text="The queue is empty." />}
                         >
                             <div class="absolute inset-0 overflow-y-auto scrollbar-thin scrollbar-track-primary-600 scrollbar-thumb-primary-400 hover:scrollbar-thumb-primary-300">
                                 <SortableList
@@ -148,15 +143,10 @@ const Queue: Component<Props> = (props) => {
                                                 {...data}
                                                 index={index}
                                                 isActive={isActiveItem(id)}
-                                                isPlaying={
-                                                    isActiveItem(id) &&
-                                                    props.isPlaying
-                                                }
+                                                isPlaying={isActiveItem(id) && props.isPlaying}
                                                 onClick={handleClickItem(id)}
                                                 onClickLink={props.toggleQueue}
-                                                onContextMenu={handleClickMenu(
-                                                    data
-                                                )}
+                                                onContextMenu={handleClickMenu(data)}
                                             />
                                         );
                                     }}

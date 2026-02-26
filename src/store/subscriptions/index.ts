@@ -3,6 +3,7 @@ import * as api from '../../api/youtube';
 import { useStore } from '..';
 import { useNotifications } from '../notifications';
 import { initialState } from './_state';
+import { captureError } from '../../lib/helpers';
 
 export const useSubscriptions = () => {
     const [{ subscriptions }, setState] = useStore();
@@ -10,11 +11,7 @@ export const useSubscriptions = () => {
 
     const getData = async (channelId: string) => {
         try {
-            const {
-                items,
-                nextPageToken: pageToken,
-                hasNextPage
-            } = subscriptions;
+            const { items, nextPageToken: pageToken, hasNextPage } = subscriptions;
 
             if (!hasNextPage) {
                 return;
@@ -36,6 +33,8 @@ export const useSubscriptions = () => {
                 totalResults
             });
         } catch (error) {
+            captureError(error);
+
             openNotification('Error fetching subscriptions.');
         }
     };

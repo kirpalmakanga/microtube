@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from '@solidjs/router';
 import Loader from '../components/Loader';
 import { logIn } from '../api/youtube';
 import { useAuth } from '../store/user';
+import { captureError } from '../lib/helpers';
 
 const Callback: Component = () => {
     const navigate = useNavigate();
@@ -10,11 +11,17 @@ const Callback: Component = () => {
     const [_, { setUser }] = useAuth();
 
     onMount(async () => {
-        const data = await logIn(searchParams.code);
+        const { code } = searchParams;
 
-        setUser(data);
+        if (code) {
+            const data = await logIn(code);
 
-        navigate('/');
+            setUser(data);
+
+            navigate('/');
+        } else {
+            captureError(new Error('Missing authorization code'));
+        }
     });
 
     return <Loader />;

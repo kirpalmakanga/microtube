@@ -28,10 +28,7 @@ const QueueItem: Component<Props> = (props) => {
         >
             <div class="absolute left-0 top-0 bottom-0 flex flex-shrink-0 items-center justify-center w-10 text-light-50 text-sm group-hover:hidden">
                 <Show when={props.isActive} fallback={props.index}>
-                    <EqualizerIcon
-                        class="w-6 h-6"
-                        isAnimated={props.isPlaying}
-                    />
+                    <EqualizerIcon class="w-6 h-6" isAnimated={props.isPlaying} />
                 </Show>
             </div>
 

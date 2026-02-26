@@ -30,9 +30,9 @@ interface NewOptions {
 const noop = () => {};
 
 export const YoutubePlayer: Component<Props> = (props) => {
-    const {
-        playerVars: { start, end }
-    }: any = props.options;
+    // const {
+    //     playerVars: { start, end }
+    // }: any = props.options;
 
     let internalPlayer: YouTubePlayerInstance;
 

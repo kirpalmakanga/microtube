@@ -57,7 +57,7 @@ export const useKey = (
 ) => {
     useKeyboard(
         ({ key: eventKey }: KeyboardEvent) => {
-            eventKey === key && action();
+            if (eventKey === key) action();
         },
         event,
         element
@@ -74,12 +74,9 @@ export const useOnScreen = (
     const setRef = (el: HTMLElement) => (ref = el);
 
     onMount(() => {
-        observer = new IntersectionObserver(
-            ([entry]) => setIntersecting(entry.isIntersecting),
-            {
-                rootMargin
-            }
-        );
+        observer = new IntersectionObserver(([entry]) => setIntersecting(entry.isIntersecting), {
+            rootMargin
+        });
 
         if (ref && observer) observer.observe(ref);
     });

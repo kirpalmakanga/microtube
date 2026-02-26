@@ -2,6 +2,7 @@ import { Component, createEffect, Match, onMount, Switch } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
 import Icon from './Icon';
+import { captureError } from '../lib/helpers';
 
 interface Props {
     class?: string;
@@ -42,7 +43,9 @@ const Img: Component<Props> = (props) => {
                     img.onerror = reject;
                 });
             }
-        } catch (e) {
+        } catch (error) {
+            captureError(error);
+
             setState({ hasError: true });
         } finally {
             setState({ isLoading: false });
@@ -68,14 +71,9 @@ const Img: Component<Props> = (props) => {
         >
             <Transition name="fade">
                 <Switch>
-                    <Match
-                        when={!props.src || state.isLoading || state.hasError}
-                    >
+                    <Match when={!props.src || state.isLoading || state.hasError}>
                         <span class="absolute inset-0 flex items-center justify-center bg-primary-600">
-                            <Icon
-                                class="w-6 h-6 text-primary-100"
-                                name="image"
-                            />
+                            <Icon class="w-6 h-6 text-primary-100" name="image" />
                         </span>
                     </Match>
 

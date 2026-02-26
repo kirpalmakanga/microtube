@@ -89,9 +89,7 @@ export async function searchVideos({
     let items = [];
 
     if (searchResults.length) {
-        const videoIds = searchResults.map(
-            ({ id: { videoId } }: SearchResultItem) => videoId
-        );
+        const videoIds = searchResults.map(({ id: { videoId } }: SearchResultItem) => videoId);
 
         items = await getVideosFromIds(videoIds);
     }
@@ -268,10 +266,7 @@ export async function getPlaylistItems({
     };
 }
 
-export async function addPlaylistItem(
-    playlistId: string,
-    videoId: string
-): Promise<string> {
+export async function addPlaylistItem(playlistId: string, videoId: string): Promise<string> {
     const { id } = await request(
         'post',
         'playlistItems',
@@ -411,9 +406,7 @@ export async function getChannelVideos({
         maxResults: ITEMS_PER_REQUEST
     });
 
-    const videoIds = items.map(
-        ({ id: { videoId } }: SearchResultItem) => videoId
-    );
+    const videoIds = items.map(({ id: { videoId } }: SearchResultItem) => videoId);
 
     const videos = await getVideosFromIds(videoIds);
 

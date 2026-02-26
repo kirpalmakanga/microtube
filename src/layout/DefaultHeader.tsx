@@ -32,9 +32,7 @@ const DefaultHeader = () => {
 
             <Show
                 when={
-                    user.isSignedIn &&
-                    location.pathname !== '/' &&
-                    location.pathname !== '/login'
+                    user.isSignedIn && location.pathname !== '/' && location.pathname !== '/login'
                 }
             >
                 <A
@@ -58,10 +56,7 @@ const DefaultHeader = () => {
 
             <nav class="flex gap-4 ml-2">
                 <Show when={user.isSignedIn}>
-                    <A
-                        class="group h-12 flex items-center justify-center"
-                        href="/search"
-                    >
+                    <A class="group h-12 flex items-center justify-center" href="/search">
                         <Icon
                             class="transition text-light-50 group-hover:text-opacity-50 w-5 h-5"
                             name="search"
@@ -69,10 +64,7 @@ const DefaultHeader = () => {
                     </A>
 
                     <Show when={location.pathname !== '/'}>
-                        <A
-                            class="group h-12 flex items-center justify-center"
-                            href="/"
-                        >
+                        <A class="group h-12 flex items-center justify-center" href="/">
                             <Icon
                                 class="transition text-light-50 group-hover:text-opacity-50 w-5 h-5"
                                 name="folder"
@@ -120,9 +112,7 @@ const DefaultHeader = () => {
                                     class="flex items-center justify-center gap-2 px-4 py-1 bg-primary-800 hover:bg-primary-700 transition-colors text-light-50 font-montserrat rounded shadow"
                                     icon="log-out"
                                     iconClass="h-6 w-6"
-                                    title={
-                                        user.isSignedIn ? 'Log out' : 'Log in'
-                                    }
+                                    title={user.isSignedIn ? 'Log out' : 'Log in'}
                                     onClick={handleLogging}
                                 />
                             </div>

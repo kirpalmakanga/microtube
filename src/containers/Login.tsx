@@ -1,7 +1,7 @@
 import { Component, createSignal } from 'solid-js';
 import Button from '../components/Button';
 import Placeholder from '../components/Placeholder';
-import { delay } from '../lib/helpers';
+import { captureError, delay } from '../lib/helpers';
 import { useNotifications } from '../store/notifications';
 import { useAuth } from '../store/user';
 
@@ -20,6 +20,8 @@ const Login: Component = () => {
 
             setIsSigningIn(false);
         } catch (error) {
+            captureError(error);
+
             await delay(50);
 
             setIsSigningIn(false);
@@ -29,10 +31,7 @@ const Login: Component = () => {
     };
 
     return (
-        <Placeholder
-            icon="lock"
-            text="You must be logged in to access this content."
-        >
+        <Placeholder icon="lock" text="You must be logged in to access this content.">
             <Button
                 class="flex items-center justify-center gap-2 px-4 py-1 bg-primary-900 hover:bg-primary-800 transition-colors font-montserrat text-light-50 rounded shadow"
                 icon="user"

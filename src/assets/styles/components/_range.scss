@@ -28,7 +28,8 @@ $track-radius: 5px !default;
 $contrast: 5% !default;
 
 @mixin shadow($shadow-size, $shadow-blur, $shadow-color) {
-    box-shadow: $shadow-size $shadow-size $shadow-blur $shadow-color,
+    box-shadow:
+        $shadow-size $shadow-size $shadow-blur $shadow-color,
         0 0 $shadow-size lighten($shadow-color, 5%);
 }
 
@@ -41,11 +42,7 @@ $contrast: 5% !default;
 
 @mixin thumb() {
     @include transition();
-    @include shadow(
-        $thumb-shadow-size,
-        $thumb-shadow-blur,
-        $thumb-shadow-color
-    );
+    @include shadow($thumb-shadow-size, $thumb-shadow-blur, $thumb-shadow-color);
     border: $thumb-border-width solid $thumb-border-color;
     height: $thumb-height;
     width: $thumb-width;
@@ -78,8 +75,7 @@ $contrast: 5% !default;
         @include thumb();
         -webkit-appearance: none;
         margin-top: calc(
-            (-#{$track-border-width} * 2 + #{$track-height}) / 2 - #{$thumb-height} /
-                2
+            (-#{$track-border-width} * 2 + #{$track-height}) / 2 - #{$thumb-height} / 2
         );
     }
 

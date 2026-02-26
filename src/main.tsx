@@ -19,9 +19,7 @@ const Search = lazy(() => import('./containers/Search'));
 const Subscriptions = lazy(() => import('./containers/Subscriptions'));
 const Channel = lazy(() => import('./containers/Channel'));
 const ChannelVideos = lazy(() => import('./containers/Channel/ChannelVideos'));
-const ChannelPlaylists = lazy(
-    () => import('./containers/Channel/ChannelPlaylists')
-);
+const ChannelPlaylists = lazy(() => import('./containers/Channel/ChannelPlaylists'));
 const ChannelAbout = lazy(() => import('./containers/Channel/ChannelAbout'));
 
 const Protected: ParentComponent = (props) => {
@@ -43,26 +41,14 @@ if (appContainer) {
                 <Router root={Root}>
                     <Route path="" component={Protected}>
                         <Route path="/" component={Playlists} />
-                        <Route
-                            path="/playlist/:playlistId"
-                            component={Playlist}
-                        />
+                        <Route path="/playlist/:playlistId" component={Playlist} />
                         <Route path="/video/:videoId" component={Video} />
                         <Route path="/search" component={Search} />
-                        <Route
-                            path="/subscriptions"
-                            component={Subscriptions}
-                        />
+                        <Route path="/subscriptions" component={Subscriptions} />
                         <Route path="/channel/:channelId" component={Channel}>
-                            <Route
-                                path="/"
-                                component={() => <Navigate href="videos" />}
-                            />
+                            <Route path="/" component={() => <Navigate href="videos" />} />
                             <Route path="/videos" component={ChannelVideos} />
-                            <Route
-                                path="/playlists"
-                                component={ChannelPlaylists}
-                            />
+                            <Route path="/playlists" component={ChannelPlaylists} />
                             <Route path="/about" component={ChannelAbout} />
                         </Route>
                     </Route>

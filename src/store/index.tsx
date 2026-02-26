@@ -1,9 +1,4 @@
-import {
-    createContext,
-    useContext,
-    createEffect,
-    ParentComponent
-} from 'solid-js';
+import { createContext, useContext, createEffect, ParentComponent } from 'solid-js';
 import { createStore, SetStoreFunction, Store } from 'solid-js/store';
 import { rootInitialState, RootState } from './_state';
 import { saveState, loadState } from '../lib/localStorage';
@@ -26,11 +21,7 @@ export const StoreProvider: ParentComponent = (props) => {
         });
     });
 
-    return (
-        <StoreContext.Provider value={store}>
-            {props.children}
-        </StoreContext.Provider>
-    );
+    return <StoreContext.Provider value={store}>{props.children}</StoreContext.Provider>;
 };
 
 export const useStore = () =>

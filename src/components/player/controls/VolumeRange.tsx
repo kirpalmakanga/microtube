@@ -12,13 +12,7 @@ const VolumeRange: Component<Props> = (props) => {
 
     return (
         <div class="bg-primary-900 px-4 py-3">
-            <input
-                type="range"
-                min="0"
-                max="100"
-                value={props.value}
-                onChange={handleUpdate}
-            />
+            <input type="range" min="0" max="100" value={props.value} onChange={handleUpdate} />
         </div>
     );
 };

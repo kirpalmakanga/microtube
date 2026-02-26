@@ -4,6 +4,7 @@ import { useStore } from '..';
 import { useNotifications } from '../notifications';
 import { usePrompt } from '../prompt';
 import { initialState } from './_state';
+import { captureError } from '../../lib/helpers';
 
 export const useChannel = (channelId: string) => {
     const [{ channel }, setState] = useStore();
@@ -16,17 +17,15 @@ export const useChannel = (channelId: string) => {
 
             setState('channel', data);
         } catch (error) {
+            captureError(error);
+
             openNotification('Error fetching channel data.');
         }
     };
 
     const getPlaylists = async () => {
         try {
-            const {
-                items,
-                nextPageToken: pageToken,
-                hasNextPage
-            } = channel.playlists;
+            const { items, nextPageToken: pageToken, hasNextPage } = channel.playlists;
 
             if (hasNextPage) {
                 const {
@@ -79,6 +78,8 @@ export const useChannel = (channelId: string) => {
                 });
             }
         } catch (error) {
+            captureError(error);
+
             openNotification('Error fetching channel videos.');
         }
     };
@@ -99,6 +100,8 @@ export const useChannel = (channelId: string) => {
 
                         await api.unsubscribeFromChannel(subscriptionId);
                     } catch (error) {
+                        captureError(error);
+
                         openNotification('Error unsubscribing from channel.');
                     }
                 }
@@ -109,6 +112,8 @@ export const useChannel = (channelId: string) => {
 
                 setState('channel', { subscriptionId });
             } catch (error) {
+                captureError(error);
+
                 openNotification('Error subscribing to channel.');
             }
         }

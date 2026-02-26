@@ -1,24 +1,18 @@
 import { format } from 'date-fns';
 
-export const preventDefault =
-    (func = (e: Event) => {}) =>
-    (e: Event) => {
-        e.preventDefault();
+export const preventDefault = (func?: (e: Event) => void) => (e: Event) => {
+    e.preventDefault();
 
-        func(e);
-    };
+    if (func) func(e);
+};
 
-export const stopPropagation =
-    (func = (e: Event) => {}) =>
-    (e: Event) => {
-        e.stopPropagation();
-        func && func(e);
-    };
+export const stopPropagation = (func?: (e: Event) => void) => (e: Event) => {
+    e.stopPropagation();
 
-export const getThumbnails = (
-    thumbnails: ThumbnailsData,
-    size: string
-): string => {
+    if (func) func(e);
+};
+
+export const getThumbnails = (thumbnails: ThumbnailsData, size: string): string => {
     const {
         [size]: { url = '' }
     } = thumbnails;
@@ -105,21 +99,16 @@ export const formatTime = (t: number) => {
 export const isMobile = () => {
     const { userAgent = '' } = navigator;
 
-    return !!userAgent.match(
-        /(Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone)/i
-    );
+    return !!userAgent.match(/(Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone)/i);
 };
 
 export const parseVideoId = (url: string) => {
     const parts = url.split(/(vi\/|v%3D|v=|\/v\/|youtu\.be\/|\/embed\/)/);
 
-    return parts[2] !== undefined
-        ? parts[2].split(/[^0-9a-z_\-]/i)[0]
-        : parts[0];
+    return parts[2] !== undefined ? parts[2].split(/[^0-9a-z_\-]/i)[0] : parts[0];
 };
 
-export const delay = (t: number) =>
-    new Promise((resolve) => setTimeout(resolve, t));
+export const delay = (t: number) => new Promise((resolve) => setTimeout(resolve, t));
 
 export const splitLines = (str: string) => str.match(/[^\r\n]+/g) || [];
 
@@ -161,10 +150,7 @@ export const debounce = (callback: (...args: any[]) => void, delay: number) => {
     };
 };
 
-export function pick<T extends object, K extends keyof T>(
-    base: T,
-    ...keys: K[]
-): Pick<T, K> {
+export function pick<T extends object, K extends keyof T>(base: T, ...keys: K[]): Pick<T, K> {
     if (!keys.length) return base;
 
     const entries = keys.map((key) => [key, base[key]]);
@@ -172,10 +158,7 @@ export function pick<T extends object, K extends keyof T>(
     return Object.fromEntries(entries);
 }
 
-export function omit<T extends object, K extends keyof T>(
-    base: T,
-    ...keys: K[]
-): Omit<T, K> {
+export function omit<T extends object, K extends keyof T>(base: T, ...keys: K[]): Omit<T, K> {
     if (!keys.length) return base;
 
     const result = { ...base };
@@ -186,8 +169,7 @@ export function omit<T extends object, K extends keyof T>(
 }
 
 export const wrapURLs = (text: string) => {
-    const urlPattern =
-        /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
+    const urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
 
     const pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
 
@@ -195,10 +177,7 @@ export const wrapURLs = (text: string) => {
 
     return text
         .replace(urlPattern, '<a href="$&" target="_blank">$&</a>')
-        .replace(
-            pseudoUrlPattern,
-            '$1<a href="http://$2" target="_blank">$2</a>'
-        )
+        .replace(pseudoUrlPattern, '$1<a href="http://$2" target="_blank">$2</a>')
         .replace(emailAddressPattern, '<a href="mailto:$&">$&</a>');
 };
 
@@ -217,10 +196,7 @@ export const loadScript = async (src: string) => {
     }
 };
 
-export const setImmediateInterval = (
-    handler: Function,
-    timeout?: number
-): number => {
+export const setImmediateInterval = (handler: Function, timeout?: number): number => {
     handler();
 
     return setInterval(handler, timeout);
@@ -228,8 +204,7 @@ export const setImmediateInterval = (
 
 export const getVideoURL = (id: string) => `https://youtu.be/${id}`;
 
-export const getPlaylistURL = (id: string) =>
-    `https://youtube.com/playlist?list=${id}`;
+export const getPlaylistURL = (id: string) => `https://youtube.com/playlist?list=${id}`;
 
 export const shareURL = (config: ShareConfig) => navigator.share(config);
 
@@ -242,7 +217,7 @@ function isObject(item: unknown) {
 export const mergeDeep = (
     target: { [key: string]: any },
     ...sources: { [key: string]: any }[]
-): Object => {
+): object => {
     if (!sources.length) return target;
 
     const source = sources.shift();
@@ -282,4 +257,10 @@ export function isEqual(a: unknown, b: unknown): boolean {
     }
 
     return false;
+}
+
+export function captureError(error: unknown) {
+    if (import.meta.env.DEV) {
+        console.error(error);
+    }
 }

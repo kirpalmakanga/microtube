@@ -1,11 +1,4 @@
-import {
-    createEffect,
-    createSignal,
-    on,
-    onCleanup,
-    onMount,
-    Show
-} from 'solid-js';
+import { createEffect, createSignal, on, onCleanup, onMount, Show } from 'solid-js';
 import { A, useNavigate, useSearchParams } from '@solidjs/router';
 import List from '../components/List';
 import ListItem from '../components/ListItem';
@@ -86,18 +79,12 @@ const Search = () => {
 
     createEffect(
         on(
-            [
-                (): string => searchParams.query || '',
-                (): number => search.forMine
-            ],
+            [(): string => searchParams.query || '', (): number => search.forMine],
             (
                 [query, forMine]: [string, number],
                 [previousQuery, previousForMine]: [string, number] = ['', 0]
             ) => {
-                if (
-                    query &&
-                    (query !== previousQuery || forMine !== previousForMine)
-                ) {
+                if (query && (query !== previousQuery || forMine !== previousForMine)) {
                     setShouldMountList(false);
 
                     clearSearch();
@@ -129,17 +116,11 @@ const Search = () => {
                         <ListItem
                             {...data}
                             subtitle={
-                                <A
-                                    href={`/channel/${data.channelId}`}
-                                    onClick={stopPropagation()}
-                                >
+                                <A href={`/channel/${data.channelId}`} onClick={stopPropagation()}>
                                     {data.channelTitle}
                                 </A>
                             }
-                            subSubtitle={formatDate(
-                                data.publishedAt,
-                                'MMMM do yyyy'
-                            )}
+                            subSubtitle={formatDate(data.publishedAt, 'MMMM do yyyy')}
                             onClick={handleClickCard(data)}
                             onClickMenu={handleClickMenu(data)}
                         />

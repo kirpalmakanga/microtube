@@ -3,12 +3,7 @@ import { useNavigate, useParams } from '@solidjs/router';
 import List from '../../components/List';
 import ListItem from '../../components/ListItem';
 import Placeholder from '../../components/Placeholder';
-import {
-    copyText,
-    getPlaylistURL,
-    isMobile,
-    shareURL
-} from '../../lib/helpers';
+import { copyText, getPlaylistURL, isMobile, shareURL } from '../../lib/helpers';
 import { useChannel } from '../../store/channel';
 import { useMenu } from '../../store/menu';
 import { useNotifications } from '../../store/notifications';
@@ -71,24 +66,14 @@ const Playlists: Component = () => {
 
     return (
         <Show
-            when={
-                channel.playlists.totalResults === null ||
-                channel.playlists.totalResults > 0
-            }
-            fallback={
-                <Placeholder
-                    icon="list"
-                    text="This channel does not have playlists yet."
-                />
-            }
+            when={channel.playlists.totalResults === null || channel.playlists.totalResults > 0}
+            fallback={<Placeholder icon="list" text="This channel does not have playlists yet." />}
         >
             <List items={channel.playlists.items} loadItems={getPlaylists}>
                 {({ data }) => (
                     <ListItem
                         {...data}
-                        badge={`${data.itemCount} video${
-                            data.itemCount !== 1 ? 's' : ''
-                        }`}
+                        badge={`${data.itemCount} video${data.itemCount !== 1 ? 's' : ''}`}
                         onClick={handleClickCard(data)}
                         onClickMenu={handleClickMenu(data)}
                     />

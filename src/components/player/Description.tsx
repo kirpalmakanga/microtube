@@ -6,10 +6,7 @@ interface Props {
 }
 
 const Description: Component<Props> = (props) => {
-    const text = createMemo(
-        (text: string) => (text ? wrapURLs(text) : ''),
-        props.text
-    );
+    const text = createMemo((text: string) => (text ? wrapURLs(text) : ''), props.text);
 
     return (
         <div

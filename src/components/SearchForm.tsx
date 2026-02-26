@@ -7,11 +7,10 @@ interface Props {
 
 const SearchForm: Component<Props> = (props) => {
     const [input, setInput] = createSignal(props.query || '');
-    let inputRef: HTMLDivElement | undefined = undefined;
+    let inputRef = undefined as HTMLInputElement | undefined;
 
-    const handleInput: JSX.EventHandler<HTMLInputElement, Event> = ({
-        currentTarget: { value }
-    }) => setInput(value);
+    const handleInput: JSX.EventHandler<HTMLInputElement, Event> = ({ currentTarget: { value } }) =>
+        setInput(value);
 
     const handleSubmit = preventDefault(() => {
         const newQuery = input().trim();
@@ -19,7 +18,9 @@ const SearchForm: Component<Props> = (props) => {
         if (newQuery && newQuery !== props.query) props.onSubmit(newQuery);
     });
 
-    onMount(() => inputRef?.focus());
+    onMount(() => {
+        if (inputRef) inputRef.focus();
+    });
 
     return (
         <form class="flex flex-grow" onSubmit={handleSubmit}>

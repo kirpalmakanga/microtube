@@ -18,9 +18,7 @@ const Notifications: Component = () => {
         <Transition name="slide-up">
             <Show when={notifications.isVisible}>
                 <div class="absolute bottom-4 right-4 z-10 bg-primary-800 flex overflow-hidden rounded shadow ml-4">
-                    <div class="flex-grow px-4 py-2 text-light-50">
-                        {notifications.message}
-                    </div>
+                    <div class="flex-grow px-4 py-2 text-light-50">{notifications.message}</div>
 
                     <Show when={notifications.callback}>
                         <button

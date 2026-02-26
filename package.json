@@ -30,8 +30,6 @@
     "devDependencies": {
         "@types/uuid": "^10.0.0",
         "@windicss/plugin-scrollbar": "^1.2.3",
-        "eslint": "^8.57.0",
-        "eslint-plugin-solid": "^0.14.1",
         "sass": "^1.77.6",
         "vite": "^6.2.5",
         "vite-plugin-pwa": "^1.0.0",

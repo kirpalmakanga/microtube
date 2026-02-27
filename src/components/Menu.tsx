@@ -12,47 +12,49 @@ const Menu = () => {
         <>
             <Transition name="fade">
                 <Show when={menu.isOpen}>
-                    <div
-                        class="fixed inset-0 bg-primary-900 bg-opacity-50 cursor-pointer z-10"
-                        onClick={closeMenu}
-                    ></div>
+                    <div class="fixed inset-0 bg-primary-900 bg-opacity-50 cursor-pointer z-10"></div>
                 </Show>
             </Transition>
 
             <Transition name="slide-up">
                 <Show when={menu.isOpen}>
-                    <div class="fixed left-0 right-0 bottom-0 shadow z-10">
-                        <Show when={menu.title}>
-                            <div
-                                class="p-4 bg-primary-900 text-light-50 font-montserrat"
-                                onClick={stopPropagation()}
-                            >
-                                {menu.title}
-                            </div>
-                        </Show>
+                    <div
+                        class="fixed inset-0 flex flex-col <md:justify-end md:(justify-center items-center) shadow z-10 p-4"
+                        onClick={closeMenu}
+                    >
+                        <div class="bg-primary-900 shadow min-w-md max-w-full rounded p-4">
+                            <Show when={menu.title}>
+                                <div
+                                    class="p-4 bg-primary-900 text-light-50 font-montserrat"
+                                    onClick={stopPropagation()}
+                                >
+                                    {menu.title}
+                                </div>
+                            </Show>
 
-                        <ul class="menu__items">
-                            <For each={menu.items}>
-                                {({ title, icon, onClick }: MenuItemData) => (
-                                    <li class="flex border-t-1 border-primary-700">
-                                        <button
-                                            class="flex items-center gap-4 flex-grow bg-primary-800 hover:bg-primary-700 text-light-50 text-sm transition-colors font-montserrat p-4"
-                                            type="button"
-                                            onClick={() => {
-                                                closeMenu();
-                                                onClick(menu.callbackData);
-                                            }}
-                                        >
-                                            <Show when={icon}>
-                                                <Icon class="h-5 w-5" name={icon} />
-                                            </Show>
+                            <ul class="flex flex-col gap-4">
+                                <For each={menu.items}>
+                                    {({ title, icon, onClick }: MenuItemData) => (
+                                        <li class="flex">
+                                            <button
+                                                class="flex items-center gap-4 flex-grow bg-primary-800 hover:bg-primary-700 text-light-50 text-sm transition-colors font-montserrat p-4 rounded"
+                                                type="button"
+                                                onClick={() => {
+                                                    closeMenu();
+                                                    onClick(menu.callbackData);
+                                                }}
+                                            >
+                                                <Show when={icon}>
+                                                    <Icon class="h-5 w-5" name={icon} />
+                                                </Show>
 
-                                            <span>{title}</span>
-                                        </button>
-                                    </li>
-                                )}
-                            </For>
-                        </ul>
+                                                <span>{title}</span>
+                                            </button>
+                                        </li>
+                                    )}
+                                </For>
+                            </ul>
+                        </div>
                     </div>
                 </Show>
             </Transition>

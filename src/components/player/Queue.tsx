@@ -72,6 +72,7 @@ const Queue: Component<Props> = (props) => {
                 {
                     title: 'Remove from queue',
                     icon: 'delete',
+                    color: 'error',
                     onClick: removeQueueItem
                 }
             ]

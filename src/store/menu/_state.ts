@@ -1,7 +1,10 @@
+export type AlertColor = 'error' | 'warning' | 'success';
+
 export interface MenuItemData {
     title: string;
     icon: string;
     onClick: (...args: any[]) => void;
+    color?: AlertColor;
 }
 
 export type MenuOpener = (data: {

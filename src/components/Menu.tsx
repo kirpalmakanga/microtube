@@ -2,8 +2,18 @@ import { For, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import { stopPropagation } from '../lib/helpers';
 import { useMenu } from '../store/menu';
-import { MenuItemData } from '../store/menu/_state';
+import { AlertColor, MenuItemData } from '../store/menu/_state';
 import Icon from './Icon';
+
+const menuItemColors: Record<AlertColor, string> = {
+    error: 'text-red-400',
+    success: '',
+    warning: ''
+};
+
+function getItemColor(code?: AlertColor) {
+    return code ? menuItemColors[code] : '';
+}
 
 const Menu = () => {
     const [menu, { closeMenu }] = useMenu();
@@ -34,10 +44,13 @@ const Menu = () => {
 
                             <ul class="flex flex-col gap-4">
                                 <For each={menu.items}>
-                                    {({ title, icon, onClick }: MenuItemData) => (
+                                    {({ title, icon, color, onClick }: MenuItemData) => (
                                         <li class="flex">
                                             <button
                                                 class="flex items-center gap-4 flex-grow bg-primary-800 hover:bg-primary-700 text-light-50 text-sm transition-colors font-montserrat p-4 rounded"
+                                                classList={{
+                                                    [getItemColor(color)]: !!color
+                                                }}
                                                 type="button"
                                                 onClick={() => {
                                                     closeMenu();

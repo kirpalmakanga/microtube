@@ -81,6 +81,7 @@ const Playlists: Component = () => {
                 {
                     title: 'Remove from playlist',
                     icon: 'delete',
+                    color: 'error',
                     onClick: removePlaylistItem
                 }
             ]

@@ -10,7 +10,7 @@ interface Props {
 const ListItem: Component<Props> = (props) => (
     <div class="relative flex">
         <Img
-            class="w-48"
+            class="w-48 rounded"
             imgClass="w-full h-full object-cover"
             src={props.img}
             alt={props.alt}

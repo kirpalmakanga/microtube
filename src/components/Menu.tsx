@@ -32,7 +32,7 @@ const Menu = () => {
                         class="fixed inset-0 flex flex-col <md:justify-end md:(justify-center items-center) shadow z-10 p-4"
                         onClick={closeMenu}
                     >
-                        <div class="bg-primary-900 shadow  max-w-full rounded p-4">
+                        <div class="bg-primary-900 shadow min-w-xs max-w-full rounded p-4">
                             <Show when={menu.title}>
                                 <div
                                     class="p-4 bg-primary-900 text-light-50 font-montserrat"

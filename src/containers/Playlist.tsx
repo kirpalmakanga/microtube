@@ -56,8 +56,8 @@ const Playlists: Component = () => {
                     onClick: queueItem
                 },
                 {
-                    title: 'Save to playlist',
-                    icon: 'folder-add',
+                    title: 'Save',
+                    icon: 'bookmark-outline',
                     onClick: editPlaylistItem
                 },
                 {

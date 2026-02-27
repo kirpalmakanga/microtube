@@ -51,8 +51,8 @@ const Search = () => {
                     onClick: queueItem
                 },
                 {
-                    title: `Save to playlist`,
-                    icon: 'folder-add',
+                    title: `Save`,
+                    icon: 'bookmark-outline',
                     onClick: editPlaylistItem
                 },
                 {

@@ -71,7 +71,7 @@ export const usePlaylistItems = (playlistId?: string) => {
     const editPlaylistItem = (videoData: VideoData) => {
         openPrompt({
             mode: 'playlists',
-            headerText: 'Save to playlist',
+            headerText: 'Save',
             cancelText: 'Close',
             callback: async ({ id: playlistId, title, privacyStatus }: PlaylistData) => {
                 try {

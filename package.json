@@ -15,25 +15,24 @@
     },
     "dependencies": {
         "@minht11/solid-virtual-container": "^0.2.1",
-        "@solidjs/router": "^0.13.6",
+        "@solidjs/router": "^0.15.4",
         "@thisbeyond/solid-dnd": "^0.7.5",
-        "axios": "^1.7.2",
-        "date-fns": "^3.6.0",
-        "firebase": "^10.5.0",
+        "axios": "^1.13.5",
+        "date-fns": "^4.1.0",
+        "firebase": "^12.9.0",
         "oxfmt": "^0.35.0",
         "oxlint": "^1.50.0",
         "socket.io-client": "^4.7.2",
-        "solid-js": "^1.8.17",
-        "solid-transition-group": "^0.2.3",
-        "uuid": "^10.0.0"
+        "solid-js": "^1.9.11",
+        "solid-transition-group": "^0.3.0",
+        "uuid": "^13.0.0"
     },
     "devDependencies": {
-        "@types/uuid": "^10.0.0",
         "@windicss/plugin-scrollbar": "^1.2.3",
-        "sass": "^1.77.6",
-        "vite": "^6.2.5",
-        "vite-plugin-pwa": "^1.0.0",
-        "vite-plugin-solid": "^2.11.6",
+        "sass": "^1.97.3",
+        "vite": "^7.3.1",
+        "vite-plugin-pwa": "^1.2.0",
+        "vite-plugin-solid": "^2.11.10",
         "vite-plugin-windicss": "^1.9.4",
         "windicss": "^3.5.6"
     }

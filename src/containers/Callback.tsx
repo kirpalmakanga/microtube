@@ -14,7 +14,7 @@ const Callback: Component = () => {
         const { code } = searchParams;
 
         if (code) {
-            const data = await logIn(code);
+            const data = await logIn(code as string);
 
             setUser(data);
 

@@ -88,7 +88,11 @@ const Playlists: Component = () => {
         });
     };
 
-    onMount(() => getPlaylistTitle(params.playlistId));
+    onMount(() => {
+        if (params.playlistId) {
+            getPlaylistTitle(params.playlistId);
+        }
+    });
 
     onCleanup(clearPlaylistItems);
 

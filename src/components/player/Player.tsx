@@ -364,7 +364,7 @@ const Player = () => {
                         </Show>
 
                         <Show when={isSingleVideo()}>
-                            <IconButton onClick={handleEditPlaylistItem} icon="folder-add" />
+                            <IconButton onClick={handleEditPlaylistItem} icon="bookmark-outline" />
                         </Show>
 
                         <Show when={hasCurrentVideo()}>

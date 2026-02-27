@@ -42,7 +42,7 @@ const Menu = () => {
                                 </div>
                             </Show>
 
-                            <ul class="flex flex-col gap-4">
+                            <ul class="flex flex-col gap-2">
                                 <For each={menu.items}>
                                     {({ title, icon, color, onClick }: MenuItemData) => (
                                         <li class="flex">

@@ -13,7 +13,7 @@ const Playlists: Component = () => {
     const params = useParams();
     const navigate = useNavigate();
 
-    const [channel, { getPlaylists }] = useChannel(params.channelId);
+    const [channel, { getPlaylists }] = useChannel(params.channelId as string);
 
     const [, { queuePlaylist, launchPlaylist }] = usePlaylists();
 

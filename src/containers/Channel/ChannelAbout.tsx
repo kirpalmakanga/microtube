@@ -5,7 +5,7 @@ import { useChannel } from '../../store/channel';
 
 const ChannelAbout: Component = () => {
     const { channelId } = useParams();
-    const [channel] = useChannel(channelId);
+    const [channel] = useChannel(channelId as string);
 
     const text = createMemo((text: string) => (text ? wrapURLs(text) : ''), channel.description);
 

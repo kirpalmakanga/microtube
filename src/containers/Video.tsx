@@ -6,7 +6,7 @@ const Video: Component = () => {
     const params = useParams();
     const [, { getVideo, clearVideo }] = usePlayer();
 
-    onMount(() => getVideo(params.videoId));
+    onMount(() => getVideo(params.videoId as string));
 
     onCleanup(clearVideo);
 

@@ -14,7 +14,7 @@ const ChannelVideos = () => {
     const params = useParams();
     const navigate = useNavigate();
 
-    const [channel, { getVideos }] = useChannel(params.channelId);
+    const [channel, { getVideos }] = useChannel(params.channelId as string);
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
     const [, { openNotification }] = useNotifications();

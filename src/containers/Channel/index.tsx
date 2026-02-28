@@ -32,7 +32,7 @@ const Tabs: Component<TabsProps> = (props) => (
 const Channel: ParentComponent = (props) => {
     const { channelId } = useParams();
 
-    const [channel, { getData, clearData, toggleSubscription }] = useChannel(channelId);
+    const [channel, { getData, clearData, toggleSubscription }] = useChannel(channelId as string);
 
     const [isSubscribing, setSubscriptionStatus] = createSignal(false);
 

@@ -49,28 +49,45 @@ const NewPlayListForm: Component<FormProps> = ({ onSubmit }) => {
     const handleSubmit = preventDefault(() => state.title && onSubmit(state as PlaylistData));
 
     return (
-        <form class="flex z-1 shadow" onSubmit={handleSubmit}>
-            <input
-                class="flex-grow bg-primary-800 focus:outline-none px-4 py-2 border-r-1 border-primary-700"
-                name="title"
-                value={state.title}
-                placeholder="Playlist title"
-                onChange={handleInput}
-                onKeyPress={stopPropagation()}
-            />
+        <form class="flex flex-col z-1 gap-4" onSubmit={handleSubmit}>
+            <fieldset class="flex flex-col gap-4">
+                <label>New playlist</label>
 
-            <DropDown
-                currentValue={state.privacyStatus}
-                options={privacyOptions}
-                onSelect={handlePrivacyStatusChange}
-            />
+                <div class="flex flex-col">
+                    <label class="text-sm mb-1" for="playlist-title">
+                        Title
+                    </label>
 
-            <Button
-                class="border-l-1 border-primary-700 bg-primary-900 hover:bg-primary-800 transition-colors px-4 py-2 disabled:(opacity-80 pointer-events-none)"
-                type="submit"
-                title="Create"
-                disabled={!state.title}
-            />
+                    <input
+                        id="playlist-title"
+                        class="h-8 flex-grow transition-colors bg-primary-800 hover:bg-primary-700 focus:(outline-none bg-primary-600) px-2 rounded"
+                        name="title"
+                        value={state.title}
+                        placeholder="Title"
+                        onChange={handleInput}
+                        onKeyPress={stopPropagation()}
+                    />
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="text-sm mb-1">Privacy</label>
+
+                    <DropDown
+                        currentValue={state.privacyStatus}
+                        options={privacyOptions}
+                        onSelect={handlePrivacyStatusChange}
+                    />
+                </div>
+            </fieldset>
+
+            <div class="flex justify-end">
+                <Button
+                    class="flex items-center justify-center gap-2 px-4 py-1 bg-violet-500 hover:bg-violet-400 transition-colors text-light-50 font-montserrat rounded shadow"
+                    type="submit"
+                    title="Create"
+                    disabled={!state.title}
+                />
+            </div>
         </form>
     );
 };
@@ -98,12 +115,14 @@ export const PlaylistManager: Component<Props> = ({ onClickItem }) => {
     };
 
     return (
-        <div class="flex flex-col h-40vh">
-            <NewPlayListForm onSubmit={onCreatePlaylist} />
-
+        <div class="flex flex-col h-60vh gap-4">
             <List items={playlists.items} loadItems={getPlaylists} itemSize={50}>
                 {ListItem}
             </List>
+
+            <div class="bg-white opacity-10 h-[1px]"></div>
+
+            <NewPlayListForm onSubmit={onCreatePlaylist} />
         </div>
     );
 };

@@ -72,7 +72,6 @@ export const usePlaylistItems = (playlistId?: string) => {
         openPrompt({
             mode: 'playlists',
             headerText: 'Save',
-            cancelText: 'Close',
             callback: async ({ id: playlistId, title, privacyStatus }: PlaylistData) => {
                 try {
                     const { thumbnails } = videoData;

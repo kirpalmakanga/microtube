@@ -29,15 +29,14 @@ const SearchHeader = () => {
                 <Icon class="text-light-50 w-6 h-6" name="arrow-left" />
             </A>
 
-            <SearchForm query={searchParams.query || ''} onSubmit={handleFormSubmit} />
+            <SearchForm query={(searchParams.query as string) || ''} onSubmit={handleFormSubmit} />
 
-            <nav class="-mr-4">
-                <DropDown
-                    currentValue={search.forMine}
-                    options={searchModeOptions}
-                    onSelect={setSearchTarget}
-                />
-            </nav>
+            <DropDown
+                buttonClass="rounded-l-none"
+                currentValue={search.forMine}
+                options={searchModeOptions}
+                onSelect={setSearchTarget}
+            />
         </div>
     );
 };

@@ -22,7 +22,7 @@ const Notifications: Component = () => {
 
                     <Show when={notifications.callback}>
                         <button
-                            class="px-4 py-2 transition-colors text-light-50 bg-primary-700 hover:bg-primary-600"
+                            class="px-4 py-2 transition-colors text-light-50 bg-violet-500 hover:bg-violet-400"
                             onClick={onValidate}
                         >
                             {notifications.callbackButtonText}

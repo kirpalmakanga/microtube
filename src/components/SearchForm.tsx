@@ -26,7 +26,7 @@ const SearchForm: Component<Props> = (props) => {
         <form class="flex flex-grow" onSubmit={handleSubmit}>
             <input
                 ref={inputRef}
-                class="h-12 px-4 flex-grow transition-colors bg-primary-600 focus:(outline-none bg-primary-500) text-100 placeholder-100 placeholder-opacity-50 caret-white caret-opacity-50"
+                class="h-8 px-2 flex-grow transition-colors bg-primary-800 hover:bg-primary-700 focus:(outline-none bg-primary-600) placeholder-100 placeholder-opacity-50 rounded-l"
                 value={input()}
                 type="text"
                 placeholder="Search..."

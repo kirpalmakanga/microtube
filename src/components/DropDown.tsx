@@ -1,7 +1,10 @@
-import { createMemo, createSignal, For, Show } from 'solid-js';
+import { createMemo, createSignal, For, onCleanup, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import { preventDefault, stopPropagation } from '../lib/helpers';
+// oxlint-disable-next-line no-unused-vars
+import clickOutside from '../lib/directives';
 import Icon from './Icon';
+import { makeResizeObserver } from '@solid-primitives/resize-observer';
 
 export interface DropDownOption<T> {
     label: string;
@@ -20,7 +23,8 @@ const menuMargin = 8;
 function DropDown<T>(props: DropDownProps<T>) {
     const [menuPosition, setMenuPosition] = createSignal({
         x: 0,
-        y: 0
+        y: 0,
+        width: 0
     });
     const [isOpen, setOpenStatus] = createSignal(false);
     const label = createMemo(
@@ -37,27 +41,18 @@ function DropDown<T>(props: DropDownProps<T>) {
     let trigger = undefined as HTMLButtonElement | undefined;
     let menu = undefined as HTMLUListElement | undefined;
 
-    function closeOptions() {
-        if (isOpen()) setOpenStatus(false);
-    }
-
     function calculateMenuPosition() {
         if (trigger && menu) {
-            const { innerWidth: viewportWidth, innerHeight: viewportHeight } = window;
+            const { innerHeight: viewportHeight } = window;
             const {
                 x: triggerX,
                 y: triggerY,
                 width: triggerWidth,
                 height: triggerHeight
             } = trigger.getBoundingClientRect();
-            const { width: menuWidth, height: menuHeight } = menu.getBoundingClientRect();
+            const { height: menuHeight } = menu.getBoundingClientRect();
 
-            let x: number = triggerX;
             let y: number = triggerY;
-
-            if (triggerX + triggerWidth + menuWidth > viewportWidth) {
-                x += triggerWidth - menuWidth;
-            }
 
             if (triggerY + triggerHeight + menuMargin + menuHeight > viewportHeight) {
                 y -= menuMargin + menuHeight;
@@ -66,19 +61,34 @@ function DropDown<T>(props: DropDownProps<T>) {
             }
 
             setMenuPosition({
-                x,
+                width: triggerWidth,
+                x: triggerX,
                 y
             });
         }
     }
 
+    const { observe, unobserve } = makeResizeObserver(calculateMenuPosition);
+
     function toggleOptions() {
         setOpenStatus(!isOpen());
+
+        if (isOpen()) {
+            observe(document.body);
+        } else {
+            unobserve(document.body);
+        }
+    }
+
+    function closeOptions() {
+        if (isOpen()) toggleOptions();
     }
 
     function handleOptionClick(value: T, isActiveItem: boolean) {
         return preventDefault(() => !isActiveItem && props.onSelect(value));
     }
+
+    onCleanup(() => unobserve(document.body));
 
     return (
         <>
@@ -91,7 +101,7 @@ function DropDown<T>(props: DropDownProps<T>) {
                 }}
                 type="button"
                 onClick={stopPropagation(toggleOptions)}
-                onBlur={closeOptions}
+                use:clickOutside={closeOptions}
             >
                 <span class="font-montserrat text-sm">{label()}</span>
 
@@ -102,8 +112,12 @@ function DropDown<T>(props: DropDownProps<T>) {
                 <Show when={isOpen()}>
                     <ul
                         ref={menu}
-                        class="flex flex-col fixed shadow min-w-48 bg-primary-900 rounded p-1 gap-1"
-                        style={{ left: `${menuPosition().x}px`, top: `${menuPosition().y}px` }}
+                        class="flex flex-col fixed shadow min-w-48 bg-primary-900 rounded p-1 gap-1 z-10"
+                        style={{
+                            left: `${menuPosition().x}px`,
+                            top: `${menuPosition().y}px`,
+                            width: `${menuPosition().width}px`
+                        }}
                     >
                         <For each={props.options}>
                             {({ label, value }) => {

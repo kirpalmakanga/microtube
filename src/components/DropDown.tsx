@@ -102,7 +102,7 @@ function DropDown<T>(props: DropDownProps<T>) {
                 <Show when={isOpen()}>
                     <ul
                         ref={menu}
-                        class="fixed shadow min-w-48"
+                        class="flex flex-col fixed shadow min-w-48 bg-primary-900 rounded p-1 gap-1"
                         style={{ left: `${menuPosition().x}px`, top: `${menuPosition().y}px` }}
                     >
                         <For each={props.options}>
@@ -111,7 +111,7 @@ function DropDown<T>(props: DropDownProps<T>) {
 
                                 return (
                                     <li
-                                        class="h-12 p-4 flex items-centerfont-montserrat text-light-50 text-sm transition-colors bg-primary-900 hover:bg-primary-800 cursor-pointer"
+                                        class="p-2 flex items-centerfont-montserrat text-light-50 text-sm transition-colors  hover:bg-primary-800 cursor-pointer rounded"
                                         classList={{
                                             'bg-primary-700': isActiveItem
                                         }}

@@ -1,3 +1,5 @@
+@use 'mixins' as *;
+
 @include font-face('Open Sans', '/fonts/OpenSans', normal, normal);
 @include font-face('Open Sans', '/fonts/OpenSans-Bold', bold, normal);
 

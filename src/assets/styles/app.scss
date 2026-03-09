@@ -1,7 +1,6 @@
-@import 'common/_variables';
-@import 'common/_animations';
-@import 'common/_mixins';
-@import 'common/_global';
+@use 'common/variables';
+@use 'common/animations';
+@use 'common/global';
 
-@import 'components/_range';
-@import 'components/_soundwave';
+@use 'components/range';
+@use 'components/soundwave';

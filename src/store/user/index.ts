@@ -68,7 +68,7 @@ export const useAuth = () => {
         window.location.href = url;
     };
 
-    const setUser = (data) => {
+    const setUser = (data: UserData) => {
         setState('user', {
             ...data,
             isSignedIn: true

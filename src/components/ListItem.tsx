@@ -48,7 +48,7 @@ const ListItem: Component<Props> = (props) => {
             </div>
 
             <Button
-                class="flex flex-grow items-center justify-center transition-colors text-light-50 hover:text-opacity-50 p-2"
+                class="flex items-center justify-center transition-colors text-light-50 hover:text-opacity-50 p-2"
                 icon="more"
                 iconClass="w-5 h-5"
                 onClick={props.onClickMenu}

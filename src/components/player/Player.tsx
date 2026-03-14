@@ -1,4 +1,4 @@
-import { createEffect, onMount, Show } from 'solid-js';
+import { createEffect, createSignal, onMount, Show } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
 import { isMobile, omit } from '../../lib/helpers';
@@ -12,6 +12,7 @@ import Queue from './Queue';
 import Screen from './Screen';
 import Description from './Description';
 import IconButton from '../IconButton';
+import PlaylistSelectorModal from '../playlist/PlaylistSelectorModal';
 
 interface PlayerInnerState {
     isPlaying: boolean;
@@ -47,6 +48,8 @@ const Player = () => {
 
     const { isFullscreen, fullscreenRef, enterFullscreen, exitFullscreen } = useFullscreen();
 
+    const [isPlaylistSelectorVisible, setIsPlaylistSelectorVisible] = createSignal<boolean>(false);
+
     function isSingleVideo() {
         return !!storeState.video.id;
     }
@@ -55,8 +58,8 @@ const Player = () => {
         return !!storeState.currentVideo.id;
     }
 
-    function handleEditPlaylistItem() {
-        editPlaylistItem(storeState.currentVideo);
+    function onSelectPlaylist(playlistData: PlaylistData) {
+        editPlaylistItem(storeState.currentVideo, playlistData);
     }
 
     function toggleFullscreen() {
@@ -193,6 +196,14 @@ const Player = () => {
         }
     }
 
+    function openPlaylistSelector() {
+        setIsPlaylistSelectorVisible(true);
+    }
+
+    function closePlaylistSelector() {
+        setIsPlaylistSelectorVisible(false);
+    }
+
     useKey('keypress', 'ArrowLeft', () => goToVideo(false));
     useKey('keypress', 'ArrowRight', () => goToVideo(true));
     useKey('keypress', 'm', toggleMute);
@@ -306,6 +317,20 @@ const Player = () => {
                                 disabled={!hasCurrentVideo()}
                             />
                         </Show>
+
+                        <Show when={!isMobile()}>
+                            <div class="relative group" onWheel={handleWheelVolume}>
+                                <IconButton
+                                    onClick={toggleMute}
+                                    icon={state.volume === 0 ? 'volume-off' : 'volume-up'}
+                                    disabled={!hasCurrentVideo()}
+                                />
+
+                                <div class="absolute bottom-full right-0 w-36 transition-opacity opacity-0 invisible group-hover:(opacity-100 visible)">
+                                    <VolumeRange value={state.volume} onChange={setVolume} />
+                                </div>
+                            </div>
+                        </Show>
                     </div>
 
                     <Info
@@ -320,18 +345,7 @@ const Player = () => {
                     />
 
                     <div class="flex items-center px-4 gap-2">
-                        <Show when={!isMobile() && storeState.currentVideo.id}>
-                            <div class="relative group" onWheel={handleWheelVolume}>
-                                <IconButton
-                                    onClick={toggleMute}
-                                    icon={state.volume === 0 ? 'volume-off' : 'volume-up'}
-                                />
-
-                                <div class="absolute bottom-full right-0 w-36 transition-opacity opacity-0 invisible group-hover:(opacity-100 visible)">
-                                    <VolumeRange value={state.volume} onChange={setVolume} />
-                                </div>
-                            </div>
-                        </Show>
+                        <IconButton onClick={openPlaylistSelector} icon="bookmark-outline" />
 
                         <Show when={hasCurrentVideo() || isSingleVideo()}>
                             <IconButton
@@ -362,10 +376,6 @@ const Player = () => {
                             />
                         </Show>
 
-                        <Show when={isSingleVideo()}>
-                            <IconButton onClick={handleEditPlaylistItem} icon="bookmark-outline" />
-                        </Show>
-
                         <Show when={hasCurrentVideo()}>
                             <IconButton
                                 onClick={toggleFullscreen}
@@ -375,6 +385,12 @@ const Player = () => {
                     </div>
                 </div>
             </div>
+
+            <PlaylistSelectorModal
+                isVisible={isPlaylistSelectorVisible()}
+                onClickItem={onSelectPlaylist}
+                onClickClose={closePlaylistSelector}
+            />
         </div>
     );
 };

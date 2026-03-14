@@ -1,6 +1,6 @@
 import { Component, createSignal, For, onCleanup, onMount, ParentComponent } from 'solid-js';
 import { A, useParams } from '@solidjs/router';
-import Button from '../../components/Button';
+import Button from '../../components/ui/Button';
 import Img from '../../components/ui/Img';
 import { getThumbnails } from '../../lib/helpers';
 import { useChannel } from '../../store/channel';

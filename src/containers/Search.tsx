@@ -2,7 +2,7 @@ import { createEffect, createSignal, on, onCleanup, onMount, Show } from 'solid-
 import { A, useNavigate, useSearchParams } from '@solidjs/router';
 import List from '../components/List';
 import ListItem from '../components/ListItem';
-import Placeholder from '../components/Placeholder';
+import Placeholder from '../components/ui/Placeholder';
 import {
     copyText,
     formatDate,
@@ -30,7 +30,7 @@ const Search = () => {
         const { query } = searchParams;
 
         if (query) {
-            searchVideos(query);
+            searchVideos(query as string);
         }
     };
     const handleClickCard =
@@ -79,7 +79,7 @@ const Search = () => {
 
     createEffect(
         on(
-            [(): string => searchParams.query || '', (): number => search.forMine],
+            [(): string => (searchParams.query as string) || '', (): number => search.forMine],
             (
                 [query, forMine]: [string, number],
                 [previousQuery, previousForMine]: [string, number] = ['', 0]

@@ -1,8 +1,8 @@
 import { Component, JSX } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
-import DropDown, { DropDownOption } from '../DropDown';
-import Button from '../Button';
+import DropDown, { DropDownOption } from '../ui/DropDown';
+import Button from '../ui/Button';
 import List from '../List';
 import { usePlaylists } from '../../store/playlists';
 import { preventDefault, stopPropagation } from '../../lib/helpers';

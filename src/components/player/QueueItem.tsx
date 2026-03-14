@@ -10,10 +10,10 @@ import {
     shareURL,
     stopPropagation
 } from '../../lib/helpers';
-import Icon from '../Icon';
+import Icon from '../ui/Icon';
 import ListItemThumbnail from '../ListItemThumbnail';
 import ListItemMeta from '../ListItemMeta';
-import EqualizerIcon from '../EqualizerIcon';
+import EqualizerIcon from '../ui/EqualizerIcon';
 import Menu, { MenuItemData } from '../ui/Menu';
 import { usePlayer } from '../../store/player';
 import { useNotifications } from '../../store/notifications';

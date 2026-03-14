@@ -3,7 +3,7 @@ import { Transition } from 'solid-transition-group';
 import { stopPropagation } from '../lib/helpers';
 import { useMenu } from '../store/menu';
 import { AlertColor, MenuItemData } from '../store/menu/_state';
-import Icon from './Icon';
+import Icon from './ui/Icon';
 
 const menuItemColors: Record<AlertColor, string> = {
     error: 'text-red-400',

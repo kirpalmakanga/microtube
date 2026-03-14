@@ -1,7 +1,7 @@
 import { Component, Show } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import List from '../components/List';
-import Placeholder from '../components/Placeholder';
+import Placeholder from '../components/ui/Placeholder';
 import { copyText, getPlaylistURL, isMobile, shareURL } from '../lib/helpers';
 import { useMenu } from '../store/menu';
 import { useNotifications } from '../store/notifications';

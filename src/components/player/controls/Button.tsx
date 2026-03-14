@@ -1,6 +1,6 @@
 import { Component, Show, splitProps } from 'solid-js';
 import { Transition } from 'solid-transition-group';
-import Icon from '../../Icon';
+import Icon from '../../ui/Icon';
 
 interface Props {
     classList?: { [key: string]: boolean };

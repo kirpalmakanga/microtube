@@ -1,6 +1,6 @@
 import { Component, JSXElement, Show } from 'solid-js';
 import { getThumbnails } from '../lib/helpers';
-import Button from './Button';
+import Button from './ui/Button';
 import ListItemThumbnail from './ListItemThumbnail';
 import ListItemMeta from './ListItemMeta';
 

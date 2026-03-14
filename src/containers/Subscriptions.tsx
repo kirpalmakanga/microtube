@@ -2,7 +2,7 @@ import { Show } from 'solid-js';
 import { useNavigate } from '@solidjs/router';
 import ListItem from '../components/ListItem';
 import List from '../components/List';
-import Placeholder from '../components/Placeholder';
+import Placeholder from '../components/ui/Placeholder';
 import { useSubscriptions } from '../store/subscriptions';
 
 const Subscriptions = () => {

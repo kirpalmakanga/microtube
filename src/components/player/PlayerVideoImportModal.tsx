@@ -8,7 +8,7 @@ import {
     splitLines,
     stopPropagation
 } from '../../lib/helpers';
-import Button from '../Button';
+import Button from '../ui/Button';
 
 interface PlayerVideoImportModalProps {
     isVisible: boolean;

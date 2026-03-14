@@ -2,7 +2,7 @@ import { Component, createEffect, Match, onMount, Switch } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
 import Icon from './Icon';
-import { captureError } from '../lib/helpers';
+import { captureError } from '../../lib/helpers';
 
 interface Props {
     class?: string;

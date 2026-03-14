@@ -11,7 +11,7 @@ import {
     transformStyle
 } from '@thisbeyond/solid-dnd';
 import { createMemo, createSignal, For, JSXElement, ParentComponent, Show } from 'solid-js';
-import Icon from './Icon';
+import Icon from './ui/Icon';
 
 interface ListProps {
     items: any[];

@@ -1,11 +1,10 @@
 import { ParentComponent, Show } from 'solid-js';
+import { Portal } from 'solid-js/web';
+import { Transition } from 'solid-transition-group';
 import { stopPropagation } from '../../lib/helpers';
 
-import Icon from '../Icon';
-import Button from '../Button';
-
-import { Transition } from 'solid-transition-group';
-import { Portal } from 'solid-js/web';
+import Icon from './Icon';
+import Button from './Button';
 
 interface Props {
     isVisible: boolean;

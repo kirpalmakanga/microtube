@@ -1,5 +1,5 @@
 import { Component, createSignal } from 'solid-js';
-import IconButton from '../IconButton';
+import IconButton from '../ui/IconButton';
 import PlayerVideoImportModal from './PlayerVideoImportModal';
 
 interface Props {

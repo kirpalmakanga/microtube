@@ -1,7 +1,7 @@
 import { Component, onCleanup, onMount, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
 import { usePlayer } from '../../store/player';
-import Placeholder from '../Placeholder';
+import Placeholder from '../ui/Placeholder';
 import SortableList from '../SortableList';
 import QueueHeader from './QueueHeader';
 import QueueItem from './QueueItem';

@@ -1,7 +1,7 @@
 import { Component, onCleanup, onMount, Show } from 'solid-js';
 import { useParams } from '@solidjs/router';
 import List from '../components/List';
-import Placeholder from '../components/Placeholder';
+import Placeholder from '../components/ui/Placeholder';
 import PlaylistItem from '../components/playlist/PlaylistItem';
 import { usePlaylistItems } from '../store/playlist-items';
 

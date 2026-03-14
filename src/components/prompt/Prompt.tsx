@@ -1,8 +1,7 @@
 import { Component, Show } from 'solid-js';
 import { usePrompt } from '../../store/prompt';
 
-import Button from '../Button';
-
+import Button from '../ui/Button';
 import Modal from '../ui/Modal';
 
 const Prompt: Component = () => {

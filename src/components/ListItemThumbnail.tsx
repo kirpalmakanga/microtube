@@ -1,5 +1,5 @@
 import { Component, Show } from 'solid-js';
-import Img from './Img';
+import Img from './ui/Img';
 
 interface Props {
     img: string;

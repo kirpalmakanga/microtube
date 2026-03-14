@@ -1,6 +1,6 @@
 import { Component, createSignal } from 'solid-js';
-import Button from '../components/Button';
-import Placeholder from '../components/Placeholder';
+import Button from '../components/ui/Button';
+import Placeholder from '../components/ui/Placeholder';
 import { captureError, delay } from '../lib/helpers';
 import { useNotifications } from '../store/notifications';
 import { useAuth } from '../store/user';

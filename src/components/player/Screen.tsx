@@ -1,5 +1,5 @@
 import { Component, Show, splitProps } from 'solid-js';
-import Placeholder from '../Placeholder';
+import Placeholder from '../ui/Placeholder';
 import { YoutubePlayer } from './YouTubePlayer';
 import { Options, YouTubePlayerInstance } from '../../api/youtube-player';
 

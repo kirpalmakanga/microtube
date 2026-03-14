@@ -1,5 +1,5 @@
 import { Component, For, Show } from 'solid-js';
-import Icon from '../Icon';
+import Icon from './Icon';
 import Modal from './Modal';
 
 export type AlertColor = 'error' | 'warning' | 'success';

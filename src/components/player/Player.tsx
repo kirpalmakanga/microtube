@@ -11,7 +11,7 @@ import Info from './Info';
 import Queue from './Queue';
 import Screen from './Screen';
 import Description from './Description';
-import IconButton from '../IconButton';
+import IconButton from '../ui/IconButton';
 import PlaylistSelectorModal from '../playlist/PlaylistSelectorModal';
 
 interface PlayerInnerState {

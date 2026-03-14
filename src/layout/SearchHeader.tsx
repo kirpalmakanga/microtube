@@ -1,6 +1,6 @@
 import { A, useSearchParams } from '@solidjs/router';
-import DropDown, { DropDownOption } from '../components/DropDown';
-import Icon from '../components/Icon';
+import DropDown, { DropDownOption } from '../components/ui/DropDown';
+import Icon from '../components/ui/Icon';
 import Title from '../components/meta/Title';
 import SearchForm from '../components/SearchForm';
 import { useAppTitle } from '../store/app';

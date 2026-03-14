@@ -1,7 +1,7 @@
 import { VirtualContainer } from '@minht11/solid-virtual-container';
 import { createSignal, JSXElement, onCleanup, onMount, Show } from 'solid-js';
 import { throttle } from '../lib/helpers';
-import LoadingIcon from './LoadingIcon';
+import LoadingIcon from './ui/LoadingIcon';
 
 type ListItemProps = { index: number; data: any };
 

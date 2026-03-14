@@ -1,6 +1,6 @@
 import { createSignal, lazy, onMount, ParentComponent, Show } from 'solid-js';
 import { registerSW } from 'virtual:pwa-register';
-import Loader from './components/Loader';
+import Loader from './components/ui/Loader';
 import Menu from './components/Menu';
 import Notifications from './components/Notifications';
 // import Player from './components/player/Player';

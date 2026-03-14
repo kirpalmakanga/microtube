@@ -1,9 +1,9 @@
 import { A, useLocation } from '@solidjs/router';
 import { createSignal, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
-import Button from '../components/Button';
-import Icon from '../components/Icon';
-import Img from '../components/Img';
+import Button from '../components/ui/Button';
+import Icon from '../components/ui/Icon';
+import Img from '../components/ui/Img';
 import Title from '../components/meta/Title';
 import { useAppTitle } from '../store/app';
 import { useAuth } from '../store/user';

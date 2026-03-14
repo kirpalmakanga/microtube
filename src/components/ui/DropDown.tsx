@@ -1,8 +1,8 @@
 import { createMemo, createSignal, For, onCleanup, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
-import { preventDefault, stopPropagation } from '../lib/helpers';
+import { preventDefault, stopPropagation } from '../../lib/helpers';
 // oxlint-disable-next-line no-unused-vars
-import clickOutside from '../lib/directives';
+import clickOutside from '../../lib/directives';
 import Icon from './Icon';
 import { makeResizeObserver } from '@solid-primitives/resize-observer';
 

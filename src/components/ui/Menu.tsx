@@ -1,4 +1,4 @@
-import { Component, For, Show } from 'solid-js';
+import { Component, For, ParentComponent, Show } from 'solid-js';
 import Icon from './Icon';
 import Modal from './Modal';
 
@@ -22,13 +22,13 @@ export interface MenuItemData {
 }
 
 interface MenuProps {
-    title: string;
+    title?: string;
     items: MenuItemData[];
     isVisible: boolean;
     onClickClose: () => void;
 }
 
-const Menu: Component<MenuProps> = (props) => {
+const Menu: ParentComponent<MenuProps> = (props) => {
     function handeClick(callback: () => void) {
         return () => {
             callback();

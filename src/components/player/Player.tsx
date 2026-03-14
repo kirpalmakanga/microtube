@@ -326,9 +326,11 @@ const Player = () => {
                                     disabled={!hasCurrentVideo()}
                                 />
 
-                                <div class="absolute bottom-full right-0 w-36 transition-opacity opacity-0 invisible group-hover:(opacity-100 visible)">
-                                    <VolumeRange value={state.volume} onChange={setVolume} />
-                                </div>
+                                <Show when={hasCurrentVideo()}>
+                                    <div class="absolute bottom-full right-0 w-36 transition-opacity opacity-0 invisible group-hover:(opacity-100 visible)">
+                                        <VolumeRange value={state.volume} onChange={setVolume} />
+                                    </div>
+                                </Show>
                             </div>
                         </Show>
                     </div>
@@ -345,7 +347,9 @@ const Player = () => {
                     />
 
                     <div class="flex items-center px-4 gap-2">
-                        <IconButton onClick={openPlaylistSelector} icon="bookmark-outline" />
+                        <Show when={hasCurrentVideo()}>
+                            <IconButton onClick={openPlaylistSelector} icon="bookmark-outline" />
+                        </Show>
 
                         <Show when={hasCurrentVideo() || isSingleVideo()}>
                             <IconButton

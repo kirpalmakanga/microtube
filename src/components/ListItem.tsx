@@ -18,7 +18,7 @@ interface Props {
 const ListItem: Component<Props> = (props) => {
     return (
         <div
-            class="flex w-full bg-primary-700 hover:bg-primary-600 transition-colors no-highlights"
+            class="flex items-center w-full bg-primary-700 hover:bg-primary-600 transition-colors no-highlights"
             onContextMenu={props.onClickMenu}
         >
             <Show when={typeof props.index === 'number'}>
@@ -32,7 +32,10 @@ const ListItem: Component<Props> = (props) => {
                 onClick={props.onClick}
             >
                 <ListItemThumbnail
-                    img={getThumbnails(props.thumbnails, 'medium')}
+                    img={
+                        getThumbnails(props.thumbnails, 'medium') ||
+                        getThumbnails(props.thumbnails, 'default')
+                    }
                     alt={props.title}
                     badge={props.badge}
                 />
@@ -44,16 +47,12 @@ const ListItem: Component<Props> = (props) => {
                 />
             </div>
 
-            <Show when={props.onClickMenu}>
-                <div class="flex flex-col">
-                    <Button
-                        class="flex flex-grow items-center justify-center transition-colors text-light-50 hover:text-opacity-50 p-2"
-                        icon="more"
-                        iconClass="w-5 h-5"
-                        onClick={props.onClickMenu}
-                    />
-                </div>
-            </Show>
+            <Button
+                class="flex flex-grow items-center justify-center transition-colors text-light-50 hover:text-opacity-50 p-2"
+                icon="more"
+                iconClass="w-5 h-5"
+                onClick={props.onClickMenu}
+            />
         </div>
     );
 };

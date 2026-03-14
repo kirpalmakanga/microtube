@@ -1,10 +1,6 @@
 import { Component, onCleanup, onMount, Show } from 'solid-js';
 import { Transition } from 'solid-transition-group';
-import { copyText, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
-import { useMenu } from '../../store/menu';
-import { useNotifications } from '../../store/notifications';
 import { usePlayer } from '../../store/player';
-import { usePlaylistItems } from '../../store/playlist-items';
 import Placeholder from '../Placeholder';
 import SortableList from '../SortableList';
 import QueueHeader from './QueueHeader';
@@ -26,58 +22,10 @@ const Queue: Component<Props> = (props) => {
             subscribeToCurrentQueueId,
             setQueue,
             clearQueue,
-            removeQueueItem,
             setActiveQueueItem,
-            clearNewQueueItems,
-            importVideos
+            clearNewQueueItems
         }
     ] = usePlayer();
-
-    const [, { editPlaylistItem }] = usePlaylistItems();
-
-    const [, { openNotification }] = useNotifications();
-
-    const [, { openMenu }] = useMenu();
-
-    const handleClickMenu = (callbackData: VideoData) => () => {
-        const { title } = callbackData;
-
-        openMenu({
-            title,
-            callbackData,
-            items: [
-                {
-                    title: 'Save',
-                    icon: 'bookmark-outline',
-                    onClick: editPlaylistItem
-                },
-                {
-                    title: 'Share',
-                    icon: 'share',
-                    onClick: ({ id, title }: VideoData) => {
-                        const url = getVideoURL(id);
-
-                        if (isMobile()) {
-                            shareURL({
-                                title,
-                                url
-                            });
-                        } else {
-                            copyText(url);
-
-                            openNotification('Copied link to clipboard.');
-                        }
-                    }
-                },
-                {
-                    title: 'Remove from queue',
-                    icon: 'delete',
-                    color: 'error',
-                    onClick: removeQueueItem
-                }
-            ]
-        });
-    };
 
     const isActiveItem = (id: string) => id === player.currentId;
 
@@ -114,7 +62,6 @@ const Queue: Component<Props> = (props) => {
             <QueueHeader
                 itemCount={player.queue.length}
                 onClickClose={props.toggleQueue}
-                onClickImport={importVideos}
                 onClickClear={clearQueue}
             />
 
@@ -147,7 +94,6 @@ const Queue: Component<Props> = (props) => {
                                                 isPlaying={isActiveItem(id) && props.isPlaying}
                                                 onClick={handleClickItem(id)}
                                                 onClickLink={props.toggleQueue}
-                                                onContextMenu={handleClickMenu(data)}
                                             />
                                         );
                                     }}

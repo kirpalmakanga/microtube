@@ -1,7 +1,7 @@
 import { createEffect, onMount, Show } from 'solid-js';
 import { createStore } from 'solid-js/store';
 import { Transition } from 'solid-transition-group';
-import { isMobile } from '../../lib/helpers';
+import { isMobile, omit } from '../../lib/helpers';
 import { useFullscreen, useKey } from '../../lib/hooks';
 import { usePlayer } from '../../store/player';
 import { usePlaylistItems } from '../../store/playlist-items';
@@ -238,7 +238,7 @@ const Player = () => {
         if (!videoId) {
             youtube = null;
 
-            setPlayerState(getInitialPlayerState());
+            setPlayerState(omit(getInitialPlayerState(), 'isQueueVisible'));
         }
 
         return videoId;
@@ -254,7 +254,6 @@ const Player = () => {
             classList={{
                 'fixed inset-0 bg-primary-900': isFullscreen()
             }}
-            data-state-show-queue={state.isQueueVisible ? 'enabled' : 'disabled'}
         >
             <Screen
                 isVisible={isSingleVideo() || state.isScreenVisible || isFullscreen()}

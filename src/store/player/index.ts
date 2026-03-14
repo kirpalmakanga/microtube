@@ -9,7 +9,7 @@ import { IS_DEV_MODE } from '../../config/app';
 import * as api from '../../api/youtube';
 import { saveData, subscribeToData } from '../../api/database';
 
-import { splitLines, parseVideoId, chunk, isEqual, captureError } from '../../lib/helpers';
+import { isEqual, captureError } from '../../lib/helpers';
 import { initialState } from './_state';
 
 export const usePlayer = () => {
@@ -51,11 +51,12 @@ export const usePlayer = () => {
         saveData(queuePath, queue);
     };
 
+    function isInQueue(videoId: string) {
+        return player.queue.find(({ id: queueItemId }: VideoData) => queueItemId === videoId);
+    }
+
     const queueItems = (newItems: VideoData[]) => {
-        const items = newItems.filter(
-            ({ id }: VideoData) =>
-                !player.queue.find(({ id: queueItemId }: VideoData) => queueItemId === id)
-        );
+        const items = newItems.filter(({ id }: VideoData) => !isInQueue(id));
 
         const { queue: currentQueue, newQueueItems } = player;
 
@@ -81,7 +82,7 @@ export const usePlayer = () => {
 
     const queueVideos = async (ids: string[]) => {
         try {
-            const items = await api.getVideosFromIds(ids);
+            const items = await api.getVideosFromIds(ids.filter((id) => !isInQueue(id)));
 
             queueItems(items);
         } catch (error) {
@@ -91,27 +92,7 @@ export const usePlayer = () => {
         }
     };
 
-    const importVideos = () =>
-        openPrompt({
-            mode: 'import',
-            headerText: 'Import videos',
-            confirmText: 'Import',
-            callback: async (text: string) => {
-                const lines = splitLines(text).filter(Boolean);
-
-                if (lines.length) {
-                    const videoIds = [...new Set(lines.map(parseVideoId))];
-
-                    const chunks = chunk(videoIds, 50);
-
-                    for (const ids of chunks) {
-                        await queueVideos(ids);
-                    }
-                }
-            }
-        });
-
-    const removeQueueItem = ({ id: targetId }: VideoData) => {
+    const removeQueueItem = (targetId: string) => {
         setQueue(player.queue.filter(({ id }: VideoData) => id !== targetId));
 
         if (targetId === player.currentId) {
@@ -168,7 +149,7 @@ export const usePlayer = () => {
             queueItems,
             queueItem,
             setActiveQueueItem,
-            importVideos,
+            queueVideos,
             removeQueueItem,
             clearQueue,
             clearNewQueueItems,

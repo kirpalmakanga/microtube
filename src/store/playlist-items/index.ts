@@ -68,56 +68,44 @@ export const usePlaylistItems = (playlistId?: string) => {
         }
     };
 
-    const editPlaylistItem = (videoData: VideoData) => {
-        openPrompt({
-            mode: 'playlists',
-            headerText: 'Save',
-            callback: async ({ id: playlistId, title, privacyStatus }: PlaylistData) => {
-                try {
-                    const { thumbnails } = videoData;
+    const editPlaylistItem = async (videoData: VideoData, playlistData: PlaylistData) => {
+        try {
+            const { thumbnails } = videoData;
 
-                    if (playlistId) {
-                        await addPlaylistItem(videoData, playlistId);
+            if (playlistData.id) {
+                await addPlaylistItem(videoData, playlistData.id);
 
-                        const index = playlists.items.findIndex(
-                            ({ id }: PlaylistData) => id === playlistId
-                        );
+                const index = playlists.items.findIndex(
+                    ({ id }: PlaylistData) => id === playlistId
+                );
 
-                        if (index > -1) {
-                            setState(
-                                'playlists',
-                                'items',
-                                index,
-                                'itemCount',
-                                (c: number) => c + 1
-                            );
-                        }
-                    } else {
-                        const playlist = await api.createPlaylist({
-                            title,
-                            privacyStatus
-                        });
-
-                        await addPlaylistItem(videoData, playlist.id);
-
-                        setState('playlists', 'items', (items) => [
-                            {
-                                ...playlist,
-                                thumbnails,
-                                itemCount: 1
-                            },
-                            ...items
-                        ]);
-                    }
-
-                    openNotification(`Added to playlist "${title}".`);
-                } catch (error) {
-                    captureError(error);
-
-                    openNotification('Error editing playlist item.');
+                if (index > -1) {
+                    setState('playlists', 'items', index, 'itemCount', (c: number) => c + 1);
                 }
+            } else {
+                const playlist = await api.createPlaylist({
+                    title: playlistData.title,
+                    privacyStatus: playlistData.privacyStatus
+                });
+
+                await addPlaylistItem(videoData, playlist.id);
+
+                setState('playlists', 'items', (items) => [
+                    {
+                        ...playlist,
+                        thumbnails,
+                        itemCount: 1
+                    },
+                    ...items
+                ]);
             }
-        });
+
+            openNotification(`Added to playlist "${playlistData.title}".`);
+        } catch (error) {
+            captureError(error);
+
+            openNotification('Error editing playlist item.');
+        }
     };
 
     const removePlaylistItem = ({ playlistItemId, playlistId, title }: PlaylistItemData) => {

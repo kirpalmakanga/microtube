@@ -1,4 +1,4 @@
-import { Component, Show } from 'solid-js';
+import { Component, JSXElement, Show } from 'solid-js';
 import { getThumbnails } from '../lib/helpers';
 import Button from './Button';
 import ListItemThumbnail from './ListItemThumbnail';
@@ -7,7 +7,7 @@ import ListItemMeta from './ListItemMeta';
 interface Props {
     index?: number;
     title: string;
-    subtitle: string;
+    subtitle: string | JSXElement;
     subSubtitle: string;
     badge: string;
     thumbnails: ThumbnailsData;

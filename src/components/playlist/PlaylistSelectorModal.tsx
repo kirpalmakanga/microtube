@@ -6,17 +6,7 @@ import Button from '../Button';
 import List from '../List';
 import { usePlaylists } from '../../store/playlists';
 import { preventDefault, stopPropagation } from '../../lib/helpers';
-
-interface PlaylistData {
-    playlistId: string;
-    title: string;
-    itemCount: number;
-    privacyStatus: string;
-}
-
-interface Props {
-    onClickItem: (data: PlaylistData) => void;
-}
+import Modal from '../ui/Modal';
 
 interface FormProps {
     onSubmit: (data: PlaylistData) => void;
@@ -92,10 +82,24 @@ const NewPlayListForm: Component<FormProps> = ({ onSubmit }) => {
     );
 };
 
-export const PlaylistManager: Component<Props> = ({ onClickItem }) => {
+interface PlaylistSelectorModalProps {
+    isVisible: boolean;
+    onClickItem: (data: PlaylistData) => void;
+    onClickClose: () => void;
+}
+
+export const PlaylistSelectorModal: Component<PlaylistSelectorModalProps> = (props) => {
     const [playlists, { getPlaylists }] = usePlaylists();
-    const onCreatePlaylist = (data: PlaylistData) => onClickItem(data);
-    const makeOnClickItem = (data: PlaylistData) => () => onClickItem(data);
+    const onCreatePlaylist = (data: PlaylistData) => {
+        props.onClickItem(data);
+
+        props.onClickClose();
+    };
+    const makeOnClickItem = (data: PlaylistData) => () => {
+        props.onClickItem(data);
+
+        props.onClickClose();
+    };
 
     const ListItem = ({ data }: { data: PlaylistData }) => {
         const { title, itemCount } = data;
@@ -115,16 +119,18 @@ export const PlaylistManager: Component<Props> = ({ onClickItem }) => {
     };
 
     return (
-        <div class="flex flex-col h-60vh gap-4">
-            <List items={playlists.items} loadItems={getPlaylists} itemSize={50}>
-                {ListItem}
-            </List>
+        <Modal title="Save" isVisible={props.isVisible} onClickClose={props.onClickClose}>
+            <div class="flex flex-col h-60vh gap-4">
+                <List items={playlists.items} loadItems={getPlaylists} itemSize={50}>
+                    {ListItem}
+                </List>
 
-            <div class="bg-white opacity-10 h-[1px]"></div>
+                <div class="bg-white opacity-10 h-[1px]"></div>
 
-            <NewPlayListForm onSubmit={onCreatePlaylist} />
-        </div>
+                <NewPlayListForm onSubmit={onCreatePlaylist} />
+            </div>
+        </Modal>
     );
 };
 
-export default PlaylistManager;
+export default PlaylistSelectorModal;

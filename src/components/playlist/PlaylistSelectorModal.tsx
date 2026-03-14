@@ -5,8 +5,9 @@ import DropDown, { DropDownOption } from '../ui/DropDown';
 import Button from '../ui/Button';
 import List from '../List';
 import { usePlaylists } from '../../store/playlists';
-import { preventDefault, stopPropagation } from '../../lib/helpers';
+import { getThumbnails, preventDefault, stopPropagation } from '../../lib/helpers';
 import Modal from '../ui/Modal';
+import Img from '../ui/Img';
 
 interface FormProps {
     onSubmit: (data: PlaylistData) => void;
@@ -102,18 +103,27 @@ export const PlaylistSelectorModal: Component<PlaylistSelectorModalProps> = (pro
     };
 
     const ListItem = ({ data }: { data: PlaylistData }) => {
-        const { title, itemCount } = data;
-
         return (
             <button
-                class="flex items-center bg-primary-700 hover:bg-primary-600 transition-colors w-full text-left overflow-hidden"
+                class="flex items-center bg-primary-700 hover:bg-primary-600 transition-colors w-full text-left overflow-hidden p-4 gap-4"
                 onClick={makeOnClickItem(data)}
             >
-                <span class="flex-grow text-light-50 font-montserrat overflow-ellipsis overflow-hidden p-4">
-                    {title}
+                <Img
+                    class="w-24 rounded"
+                    imgClass="w-full h-full object-cover"
+                    src={
+                        getThumbnails(data.thumbnails, 'medium') ||
+                        getThumbnails(data.thumbnails, 'default')
+                    }
+                    alt={data.title}
+                    background
+                />
+
+                <span class="flex-grow text-light-50 font-montserrat overflow-ellipsis overflow-hidden">
+                    {data.title}
                 </span>
 
-                <span class="p-4">{itemCount}</span>
+                <span class="text-sm">{`${data.itemCount} item${data.itemCount !== 1 ? 's' : ''}`}</span>
             </button>
         );
     };
@@ -121,7 +131,7 @@ export const PlaylistSelectorModal: Component<PlaylistSelectorModalProps> = (pro
     return (
         <Modal title="Save" isVisible={props.isVisible} onClickClose={props.onClickClose}>
             <div class="flex flex-col h-60vh gap-4">
-                <List items={playlists.items} loadItems={getPlaylists} itemSize={50}>
+                <List items={playlists.items} loadItems={getPlaylists} itemSize={76}>
                     {ListItem}
                 </List>
 

@@ -7,7 +7,7 @@ interface Props {
     badge: string;
 }
 
-const ListItem: Component<Props> = (props) => (
+const ListItemThumbnail: Component<Props> = (props) => (
     <div class="relative flex">
         <Img
             class="w-48 rounded"
@@ -25,4 +25,4 @@ const ListItem: Component<Props> = (props) => (
     </div>
 );
 
-export default ListItem;
+export default ListItemThumbnail;

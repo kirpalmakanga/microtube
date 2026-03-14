@@ -1,12 +1,10 @@
-import { createContext, useContext, createEffect, ParentComponent } from 'solid-js';
-import { createStore, SetStoreFunction, Store } from 'solid-js/store';
+import { createEffect, createRoot } from 'solid-js';
+import { createStore } from 'solid-js/store';
 import { rootInitialState, RootState } from './_state';
 import { saveState, loadState } from '../lib/localStorage';
 import { mergeDeep, pick, omit } from '../lib/helpers';
 
-const StoreContext = createContext();
-
-export const StoreProvider: ParentComponent = (props) => {
+const rootStore = createRoot(() => {
     const store = createStore<RootState>(
         mergeDeep(rootInitialState(), loadState() || {}) as RootState
     );
@@ -21,8 +19,7 @@ export const StoreProvider: ParentComponent = (props) => {
         });
     });
 
-    return <StoreContext.Provider value={store}>{props.children}</StoreContext.Provider>;
-};
+    return store;
+});
 
-export const useStore = () =>
-    useContext(StoreContext) as [Store<RootState>, SetStoreFunction<RootState>];
+export const useStore = () => rootStore;

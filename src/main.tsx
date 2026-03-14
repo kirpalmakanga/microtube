@@ -6,7 +6,7 @@ import 'virtual:windi.css';
 
 import './assets/styles/app.scss';
 import Root from './Root';
-import { StoreProvider, useStore } from './store';
+import { useStore } from './store';
 
 const Login = lazy(() => import('./containers/Login'));
 const Callback = lazy(() => import('./containers/Callback'));
@@ -37,28 +37,26 @@ const appContainer = document.querySelector('#app');
 if (appContainer) {
     render(
         () => (
-            <StoreProvider>
-                <Router root={Root}>
-                    <Route path="" component={Protected}>
-                        <Route path="/" component={Playlists} />
-                        <Route path="/playlist/:playlistId" component={Playlist} />
-                        <Route path="/video/:videoId" component={Video} />
-                        <Route path="/search" component={Search} />
-                        <Route path="/subscriptions" component={Subscriptions} />
-                        <Route path="/channel/:channelId" component={Channel}>
-                            <Route path="/" component={() => <Navigate href="videos" />} />
-                            <Route path="/videos" component={ChannelVideos} />
-                            <Route path="/playlists" component={ChannelPlaylists} />
-                            <Route path="/about" component={ChannelAbout} />
-                        </Route>
+            <Router root={Root}>
+                <Route path="" component={Protected}>
+                    <Route path="/" component={Playlists} />
+                    <Route path="/playlist/:playlistId" component={Playlist} />
+                    <Route path="/video/:videoId" component={Video} />
+                    <Route path="/search" component={Search} />
+                    <Route path="/subscriptions" component={Subscriptions} />
+                    <Route path="/channel/:channelId" component={Channel}>
+                        <Route path="/" component={() => <Navigate href="videos" />} />
+                        <Route path="/videos" component={ChannelVideos} />
+                        <Route path="/playlists" component={ChannelPlaylists} />
+                        <Route path="/about" component={ChannelAbout} />
                     </Route>
+                </Route>
 
-                    <Route path="/login" component={Login} />
-                    <Route path="/callback" component={Callback} />
+                <Route path="/login" component={Login} />
+                <Route path="/callback" component={Callback} />
 
-                    <Route path="*" component={NotFound} />
-                </Router>
-            </StoreProvider>
+                <Route path="*" component={NotFound} />
+            </Router>
         ),
         appContainer
     );

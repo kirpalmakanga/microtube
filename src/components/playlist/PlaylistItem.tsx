@@ -25,7 +25,6 @@ const PlaylistItem: Component<PlaylistItemProps> = (props) => {
     const navigate = useNavigate();
 
     const [isPlaylistSelectorVisible, setIsPlaylistSelectorVisible] = createSignal<boolean>(false);
-    const [isMenuVisible, setIsMenuVisible] = createSignal<boolean>(false);
 
     const [, { editPlaylistItem, removePlaylistItem }] = usePlaylistItems(props.data.playlistId);
 
@@ -39,14 +38,6 @@ const PlaylistItem: Component<PlaylistItemProps> = (props) => {
 
     function closePlaylistSelector() {
         setIsPlaylistSelectorVisible(false);
-    }
-
-    function openMenu() {
-        setIsMenuVisible(true);
-    }
-
-    function closeMenu() {
-        setIsMenuVisible(false);
     }
 
     function goToPlaylistItem() {
@@ -96,31 +87,31 @@ const PlaylistItem: Component<PlaylistItemProps> = (props) => {
 
     return (
         <>
-            <ListItem
-                {...props.data}
-                index={props.index}
-                badge={formatTime(props.data.duration)}
-                subtitle={
-                    <A href={`/channel/${props.data.channelId}`} onClick={stopPropagation()}>
-                        {props.data.channelTitle}
-                    </A>
-                }
-                subSubtitle={formatDate(props.data.publishedAt, 'MMMM do yyyy')}
-                onClick={goToPlaylistItem}
-                onClickMenu={openMenu}
-            />
+            <Menu title={props.data.title} items={menuItems}>
+                {(openMenu) => (
+                    <ListItem
+                        {...props.data}
+                        index={props.index}
+                        badge={formatTime(props.data.duration)}
+                        subtitle={
+                            <A
+                                href={`/channel/${props.data.channelId}`}
+                                onClick={stopPropagation()}
+                            >
+                                {props.data.channelTitle}
+                            </A>
+                        }
+                        subSubtitle={formatDate(props.data.publishedAt, 'MMMM do yyyy')}
+                        onClick={goToPlaylistItem}
+                        onClickMenu={openMenu}
+                    />
+                )}
+            </Menu>
 
             <PlaylistSelectorModal
                 isVisible={isPlaylistSelectorVisible()}
                 onClickItem={onSelectPlaylist}
                 onClickClose={closePlaylistSelector}
-            />
-
-            <Menu
-                title={props.data.title}
-                items={menuItems}
-                isVisible={isMenuVisible()}
-                onClickClose={closeMenu}
             />
         </>
     );

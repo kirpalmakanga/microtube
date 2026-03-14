@@ -1,16 +1,13 @@
 import { createSignal, lazy, onMount, ParentComponent, Show } from 'solid-js';
 import { registerSW } from 'virtual:pwa-register';
 import Loader from './components/ui/Loader';
-import Menu from './components/Menu';
 import Notifications from './components/Notifications';
-// import Player from './components/player/Player';
 import Prompt from './components/prompt/Prompt';
-import { IS_DEV_MODE } from './config/app';
 import Header from './layout/Header';
-// import { enableImportMethods } from './actions.bak/youtube';
-import { isMobile, preventDefault } from './lib/helpers';
 import { useAuth } from './store/user';
 import { useNotifications } from './store/notifications';
+import { isMobile, preventDefault } from './lib/helpers';
+import { IS_DEV_MODE } from './config/app';
 
 const Player = lazy(() => import('./components/player/Player'));
 
@@ -57,8 +54,6 @@ const Root: ParentComponent = (props) => {
                     <Player />
 
                     <Prompt />
-
-                    <Menu />
                 </Show>
             </Show>
 

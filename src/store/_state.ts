@@ -18,7 +18,6 @@ import {
     NotificationState
 } from './notifications/_state';
 import { initialState as promptInitialState, PromptState } from './prompt/_state';
-import { initialState as menuInitialState, MenuState } from './menu/_state';
 
 export interface RootState {
     app: AppState;
@@ -31,7 +30,6 @@ export interface RootState {
     search: SearchState;
     notifications: NotificationState;
     prompt: PromptState;
-    menu: MenuState;
 }
 
 export const rootInitialState = (): RootState => ({
@@ -44,6 +42,5 @@ export const rootInitialState = (): RootState => ({
     subscriptions: subscriptionsInitialState(),
     search: searchInitialState(),
     notifications: notificationsInitialState(),
-    prompt: promptInitialState(),
-    menu: menuInitialState()
+    prompt: promptInitialState()
 });

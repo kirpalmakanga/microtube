@@ -11,11 +11,12 @@ import {
     shareURL,
     stopPropagation
 } from '../lib/helpers';
-import { useMenu } from '../store/menu';
 import { useNotifications } from '../store/notifications';
 import { usePlayer } from '../store/player';
 import { usePlaylistItems } from '../store/playlist-items';
 import { useSearch } from '../store/search';
+import Menu, { MenuItemData } from '../components/ui/Menu';
+import PlaylistSelectorModal from '../components/playlist/PlaylistSelectorModal';
 
 const Search = () => {
     const navigate = useNavigate();
@@ -23,59 +24,20 @@ const Search = () => {
     const [search, { searchVideos, clearSearch }] = useSearch();
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
-    const [, { openMenu }] = useMenu();
     const [, { openNotification }] = useNotifications();
     const [shouldMountList, setShouldMountList] = createSignal(false);
-    const handleSearchVideos = () => {
+
+    function handleSearchVideos() {
         const { query } = searchParams;
 
         if (query) {
             searchVideos(query as string);
         }
-    };
-    const handleClickCard =
-        ({ id }: VideoData) =>
-        () =>
-            navigate(`/video/${id}`);
+    }
 
-    const handleClickMenu = (callbackData: VideoData) => () => {
-        const { title } = callbackData;
-
-        openMenu({
-            title,
-            callbackData,
-            items: [
-                {
-                    title: `Add to queue`,
-                    icon: 'circle-add',
-                    onClick: queueItem
-                },
-                {
-                    title: `Save`,
-                    icon: 'bookmark-outline',
-                    onClick: editPlaylistItem
-                },
-                {
-                    title: 'Share',
-                    icon: 'share',
-                    onClick: ({ id, title }: VideoData) => {
-                        const url = getVideoURL(id);
-
-                        if (isMobile()) {
-                            shareURL({
-                                title,
-                                url
-                            });
-                        } else {
-                            copyText(url);
-
-                            openNotification('Copied link to clipboard.');
-                        }
-                    }
-                }
-            ]
-        });
-    };
+    function handleClickCard({ id }: VideoData) {
+        return () => navigate(`/video/${id}`);
+    }
 
     createEffect(
         on(
@@ -112,19 +74,87 @@ const Search = () => {
                 fallback={<Placeholder icon="list" text="No results found." />}
             >
                 <List items={search.items} loadItems={handleSearchVideos}>
-                    {({ data }) => (
-                        <ListItem
-                            {...data}
-                            subtitle={
-                                <A href={`/channel/${data.channelId}`} onClick={stopPropagation()}>
-                                    {data.channelTitle}
-                                </A>
-                            }
-                            subSubtitle={formatDate(data.publishedAt, 'MMMM do yyyy')}
-                            onClick={handleClickCard(data)}
-                            onClickMenu={handleClickMenu(data)}
-                        />
-                    )}
+                    {({ data }) => {
+                        const [isPlaylistSelectorVisible, setIsPlaylistSelectorVisible] =
+                            createSignal<boolean>(false);
+
+                        function openPlaylistSelector() {
+                            setIsPlaylistSelectorVisible(true);
+                        }
+
+                        function closePlaylistSelector() {
+                            setIsPlaylistSelectorVisible(false);
+                        }
+
+                        function onSelectPlaylist(playlistData: PlaylistData) {
+                            editPlaylistItem(data, playlistData);
+                        }
+
+                        function menuItems(videoData: VideoData): MenuItemData[] {
+                            return [
+                                {
+                                    title: `Add to queue`,
+                                    icon: 'circle-add',
+                                    onClick: () => queueItem(videoData)
+                                },
+                                {
+                                    title: `Save`,
+                                    icon: 'bookmark-outline',
+                                    onClick: () => openPlaylistSelector()
+                                },
+                                {
+                                    title: 'Share',
+                                    icon: 'share',
+                                    onClick: () => {
+                                        const url = getVideoURL(videoData.id);
+
+                                        if (isMobile()) {
+                                            shareURL({
+                                                title: videoData.title,
+                                                url
+                                            });
+                                        } else {
+                                            copyText(url);
+
+                                            openNotification('Copied link to clipboard.');
+                                        }
+                                    }
+                                }
+                            ];
+                        }
+
+                        return (
+                            <>
+                                <Menu title={data.title} items={menuItems(data)}>
+                                    {(openMenu) => (
+                                        <ListItem
+                                            {...data}
+                                            subtitle={
+                                                <A
+                                                    href={`/channel/${data.channelId}`}
+                                                    onClick={stopPropagation()}
+                                                >
+                                                    {data.channelTitle}
+                                                </A>
+                                            }
+                                            subSubtitle={formatDate(
+                                                data.publishedAt,
+                                                'MMMM do yyyy'
+                                            )}
+                                            onClick={handleClickCard(data)}
+                                            onClickMenu={openMenu}
+                                        />
+                                    )}
+                                </Menu>
+
+                                <PlaylistSelectorModal
+                                    isVisible={isPlaylistSelectorVisible()}
+                                    onClickItem={onSelectPlaylist}
+                                    onClickClose={closePlaylistSelector}
+                                />
+                            </>
+                        );
+                    }}
                 </List>
             </Show>
         </Show>

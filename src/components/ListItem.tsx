@@ -12,7 +12,7 @@ interface Props {
     badge: string;
     thumbnails: ThumbnailsData;
     onClick: () => void;
-    onClickMenu: () => void;
+    onClickMenu?: () => void;
 }
 
 const ListItem: Component<Props> = (props) => {
@@ -47,12 +47,14 @@ const ListItem: Component<Props> = (props) => {
                 />
             </div>
 
-            <Button
-                class="flex items-center justify-center transition-colors text-light-50 hover:text-opacity-50 p-2"
-                icon="more"
-                iconClass="w-5 h-5"
-                onClick={props.onClickMenu}
-            />
+            <Show when={props.onClickMenu}>
+                <Button
+                    class="flex items-center justify-center transition-colors text-light-50 hover:text-opacity-50 p-2"
+                    icon="more"
+                    iconClass="w-5 h-5"
+                    onClick={props.onClickMenu}
+                />
+            </Show>
         </div>
     );
 };

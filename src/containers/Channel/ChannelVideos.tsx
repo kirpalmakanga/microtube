@@ -1,14 +1,15 @@
-import { Show } from 'solid-js';
+import { createSignal, Show } from 'solid-js';
 import { useNavigate, useParams } from '@solidjs/router';
 import List from '../../components/List';
 import ListItem from '../../components/ListItem';
 import Placeholder from '../../components/ui/Placeholder';
 import { copyText, formatDate, getVideoURL, isMobile, shareURL } from '../../lib/helpers';
 import { useChannel } from '../../store/channel';
-import { useMenu } from '../../store/menu';
 import { useNotifications } from '../../store/notifications';
 import { usePlayer } from '../../store/player';
 import { usePlaylistItems } from '../../store/playlist-items';
+import PlaylistSelectorModal from '../../components/playlist/PlaylistSelectorModal';
+import Menu from '../../components/ui/Menu';
 
 const ChannelVideos = () => {
     const params = useParams();
@@ -18,68 +19,85 @@ const ChannelVideos = () => {
     const [, { editPlaylistItem }] = usePlaylistItems();
     const [, { queueItem }] = usePlayer();
     const [, { openNotification }] = useNotifications();
-    const [, { openMenu }] = useMenu();
 
-    const handleGetChannelVideos = () => getVideos();
-
-    const handleClickCard =
-        ({ id }: VideoData) =>
-        () =>
-            navigate(`/video/${id}`);
-
-    const handleClickMenu = (callbackData: VideoData) => () => {
-        const { title } = callbackData;
-
-        openMenu({
-            title,
-            callbackData,
-            items: [
-                {
-                    title: `Add to queue`,
-                    icon: 'circle-add',
-                    onClick: queueItem
-                },
-                {
-                    title: `Save`,
-                    icon: 'bookmark-outline',
-                    onClick: editPlaylistItem
-                },
-                {
-                    title: 'Share',
-                    icon: 'share',
-                    onClick: ({ id, title }: VideoData) => {
-                        const url = getVideoURL(id);
-
-                        if (isMobile()) {
-                            shareURL({
-                                title,
-                                url
-                            });
-                        } else {
-                            copyText(url);
-
-                            openNotification('Copied link to clipboard.');
-                        }
-                    }
-                }
-            ]
-        });
-    };
+    function handleClickCard({ id }: VideoData) {
+        return () => navigate(`/video/${id}`);
+    }
 
     return (
         <Show
             when={channel.videos.totalResults === null || channel.videos.totalResults > 0}
             fallback={<Placeholder icon="list" text="This channel hasn't uploaded videos." />}
         >
-            <List items={channel.videos.items} loadItems={handleGetChannelVideos}>
-                {({ data }) => (
-                    <ListItem
-                        {...data}
-                        subSubtitle={formatDate(data.publishedAt, 'MMMM do yyyy')}
-                        onClick={handleClickCard(data)}
-                        onClickMenu={handleClickMenu(data)}
-                    />
-                )}
+            <List items={channel.videos.items} loadItems={getVideos}>
+                {({ data }) => {
+                    const [isPlaylistSelectorVisible, setIsPlaylistSelectorVisible] =
+                        createSignal<boolean>(false);
+
+                    function openPlaylistSelector() {
+                        setIsPlaylistSelectorVisible(true);
+                    }
+
+                    function closePlaylistSelector() {
+                        setIsPlaylistSelectorVisible(false);
+                    }
+
+                    function onSelectPlaylist(playlistData: PlaylistData) {
+                        editPlaylistItem(data, playlistData);
+                    }
+
+                    const menuItems = [
+                        {
+                            title: `Add to queue`,
+                            icon: 'circle-add',
+                            onClick: () => queueItem(data)
+                        },
+                        {
+                            title: `Save`,
+                            icon: 'bookmark-outline',
+                            onClick: openPlaylistSelector
+                        },
+                        {
+                            title: 'Share',
+                            icon: 'share',
+                            onClick: () => {
+                                const url = getVideoURL(data.id);
+
+                                if (isMobile()) {
+                                    shareURL({
+                                        title: data.title,
+                                        url
+                                    });
+                                } else {
+                                    copyText(url);
+
+                                    openNotification('Copied link to clipboard.');
+                                }
+                            }
+                        }
+                    ];
+
+                    return (
+                        <>
+                            <Menu title={data.title} items={menuItems}>
+                                {(openMenu) => (
+                                    <ListItem
+                                        {...data}
+                                        subSubtitle={formatDate(data.publishedAt, 'MMMM do yyyy')}
+                                        onClick={handleClickCard(data)}
+                                        onClickMenu={openMenu}
+                                    />
+                                )}
+                            </Menu>
+
+                            <PlaylistSelectorModal
+                                isVisible={isPlaylistSelectorVisible()}
+                                onClickItem={onSelectPlaylist}
+                                onClickClose={closePlaylistSelector}
+                            />
+                        </>
+                    );
+                }}
             </List>
         </Show>
     );

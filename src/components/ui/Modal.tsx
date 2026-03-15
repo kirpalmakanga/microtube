@@ -30,7 +30,7 @@ const Modal: ParentComponent<Props> = (props) => {
                         onClick={props.onClickClose}
                     >
                         <div
-                            class="bg-primary-900 shadow min-w-md max-w-full rounded p-4 relative"
+                            class="bg-primary-900 shadow sm:min-w-md max-w-full rounded p-4 relative"
                             onClick={stopPropagation()}
                         >
                             <Button

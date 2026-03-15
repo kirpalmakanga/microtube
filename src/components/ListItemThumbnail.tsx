@@ -8,9 +8,9 @@ interface Props {
 }
 
 const ListItemThumbnail: Component<Props> = (props) => (
-    <div class="relative flex">
+    <div class="relative flex bg-red">
         <Img
-            class="w-48 rounded"
+            class="w-auto h-28 rounded"
             imgClass="w-full h-full object-cover"
             src={props.img}
             alt={props.alt}

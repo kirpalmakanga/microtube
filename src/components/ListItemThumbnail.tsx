@@ -8,7 +8,7 @@ interface Props {
 }
 
 const ListItemThumbnail: Component<Props> = (props) => (
-    <div class="relative flex bg-red">
+    <div class="relative flex bg-red flex-shrink-0">
         <Img
             class="rounded"
             imgClass="w-auto h-28 object-cover"
